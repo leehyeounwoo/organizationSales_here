@@ -16,10 +16,10 @@ export default {
 		// 	return this.$store.state.tagsView.cachedViews
 		// },
 		key() {
-			return this.$route.path;
+			return this.$route.path
 		},
 	},
-};
+}
 </script>
 
 <style lang="scss" scoped>

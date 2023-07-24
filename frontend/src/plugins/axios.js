@@ -1,16 +1,16 @@
-'use strict';
+'use strict'
 
-import Vue from 'vue';
-import axios from 'axios';
+import Vue from 'vue'
+import axios from 'axios'
 // import './appcrypt';
 
 let _config = {
 	timeout: 60 * 1000, // Timeout
 	// withCredentials: true, // Check cross-site Access-Control
-};
+}
 // console.log(_config);
 
-const _axios = axios.create(_config);
+const _axios = axios.create(_config)
 
 _axios.interceptors.request.use(
 	function(config) {
@@ -26,17 +26,17 @@ _axios.interceptors.request.use(
 			//   config.headers.sdskey = d.t;
 			// }
 		} catch (e) {
-			console.error(e);
-			config = _config;
+			console.error(e)
+			config = _config
 		}
 		// console.log(config)
-		return config;
+		return config
 	},
 	function(error) {
 		// Do something with request error
-		return Promise.reject(error);
+		return Promise.reject(error)
 	},
-);
+)
 // Add a response interceptor
 _axios.interceptors.response.use(
 	function(response) {
@@ -48,34 +48,34 @@ _axios.interceptors.response.use(
 			// method, url, data
 			//Vue.appdbg.tlog(`${response.config.method} ${response.config.url}\ndata: ${response.config.data}\nres: ${JSON.stringify(response.data, 0, 2)}`);
 		} catch (e) {
-			console.error(e);
+			console.error(e)
 		}
-		return response;
+		return response
 	},
 	function(error) {
 		// Do something with response error
-		return Promise.reject(error);
+		return Promise.reject(error)
 	},
-);
+)
 
 Plugin.install = function(Vue, options) {
-	console.log(options);
-	Vue.axios = _axios;
-	window.axios = _axios;
+	console.log(options)
+	Vue.axios = _axios
+	window.axios = _axios
 	Object.defineProperties(Vue.prototype, {
 		axios: {
 			get() {
-				return _axios;
+				return _axios
 			},
 		},
 		$axios: {
 			get() {
-				return _axios;
+				return _axios
 			},
 		},
-	});
-};
+	})
+}
 
-Vue.use(Plugin);
+Vue.use(Plugin)
 
-export default Plugin;
+export default Plugin

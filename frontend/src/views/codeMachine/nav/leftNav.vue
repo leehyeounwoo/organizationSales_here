@@ -58,9 +58,9 @@ export default {
 					items: [{ title: 'Breakfast & brunch' }],
 				},
 			], // 왼쪽 nav
-		};
+		}
 	},
-};
+}
 </script>
 <style lang="scss" scoped>
 .nav-left {

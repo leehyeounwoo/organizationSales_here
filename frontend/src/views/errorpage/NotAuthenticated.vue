@@ -38,5 +38,5 @@ export default {
 	metaInfo: {
 		title: '500 Not Authenticated',
 	},
-};
+}
 </script>

@@ -15,13 +15,13 @@
 	</div>
 </template>
 <script>
-import { AppMain, leftNav } from '../codeMachine';
+import { AppMain, leftNav } from '../codeMachine'
 export default {
 	components: {
 		AppMain,
 		leftNav,
 	},
-};
+}
 </script>
 <style lang="scss" scoped>
 .dashboard {

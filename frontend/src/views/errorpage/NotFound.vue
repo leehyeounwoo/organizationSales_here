@@ -38,5 +38,5 @@ export default {
 	metaInfo: {
 		title: '404 Not Found',
 	},
-};
+}
 </script>
