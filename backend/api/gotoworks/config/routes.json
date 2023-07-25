@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/gotoworks",
+      "handler": "gotoworks.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/gotoworks/count",
+      "handler": "gotoworks.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/gotoworks/:id",
+      "handler": "gotoworks.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gotoworks",
+      "handler": "gotoworks.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/gotoworks/:id",
+      "handler": "gotoworks.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/gotoworks/:id",
+      "handler": "gotoworks.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

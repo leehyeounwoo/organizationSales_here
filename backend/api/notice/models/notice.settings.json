@@ -17,8 +17,8 @@
       "type": "boolean"
     },
     "businesses": {
-      "collection": "business",
-      "via": "notice"
+      "via": "notice",
+      "collection": "business"
     },
     "fixYn": {
       "type": "boolean"

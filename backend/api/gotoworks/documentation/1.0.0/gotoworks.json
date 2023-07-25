@@ -1,18 +1,18 @@
 {
   "paths": {
-    "/notices": {
+    "/gotoworks": {
       "get": {
         "deprecated": false,
-        "description": "",
+        "description": "Find all the gotoworks's records",
         "responses": {
           "200": {
-            "description": "response",
+            "description": "Retrieve gotoworks document(s)",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Notice"
+                    "$ref": "#/components/schemas/Gotoworks"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Notice"
+          "Gotoworks"
         ],
         "parameters": [
           {
@@ -194,14 +194,14 @@
       },
       "post": {
         "deprecated": false,
-        "description": "Create a new record",
+        "description": "Create a new gotoworks record",
         "responses": {
           "200": {
-            "description": "response",
+            "description": "Retrieve gotoworks document(s)",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Notice"
+                  "$ref": "#/components/schemas/Gotoworks"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Notice"
+          "Gotoworks"
         ],
         "requestBody": {
           "description": "",
@@ -247,20 +247,20 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewNotice"
+                "$ref": "#/components/schemas/NewGotoworks"
               }
             }
           }
         }
       }
     },
-    "/notices/count": {
+    "/gotoworks/count": {
       "get": {
         "deprecated": false,
-        "description": "",
+        "description": "Retrieve the numver of gotoworks documents",
         "responses": {
           "200": {
-            "description": "response",
+            "description": "Retrieve gotoworks document(s)",
             "content": {
               "application/json": {
                 "schema": {
@@ -306,22 +306,22 @@
         },
         "summary": "",
         "tags": [
-          "Notice"
+          "Gotoworks"
         ],
         "parameters": []
       }
     },
-    "/notices/{id}": {
+    "/gotoworks/{id}": {
       "get": {
         "deprecated": false,
-        "description": "",
+        "description": "Find one gotoworks record",
         "responses": {
           "200": {
-            "description": "response",
+            "description": "Retrieve gotoworks document(s)",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Notice"
+                  "$ref": "#/components/schemas/Gotoworks"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Notice"
+          "Gotoworks"
         ],
         "parameters": [
           {
@@ -376,14 +376,14 @@
       },
       "put": {
         "deprecated": false,
-        "description": "Update a record",
+        "description": "Update a single gotoworks record",
         "responses": {
           "200": {
-            "description": "response",
+            "description": "Retrieve gotoworks document(s)",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Notice"
+                  "$ref": "#/components/schemas/Gotoworks"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Notice"
+          "Gotoworks"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewNotice"
+                "$ref": "#/components/schemas/NewGotoworks"
               }
             }
           }
@@ -449,10 +449,10 @@
       },
       "delete": {
         "deprecated": false,
-        "description": "Delete a record",
+        "description": "Delete a single gotoworks record",
         "responses": {
           "200": {
-            "description": "deletes a single record based on the ID supplied",
+            "description": "deletes a single gotoworks based on the ID supplied",
             "content": {
               "application/json": {
                 "schema": {
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Notice"
+          "Gotoworks"
         ],
         "parameters": [
           {
@@ -514,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Notice": {
+      "Gotoworks": {
         "required": [
           "id"
         ],
@@ -522,143 +522,194 @@
           "id": {
             "type": "string"
           },
-          "title": {
+          "startWork": {
+            "type": "datetime"
+          },
+          "endWork": {
+            "type": "datetime"
+          },
+          "date": {
             "type": "string"
           },
-          "useYn": {
-            "type": "boolean"
+          "status": {
+            "type": "string",
+            "enum": [
+              "startWork",
+              "endWork",
+              "vacation",
+              "morningVacation",
+              "afternoonVacation",
+              "none",
+              "etc"
+            ]
           },
-          "businesses": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "phoneNumber": {
-                  "type": "string"
-                },
-                "workingHoursStart": {
-                  "type": "time"
-                },
-                "workingHoursEnd": {
-                  "type": "time"
-                },
-                "manager": {
-                  "type": "string"
-                },
-                "managerPhoneNumber": {
-                  "type": "string"
-                },
-                "workCheckURL": {
-                  "type": "string"
-                },
-                "splitHoldingTime": {
-                  "type": "string"
-                },
-                "maximumHoldingTime": {
-                  "type": "string"
-                },
-                "notice": {
-                  "type": "string"
-                },
-                "gotoworks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
+          "vacation": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vacationDate": {
+                "type": "string"
+              },
+              "adminName": {
+                "type": "string"
+              },
+              "adminId": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string"
+              },
+              "viewStatus": {
+                "type": "boolean"
+              },
+              "gotowork": {
+                "type": "string"
+              },
+              "user": {
+                "type": "string"
+              },
+              "published_at": {
+                "type": "datetime"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
               }
             }
           },
-          "fixYn": {
-            "type": "boolean"
-          },
-          "detail": {
-            "type": "string"
-          },
-          "fileUpload": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id",
-                "name",
-                "hash",
-                "mime",
-                "size",
-                "url",
-                "provider"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "alternativeText": {
-                  "type": "string"
-                },
-                "caption": {
-                  "type": "string"
-                },
-                "width": {
-                  "type": "integer"
-                },
-                "height": {
-                  "type": "integer"
-                },
-                "formats": {
-                  "type": "object"
-                },
-                "hash": {
-                  "type": "string"
-                },
-                "ext": {
-                  "type": "string"
-                },
-                "mime": {
-                  "type": "string"
-                },
-                "size": {
-                  "type": "number"
-                },
-                "url": {
-                  "type": "string"
-                },
-                "previewUrl": {
-                  "type": "string"
-                },
-                "provider": {
-                  "type": "string"
-                },
-                "provider_metadata": {
-                  "type": "object"
-                },
-                "related": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
+          "user": {
+            "required": [
+              "id",
+              "username",
+              "email"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "resetPasswordToken": {
+                "type": "string"
+              },
+              "confirmed": {
+                "type": "boolean"
+              },
+              "blocked": {
+                "type": "boolean"
+              },
+              "role": {
+                "type": "string"
+              },
+              "salesPhoneNumber": {
+                "type": "string"
+              },
+              "bank": {
+                "type": "string"
+              },
+              "accountNumber": {
+                "type": "string"
+              },
+              "fileUpload": {
+                "type": "array",
+                "items": {
                   "type": "string"
                 }
+              },
+              "businessRegistration": {
+                "type": "string"
+              },
+              "businessNumber": {
+                "type": "string"
+              },
+              "gotoworks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "vacations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "business": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": "string"
+              },
+              "workingHoursStart": {
+                "type": "time"
+              },
+              "workingHoursEnd": {
+                "type": "time"
+              },
+              "manager": {
+                "type": "string"
+              },
+              "managerPhoneNumber": {
+                "type": "string"
+              },
+              "workCheckURL": {
+                "type": "string"
+              },
+              "splitHoldingTime": {
+                "type": "string"
+              },
+              "maximumHoldingTime": {
+                "type": "string"
+              },
+              "notice": {
+                "type": "string"
+              },
+              "gotoworks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published_at": {
+                "type": "datetime"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
               }
             }
           },
@@ -667,24 +718,36 @@
           }
         }
       },
-      "NewNotice": {
+      "NewGotoworks": {
         "properties": {
-          "title": {
+          "startWork": {
+            "type": "datetime"
+          },
+          "endWork": {
+            "type": "datetime"
+          },
+          "date": {
             "type": "string"
           },
-          "useYn": {
-            "type": "boolean"
+          "status": {
+            "type": "string",
+            "enum": [
+              "startWork",
+              "endWork",
+              "vacation",
+              "morningVacation",
+              "afternoonVacation",
+              "none",
+              "etc"
+            ]
           },
-          "businesses": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "vacation": {
+            "type": "string"
           },
-          "fixYn": {
-            "type": "boolean"
+          "user": {
+            "type": "string"
           },
-          "detail": {
+          "business": {
             "type": "string"
           },
           "published_at": {
@@ -702,7 +765,7 @@
   },
   "tags": [
     {
-      "name": "Notice"
+      "name": "Gotoworks"
     }
   ]
 }

@@ -558,6 +558,39 @@
                 "role": {
                   "type": "string"
                 },
+                "salesPhoneNumber": {
+                  "type": "string"
+                },
+                "bank": {
+                  "type": "string"
+                },
+                "accountNumber": {
+                  "type": "string"
+                },
+                "fileUpload": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "businessRegistration": {
+                  "type": "string"
+                },
+                "businessNumber": {
+                  "type": "string"
+                },
+                "gotoworks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "vacations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
                 "created_by": {
                   "type": "string"
                 },

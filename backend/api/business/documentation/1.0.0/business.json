@@ -592,6 +592,49 @@
               }
             }
           },
+          "gotoworks": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "startWork": {
+                  "type": "datetime"
+                },
+                "endWork": {
+                  "type": "datetime"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "vacation": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "business": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -628,6 +671,12 @@
           },
           "notice": {
             "type": "string"
+          },
+          "gotoworks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "datetime"

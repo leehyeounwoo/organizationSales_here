@@ -1250,6 +1250,241 @@
                 "type": "string"
               }
             }
+          },
+          "salesPhoneNumber": {
+            "type": "string"
+          },
+          "bank": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "fileUpload": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id",
+                "name",
+                "hash",
+                "mime",
+                "size",
+                "url",
+                "provider"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "alternativeText": {
+                  "type": "string"
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                },
+                "formats": {
+                  "type": "object"
+                },
+                "hash": {
+                  "type": "string"
+                },
+                "ext": {
+                  "type": "string"
+                },
+                "mime": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "previewUrl": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "provider_metadata": {
+                  "type": "object"
+                },
+                "related": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "businessRegistration": {
+            "required": [
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "alternativeText": {
+                "type": "string"
+              },
+              "caption": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "formats": {
+                "type": "object"
+              },
+              "hash": {
+                "type": "string"
+              },
+              "ext": {
+                "type": "string"
+              },
+              "mime": {
+                "type": "string"
+              },
+              "size": {
+                "type": "number"
+              },
+              "url": {
+                "type": "string"
+              },
+              "previewUrl": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "provider_metadata": {
+                "type": "object"
+              },
+              "related": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "businessNumber": {
+            "type": "string"
+          },
+          "gotoworks": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "startWork": {
+                  "type": "datetime"
+                },
+                "endWork": {
+                  "type": "datetime"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "vacation": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "business": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "vacations": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "vacationDate": {
+                  "type": "string"
+                },
+                "adminName": {
+                  "type": "string"
+                },
+                "adminId": {
+                  "type": "string"
+                },
+                "comment": {
+                  "type": "string"
+                },
+                "viewStatus": {
+                  "type": "boolean"
+                },
+                "gotowork": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -1287,6 +1522,30 @@
           },
           "role": {
             "type": "string"
+          },
+          "salesPhoneNumber": {
+            "type": "string"
+          },
+          "bank": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "businessNumber": {
+            "type": "string"
+          },
+          "gotoworks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vacations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_by": {
             "type": "string"

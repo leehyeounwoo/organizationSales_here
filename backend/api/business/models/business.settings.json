@@ -39,8 +39,12 @@
       "type": "string"
     },
     "notice": {
-      "via": "businesses",
-      "model": "notice"
+      "model": "notice",
+      "via": "businesses"
+    },
+    "gotoworks": {
+      "collection": "gotoworks",
+      "via": "business"
     }
   }
 }

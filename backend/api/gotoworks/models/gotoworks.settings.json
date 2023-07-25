@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "gotoworks",
+  "info": {
+    "name": "gotoworks"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "startWork": {
+      "type": "datetime"
+    },
+    "endWork": {
+      "type": "datetime"
+    },
+    "date": {
+      "type": "date"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "startWork",
+        "endWork",
+        "vacation",
+        "morningVacation",
+        "afternoonVacation",
+        "none",
+        "etc"
+      ]
+    },
+    "vacation": {
+      "via": "gotowork",
+      "model": "vacation"
+    },
+    "user": {
+      "via": "gotoworks",
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "business": {
+      "via": "gotoworks",
+      "model": "business"
+    }
+  }
+}

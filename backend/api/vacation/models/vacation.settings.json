@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vacations",
+  "info": {
+    "name": "vacation"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "vacationDate": {
+      "type": "date"
+    },
+    "adminName": {
+      "type": "richtext"
+    },
+    "adminId": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "string"
+    },
+    "viewStatus": {
+      "type": "boolean"
+    },
+    "gotowork": {
+      "model": "gotoworks",
+      "via": "vacation"
+    },
+    "user": {
+      "via": "vacations",
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}
