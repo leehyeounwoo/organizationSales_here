@@ -8,32 +8,6 @@ export const me = gql`
 			id
 			username
 			email
-			name
-			groupcode
-			role {
-				id
-				name
-			}
-			group {
-				id
-				groupcode
-				logo {
-					id
-					url
-					name
-				}
-			}
-			face {
-				id
-				url
-				name
-			}
-			visit
-			event
-			day
-			reserveday {
-				title
-			}
 		}
 	}
 `

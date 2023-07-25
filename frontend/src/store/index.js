@@ -2,15 +2,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import apollo from '../apollo/config'
 // import axios from 'axios'
-import {} from '../apollo/mutation'
+import { login } from '../apollo/mutation'
 import { me } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
 	state: {
 		leftNavDrawer: true,
+		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0 },
 	},
-	mutations: {},
+	mutations: {
+		meData(state, payload) {
+			state.meData = payload
+		},
+	},
 	actions: {
 		// sendMessage({ dispatch }, input) {
 		// 	return new Promise((resolve, reject) => {
@@ -66,20 +71,20 @@ export default new Vuex.Store({
 					})
 			})
 		},
-		// login({ commit }, input) {
-		// 	return new Promise((resolve, reject) => {
-		// 		apollo.clients['defaultClient']
-		// 			.mutate({ mutation: login, variables: input })
-		// 			.then(({ data }) => {
-		// 				sessionStorage.setItem(tokenName, data.login.jwt)
-		// 				commit('meData', data.login.user)
-		// 				resolve(data.login.user)
-		// 			})
-		// 			.catch(err => {
-		// 				reject(err)
-		// 			})
-		// 	})
-		// },
+		login({ commit }, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({ mutation: login, variables: input })
+					.then(({ data }) => {
+						sessionStorage.setItem(tokenName, data.login.jwt)
+						commit('meData', data.login.user)
+						resolve(data.login.user)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
 	},
 	modules: {},
 })

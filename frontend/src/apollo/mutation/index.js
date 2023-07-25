@@ -10,7 +10,6 @@ export const login = gql`
 				username
 				blocked
 				email
-				out
 			}
 		}
 	}

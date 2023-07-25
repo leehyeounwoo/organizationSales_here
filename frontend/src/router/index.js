@@ -7,21 +7,27 @@ import notFound from '../views/errorpage/NotFound.vue'
 import notAuth from '../views/errorpage/NotAuthenticated.vue'
 
 // 메인 화면
-import codeMachine from '../views/layout/codeMachine.vue'
-const mainBoard = () => import(/* webpackChunkName: "main" */ '../views/codeMachine/mainBoard.vue')
+const KIOSK = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/boardLayout/KIOSK.vue')
+const kioskLogin = () => import(/* webpackChunkName: "kioskLogin" */ '../views/admin/login/kioskLogin.vue')
+const dashBoard = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/dashboard.vue')
 
 const routes = [
 	{ path: '*', name: 'notfound', component: notFound },
 	{ path: '/block', name: 'block', component: notAuth },
 	{
 		path: '/',
-		name: 'Home',
-		component: codeMachine,
+		component: kioskLogin,
+		name: 'kioskLogin',
+	},
+	{
+		path: '/',
+		name: 'KIOSK',
+		component: KIOSK,
 		children: [
 			{
-				path: 'board',
-				component: mainBoard,
-				name: 'mainBoard',
+				path: '/',
+				name: 'dashBoard',
+				component: dashBoard,
 			},
 		],
 	},
