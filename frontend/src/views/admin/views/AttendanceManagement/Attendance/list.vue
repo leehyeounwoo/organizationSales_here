@@ -14,24 +14,13 @@
 					>
 					<v-btn class="search_btn_type2" color="#FFFFFF" elevation="0" @click="click_date_now">오늘</v-btn>
 				</v-flex>
-				<v-flex>
-					<div class="d-flex align-center date_picker2" style="width:115px">
-						<DatepickerDialog :picker="date_picker" @change="click_date_picker"></DatepickerDialog>
-					</div>
-				</v-flex>
 			</v-layout>
 			<v-layout align-center justify-end>
 				<v-flex class="search_select ml-3 mr-2 " style="max-width:200px !important; min-width:200px !important;">
 					<selectBox v-if="$store.state.meData.role.id === '4'" :sel="searchsel" :class="'searchSel'" style="font-size:12px"></selectBox>
 				</v-flex>
-				<v-flex class="search_select ml-3 mr-2 " style="max-width:200px !important;">
+				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
 					<selectBox :sel="searchsel1" :class="'searchSel'" style="font-size:12px"></selectBox>
-				</v-flex>
-				<v-flex class="search_select ml-3 mr-2 " style="max-width:200px !important;">
-					<selectBox :sel="searchsel2" :class="'searchSel'" style="font-size:12px"></selectBox>
-				</v-flex>
-				<v-flex class="search_select ml-3 mr-2 " style="max-width:200px !important;">
-					<selectBox :sel="searchsel3" :class="'searchSel'" style="font-size:12px"></selectBox>
 				</v-flex>
 				<v-flex style="max-width:200px;">
 					<txtField class="search_box_admin" v-model="search_project" :txtField="search"></txtField>
@@ -52,20 +41,45 @@
 					table.page ? table.page : 1
 				} `,
 			}"
+			@pagination="pagination($event)"
 		>
 		</v-data-table>
+		<v-btn small class="btn-style2" @click="clickExport()">
+			<img src="@/assets/images/excel-img2.png" />
+			엑셀 다운로드
+		</v-btn>
+		<download-excel
+			class="btn btn-default"
+			id="clientExcel"
+			:data="table.items"
+			style="display:none"
+			:fields="table.json_fields"
+			type="text/csv;charset=utf8"
+			worksheet="My Worksheet"
+			name="근태관리 엑셀리스트"
+		>
+		</download-excel>
+		<v-layout>
+			<v-btn @click="detailClick(item)">아아아</v-btn>
+			<v-btn @click="click_vacation_status()">연차아아아</v-btn>
+		</v-layout>
+
+		<detail :setdialog="newDialog2"></detail>
+		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
 	</div>
 </template>
 
 <script>
 import { selectBox, txtField } from '@/components/index.js'
-import { DatepickerDialog } from '@/components'
+import detail from './detail.vue'
+import vacationStatus from './vacationStatus.vue'
 
 export default {
 	components: {
 		selectBox,
 		txtField,
-		DatepickerDialog,
+		detail,
+		vacationStatus,
 	},
 
 	data() {
@@ -160,27 +174,9 @@ export default {
 				hideDetail: true,
 				items: [],
 				outlined: true,
-				placeholder: '부서선택',
+				placeholder: '팀선택',
 				returnObject: true,
 				itemText: 'title',
-			},
-			searchsel2: {
-				value: '',
-				errorMessage: '',
-				hideDetail: true,
-				items: [],
-				outlined: true,
-				placeholder: '직급선택',
-				returnObject: true,
-				itemText: 'title',
-			},
-			searchsel3: {
-				value: '이름',
-				errorMessage: '',
-				hideDetail: true,
-				items: ['이름', '휴대전화'],
-				outlined: true,
-				placeholder: '이름/휴대전화',
 			},
 			search: {
 				clearable: false,
@@ -222,6 +218,63 @@ export default {
 				text = '토'
 			}
 			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
+		},
+		click_date_before() {
+			let input = {
+				date: this.$moment(this.date)
+					.subtract(1, 'd')
+					.format('YYYY-MM-DD'),
+			}
+			if (this.$store.state.meData.role.id !== '4') {
+				input.business = this.$store.state.meData.business.id
+			}
+			this.usersView(input)
+
+			this.date = this.$moment(this.date).subtract(1, 'd')
+		},
+		click_date_next() {
+			let input = {
+				date: this.$moment(this.date)
+					.add(1, 'd')
+					.format('YYYY-MM-DD'),
+			}
+			if (this.$store.state.meData.role.id !== '4') {
+				input.business = this.$store.state.meData.business.id
+			}
+			this.usersView(input)
+			this.date = this.$moment(this.date).add(1, 'd')
+		},
+		click_date_now() {
+			let input = {
+				date: this.$moment().format('YYYY-MM-DD'),
+			}
+			if (this.$store.state.meData.role.id !== '4') {
+				input.business = this.$store.state.meData.business.id
+			}
+			this.usersView(input)
+			this.date = this.$moment()
+		},
+		click_date_picker() {
+			let input = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+			}
+			if (this.$store.state.meData.role.id !== '4') {
+				input.business = this.$store.state.meData.business.id
+			}
+			this.usersView(input)
+			this.date = this.$moment(this.date_picker.date)
+		},
+		detailClick() {
+			this.newDialog2.title = '근태정보'
+			this.newDialog2.dialog = true
+			this.newDialog2.edit = true
+			this.newDialog2.editData = '하하'
+		},
+		click_vacation_status() {
+			this.newDialog.title = '신청 연차 관리'
+			this.newDialog.dialog = true
+			this.newDialog.edit = true
+			this.newDialog.editData = 'dd'
 		},
 	},
 }
@@ -364,7 +417,7 @@ export default {
 					height: 53px;
 					border-top: 1px solid #7d7d7d !important;
 					border-bottom: 1px solid #7d7d7d !important;
-					background-color: #f5f5f5 !important;
+					background-color: #e9ecf4 !important;
 				}
 			}
 		}
@@ -386,7 +439,7 @@ export default {
 	}
 }
 .table_style_2 > .v-data-footer {
-	justify-content: center;
+	justify-content: end;
 	padding-right: 0px;
 	.v-data-footer__select {
 		margin-left: 0px;
@@ -486,5 +539,16 @@ export default {
 			}
 		}
 	}
+}
+.btn-style2 {
+	box-shadow: none;
+	background-color: #ffffff;
+	border: 1px solid #9a9c9b;
+	border-radius: 5px;
+	// margin-top: -3rem !important;
+	// margin-left: 92.5rem !important;
+	position: absolute;
+	bottom: 15px;
+	left: 0px;
 }
 </style>
