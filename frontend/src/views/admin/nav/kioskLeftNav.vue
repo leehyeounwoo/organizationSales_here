@@ -11,7 +11,7 @@
 				:class="index === 0 ? 'active' : 'listNav'"
 				justify-center
 				align-center
-				:style="list.click ? `background-color:${$store.state.PointColor2}; border-radius:1vh; color:white` : `border-radius:1vh;`"
+				:style="list.click ? `background-color:#3e7ccc; border-radius:1vh; color:white` : `border-radius:1vh;`"
 				@click.stop="listClick(list)"
 			>
 				<v-flex style="text-align:center;">
@@ -97,6 +97,7 @@ export default {
 				})
 		},
 		listClick(list) {
+			console.log(list)
 			this.$store.state.drawer = false
 			this.$router.push({ name: list.name }).catch(() => {})
 			this.$store.state.dashBoardList.forEach(element => {
