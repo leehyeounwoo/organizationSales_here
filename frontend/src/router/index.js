@@ -10,6 +10,8 @@ import notAuth from '../views/errorpage/NotAuthenticated.vue'
 const KIOSK = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/boardLayout/KIOSK.vue')
 const kioskLogin = () => import(/* webpackChunkName: "kioskLogin" */ '../views/admin/login/kioskLogin.vue')
 const dashBoard = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/dashboard.vue')
+const attendanceManagement = () =>
+	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/AttendanceManagement/attendanceManagement.vue')
 
 const routes = [
 	{ path: '*', name: 'notfound', component: notFound },
@@ -28,6 +30,11 @@ const routes = [
 				path: '/',
 				name: 'dashBoard',
 				component: dashBoard,
+			},
+			{
+				path: '/admin/attendanceManagement',
+				name: 'attendanceManagement',
+				component: attendanceManagement,
 			},
 		],
 	},

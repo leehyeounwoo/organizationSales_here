@@ -74,7 +74,7 @@ export default {
 						},
 						{
 							title: '근태 관리',
-							name: '',
+							name: 'attendanceManagement',
 							click: false,
 						},
 						{
@@ -95,6 +95,16 @@ export default {
 					// sessionStorage.removeItem('reserveLite-t')
 					this.$router.push('/').catch(() => {})
 				})
+		},
+		listClick(list) {
+			this.$store.state.drawer = false
+			this.$router.push({ name: list.name }).catch(() => {})
+			this.$store.state.dashBoardList.forEach(element => {
+				element.click = false
+			})
+			list.click = true
+
+			this.closeRight()
 		},
 	},
 }
