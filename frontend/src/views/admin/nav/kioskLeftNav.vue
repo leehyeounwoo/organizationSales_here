@@ -4,22 +4,7 @@
 			<v-icon @click="$store.state.drawer = false">mdi-close</v-icon>
 		</v-layout>
 		<v-layout class="logoLayout" style="">
-			<v-img
-				v-if="$store.state.logoUrl !== '' && $store.state.logoUrl"
-				@click="$router.push({ name: 'businessSiteManagement' }).catch(() => {}), ($store.state.drawer = false)"
-				:src="$store.state.logoUrl"
-				lazy-src="/image/reserve_lite logo.png"
-			></v-img>
-			<v-layout
-				v-else
-				justify-center
-				@click="$router.push({ name: 'businessSiteManagement' }).catch(() => {}), ($store.state.drawer = false)"
-				style="cursor:pointer;"
-			>
-				<v-layout justify-center>
-					<v-img contain max-width="115.6" max-height="30" src="../../../assets/images/reserve_lite logo.png"></v-img>
-				</v-layout>
-			</v-layout>
+			<span style="color:white">Members Here</span>
 		</v-layout>
 		<div v-for="(list, index) in $store.state.dashBoardList" :key="index">
 			<v-layout
@@ -33,7 +18,6 @@
 					<div>{{ list.title }}</div>
 				</v-flex>
 			</v-layout>
-			<v-divider v-if="index === 0" style="width:166px; padding-bottom:6px; margin:0 auto"></v-divider>
 		</div>
 	</div>
 </template>
@@ -72,30 +56,35 @@ export default {
 					this.$store.state.meData = res.me
 					this.$store.state.dashBoardList = [
 						{
-							title: '사업자 관리',
+							title: '사업지 관리',
 							name: 'dashBoard',
 							click: true,
 						},
 
 						{
-							title: '상품 관리',
-							name: 'visitReservationManagement',
+							title: '물건 배정',
+							name: '',
 							click: false,
 						},
 
 						{
 							title: '조직 관리',
-							name: 'customerManagement',
+							name: '',
 							click: false,
 						},
 						{
 							title: '근태 관리',
-							name: 'systemManagement',
+							name: '',
 							click: false,
 						},
 						{
 							title: '정산 관리',
-							name: 'systemManagement',
+							name: '',
+							click: false,
+						},
+						{
+							title: '알림톡 관리',
+							name: '',
 							click: false,
 						},
 					]
@@ -115,13 +104,13 @@ export default {
 .active {
 	cursor: pointer;
 	margin: 14px 14px 20px !important;
-	background: #ffae28;
+	background: #3e7ccc;
 	color: white;
 	width: 166px;
 	height: 40px;
 }
 .active:hover {
-	background-color: var(--point2-color);
+	background-color: #3e7ccc;
 	color: white;
 	border-radius: 1vh;
 	transition: 0.5s;
@@ -134,7 +123,7 @@ export default {
 	height: 40px;
 }
 .listNav:hover {
-	background-color: var(--point2-color);
+	background-color: #3e7ccc;
 	color: white;
 	border-radius: 1vh;
 	transition: 0.5s;
@@ -142,12 +131,12 @@ export default {
 </style>
 
 <style lang="scss">
-:root {
-	--point1-color: rgb(222, 222, 222);
-	--point2-color: #323153;
-	--point3-color: #ffae28;
-	--info-color: blue;
-}
+// :root {
+// 	--point1-color: rgb(222, 222, 222);
+// 	--point2-color: #323153;
+// 	--point3-color: #ffae28;
+// 	--info-color: blue;
+// }
 .leftNav_wrap {
 	width: 200px;
 }
