@@ -1,7 +1,7 @@
 <template>
-	<div>
-		<h1>dashboard</h1>
-	</div>
+	<v-layout>
+		<v-flex xs12>dashboard</v-flex>
+	</v-layout>
 </template>
 
 <script>
