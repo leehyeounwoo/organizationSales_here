@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import apollo from '../apollo/config'
-import axios from 'axios'
+// import axios from 'axios'
 import {} from '../apollo/mutation'
 import { me } from '../apollo/query'
 Vue.use(Vuex)
@@ -12,26 +12,26 @@ export default new Vuex.Store({
 	},
 	mutations: {},
 	actions: {
-		sendMessage({ dispatch }, input) {
-			return new Promise((resolve, reject) => {
-				dispatch('getToken').then(res => {
-					var formData = new FormData()
-					formData.append('token', res.data.token)
-					for (var key in input) {
-						formData.append(key, input[key])
-					}
-					let config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-					axios
-						.post('https://kakaoapi.aligo.in/akv10/alimtalk/send/', formData, config)
-						.then(data => {
-							resolve(data)
-						})
-						.catch(err => {
-							reject(err)
-						})
-				})
-			})
-		},
+		// sendMessage({ dispatch }, input) {
+		// 	return new Promise((resolve, reject) => {
+		// 		dispatch('getToken').then(res => {
+		// 			var formData = new FormData()
+		// 			formData.append('token', res.data.token)
+		// 			for (var key in input) {
+		// 				formData.append(key, input[key])
+		// 			}
+		// 			let config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+		// 			axios
+		// 				.post('https://kakaoapi.aligo.in/akv10/alimtalk/send/', formData, config)
+		// 				.then(data => {
+		// 					resolve(data)
+		// 				})
+		// 				.catch(err => {
+		// 					reject(err)
+		// 				})
+		// 		})
+		// 	})
+		// },
 		// eslint-disable-next-line no-empty-pattern
 		// createSendMessage({}, input) {
 		// 	return new Promise((resolve, reject) => {
