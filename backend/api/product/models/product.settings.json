@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "name": "product",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "housingType": {
+      "type": "string"
+    },
+    "dong": {
+      "type": "string"
+    },
+    "ho": {
+      "type": "string"
+    },
+    "contractStatus": {
+      "type": "boolean"
+    },
+    "assignments": {
+      "collection": "assignment",
+      "via": "product"
+    }
+  }
+}

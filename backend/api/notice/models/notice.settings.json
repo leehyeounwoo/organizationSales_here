@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notices",
+  "info": {
+    "name": "notice"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "useYn": {
+      "type": "boolean"
+    },
+    "businesses": {
+      "collection": "business",
+      "via": "notice"
+    },
+    "fixYn": {
+      "type": "boolean"
+    },
+    "detail": {
+      "type": "string"
+    },
+    "fileUpload": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    }
+  }
+}

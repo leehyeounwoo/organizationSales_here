@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "businesses",
+  "info": {
+    "name": "business",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "workingHoursStart": {
+      "type": "time"
+    },
+    "workingHoursEnd": {
+      "type": "time"
+    },
+    "manager": {
+      "type": "string"
+    },
+    "managerPhoneNumber": {
+      "type": "string"
+    },
+    "workCheckURL": {
+      "type": "string"
+    },
+    "splitHoldingTime": {
+      "type": "string"
+    },
+    "maximumHoldingTime": {
+      "type": "string"
+    },
+    "notice": {
+      "via": "businesses",
+      "model": "notice"
+    }
+  }
+}

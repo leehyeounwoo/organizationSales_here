@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_edit_logs",
+  "info": {
+    "name": "productEditLog"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "editDetail": {
+      "type": "string"
+    }
+  }
+}

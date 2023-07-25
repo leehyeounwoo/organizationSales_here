@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "assignments",
+  "info": {
+    "name": "assignment",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "assignmentTime": {
+      "type": "datetime"
+    },
+    "useYn": {
+      "type": "boolean"
+    },
+    "assignmentStatus": {
+      "type": "boolean"
+    },
+    "product": {
+      "via": "assignments",
+      "model": "product"
+    }
+  }
+}

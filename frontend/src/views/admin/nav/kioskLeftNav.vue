@@ -44,24 +44,68 @@ export default {
 		return {}
 	},
 
-	created() {},
-	methods: {
-		listClick(list) {
-			this.$store.state.drawer = false
-			if (list.title !== '방문예약 생성') {
-				this.$router.push({ name: list.name }).catch(() => {})
-				this.$store.state.dashBoardList.forEach(element => {
-					element.click = false
-				})
-				list.click = true
-			} else {
-				this.createDialog.dialog = true
+	async created() {
+		this.$store.state.loading = true
+		let ok = 0
+		const meDataWaitings = setInterval(async () => {
+			ok += 1
+
+			if (sessionStorage.getItem('reserveLite-t')) {
+				clearInterval(meDataWaitings)
+				await this.medata()
 			}
-			this.closeRight()
-		},
+			if (ok === 10) {
+				clearInterval(meDataWaitings)
+			}
+		}, 1000)
+	},
+	methods: {
 		closeRight() {
 			this.$store.state.bellStatus = false
 			this.$store.state.chatStatus = false
+		},
+		async medata() {
+			await this.$store
+				.dispatch('me')
+				.then(async res => {
+					console.log(res)
+					this.$store.state.meData = res.me
+					this.$store.state.dashBoardList = [
+						{
+							title: '사업자 관리',
+							name: 'dashBoard',
+							click: true,
+						},
+
+						{
+							title: '상품 관리',
+							name: 'visitReservationManagement',
+							click: false,
+						},
+
+						{
+							title: '조직 관리',
+							name: 'customerManagement',
+							click: false,
+						},
+						{
+							title: '근태 관리',
+							name: 'systemManagement',
+							click: false,
+						},
+						{
+							title: '정산 관리',
+							name: 'systemManagement',
+							click: false,
+						},
+					]
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+					// sessionStorage.removeItem('reserveLite-t')
+					this.$router.push('/').catch(() => {})
+				})
 		},
 	},
 }
