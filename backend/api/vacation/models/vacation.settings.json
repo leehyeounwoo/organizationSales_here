@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "vacations",
   "info": {
-    "name": "vacation"
+    "name": "vacation",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -30,9 +31,12 @@
       "via": "vacation"
     },
     "user": {
-      "via": "vacations",
       "plugin": "users-permissions",
-      "model": "user"
+      "model": "user",
+      "via": "vacations"
+    },
+    "status": {
+      "type": "string"
     }
   }
 }

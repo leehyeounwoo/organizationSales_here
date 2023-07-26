@@ -572,6 +572,9 @@
               "user": {
                 "type": "string"
               },
+              "status": {
+                "type": "string"
+              },
               "published_at": {
                 "type": "datetime"
               },

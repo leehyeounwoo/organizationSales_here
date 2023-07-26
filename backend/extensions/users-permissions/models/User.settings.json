@@ -93,8 +93,8 @@
       "via": "user"
     },
     "vacations": {
-      "collection": "vacation",
-      "via": "user"
+      "via": "user",
+      "collection": "vacation"
     },
     "phoneNumber": {
       "type": "string"
