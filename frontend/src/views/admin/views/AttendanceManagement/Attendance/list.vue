@@ -30,7 +30,7 @@
 		<v-data-table
 			:headers="table.headers"
 			:items="table.items"
-			item-key="userId"
+			item-key="id"
 			class="elevation-0 table_style_2 mt-2"
 			:footer-props="{
 				['items-per-page-text']: `• Total : ${table.total ? table.total : table.items.length}`,
@@ -771,11 +771,25 @@ export default {
 			this.newDialog2.edit = true
 			this.newDialog2.editData = item
 		},
-		click_vacation_status() {
+		click_vacation_status(item) {
 			this.newDialog.title = '신청 연차 관리'
 			this.newDialog.dialog = true
 			this.newDialog.edit = true
-			this.newDialog.editData = 'dd'
+			this.newDialog.editData = item
+		},
+		vacation_filter(val) {
+			console.log(val)
+			if (val) {
+				if (val === 'agree') {
+					return '승인'
+				} else if (val === 'disagree') {
+					return '미승인'
+				} else if (val === 'waiting') {
+					return '처리전'
+				} else {
+					return '-'
+				}
+			}
 		},
 	},
 }

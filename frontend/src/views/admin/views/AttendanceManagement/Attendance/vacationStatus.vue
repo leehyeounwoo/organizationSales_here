@@ -179,14 +179,27 @@ export default {
 				},
 				{
 					value: '',
-					title: '이메일',
+					title: '영업번호',
 					txtfield: {
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 						autocomplete: 'off',
-						placeholder: '예) email@email.com',
+						placeholder: '예) 010-1234-5678',
+						readonly: true,
+					},
+					required: false,
+				},
+				{
+					value: '',
+					title: '사업자 정보',
+					txtfield: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						autocomplete: 'off',
 						readonly: true,
 					},
 					required: false,
@@ -206,7 +219,7 @@ export default {
 					required: false,
 				},
 				{
-					title: '지점',
+					title: '팀',
 					value: '',
 					txtfield: {
 						maxlength: '255',
@@ -218,34 +231,6 @@ export default {
 						readonly: true,
 					},
 
-					required: true,
-				},
-				{
-					title: '부서',
-					value: '',
-					txtfield: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						autocomplete: 'off',
-						placeholder: '',
-						readonly: true,
-					},
-					required: true,
-				},
-				{
-					title: '직급',
-					value: '',
-					txtfield: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						autocomplete: 'off',
-						placeholder: '',
-						readonly: true,
-					},
 					required: true,
 				},
 				{
@@ -407,13 +392,14 @@ export default {
 					if (this.setdialog.edit) {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
-						this.leftInfoTop[2].value = this.setdialog.editData.all.email
-						this.leftInfoTop[3].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
-						this.leftInfoTop[4].value = this.setdialog.editData.position
+						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
+						this.leftInfoTop[3].value = this.setdialog.editData.title ? this.setdialog.editData.title : '-'
+						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
 						this.leftInfoTop[5].value = this.setdialog.editData.team
-						this.leftInfoTop[6].value = this.setdialog.editData.rank
-						this.leftInfoTop[7].value = this.$moment().diff(this.$moment(this.setdialog.editData.all.startDate), 'day') + '일'
-						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format('YYYY-MM-DD')
+						this.leftInfoTop[6].value = this.$moment().diff(this.$moment(this.setdialog.editData.created_at), 'day') + '일'
+						this.leftInfoTop[7].value = this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format(
+							'YYYY-MM-DD',
+						)
 						this.rightInfoTop[1].value =
 							this.setdialog.editData.vacationData.type === 'vacation'
 								? '휴가'

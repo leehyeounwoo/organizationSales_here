@@ -645,7 +645,7 @@ export const reserveusers = gql`
 `
 // admin
 export const users = gql`
-	query users {
+	query users($date: Date, $status: String) {
 		usersConnection {
 			aggregate {
 				count
@@ -667,7 +667,7 @@ export const users = gql`
 			phoneNumber
 			bank
 			accountNumber
-			gotoworks {
+			gotoworks(where: { date: $date, status: $status }) {
 				id
 				status
 				startWork
@@ -677,6 +677,10 @@ export const users = gql`
 				}
 			}
 			vacations {
+				id
+				status
+				created_at
+				vacationDate
 				viewStatus
 			}
 		}
