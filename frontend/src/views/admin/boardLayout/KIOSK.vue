@@ -65,6 +65,7 @@ export default {
 			await this.$store
 				.dispatch('me')
 				.then(async res => {
+					this.$store.state.loading = false
 					this.$store.state.meData = res.me
 					this.$store.state.dashBoardList = [
 						{
