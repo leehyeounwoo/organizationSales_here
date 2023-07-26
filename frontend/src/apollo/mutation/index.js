@@ -2046,3 +2046,52 @@ export const updateEvent = gql`
 		}
 	}
 `
+export const createGotowork = gql`
+	mutation createGotowork(
+		$date: Date
+		$user: ID!
+		$startWork: DateTime
+		$endWork: DateTime
+		$status: ENUM_GOTOWORKS_STATUS
+		$business: ID
+		$vacation: ID
+	) {
+		createGotowork(
+			input: {
+				data: {
+					date: $date
+					user: $user
+					startWork: $startWork
+					endWork: $endWork
+					status: $status
+					business: $business
+					vacation: $vacation
+				}
+			}
+		) {
+			gotowork {
+				id
+			}
+		}
+	}
+`
+export const updateGotowork = gql`
+	mutation updateGotowork($id: ID!, $date: Date, $user: ID!, $startWork: DateTime, $endWork: DateTime, $status: ENUM_GOTOWORKS_STATUS) {
+		updateGotowork(
+			input: { where: { id: $id }, data: { date: $date, user: $user, startWork: $startWork, endWork: $endWork, status: $status } }
+		) {
+			gotowork {
+				id
+			}
+		}
+	}
+`
+export const deleteGotowork = gql`
+	mutation deleteGotowork($id: ID!) {
+		deleteGotowork(input: { where: { id: $id } }) {
+			gotowork {
+				id
+			}
+		}
+	}
+`

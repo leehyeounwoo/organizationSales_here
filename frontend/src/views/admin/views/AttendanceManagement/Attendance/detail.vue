@@ -211,28 +211,27 @@ export default {
 				},
 				{
 					value: '',
-					title: '이메일',
+					title: '영업번호',
 					txtfield: {
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 						autocomplete: 'off',
-						placeholder: '예) email@email.com',
+						placeholder: '예) 010-1234-5678',
 						readonly: true,
 					},
 					required: false,
 				},
 				{
 					value: '',
-					title: '입사일',
+					title: '사업자 정보',
 					txtfield: {
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 						autocomplete: 'off',
-						placeholder: '예) 2023-01-01',
 						readonly: true,
 					},
 					required: false,
@@ -252,7 +251,7 @@ export default {
 					required: false,
 				},
 				{
-					title: '지점',
+					title: '팀',
 					value: '',
 					txtfield: {
 						maxlength: '255',
@@ -260,14 +259,14 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						autocomplete: 'off',
-						placeholder: '',
+						placeholder: '1팀 / 상담사',
 						readonly: true,
 					},
 
 					required: true,
 				},
 				{
-					title: '부서',
+					title: '전체 근무일',
 					value: '',
 					txtfield: {
 						maxlength: '255',
@@ -281,7 +280,7 @@ export default {
 					required: true,
 				},
 				{
-					title: '직급',
+					title: '전체 휴무일',
 					value: '',
 					txtfield: {
 						maxlength: '255',
@@ -523,10 +522,10 @@ export default {
 					if (this.setdialog.edit) {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
-						this.leftInfoTop[2].value = this.setdialog.editData.all.email
+						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
 						this.leftInfoTop[3].value = this.setdialog.editData.all.startDate
-						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
-						this.leftInfoTop[5].value = this.setdialog.editData.position
+						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
+						this.leftInfoTop[5].value = this.setdialog.editData.team ? this.setdialog.editData.team : '-'
 						this.leftInfoTop[6].value = this.setdialog.editData.team
 						this.leftInfoTop[7].value = this.setdialog.editData.rank
 

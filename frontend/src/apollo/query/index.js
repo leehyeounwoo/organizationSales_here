@@ -644,40 +644,39 @@ export const reserveusers = gql`
 	}
 `
 // admin
-export const Users = gql`
-	query user($email: String) {
-		users(where: { email: $email }) {
+export const users = gql`
+	query users {
+		usersConnection {
+			aggregate {
+				count
+			}
+		}
+		users {
 			id
+			created_at
+			updated_at
 			username
 			email
-			provider
-			confirmed
 			blocked
-			groupcode
 			role {
 				id
 				name
+				description
 			}
-			group {
+			salesPhoneNumber
+			phoneNumber
+			bank
+			accountNumber
+			gotoworks {
 				id
-				groupcode
-				input_boxes {
-					id
-					name
-					groupcode
-					status
+				startWork
+				endWork
+				business {
+					phoneNumber
 				}
 			}
-			out
-			language
-			marketing
-			phone
-			marketingDate
-			updated_at
-			face {
-				id
-				url
-				name
+			vacations {
+				viewStatus
 			}
 		}
 	}

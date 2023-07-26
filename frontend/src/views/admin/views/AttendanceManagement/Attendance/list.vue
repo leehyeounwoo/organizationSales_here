@@ -16,9 +16,6 @@
 				</v-flex>
 			</v-layout>
 			<v-layout align-center justify-end>
-				<v-flex class="search_select ml-3 mr-2 " style="max-width:200px !important; min-width:200px !important;">
-					<selectBox v-if="$store.state.meData.role.id === '4'" :sel="searchsel" :class="'searchSel'" style="font-size:12px"></selectBox>
-				</v-flex>
 				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
 					<selectBox :sel="searchsel1" :class="'searchSel'" style="font-size:12px"></selectBox>
 				</v-flex>
@@ -43,6 +40,62 @@
 			}"
 			@pagination="pagination($event)"
 		>
+			<template v-slot:[`item.data3`]="{ item }">
+				<v-layout align-center justify-center>
+					{{ item.data3 }}
+					<v-icon v-if="item.data3 !== '-'" small class="ml-1" @click="gotoWorkDialogOpen(item)">mdi-pencil-circle</v-icon>
+				</v-layout>
+			</template>
+			<template v-slot:[`item.data4`]="{ item }">
+				<v-layout align-center justify-center>
+					{{ item.data4 }}
+					<v-icon v-if="item.data4 !== '-'" small class="ml-1" @click="leaveWorkDialogOpen(item)">mdi-pencil-circle</v-icon>
+				</v-layout>
+			</template>
+
+			<template v-slot:[`item.data5`]="{ item }">
+				<div>
+					{{ item.data5 }}
+				</div>
+			</template>
+			<template v-slot:[`item.data6`]="{ item }">
+				<v-layout justify-center align-center>
+					<v-switch
+						class="switch_style"
+						color="primary"
+						:disabled="item.data7"
+						value
+						:input-value="item.data6"
+						@click="goToWorkStatus(item)"
+					></v-switch>
+				</v-layout>
+			</template>
+			<template v-slot:[`item.data7`]="{ item }">
+				<v-layout justify-center align-center>
+					<v-switch
+						class="switch_style"
+						style="margin-top:0px;"
+						color="primary"
+						:disabled="!item.data6 || item.data5.includes('휴가') || item.data5.includes('반차')"
+						value
+						:input-value="item.data7"
+						@click="leaveWorkStatus(item)"
+					></v-switch>
+				</v-layout>
+			</template>
+			<template v-slot:[`item.vacation`]="{ item }">
+				<div v-if="item.vacation === '-'">
+					-
+				</div>
+				<div v-else style="cursor:pointer; text-decoration: underline;" @click="click_vacation_status(item)">
+					{{ vacation_filter(item.vacation) }}
+				</div>
+			</template>
+			<template v-slot:[`item.etc`]="{ item }">
+				<v-layout class="dt-align-set ml-0" justify-center>
+					<v-btn class="detail_etc_btn2" small @click="detailClick(item)" color="#9A9C9B" depressed>자세히 보기</v-btn>
+				</v-layout>
+			</template>
 		</v-data-table>
 		<v-btn small class="btn-style2" @click="clickExport()">
 			<img src="@/assets/images/excel-img2.png" />
@@ -59,10 +112,6 @@
 			name="근태관리 엑셀리스트"
 		>
 		</download-excel>
-		<v-layout>
-			<v-btn @click="detailClick(item)">아아아</v-btn>
-			<v-btn @click="click_vacation_status()">연차아아아</v-btn>
-		</v-layout>
 
 		<detail :setdialog="newDialog2"></detail>
 		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
@@ -127,9 +176,9 @@ export default {
 				headers: [
 					{ text: '직원명', value: 'data1', align: 'center', width: '7%' },
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
-					{ text: '영업번호', value: 'position', align: 'center', width: '10%' },
-					{ text: '등록일', value: 'team', align: 'center', width: '7%' },
-					{ text: '팀', value: 'rank', align: 'center', width: '7%' },
+					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '10%' },
+					{ text: '등록일', value: 'created_at', align: 'center', width: '7%' },
+					{ text: '팀', value: 'team', align: 'center', width: '7%' },
 					{ text: '상태', value: 'data5', align: 'center', width: '7%' },
 					{ text: '출근시간', value: 'data3', align: 'center', width: '10%' },
 					{ text: '퇴근시간', value: 'data4', align: 'center', width: '10%' },
@@ -195,10 +244,163 @@ export default {
 		}
 	},
 
-	async created() {},
+	async created() {
+		this.$store.state.loading = true
+		await this.me()
+		let input = {
+			start: 0,
+			limit: 10,
+			date: this.$moment().format('YYYY-MM-DD'),
+		}
+		await this.viewUsers(input)
+		this.$store.state.loading = false
+	},
 	mounted() {},
 
 	methods: {
+		async me() {
+			await this.$store.dispatch('me').then(res => {
+				this.$store.state.meData = res.data
+				console.log(this.$store.state.meData)
+			})
+		},
+		async viewUsers(input) {
+			await this.$store
+				.dispatch('users', input)
+				.then(res => {
+					let list = []
+					let workCount = 0
+					let endWorkCount = 0
+					let holiDayCount = 0
+					console.log(res)
+					res.users.forEach(element => {
+						let listData = {}
+						listData.all = element
+						listData.id = element.id
+						listData.data1 = element.username
+						listData.data2 = element.phoneNumber ? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) : ''
+						listData.salesPhoneNumber = element.salesPhoneNumber
+							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
+							: ''
+						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
+						listData.team = element.team ? element.title : '-'
+						listData.team = element.team?.title
+						listData.rank = element.rank?.title
+						listData.history = element.history ? element.history : []
+
+						if (element.gotoworks.length > 0) {
+							listData.data3 =
+								element.gotoworks[0].startWork !== null ? this.$moment(element.gotoworks[0].startWork).format('YYYY-MM-DD HH:mm:ss') : '-'
+							listData.data4 =
+								element.gotoworks[0].endWork !== null ? this.$moment(element.gotoworks[0].endWork).format('YYYY-MM-DD HH:mm:ss') : '-'
+							listData.data5 =
+								element.gotoworks[0].status === 'endWork'
+									? '퇴근'
+									: element.gotoworks[0].status === 'afternoonVacation'
+									? '오후반차'
+									: element.gotoworks[0].status === 'morningVacation'
+									? '오전반차'
+									: element.gotoworks[0].status === 'vacation'
+									? '휴가'
+									: '출근'
+							if (element.gotoworks[0].status === 'vacation') {
+								listData.data6 = true
+								listData.data7 = true
+								listData.data8 = '-'
+							} else {
+								listData.data6 = element.gotoworks[0].startWork ? true : false
+								listData.data7 = element.gotoworks[0].endWork ? true : false
+							}
+
+							if (element.gotoworks[0].startWork && element.gotoworks[0].endWork) {
+								listData.data8 = this.timeCheck(element.gotoworks[0].startWork, element.gotoworks[0].endWork)
+							}
+							if (element.gotoworks[0].status === 'startWork') {
+								workCount = workCount + 1
+							}
+							if (element.gotoworks[0].status === 'endWork') {
+								endWorkCount = endWorkCount + 1
+							}
+							if (
+								element.gotoworks[0].status === 'afternoonVacation' ||
+								element.gotoworks[0].status === 'morningVacation' ||
+								element.gotoworks[0].status === 'vacation'
+							) {
+								holiDayCount = holiDayCount + 1
+							}
+						} else {
+							listData.data3 = '-'
+							listData.data4 = '-'
+							listData.data5 = '미확인'
+							listData.data8 = '-'
+						}
+						element.vacations.reverse()
+						let vactionIndex = element.vacations.findIndex(el => el.vacationDate === this.$moment(this.date).format('YYYY-MM-DD'))
+						if (vactionIndex !== -1) {
+							listData.vacationData = element.vacations[vactionIndex]
+							listData.vacation = element.vacations[vactionIndex].status
+						} else {
+							listData.vacation = '-'
+						}
+
+						list.push(listData)
+						this.table.total = res.usersConnection.aggregate.count
+						this.table.page = input.page
+					})
+					this.allCounselor = list.length
+					this.work = workCount
+					this.endWork = endWorkCount
+					this.holiDay = holiDayCount
+					if (this.status_Keyword.value === '전체') {
+						this.table.items = list
+						this.$store.state.loading = false
+					} else {
+						let arrayData = []
+						arrayData = list.filter(x => x.data5 === this.status_Keyword.value)
+						this.table.items = arrayData
+						this.$store.state.loading = false
+					}
+				})
+				.catch(err => {
+					console.log({ err })
+				})
+		},
+		async pagination(item) {
+			if (item.page > this.table.page) {
+				// 다음 페이지
+				let range = {
+					start: (item.page - 1) * item.itemsPerPage,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					page: item.page,
+					date: this.$moment(this.date).format('YYYY-MM-DD'),
+				}
+
+				await this.viewUsers(range)
+			} else if (item.itemsPerPage !== this.table.itemsPerPage) {
+				// 한페이지에 보여줄 아이템 개수 변경
+				let range = {
+					start: 0,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					page: 1,
+					date: this.$moment(this.date).format('YYYY-MM-DD'),
+				}
+
+				await this.viewUsers(range)
+			} else if (item.page < this.table.page) {
+				// 이전 페이지
+				let range = {
+					start: (item.page - 1) * item.itemsPerPage,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					page: item.page,
+					date: this.$moment(this.date).format('YYYY-MM-DD'),
+				}
+
+				await this.viewUsers(range)
+			}
+		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
 			let text
@@ -228,7 +430,7 @@ export default {
 			if (this.$store.state.meData.role.id !== '4') {
 				input.business = this.$store.state.meData.business.id
 			}
-			this.usersView(input)
+			this.viewUsers(input)
 
 			this.date = this.$moment(this.date).subtract(1, 'd')
 		},
@@ -241,7 +443,7 @@ export default {
 			if (this.$store.state.meData.role.id !== '4') {
 				input.business = this.$store.state.meData.business.id
 			}
-			this.usersView(input)
+			this.viewUsers(input)
 			this.date = this.$moment(this.date).add(1, 'd')
 		},
 		click_date_now() {
@@ -251,7 +453,7 @@ export default {
 			if (this.$store.state.meData.role.id !== '4') {
 				input.business = this.$store.state.meData.business.id
 			}
-			this.usersView(input)
+			this.viewUsers(input)
 			this.date = this.$moment()
 		},
 		click_date_picker() {
@@ -261,14 +463,129 @@ export default {
 			if (this.$store.state.meData.role.id !== '4') {
 				input.business = this.$store.state.meData.business.id
 			}
-			this.usersView(input)
+			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
-		detailClick() {
+
+		goToWorkStatus(status) {
+			console.log(status)
+			if (status.data6) {
+				const data = {
+					id: status.id,
+				}
+				this.deleteGotoworkAction(data)
+			} else {
+				const data = {
+					date: this.$moment(this.date).format('YYYY-MM-DD'),
+					user: status.id,
+					business: this.searchsel.value.id,
+					status: 'startWork',
+				}
+				if (this.$moment().format('YYYY-MM-DD') === this.date) {
+					data.startWork = this.$moment()
+				} else {
+					data.startWork = this.$moment(this.date)
+				}
+
+				this.createGotoworkAction(data)
+			}
+		},
+		leaveWorkStatus(status) {
+			console.log(status.all.gotoworks[0].id)
+			console.log(status)
+			if (status.data7) {
+				const data = {
+					id: status.all.gotoworks[0].id,
+					user: status.id,
+					endWork: null,
+					status: 'startWork',
+				}
+				this.updateGotoworkAction(data)
+			} else {
+				if (this.$moment(this.date).format('YYYY-MM-DD') === this.$moment(this.$moment().format('YYYY-MM-DD')).format('YYYY-MM-DD')) {
+					const data = {
+						id: status.all.gotoworks[0].id,
+						user: status.id,
+
+						endWork: this.$moment(),
+						status: 'endWork',
+					}
+					this.updateGotoworkAction(data)
+				} else {
+					const data = {
+						id: status.all.gotoworks[0].id,
+						user: status.id,
+						endWork: this.$moment(this.date),
+						status: 'endWork',
+					}
+					this.updateGotoworkAction(data)
+				}
+			}
+		},
+		createGotoworkAction(data) {
+			console.log(data)
+			this.$store
+				.dispatch('createGotowork', data)
+				.then(() => {
+					let input = {
+						date: this.$moment(this.date).format('YYYY-MM-DD'),
+					}
+					this.viewUsers(input)
+				})
+				.catch(err => {
+					console.log({ err })
+				})
+		},
+		updateGotoworkAction(data) {
+			this.$store
+				.dispatch('updateGotowork', data)
+				.then(() => {
+					let input = {
+						date: this.$moment(this.date).format('YYYY-MM-DD'),
+					}
+					this.viewUsers(input)
+				})
+				.catch(err => {
+					console.log({ err })
+				})
+		},
+		deleteGotoworkAction(data) {
+			this.$store
+				.dispatch('deleteGotowork', data)
+				.then(() => {
+					let input = {
+						date: this.$moment(this.date).format('YYYY-MM-DD'),
+					}
+					this.viewUsers(input)
+				})
+				.catch(err => {
+					console.log({ err })
+				})
+		},
+		timeCheck(start, end) {
+			const moment = require('moment')
+			let timeData = ''
+			let hour = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() / 60)
+			let minute = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() % 60)
+			if (minute === 0) {
+				timeData = hour + '시간'
+			} else {
+				timeData = hour + '시간' + minute + '분'
+			}
+			return timeData
+		},
+		async SearchBiz() {
+			let data = { date: this.$moment(this.date).format('YYYY-MM-DD') }
+			if (this.$store.state.meData.role.id !== '4') {
+				data.business = this.$store.state.meData.business.id
+			}
+			await this.usersView(data)
+		},
+		detailClick(item) {
 			this.newDialog2.title = '근태정보'
 			this.newDialog2.dialog = true
 			this.newDialog2.edit = true
-			this.newDialog2.editData = '하하'
+			this.newDialog2.editData = item
 		},
 		click_vacation_status() {
 			this.newDialog.title = '신청 연차 관리'
