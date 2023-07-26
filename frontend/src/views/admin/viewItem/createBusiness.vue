@@ -98,9 +98,27 @@
 							<v-flex align-self-center style="max-width:136px !important">
 								<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield4"></txtField>
 							</v-flex>
-							<v-flex>ef</v-flex>
+							<v-flex>
+								<v-layout align-center>
+									<v-flex class="pl-3" style="max-width:150px">
+										<v-radio-group row class="system-radio-label">
+											<v-radio color="#009dac" label="지정" :value="true"></v-radio>
+											<v-radio color="#009dac" label="해제" :value="false"></v-radio>
+										</v-radio-group>
+									</v-flex>
+									<v-flex>
+										<v-btn class="etc_btn" style="width:60px">적용</v-btn>
+									</v-flex>
+									<v-flex>
+										<v-btn class="etc_btn" style="">계정정보 발송</v-btn>
+									</v-flex>
+								</v-layout>
+							</v-flex>
 						</v-layout>
 					</div>
+					<v-layout justify-end>
+						<v-btn class="mt-4 save_biz"><v-icon>mdi-check</v-icon>저장</v-btn>
+					</v-layout>
 				</v-flex>
 			</v-layout>
 		</div>
@@ -361,5 +379,22 @@ export default {
 	font-size: 14px;
 	border-bottom: 1px solid #c8c8c8;
 	border-left: 1px solid #c8c8c8;
+}
+.save_biz {
+	width: 100px !important;
+	height: 26px !important;
+	padding: 0 10px !important;
+	font-weight: bold;
+	color: white !important;
+	background: #3e7ccc !important;
+	border-radius: 0 !important;
+}
+.etc_btn {
+	height: 26px !important;
+	padding: 0 !important;
+	background: #f0f2f8 !important;
+	font-size: 12px !important;
+	font-weight: normal;
+	border-radius: 0 !important;
 }
 </style>
