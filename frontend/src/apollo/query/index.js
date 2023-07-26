@@ -669,6 +669,7 @@ export const users = gql`
 			accountNumber
 			gotoworks {
 				id
+				status
 				startWork
 				endWork
 				business {

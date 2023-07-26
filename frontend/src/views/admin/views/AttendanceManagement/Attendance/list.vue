@@ -62,7 +62,7 @@
 				<v-layout justify-center align-center>
 					<v-switch
 						class="switch_style"
-						color="primary"
+						color="#5A18F7"
 						:disabled="item.data7"
 						value
 						:input-value="item.data6"
@@ -75,7 +75,7 @@
 					<v-switch
 						class="switch_style"
 						style="margin-top:0px;"
-						color="primary"
+						color="#5A18F7"
 						:disabled="!item.data6 || item.data5.includes('휴가') || item.data5.includes('반차')"
 						value
 						:input-value="item.data7"
@@ -112,7 +112,103 @@
 			name="근태관리 엑셀리스트"
 		>
 		</download-excel>
+		<v-dialog v-model="editGotoworkDialog" persistent width="400">
+			<div class="create_wrap_lay">
+				<div class="px-8 py-4" style="background:#2d1c71; color:white;">
+					<v-layout>
+						<span style="font-weight:bold;">{{ editGotoworkData.title }}</span>
+						<v-spacer />
+						<v-icon @click="close()" class="title-icon" color="white">mdi-close</v-icon>
+					</v-layout>
+				</div>
+				<v-container style="font-size:0.75rem;">
+					<v-layout style="border-top:2px solid #b6b6b6; border-bottom:0.5px solid #b6b6b6;" align-center>
+						<v-flex xs4 px-3 py-2 style="background-color:#f5f4f4; ">상담사</v-flex>
+						<v-flex xs8 px-3 py-2>{{ editGotoworkData.counselor }}</v-flex>
+					</v-layout>
+					<v-layout style="border-bottom:0.5px solid #b6b6b6;">
+						<v-flex xs4 px-3 py-2 style="background-color:#f5f4f4;">선택일자</v-flex>
+						<v-flex xs8 px-3 py-2>{{ $moment().format('YYYY-MM-DD') }}</v-flex>
+					</v-layout>
+					<v-layout v-if="editGotoworkData.status === 'goto'" style="border-bottom:0.5px solid #b6b6b6;">
+						<v-flex xs4 px-3 py-2 style="background-color:#f5f4f4;">출근시간</v-flex>
+						<v-flex xs8 px-3 py-2
+							><v-dialog ref="startTimeDialog" v-model="startTimeDialog" :return-value.sync="startTime" persistent width="290px">
+								<template v-slot:activator="{ on, attrs }">
+									<v-text-field
+										class="time_picker"
+										dense
+										v-model="startTime"
+										hide-details="false"
+										outlined
+										readonly
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-time-picker
+									v-if="startTimeDialog"
+									:max="editGotoworkData.item.data4 === '-' ? '' : $moment(editGotoworkData.item.data4).format('HH:mm')"
+									v-model="startTime"
+									full-width
+								>
+									<v-spacer></v-spacer>
+									<v-btn text color="primary" @click="startTimeDialog = false">
+										Cancel
+									</v-btn>
+									<v-btn text color="primary" @click="$refs.startTimeDialog.save(startTime)">
+										OK
+									</v-btn>
+								</v-time-picker>
+							</v-dialog></v-flex
+						>
+					</v-layout>
+					<v-layout v-if="editGotoworkData.status === 'leave'" style="border-bottom:0.5px solid #b6b6b6;">
+						<v-flex xs4 px-3 py-2 style="background-color:#f5f4f4;">퇴근시간</v-flex>
+						<v-flex xs8 px-3 py-2
+							><v-dialog ref="endTimeDialog" v-model="endTimeDialog" :return-value.sync="endTime" persistent width="290px">
+								<template v-slot:activator="{ on, attrs }">
+									<v-text-field
+										class="time_picker"
+										dense
+										hide-details="false"
+										v-model="endTime"
+										outlined
+										readonly
+										v-bind="attrs"
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-time-picker
+									v-if="endTimeDialog"
+									:min="$moment(editGotoworkData.item.data3).format('HH:mm')"
+									v-model="endTime"
+									full-width
+								>
+									<v-spacer></v-spacer>
+									<v-btn text color="primary" @click="endTimeDialog = false">
+										Cancel
+									</v-btn>
+									<v-btn text color="primary" @click="$refs.endTimeDialog.save(endTime)">
+										OK
+									</v-btn>
+								</v-time-picker>
+							</v-dialog></v-flex
+						>
+					</v-layout>
+				</v-container>
+				<v-layout class="mt-4 pb-4" justify-center align-center>
+					<v-btn color="primary" style="width:120px; height:35px;" @click="goToworkTimeCheck()">
+						저장
+					</v-btn>
+					<v-btn class="ml-3" outlined style="width:120px; height:35px;" @click="close()">
+						취소
+					</v-btn>
+				</v-layout>
+			</div>
+		</v-dialog>
 
+		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 		<detail :setdialog="newDialog2"></detail>
 		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
 	</div>
@@ -120,6 +216,7 @@
 
 <script>
 import { selectBox, txtField } from '@/components/index.js'
+import { saveDialog } from '@/components'
 import detail from './detail.vue'
 import vacationStatus from './vacationStatus.vue'
 
@@ -129,6 +226,7 @@ export default {
 		txtField,
 		detail,
 		vacationStatus,
+		saveDialog,
 	},
 
 	data() {
@@ -278,10 +376,10 @@ export default {
 						listData.all = element
 						listData.id = element.id
 						listData.data1 = element.username
-						listData.data2 = element.phoneNumber ? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) : ''
+						listData.data2 = element.phoneNumber ? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) : '-'
 						listData.salesPhoneNumber = element.salesPhoneNumber
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
-							: ''
+							: '-'
 						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
 						listData.team = element.team ? element.title : '-'
 						listData.team = element.team?.title
@@ -471,7 +569,7 @@ export default {
 			console.log(status)
 			if (status.data6) {
 				const data = {
-					id: status.id,
+					id: status.all.gotoworks[0].id,
 				}
 				this.deleteGotoworkAction(data)
 			} else {
@@ -537,6 +635,7 @@ export default {
 				})
 		},
 		updateGotoworkAction(data) {
+			console.log(data)
 			this.$store
 				.dispatch('updateGotowork', data)
 				.then(() => {
@@ -580,6 +679,89 @@ export default {
 				data.business = this.$store.state.meData.business.id
 			}
 			await this.usersView(data)
+		},
+		gotoWorkDialogOpen(item) {
+			console.log('클릭')
+			this.editGotoworkData = {
+				title: '출근 시간변경',
+				counselor: item.data1,
+				status: 'goto',
+				item: item,
+			}
+			this.editGotoworkDialog = true
+		},
+		leaveWorkDialogOpen(item) {
+			this.editGotoworkData = {
+				title: '퇴근 시간변경',
+				counselor: item.data1,
+				status: 'leave',
+				item: item,
+			}
+			this.editGotoworkDialog = true
+		},
+		goToworkTimeCheck() {
+			if (this.editGotoworkData.status === 'goto') {
+				if (this.startTime === '') {
+					this.saveDialogStatus = {
+						open: true,
+						content: '시간을 입력해주세요.',
+						cancelBtnTxt: '확인',
+						cancelBtn: true,
+					}
+				} else {
+					this.saveDialogStatus = {
+						open: true,
+						content: '저장하시겠습니까?',
+						cancelBtnTxt: '취소',
+						cancelBtn: true,
+						btnTxt: '저장',
+						activeBtn: true,
+					}
+				}
+			} else if (this.editGotoworkData.status === 'leave') {
+				if (this.endTime === '') {
+					this.saveDialogStatus = {
+						open: true,
+						content: '시간을 입력해주세요.',
+						cancelBtnTxt: '확인',
+						cancelBtn: true,
+					}
+				} else {
+					this.saveDialogStatus = {
+						open: true,
+						content: '저장하시겠습니까?',
+						cancelBtnTxt: '취소',
+						cancelBtn: true,
+						btnTxt: '저장',
+						activeBtn: true,
+					}
+				}
+			}
+		},
+		close() {
+			this.editGotoworkDialog = false
+		},
+		activeSave() {
+			let today = this.$moment(this.date).format('YYYY-MM-DD')
+			console.log(this.editGotoworkData)
+			if (this.editGotoworkData.status === 'goto') {
+				const data = {
+					id: this.editGotoworkData.item.all.gotoworks[0].id,
+					user: this.editGotoworkData.item.id,
+					startWork: this.$moment(today + ' ' + this.startTime),
+				}
+				console.log(data)
+				this.updateGotoworkAction(data)
+			} else if (this.editGotoworkData.status === 'leave') {
+				const data = {
+					id: this.editGotoworkData.item.all.gotoworks[0].id,
+					user: this.editGotoworkData.item.id,
+					endWork: this.$moment(today + ' ' + this.endTime),
+				}
+				this.updateGotoworkAction(data)
+			}
+			this.editGotoworkDialog = false
+			this.saveDialogStatus.open = false
 		},
 		detailClick(item) {
 			this.newDialog2.title = '근태정보'

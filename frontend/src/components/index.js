@@ -10,6 +10,7 @@ export { default as selectBox3 } from './selectBox3'
 export { default as txtFieldStyle } from './txtFieldStyle'
 // dialog
 export { default as alertModal } from './dialog/alertModal'
+export { default as saveDialog } from './dialog/saveDialog'
 
 // admin
 export { default as datatable } from './datatable'
