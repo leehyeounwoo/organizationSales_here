@@ -5,7 +5,7 @@
 				<div class="slash mr-1"></div>
 				<span style="font-weight:bold">사업지 관리</span>
 			</v-layout>
-			<v-tabs v-model="tab" class="pt-8 reservationTab">
+			<v-tabs v-model="tab" :color="'#0ca2b0'" class="pt-8 reservationTab">
 				<v-tab v-for="(tab, i) in tabs" :ripple="false" :key="i"> {{ tab }}</v-tab>
 			</v-tabs>
 			<v-tabs-items v-model="tab">
