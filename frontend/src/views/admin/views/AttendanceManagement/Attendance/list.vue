@@ -363,6 +363,7 @@ export default {
 			})
 		},
 		async viewUsers(input) {
+			this.$store.state.loading = true
 			await this.$store
 				.dispatch('users', input)
 				.then(res => {
@@ -519,15 +520,20 @@ export default {
 			}
 			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
 		},
+		update() {
+			let input = {
+				date: this.$moment(this.date).format('YYYY-MM-DD'),
+			}
+
+			this.usersView(input)
+		},
 		click_date_before() {
 			let input = {
 				date: this.$moment(this.date)
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.business.id
-			}
+
 			this.viewUsers(input)
 
 			this.date = this.$moment(this.date).subtract(1, 'd')
@@ -538,9 +544,7 @@ export default {
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.business.id
-			}
+
 			this.viewUsers(input)
 			this.date = this.$moment(this.date).add(1, 'd')
 		},
@@ -548,9 +552,7 @@ export default {
 			let input = {
 				date: this.$moment().format('YYYY-MM-DD'),
 			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.business.id
-			}
+
 			this.viewUsers(input)
 			this.date = this.$moment()
 		},

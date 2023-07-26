@@ -1,7 +1,13 @@
 <template>
 	<v-app>
 		<router-view></router-view>
-		<v-dialog v-model="loading" fullscreen overlay-color="transparent" transition="dialog-center-transition" content-class="mainloadingBar">
+		<v-dialog
+			v-model="$store.state.loading"
+			fullscreen
+			overlay-color="transparent"
+			transition="dialog-center-transition"
+			content-class="mainloadingBar"
+		>
 			<!-- style="background-color: rgba(255, 255, 255, 0.5);" -->
 			<v-container fluid fill-height>
 				<v-layout justify-center align-center>
