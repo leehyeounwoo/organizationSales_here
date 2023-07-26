@@ -644,6 +644,9 @@
                   "type": "string"
                 }
               },
+              "phoneNumber": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },

@@ -95,6 +95,9 @@
     "vacations": {
       "collection": "vacation",
       "via": "user"
+    },
+    "phoneNumber": {
+      "type": "string"
     }
   }
 }
