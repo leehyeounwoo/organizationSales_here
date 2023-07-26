@@ -69,7 +69,7 @@ export default {
 
 						{
 							title: '조직 관리',
-							name: '',
+							name: 'agentManagement',
 							click: false,
 						},
 						{

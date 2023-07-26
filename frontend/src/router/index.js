@@ -12,6 +12,9 @@ const kioskLogin = () => import(/* webpackChunkName: "kioskLogin" */ '../views/a
 const dashBoard = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/dashboard.vue')
 const attendanceManagement = () =>
 	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/AttendanceManagement/attendanceManagement.vue')
+const agentManagement = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/organizationManagement/agentManagement.vue')
+const organizationStatus = () =>
+	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/organizationManagement/organizationStatus.vue')
 
 const routes = [
 	{ path: '*', name: 'notfound', component: notFound },
@@ -35,6 +38,16 @@ const routes = [
 				path: '/admin/attendanceManagement',
 				name: 'attendanceManagement',
 				component: attendanceManagement,
+			},
+			{
+				path: '/admin/agentManagement',
+				name: 'agentManagement',
+				component: agentManagement,
+			},
+			{
+				path: '/admin/organizationStatus',
+				name: 'organizationStatus',
+				component: organizationStatus,
 			},
 		],
 	},
