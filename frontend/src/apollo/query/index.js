@@ -1345,3 +1345,18 @@ export const subProducts = gql`
 		}
 	}
 `
+export const gotoWork = gql`
+	query gotoWorks($date: Date, $status: ENUM_GOTOWORKS_STATUS, $business: ID, $user: ID, $date_gte: String, $date_lte: String) {
+		gotoworks(where: { date: $date, status: $status, business: $business, user: $user, date_gte: $date_gte, date_lte: $date_lte }) {
+			id
+			date
+			status
+			startWork
+			endWork
+			user {
+				id
+				username
+			}
+		}
+	}
+`

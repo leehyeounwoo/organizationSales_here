@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import apollo from '../apollo/config'
 // import axios from 'axios'
 import { login, createGotowork, updateGotowork, deleteGotowork } from '../apollo/mutation'
-import { me, users } from '../apollo/query'
+import { me, users, gotoWork } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
@@ -149,6 +149,22 @@ export default new Vuex.Store({
 								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
 							},
 						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		gotoWork({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: gotoWork,
+						variables: input,
 					})
 					.then(({ data }) => {
 						resolve(data)

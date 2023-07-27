@@ -14,7 +14,7 @@
     "vacationDate": {
       "type": "date"
     },
-    "adminName": {
+    "vacationReason": {
       "type": "richtext"
     },
     "adminId": {
@@ -36,6 +36,9 @@
       "via": "vacations"
     },
     "status": {
+      "type": "string"
+    },
+    "vacationType": {
       "type": "string"
     }
   }

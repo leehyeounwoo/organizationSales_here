@@ -1456,7 +1456,7 @@
                 "vacationDate": {
                   "type": "string"
                 },
-                "adminName": {
+                "vacationReason": {
                   "type": "string"
                 },
                 "adminId": {
@@ -1475,6 +1475,9 @@
                   "type": "string"
                 },
                 "status": {
+                  "type": "string"
+                },
+                "vacationType": {
                   "type": "string"
                 },
                 "published_at": {

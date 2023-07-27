@@ -2332,14 +2332,14 @@ export default {
 	border-left: 1px solid #d1d1d1;
 	border-bottom: 1px solid #d1d1d1;
 	thead {
-		background-color: #f5f5f5 !important;
+		background-color: #e9ecf4 !important;
 
 		tr {
 			th:not(:last-of-type) {
 				border-right: 1px solid #d1d1d1;
 			}
 			th {
-				background-color: #f5f5f5 !important;
+				background-color: #e9ecf4 !important;
 				text-align: center !important;
 				color: #333333;
 				height: 53px;

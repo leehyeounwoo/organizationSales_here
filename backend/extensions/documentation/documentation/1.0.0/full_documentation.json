@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "07/27/2023 4:13:23 PM"
+    "x-generation-date": "07/27/2023 5:07:03 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -6035,7 +6035,7 @@
               "vacationDate": {
                 "type": "string"
               },
-              "adminName": {
+              "vacationReason": {
                 "type": "string"
               },
               "adminId": {
@@ -6054,6 +6054,9 @@
                 "type": "string"
               },
               "status": {
+                "type": "string"
+              },
+              "vacationType": {
                 "type": "string"
               },
               "published_at": {
@@ -6565,7 +6568,7 @@
           "vacationDate": {
             "type": "string"
           },
-          "adminName": {
+          "vacationReason": {
             "type": "string"
           },
           "adminId": {
@@ -6698,6 +6701,9 @@
           "status": {
             "type": "string"
           },
+          "vacationType": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -6708,7 +6714,7 @@
           "vacationDate": {
             "type": "string"
           },
-          "adminName": {
+          "vacationReason": {
             "type": "string"
           },
           "adminId": {
@@ -6727,6 +6733,9 @@
             "type": "string"
           },
           "status": {
+            "type": "string"
+          },
+          "vacationType": {
             "type": "string"
           },
           "published_at": {
@@ -7190,7 +7199,7 @@
                 "vacationDate": {
                   "type": "string"
                 },
-                "adminName": {
+                "vacationReason": {
                   "type": "string"
                 },
                 "adminId": {
@@ -7209,6 +7218,9 @@
                   "type": "string"
                 },
                 "status": {
+                  "type": "string"
+                },
+                "vacationType": {
                   "type": "string"
                 },
                 "published_at": {

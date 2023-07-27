@@ -19,6 +19,9 @@
 				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
 					<selectBox :sel="searchsel1" :class="'searchSel'" style="font-size:12px"></selectBox>
 				</v-flex>
+				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
+					<selectBox :sel="searchsel" :class="'searchSel'" style="font-size:12px"></selectBox>
+				</v-flex>
 				<v-flex style="max-width:200px;">
 					<txtField class="search_box_admin" v-model="search_project" :txtField="search"></txtField>
 				</v-flex>
@@ -27,15 +30,155 @@
 				</v-flex>
 			</v-layout>
 		</v-layout>
+		<v-layout class="mt-4">
+			<v-flex xs8>
+				<datatable
+					:datatable="settlementTable"
+					class="notice_table"
+					excelType="clientManagement"
+					excelUseYn="true"
+					@pagination="pagination"
+				>
+				</datatable>
+			</v-flex>
+			<v-flex xs4 class="ml-10">
+				<v-layout style="border-top:1px solid black">
+					<v-flex class="notice_right_table" xs2>
+						계약자
+					</v-flex>
+					<v-flex xs10 class="notice_right_table2">
+						<v-layout> </v-layout>
+					</v-flex>
+				</v-layout>
+				<v-layout>
+					<v-flex class="notice_right_table" xs2>
+						계약물건
+					</v-flex>
+					<v-flex xs10 class="notice_right_table2"> </v-flex>
+				</v-layout>
+
+				<v-layout>
+					<v-flex class="notice_right_table" xs2>
+						정산요청이력
+					</v-flex>
+					<v-flex xs10 class="notice_right_table2" style="height:163px">
+						<v-layout justify-center align-center>
+							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
+								대분류
+							</v-flex>
+							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
+								상품명
+							</v-flex>
+							<v-flex xs4 class="client_table_style">
+								세부분류
+							</v-flex>
+						</v-layout>
+						<v-layout wrap class="client_table_body_style">
+							<v-layout align-center v-for="(data, index) in detailData.interest_product" :key="data.main.value + index">
+								<v-flex xs4 style="min-width:0px; margin:0px 7px;">
+									<selectBox
+										:sel="data.main"
+										:readonly="true"
+										class="searchSel px-1"
+										:class="index === 0 ? 'py-2' : 'pb-2'"
+										style="font-size:12px"
+									></selectBox>
+								</v-flex>
+								<v-flex xs4 style="min-width:0px; margin:0px 7px;">
+									<selectBox
+										:sel="data.product"
+										:readonly="true"
+										class="searchSel pr-1"
+										:class="index === 0 ? 'py-2' : 'pb-2'"
+										style="font-size:12px"
+									></selectBox>
+								</v-flex>
+								<v-flex xs4 style="min-width:0px; margin:0px 7px; display: flex;">
+									<v-btn
+										class="detail_etc_btn py-2"
+										style="margin: 0 auto;"
+										small
+										:color="'#9A9C9B'"
+										depressed
+										@click="click_detail_path(data)"
+										>자세히 보기</v-btn
+									>
+								</v-flex>
+							</v-layout>
+						</v-layout>
+					</v-flex>
+				</v-layout>
+				<v-layout>
+					<v-flex class="notice_right_table" xs2>
+						증빙서류
+					</v-flex>
+					<v-flex xs10 class="notice_right_table2" style="height:163px">
+						<v-layout justify-center align-center>
+							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
+								대분류
+							</v-flex>
+							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
+								상품명
+							</v-flex>
+							<v-flex xs4 class="client_table_style">
+								세부분류
+							</v-flex>
+						</v-layout>
+						<v-layout wrap class="client_table_body_style">
+							<v-layout align-center v-for="(data, index) in detailData.contract_product" :key="data.main.value + index">
+								<v-flex xs4 style="margin:0px 7px;">
+									<selectBox
+										:sel="data.main"
+										:readonly="true"
+										class="searchSel  px-1"
+										:class="index === 0 ? 'py-2' : 'pb-2'"
+										style="font-size:12px"
+									></selectBox>
+								</v-flex>
+								<v-flex xs4 style="margin:0px 7px;">
+									<selectBox
+										:sel="data.product"
+										:readonly="true"
+										class="searchSel pr-1"
+										:class="index === 0 ? 'py-2' : 'pb-2'"
+										style="font-size:12px"
+									></selectBox>
+								</v-flex>
+								<v-flex xs4 style="margin:0px 7px; display: flex;">
+									<v-btn
+										class="detail_etc_btn py-2"
+										style="margin:0 auto;"
+										small
+										:color="'#9A9C9B'"
+										depressed
+										@click="click_detail_path(data)"
+										>자세히 보기</v-btn
+									>
+								</v-flex>
+							</v-layout>
+						</v-layout>
+					</v-flex>
+				</v-layout>
+				<v-layout>
+					<v-flex class="notice_right_table" xs2>
+						처리
+					</v-flex>
+					<v-flex xs10 class="notice_right_table2">
+						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
+					</v-flex>
+				</v-layout>
+			</v-flex>
+		</v-layout>
 	</div>
 </template>
 <script>
-import { selectBox, txtField } from '@/components/index.js'
+import { selectBox, txtField, datatable } from '@/components/index.js'
 
 export default {
 	components: {
 		selectBox,
 		txtField,
+		datatable,
 	},
 
 	data() {
@@ -79,19 +222,17 @@ export default {
 			work: 0,
 			endWork: 0,
 			holiDay: 0,
-			table: {
+			settlementTable: {
 				headers: [
 					{ text: '직원명', value: 'data1', align: 'center', width: '7%' },
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '10%' },
-					{ text: '등록일', value: 'created_at', align: 'center', width: '7%' },
 					{ text: '팀', value: 'team', align: 'center', width: '7%' },
-					{ text: '상태', value: 'data5', align: 'center', width: '7%' },
-					{ text: '출근시간', value: 'data3', align: 'center', width: '10%' },
-					{ text: '퇴근시간', value: 'data4', align: 'center', width: '10%' },
-					{ text: '출근', value: 'data6', align: 'center', width: '8%' },
-					{ text: '퇴근', value: 'data7', align: 'center', width: '8%' },
-					{ text: '신청 연차 관리', value: 'vacation', align: 'center', width: '10%' },
+					{ text: '계약일', value: 'data5', align: 'center', width: '7%' },
+					{ text: '계약물건', value: 'data3', align: 'center', width: '10%' },
+					{ text: '요청일', value: 'data4', align: 'center', width: '10%' },
+					{ text: '차수', value: 'data6', align: 'center', width: '8%' },
+					{ text: '상태', value: 'data7', align: 'center', width: '8%' },
 					{ text: '비고', value: 'etc', align: 'center', width: '7%' },
 				],
 				headerCheck: false,
@@ -113,6 +254,90 @@ export default {
 				pageCount: 0,
 				total: 0,
 			},
+			detailData: {
+				id: '',
+				name: {
+					value: '',
+					clearable: false,
+					maxlength: '255',
+					outlined: true,
+					backCol: 'white',
+					placeholder: '고객명',
+				},
+				phone: {
+					value: '',
+					clearable: false,
+					maxlength: '255',
+					outlined: true,
+					backCol: 'white',
+					placeholder: '연락처',
+				},
+				sex: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '성별',
+					items: ['남자', '여자'],
+					outlined: true,
+				},
+				age: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '연령대',
+					items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+					outlined: true,
+				},
+				inflow: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '유입경로',
+					items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
+					outlined: true,
+				},
+				status: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '고객상태',
+					items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
+					outlined: true,
+				},
+				counselor_business: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '지점',
+					items: [],
+					outlined: true,
+					returnObject: true,
+					itemText: 'business_title',
+				},
+				counselor_team: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '부서',
+					items: [],
+					outlined: true,
+					returnObject: true,
+					itemText: 'title',
+				},
+				counselor_name: {
+					value: '',
+					errorMessage: '',
+					hideDetail: true,
+					placeholder: '상담사명',
+					items: [],
+					outlined: true,
+					returnObject: true,
+					itemText: 'name',
+				},
+				origin_main_data: [],
+				interest_product: [],
+				contract_product: [],
+			},
 
 			searchsel: {
 				value: '',
@@ -120,7 +345,7 @@ export default {
 				hideDetail: true,
 				items: [],
 				outlined: true,
-				placeholder: '지점선택',
+				placeholder: '상태',
 				returnObject: true,
 				itemText: 'title',
 			},
@@ -151,16 +376,7 @@ export default {
 		}
 	},
 
-	async created() {
-		await this.me()
-		let input = {
-			start: 0,
-			limit: 10,
-			date: this.$moment().format('YYYY-MM-DD'),
-		}
-		await this.viewUsers(input)
-		this.$store.state.loading = false
-	},
+	async created() {},
 	mounted() {},
 
 	methods: {
@@ -170,107 +386,7 @@ export default {
 				console.log(this.$store.state.meData)
 			})
 		},
-		async viewUsers(input) {
-			await this.$store
-				.dispatch('users', input)
-				.then(res => {
-					let list = []
-					let workCount = 0
-					let endWorkCount = 0
-					let holiDayCount = 0
-					console.log(res)
-					res.users.forEach(element => {
-						let listData = {}
-						listData.all = element
-						listData.id = element.id
-						listData.data1 = element.username
-						listData.data2 = element.phoneNumber ? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) : '-'
-						listData.salesPhoneNumber = element.salesPhoneNumber
-							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
-							: '-'
-						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
-						listData.team = element.team ? element.title : '-'
-						listData.team = element.team?.title
-						listData.rank = element.rank?.title
-						listData.history = element.history ? element.history : []
 
-						if (element.gotoworks.length > 0) {
-							listData.data3 =
-								element.gotoworks[0].startWork !== null ? this.$moment(element.gotoworks[0].startWork).format('YYYY-MM-DD HH:mm:ss') : '-'
-							listData.data4 =
-								element.gotoworks[0].endWork !== null ? this.$moment(element.gotoworks[0].endWork).format('YYYY-MM-DD HH:mm:ss') : '-'
-							listData.data5 =
-								element.gotoworks[0].status === 'endWork'
-									? '퇴근'
-									: element.gotoworks[0].status === 'afternoonVacation'
-									? '오후반차'
-									: element.gotoworks[0].status === 'morningVacation'
-									? '오전반차'
-									: element.gotoworks[0].status === 'vacation'
-									? '휴가'
-									: '출근'
-							if (element.gotoworks[0].status === 'vacation') {
-								listData.data6 = true
-								listData.data7 = true
-								listData.data8 = '-'
-							} else {
-								listData.data6 = element.gotoworks[0].startWork ? true : false
-								listData.data7 = element.gotoworks[0].endWork ? true : false
-							}
-
-							if (element.gotoworks[0].startWork && element.gotoworks[0].endWork) {
-								listData.data8 = this.timeCheck(element.gotoworks[0].startWork, element.gotoworks[0].endWork)
-							}
-							if (element.gotoworks[0].status === 'startWork') {
-								workCount = workCount + 1
-							}
-							if (element.gotoworks[0].status === 'endWork') {
-								endWorkCount = endWorkCount + 1
-							}
-							if (
-								element.gotoworks[0].status === 'afternoonVacation' ||
-								element.gotoworks[0].status === 'morningVacation' ||
-								element.gotoworks[0].status === 'vacation'
-							) {
-								holiDayCount = holiDayCount + 1
-							}
-						} else {
-							listData.data3 = '-'
-							listData.data4 = '-'
-							listData.data5 = '미확인'
-							listData.data8 = '-'
-						}
-						element.vacations.reverse()
-						let vactionIndex = element.vacations.findIndex(el => el.vacationDate === this.$moment(this.date).format('YYYY-MM-DD'))
-						if (vactionIndex !== -1) {
-							listData.vacationData = element.vacations[vactionIndex]
-							listData.vacation = element.vacations[vactionIndex].status
-						} else {
-							listData.vacation = '-'
-						}
-
-						list.push(listData)
-						this.table.total = res.usersConnection.aggregate.count
-						this.table.page = input.page
-					})
-					this.allCounselor = list.length
-					this.work = workCount
-					this.endWork = endWorkCount
-					this.holiDay = holiDayCount
-					if (this.status_Keyword.value === '전체') {
-						this.table.items = list
-						this.$store.state.loading = false
-					} else {
-						let arrayData = []
-						arrayData = list.filter(x => x.data5 === this.status_Keyword.value)
-						this.table.items = arrayData
-						this.$store.state.loading = false
-					}
-				})
-				.catch(err => {
-					console.log({ err })
-				})
-		},
 		async pagination(item) {
 			if (item.page > this.table.page) {
 				// 다음 페이지
@@ -372,231 +488,6 @@ export default {
 			}
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
-		},
-
-		goToWorkStatus(status) {
-			console.log(status)
-			if (status.data6) {
-				const data = {
-					id: status.all.gotoworks[0].id,
-				}
-				this.deleteGotoworkAction(data)
-			} else {
-				const data = {
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
-					user: status.id,
-					business: this.searchsel.value.id,
-					status: 'startWork',
-				}
-				if (this.$moment().format('YYYY-MM-DD') === this.date) {
-					data.startWork = this.$moment()
-				} else {
-					data.startWork = this.$moment(this.date)
-				}
-
-				this.createGotoworkAction(data)
-			}
-		},
-		leaveWorkStatus(status) {
-			console.log(status.all.gotoworks[0].id)
-			console.log(status)
-			if (status.data7) {
-				const data = {
-					id: status.all.gotoworks[0].id,
-					user: status.id,
-					endWork: null,
-					status: 'startWork',
-				}
-				this.updateGotoworkAction(data)
-			} else {
-				if (this.$moment(this.date).format('YYYY-MM-DD') === this.$moment(this.$moment().format('YYYY-MM-DD')).format('YYYY-MM-DD')) {
-					const data = {
-						id: status.all.gotoworks[0].id,
-						user: status.id,
-
-						endWork: this.$moment(),
-						status: 'endWork',
-					}
-					this.updateGotoworkAction(data)
-				} else {
-					const data = {
-						id: status.all.gotoworks[0].id,
-						user: status.id,
-						endWork: this.$moment(this.date),
-						status: 'endWork',
-					}
-					this.updateGotoworkAction(data)
-				}
-			}
-		},
-		createGotoworkAction(data) {
-			console.log(data)
-			this.$store
-				.dispatch('createGotowork', data)
-				.then(() => {
-					let input = {
-						date: this.$moment(this.date).format('YYYY-MM-DD'),
-					}
-					this.viewUsers(input)
-				})
-				.catch(err => {
-					console.log({ err })
-				})
-		},
-		updateGotoworkAction(data) {
-			console.log(data)
-			this.$store
-				.dispatch('updateGotowork', data)
-				.then(() => {
-					let input = {
-						date: this.$moment(this.date).format('YYYY-MM-DD'),
-					}
-					this.viewUsers(input)
-				})
-				.catch(err => {
-					console.log({ err })
-				})
-		},
-		deleteGotoworkAction(data) {
-			this.$store
-				.dispatch('deleteGotowork', data)
-				.then(() => {
-					let input = {
-						date: this.$moment(this.date).format('YYYY-MM-DD'),
-					}
-					this.viewUsers(input)
-				})
-				.catch(err => {
-					console.log({ err })
-				})
-		},
-		timeCheck(start, end) {
-			const moment = require('moment')
-			let timeData = ''
-			let hour = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() / 60)
-			let minute = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() % 60)
-			if (minute === 0) {
-				timeData = hour + '시간'
-			} else {
-				timeData = hour + '시간' + minute + '분'
-			}
-			return timeData
-		},
-		async SearchBiz() {
-			let data = { date: this.$moment(this.date).format('YYYY-MM-DD') }
-			if (this.$store.state.meData.role.id !== '4') {
-				data.business = this.$store.state.meData.business.id
-			}
-			await this.usersView(data)
-		},
-		gotoWorkDialogOpen(item) {
-			console.log('클릭')
-			this.editGotoworkData = {
-				title: '출근 시간변경',
-				counselor: item.data1,
-				status: 'goto',
-				item: item,
-			}
-			this.editGotoworkDialog = true
-		},
-		leaveWorkDialogOpen(item) {
-			this.editGotoworkData = {
-				title: '퇴근 시간변경',
-				counselor: item.data1,
-				status: 'leave',
-				item: item,
-			}
-			this.editGotoworkDialog = true
-		},
-		goToworkTimeCheck() {
-			if (this.editGotoworkData.status === 'goto') {
-				if (this.startTime === '') {
-					this.saveDialogStatus = {
-						open: true,
-						content: '시간을 입력해주세요.',
-						cancelBtnTxt: '확인',
-						cancelBtn: true,
-					}
-				} else {
-					this.saveDialogStatus = {
-						open: true,
-						content: '저장하시겠습니까?',
-						cancelBtnTxt: '취소',
-						cancelBtn: true,
-						btnTxt: '저장',
-						activeBtn: true,
-					}
-				}
-			} else if (this.editGotoworkData.status === 'leave') {
-				if (this.endTime === '') {
-					this.saveDialogStatus = {
-						open: true,
-						content: '시간을 입력해주세요.',
-						cancelBtnTxt: '확인',
-						cancelBtn: true,
-					}
-				} else {
-					this.saveDialogStatus = {
-						open: true,
-						content: '저장하시겠습니까?',
-						cancelBtnTxt: '취소',
-						cancelBtn: true,
-						btnTxt: '저장',
-						activeBtn: true,
-					}
-				}
-			}
-		},
-		close() {
-			this.editGotoworkDialog = false
-		},
-		activeSave() {
-			let today = this.$moment(this.date).format('YYYY-MM-DD')
-			console.log(this.editGotoworkData)
-			if (this.editGotoworkData.status === 'goto') {
-				const data = {
-					id: this.editGotoworkData.item.all.gotoworks[0].id,
-					user: this.editGotoworkData.item.id,
-					startWork: this.$moment(today + ' ' + this.startTime),
-				}
-				console.log(data)
-				this.updateGotoworkAction(data)
-			} else if (this.editGotoworkData.status === 'leave') {
-				const data = {
-					id: this.editGotoworkData.item.all.gotoworks[0].id,
-					user: this.editGotoworkData.item.id,
-					endWork: this.$moment(today + ' ' + this.endTime),
-				}
-				this.updateGotoworkAction(data)
-			}
-			this.editGotoworkDialog = false
-			this.saveDialogStatus.open = false
-		},
-		detailClick(item) {
-			this.newDialog2.title = '근태정보'
-			this.newDialog2.dialog = true
-			this.newDialog2.edit = true
-			this.newDialog2.editData = item
-		},
-		click_vacation_status(item) {
-			this.newDialog.title = '신청 연차 관리'
-			this.newDialog.dialog = true
-			this.newDialog.edit = true
-			this.newDialog.editData = item
-		},
-		vacation_filter(val) {
-			console.log(val)
-			if (val) {
-				if (val === 'agree') {
-					return '승인'
-				} else if (val === 'disagree') {
-					return '미승인'
-				} else if (val === 'waiting') {
-					return '처리전'
-				} else {
-					return '-'
-				}
-			}
 		},
 	},
 }
@@ -721,53 +612,6 @@ export default {
 	}
 }
 
-.table_style_2 > .v-data-table__wrapper {
-	overflow: overlay;
-	table {
-		border-right: 1px solid #d1d1d1;
-		border-left: 1px solid #d1d1d1;
-		border-bottom: 1px solid #d1d1d1;
-		thead {
-			tr {
-				z-index: 1;
-				th:not(:last-of-type) {
-					border-right: 1px solid #d1d1d1;
-				}
-				th {
-					text-align: center !important;
-					color: #333333;
-					height: 53px;
-					border-top: 1px solid #7d7d7d !important;
-					border-bottom: 1px solid #7d7d7d !important;
-					background-color: #e9ecf4 !important;
-				}
-			}
-		}
-	}
-}
-
-.table_style_2 > .v-data-table__wrapper > table {
-	tbody {
-		tr {
-			td:not(:last-of-type) {
-				border-right: 1px solid #d1d1d1;
-			}
-			td {
-				height: 36px;
-				text-align: center !important;
-				background-color: #ffffff !important;
-			}
-		}
-	}
-}
-.table_style_2 > .v-data-footer {
-	justify-content: end;
-	padding-right: 0px;
-	.v-data-footer__select {
-		margin-left: 0px;
-	}
-}
-
 .table_box {
 	div {
 		.v-data-table__wrapper::-webkit-scrollbar {
@@ -872,5 +716,38 @@ export default {
 	position: absolute;
 	bottom: 15px;
 	left: 0px;
+}
+.notice_table {
+	div {
+		.v-data-table__wrapper {
+			margin: 0;
+		}
+	}
+}
+
+.notice_table > .v-data-table__wrapper > table {
+	thead {
+		th {
+			text-align: end;
+		}
+	}
+}
+.notice_right_table {
+	background-color: #e9ecf4;
+	font-size: 12px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-right: 1px solid #c8c8c8;
+	border-bottom: 1px solid #c8c8c8;
+	border-left: 1px solid #c8c8c8;
+}
+.notice_right_table2 {
+	border-right: 1px solid #c8c8c8;
+	border-bottom: 1px solid #c8c8c8;
+}
+.notice_right_table3 {
+	border-bottom: 1px solid #c8c8c8;
 }
 </style>

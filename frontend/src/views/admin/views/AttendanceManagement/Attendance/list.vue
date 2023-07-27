@@ -343,6 +343,7 @@ export default {
 	},
 
 	async created() {
+		this.$store.state.loading = true
 		await this.me()
 		let input = {
 			start: 0,
@@ -362,6 +363,7 @@ export default {
 			})
 		},
 		async viewUsers(input) {
+			this.$store.state.loading = true
 			await this.$store
 				.dispatch('users', input)
 				.then(res => {

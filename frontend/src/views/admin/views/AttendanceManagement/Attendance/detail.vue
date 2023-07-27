@@ -85,7 +85,16 @@
 					<v-layout wrap class="pt-10">
 						<v-flex xs12 class="ml-auto mb-8">
 							<v-layout justify-end>
-								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#5B5B5B" class="mr-3">확인</v-btn>
+								<v-btn
+									@click=";(setdialog.dialog = false), ($store.state.loading = false)"
+									dense
+									width="100"
+									height="26"
+									dark
+									color="#5B5B5B"
+									class="mr-3"
+									>확인</v-btn
+								>
 							</v-layout>
 						</v-flex>
 					</v-layout>
@@ -294,7 +303,7 @@ export default {
 					required: true,
 				},
 				{
-					title: '기간내 근무기간',
+					title: '검색기간내 근무기간',
 					value: '',
 					txtfield: {
 						maxlength: '255',
@@ -308,7 +317,7 @@ export default {
 					required: true,
 				},
 				{
-					title: '기간내 휴무일',
+					title: '검색기간내 휴무일',
 					value: '',
 					txtfield: {
 						maxlength: '255',
@@ -327,6 +336,7 @@ export default {
 	methods: {
 		reset() {
 			this.setdialog.dialog = false
+			this.$store.state.loading = false
 		},
 
 		async clickSave() {},
@@ -334,18 +344,17 @@ export default {
 			this.$store.state.loading = true
 
 			let input2 = {
-				business: this.setdialog.editData.all.business.id,
-				users_permissions_user: this.setdialog.editData.all.id,
+				user: this.setdialog.editData.all.id,
 				status: 'vacation',
 			}
 			await this.$store.dispatch('gotoWork', input2).then(async res2 => {
-				this.leftInfoTop[9].value = res2.gotoworks.length + '일'
+				this.leftInfoTop[7].value = res2.gotoworks.length + '일'
 				let input = {
-					business: this.setdialog.editData.all.business.id,
-					users_permissions_user: this.setdialog.editData.all.id,
+					user: this.setdialog.editData.all.id,
 				}
 				await this.$store.dispatch('gotoWork', input).then(res => {
-					this.leftInfoTop[8].value = res.gotoworks.length - res2.gotoworks.length + '일'
+					console.log(res)
+					this.leftInfoTop[6].value = res.gotoworks.length - res2.gotoworks.length + '일'
 					this.$store.state.loading = false
 				})
 			})
@@ -353,12 +362,12 @@ export default {
 		async getAllworkTime() {
 			this.$store.state.loading = true
 			let input = {
-				business: this.setdialog.editData.all.business.id,
-				users_permissions_user: this.setdialog.editData.all.id,
+				user: this.setdialog.editData.all.id,
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
 			}
 			await this.$store.dispatch('gotoWork', input).then(res => {
+				this.leftInfoTop[8].value = res.gotoworks.length + '일'
 				let li = []
 				let start = this.start_date_picker.date
 				let end = this.$moment(this.end_date_picker.date)
@@ -524,9 +533,9 @@ export default {
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
 						this.leftInfoTop[3].value = this.setdialog.editData.all.startDate
-						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
+						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
 						this.leftInfoTop[5].value = this.setdialog.editData.team ? this.setdialog.editData.team : '-'
-						this.leftInfoTop[6].value = this.setdialog.editData.team
+
 						this.leftInfoTop[7].value = this.setdialog.editData.rank
 
 						this.changeTable.items = this.setdialog.editData.history
