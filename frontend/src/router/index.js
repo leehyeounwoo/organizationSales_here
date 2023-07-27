@@ -26,7 +26,7 @@ const routes = [
 		name: 'kioskLogin',
 	},
 	{
-		path: '/',
+		path: '/KIOSK',
 		name: 'KIOSK',
 		component: KIOSK,
 		children: [

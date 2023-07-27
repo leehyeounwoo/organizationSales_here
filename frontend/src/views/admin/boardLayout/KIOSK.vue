@@ -5,7 +5,7 @@
 				@click="closeRight()"
 				v-if="$vuetify.breakpoint.lgAndUp"
 				lg2
-				style="background:#323153; color:#323153; fontWeight:bold; max-width:200px;"
+				style="background:#F2F2F2; color:#323153; fontWeight:bold; max-width:200px;"
 			>
 				<leftNav></leftNav>
 			</v-flex>
@@ -41,19 +41,20 @@ export default {
 		kioskHeader,
 	},
 	async created() {
-		this.$store.state.loading = true
-		let ok = 0
-		const meDataWaitings = setInterval(async () => {
-			ok += 1
+		console.log(22)
+		// this.$store.state.loading = true
+		// let ok = 0
+		// const meDataWaitings = setInterval(async () => {
+		// 	ok += 1
 
-			if (sessionStorage.getItem('reserveLite-t')) {
-				clearInterval(meDataWaitings)
-				await this.medata()
-			}
-			if (ok === 10) {
-				clearInterval(meDataWaitings)
-			}
-		}, 1000)
+		// 	if (sessionStorage.getItem('reserveLite-t')) {
+		// 		clearInterval(meDataWaitings)
+		// 		await this.medata()
+		// 	}
+		// 	if (ok === 10) {
+		// 		clearInterval(meDataWaitings)
+		// 	}
+		// }, 1000)
 	},
 	methods: {
 		closeRight() {
@@ -65,7 +66,6 @@ export default {
 			await this.$store
 				.dispatch('me')
 				.then(async res => {
-					this.$store.state.loading = false
 					this.$store.state.meData = res.me
 					this.$store.state.dashBoardList = [
 						{

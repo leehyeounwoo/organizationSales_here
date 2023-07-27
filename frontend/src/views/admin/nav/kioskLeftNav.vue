@@ -29,19 +29,20 @@ export default {
 	},
 
 	async created() {
-		this.$store.state.loading = true
-		let ok = 0
-		const meDataWaitings = setInterval(async () => {
-			ok += 1
+		console.log(44)
+		// this.$store.state.loading = true
+		// let ok = 0
+		// const meDataWaitings = setInterval(async () => {
+		// 	ok += 1
 
-			if (sessionStorage.getItem('reserveLite-t')) {
-				clearInterval(meDataWaitings)
-				await this.medata()
-			}
-			if (ok === 10) {
-				clearInterval(meDataWaitings)
-			}
-		}, 1000)
+		// 	if (sessionStorage.getItem('reserveLite-t')) {
+		// 		clearInterval(meDataWaitings)
+		// 		await this.medata()
+		// 	}
+		// 	if (ok === 10) {
+		// 		clearInterval(meDataWaitings)
+		// 	}
+		// }, 1000)
 	},
 	methods: {
 		closeRight() {

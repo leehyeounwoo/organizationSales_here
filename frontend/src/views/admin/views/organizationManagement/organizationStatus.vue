@@ -17,14 +17,14 @@
 		<v-layout>
 			<v-flex xs8><datatable :datatable="table"/></v-flex>
 			<v-flex xs4 class="ml-10 mt-5">
-				<v-layout style="border-top:1px solid black">
+				<v-layout v-for="(edit, index) in rightEdit" :key="index" style="border-top:1px solid black">
 					<v-flex class="notice_right_table" xs2>
-						프로필 사진
+						{{ edit.title }}
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
 						<v-layout class=" py-3 px-1">
 							<v-flex xs8 style="align-self: end;">
-								<txtField :txtField="detailData.name" v-model="detailData.name.value" class="search_box_admin"></txtField>
+								<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
 							</v-flex>
 							<v-flex xs3>
 								<btn :btn="editBtn" btn_txt="파일 첨부" :click="clickEditBtn" />
@@ -32,7 +32,7 @@
 						</v-layout>
 					</v-flex>
 				</v-layout>
-				<v-layout>
+				<!-- <v-layout>
 					<v-flex class="notice_right_table" xs2>
 						계좌정보
 					</v-flex>
@@ -145,7 +145,7 @@
 					<v-flex xs10 class="notice_right_table2">
 						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
 					</v-flex>
-				</v-layout>
+				</v-layout> -->
 			</v-flex>
 		</v-layout>
 
@@ -184,6 +184,74 @@ export default {
 
 	data() {
 		return {
+			rightEdit: [
+				{
+					title: '프로필 사진',
+					txtField: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						placeholder: '고객명',
+					},
+				},
+				{
+					title: '계좌정보',
+					txtField: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						placeholder: '고객명',
+					},
+				},
+				{
+					title: '통장사본',
+					txtField: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						placeholder: '고객명',
+					},
+				},
+				{
+					title: '근로계약서',
+					txtField: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						placeholder: '고객명',
+					},
+				},
+				{
+					title: '신분증 사본 등',
+					txtField: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						placeholder: '고객명',
+					},
+				},
+				{
+					title: '사업자 정보',
+					txtField: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						placeholder: '고객명',
+					},
+				},
+			],
 			editBtn: {
 				outlined: true,
 				small: true,
@@ -221,90 +289,90 @@ export default {
 				page: 1,
 				pageCount: 0,
 			},
-			detailData: {
-				id: '',
-				name: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '고객명',
-				},
-				phone: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '연락처',
-				},
-				sex: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '성별',
-					items: ['남자', '여자'],
-					outlined: true,
-				},
-				age: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '연령대',
-					items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-					outlined: true,
-				},
-				inflow: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '유입경로',
-					items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
-					outlined: true,
-				},
-				status: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '고객상태',
-					items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
-					outlined: true,
-				},
-				counselor_business: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '지점',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'business_title',
-				},
-				counselor_team: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '부서',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'title',
-				},
-				counselor_name: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '상담사명',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'name',
-				},
-				origin_main_data: [],
-				interest_product: [],
-				contract_product: [],
-			},
+			// detailData: {
+			// 	id: '',
+			// 	name: {
+			// 		value: '',
+			// 		clearable: false,
+			// 		maxlength: '255',
+			// 		outlined: true,
+			// 		backCol: 'white',
+			// 		placeholder: '고객명',
+			// 	},
+			// 	phone: {
+			// 		value: '',
+			// 		clearable: false,
+			// 		maxlength: '255',
+			// 		outlined: true,
+			// 		backCol: 'white',
+			// 		placeholder: '연락처',
+			// 	},
+			// 	sex: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '성별',
+			// 		items: ['남자', '여자'],
+			// 		outlined: true,
+			// 	},
+			// 	age: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '연령대',
+			// 		items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+			// 		outlined: true,
+			// 	},
+			// 	inflow: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '유입경로',
+			// 		items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
+			// 		outlined: true,
+			// 	},
+			// 	status: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '고객상태',
+			// 		items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
+			// 		outlined: true,
+			// 	},
+			// 	counselor_business: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '지점',
+			// 		items: [],
+			// 		outlined: true,
+			// 		returnObject: true,
+			// 		itemText: 'business_title',
+			// 	},
+			// 	counselor_team: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '부서',
+			// 		items: [],
+			// 		outlined: true,
+			// 		returnObject: true,
+			// 		itemText: 'title',
+			// 	},
+			// 	counselor_name: {
+			// 		value: '',
+			// 		errorMessage: '',
+			// 		hideDetail: true,
+			// 		placeholder: '상담사명',
+			// 		items: [],
+			// 		outlined: true,
+			// 		returnObject: true,
+			// 		itemText: 'name',
+			// 	},
+			// 	origin_main_data: [],
+			// 	interest_product: [],
+			// 	contract_product: [],
+			// },
 			date: this.$moment(),
 			startTimeDialog: false,
 			endTimeDialog: false,
