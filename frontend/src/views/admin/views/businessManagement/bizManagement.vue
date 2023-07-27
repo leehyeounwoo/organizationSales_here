@@ -140,19 +140,6 @@ export default {
 </script>
 
 <style lang="scss">
-.search_box_type {
-	width: 193px;
-	margin-left: 10px;
-	div {
-		div {
-			.v-input__slot {
-				min-height: 26px !important;
-				height: 26px;
-				padding: 0 10px !important;
-			}
-		}
-	}
-}
 .new_biz {
 	width: 100px !important;
 	height: 26px !important;

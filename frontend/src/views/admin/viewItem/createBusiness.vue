@@ -85,7 +85,7 @@
 					</v-layout>
 					<div style="height:250px; overflow:auto">
 						<v-layout align-center v-for="(right, idx) in right_data" :key="idx" class="right_table_item">
-							<v-flex style="max-width:50px !important">{{ right.number }}</v-flex>
+							<v-flex style="max-width:50px !important; width:50px">{{ right.number }}</v-flex>
 							<v-flex align-self-center style="max-width:126px !important">
 								<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield1"></txtField>
 							</v-flex>

@@ -3308,3 +3308,16 @@ input[type='number']::-webkit-inner-spin-button {
 	color: rgb(57, 48, 77, 80%) !important;
 	caret-color: black !important;
 }
+.search_box_type {
+	width: 193px;
+	margin-left: 10px;
+	div {
+		div {
+			.v-input__slot {
+				min-height: 26px !important;
+				height: 26px;
+				padding: 0 10px !important;
+			}
+		}
+	}
+}
