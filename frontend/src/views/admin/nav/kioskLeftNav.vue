@@ -80,7 +80,7 @@ export default {
 						},
 						{
 							title: '정산 관리',
-							name: '',
+							name: 'settlementManagement',
 							click: false,
 						},
 						{

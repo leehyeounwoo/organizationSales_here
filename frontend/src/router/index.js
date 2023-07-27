@@ -16,6 +16,8 @@ const organizationManagement = () => import(/* webpackChunkName: "KIOSK" */ '../
 const agentManagement = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/organizationManagement/agentManagement.vue')
 const organizationStatus = () =>
 	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/organizationManagement/organizationStatus.vue')
+const settlementManagement = () =>
+	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/SettlementManagement/settlementManagement.vue')
 
 const routes = [
 	{ path: '*', name: 'notfound', component: notFound },
@@ -54,6 +56,11 @@ const routes = [
 				path: '/admin/organizationStatus',
 				name: 'organizationStatus',
 				component: organizationStatus,
+			},
+			{
+				path: '/admin/settlementManagement',
+				name: 'settlementManagement',
+				component: settlementManagement,
 			},
 		],
 	},
