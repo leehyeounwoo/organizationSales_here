@@ -3,7 +3,7 @@
 		<v-layout v-if="$vuetify.breakpoint.xs" class="pa-4" justify-end>
 			<v-icon @click="$store.state.drawer = false">mdi-close</v-icon>
 		</v-layout>
-		<v-layout class="logoLayout" style="">
+		<v-layout class="logoLayout" style="" justify-center>
 			<span style="color:white">Members Here</span>
 		</v-layout>
 		<div v-for="(list, index) in $store.state.dashBoardList" :key="index">

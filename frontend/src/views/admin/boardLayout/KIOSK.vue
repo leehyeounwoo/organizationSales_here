@@ -5,7 +5,7 @@
 				@click="closeRight()"
 				v-if="$vuetify.breakpoint.lgAndUp"
 				lg2
-				style="background:#F2F2F2; color:#323153; fontWeight:bold; max-width:200px;"
+				style="background:#323153; color:#323153; fontWeight:bold; max-width:200px;"
 			>
 				<leftNav></leftNav>
 			</v-flex>
