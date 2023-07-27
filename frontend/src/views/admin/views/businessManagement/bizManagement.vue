@@ -4,19 +4,20 @@
 			<txtField class="search_box_type" v-model="search_business" :txtField="search"></txtField>
 			<v-btn class="ml-3 search_btn" color="#009dac"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 		</v-layout>
-		<v-data-table class="mt-5 business_table" :headers="table.headers"></v-data-table>
+		<datatable :datatable="table" class="mt-5"></datatable>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" />
 	</div>
 </template>
 
 <script>
-import { txtField } from '@/components/index.js'
+import { txtField, datatable } from '@/components/index.js'
 import createBusiness from '../../viewItem/createBusiness.vue'
 
 export default {
 	components: {
 		txtField,
+		datatable,
 		createBusiness,
 	},
 	data() {
@@ -128,6 +129,12 @@ export default {
 					{ text: '등록상품', value: '' },
 					{ text: '비고', value: '' },
 				],
+				class: 'datatablehover3',
+				items: [],
+				noweditting: '',
+				itemsPerPage: 10,
+				page: 1,
+				pageCount: 0,
 			},
 		}
 	},
@@ -148,10 +155,5 @@ export default {
 	color: white !important;
 	background: #1428a0 !important;
 	border-radius: 0 !important;
-}
-.business_table {
-	.v-data-table__wrapper {
-		border-top: 1px solid black;
-	}
 }
 </style>
