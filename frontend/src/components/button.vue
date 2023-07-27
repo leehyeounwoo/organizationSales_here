@@ -43,7 +43,7 @@ export default {
 <style lang="scss">
 .percentbtn {
 	height: 27px;
-	width: 100%;
+	width: 94%;
 }
 .radius5vh {
 	border-radius: 5vh;

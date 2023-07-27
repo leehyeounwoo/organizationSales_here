@@ -41,6 +41,10 @@
 			:no-data-text="datatable.noDataText"
 			:server-items-length="datatable.total"
 		>
+			<template v-slot:[`header.team`]="{ header }">
+				{{ header.text }}
+				<v-icon small style="background-color:white; border: 0.1px solid gray;" @click="teamChoiceClick">mdi-format-list-group-plus</v-icon>
+			</template>
 			<template v-slot:[`item.visit`]="{}">
 				<div>
 					현장등록
@@ -2232,6 +2236,7 @@ export default {
 	},
 	props: {
 		search: String,
+		teamChoiceClick: Function,
 		clickrow: Function,
 		userheaderselect: Object,
 		datatable: Object,

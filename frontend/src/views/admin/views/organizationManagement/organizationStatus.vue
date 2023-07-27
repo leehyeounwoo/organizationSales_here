@@ -15,19 +15,47 @@
 			</v-flex>
 		</v-layout>
 		<v-layout>
-			<v-flex xs8><datatable :datatable="table"/></v-flex>
+			<v-flex xs8><datatable :datatable="table" :teamChoiceClick="teamChoiceClick"/></v-flex>
 			<v-flex xs4 class="ml-10 mt-5">
 				<v-layout v-for="(edit, index) in rightEdit" :key="index" :style="index === 0 ? 'border-top:1px solid black' : ''">
 					<v-flex class="notice_right_table" xs2>
 						{{ edit.title }}
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
-						<v-layout class=" py-3 px-1">
+						<v-layout v-if="edit.type === 1" class=" py-3 px-1">
 							<v-flex xs8 style="align-self: end;">
 								<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
 							</v-flex>
-							<v-flex xs3>
+							<v-flex xs4>
 								<btn :btn="editBtn" btn_txt="파일 첨부" :click="clickEditBtn" />
+							</v-flex>
+						</v-layout>
+						<v-layout v-if="edit.type === 2" class=" py-3 px-1">
+							<v-flex xs6 style="align-self: end;" mr-1>
+								<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
+							</v-flex>
+							<v-flex xs6 style="align-self: end;">
+								<txtField :txtField="edit.txtField" v-model="edit.txtField2.value" class="search_box_admin"></txtField>
+							</v-flex>
+						</v-layout>
+						<v-layout v-if="edit.type === 3" class=" py-3 px-1">
+							<v-flex xs12>
+								<v-layout>
+									<v-flex xs6 style="align-self: end;" mr-1>
+										<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
+									</v-flex>
+									<v-flex xs6 style="align-self: end;">
+										<txtField :txtField="edit.txtField1" v-model="edit.txtField1.value" class="search_box_admin"></txtField>
+									</v-flex>
+								</v-layout>
+								<v-layout mt-1>
+									<v-flex xs8 style="align-self: end;">
+										<txtField :txtField="edit.txtField2" v-model="edit.txtField2.value" class="search_box_admin"></txtField>
+									</v-flex>
+									<v-flex xs4>
+										<btn :btn="editBtn" btn_txt="파일 첨부" :click="clickEditBtn" />
+									</v-flex>
+								</v-layout>
 							</v-flex>
 						</v-layout>
 					</v-flex>
@@ -136,7 +164,7 @@
 							</v-flex>
 						</v-layout>
 					</v-flex>
-				</v-layout>
+				</v-layout> -->
 
 				<v-layout>
 					<v-flex class="notice_right_table" xs2>
@@ -145,7 +173,7 @@
 					<v-flex xs10 class="notice_right_table2">
 						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
 					</v-flex>
-				</v-layout> -->
+				</v-layout>
 			</v-flex>
 		</v-layout>
 
@@ -172,6 +200,7 @@
 <script>
 import { selectBox, txtField, datatable, btn } from '@/components/index.js'
 import { saveDialog } from '@/components'
+import downloadExcel from 'vue-json-excel'
 
 export default {
 	components: {
@@ -180,6 +209,7 @@ export default {
 		saveDialog,
 		datatable,
 		btn,
+		downloadExcel,
 	},
 
 	data() {
@@ -187,68 +217,107 @@ export default {
 			rightEdit: [
 				{
 					title: '프로필 사진',
+					type: 1,
 					txtField: {
 						value: '',
 						clearable: false,
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						placeholder: '고객명',
+						readonly: true,
+						placeholder: '프로필 사진',
 					},
 				},
 				{
 					title: '계좌정보',
+					type: 2,
 					txtField: {
 						value: '',
 						clearable: false,
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						placeholder: '고객명',
+						readonly: true,
+						placeholder: '은행명',
+					},
+					txtField2: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						readonly: true,
+						placeholder: '계좌번호',
 					},
 				},
 				{
 					title: '통장사본',
+					type: 1,
 					txtField: {
 						value: '',
 						clearable: false,
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						placeholder: '고객명',
+						readonly: true,
+						placeholder: '통장사본',
 					},
 				},
 				{
 					title: '근로계약서',
+					type: 1,
 					txtField: {
 						value: '',
 						clearable: false,
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						placeholder: '고객명',
+						readonly: true,
+						placeholder: '근로계약서',
 					},
 				},
 				{
 					title: '신분증 사본 등',
+					type: 1,
 					txtField: {
 						value: '',
 						clearable: false,
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						placeholder: '고객명',
+						readonly: true,
+						placeholder: '신분증 사본 등',
 					},
 				},
 				{
 					title: '사업자 정보',
+					type: 3,
 					txtField: {
 						value: '',
 						clearable: false,
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						placeholder: '고객명',
+						readonly: true,
+						placeholder: '사업지 이름',
+					},
+					txtField1: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						readonly: true,
+						placeholder: '사업자 번호',
+					},
+					txtField2: {
+						value: '',
+						clearable: false,
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+						readonly: true,
+						placeholder: '사업자 등록증',
 					},
 				},
 			],
@@ -408,6 +477,7 @@ export default {
 				title: '출퇴근 리스트',
 			},
 			selected: [],
+
 			allCounselor: 0,
 			work: 0,
 			endWork: 0,
@@ -418,7 +488,7 @@ export default {
 					{ text: '연락처', value: 'data2', align: 'center' },
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center' },
 					{ text: '등록일', value: 'created_at', align: 'center' },
-					{ text: '팀배정 현황', value: 'team', align: 'center' },
+					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false },
 					{ text: '재직상태', value: 'data5', align: 'center' },
 					{ text: '비고', value: 'etc', align: 'center' },
 				],
@@ -486,7 +556,13 @@ export default {
 	async created() {},
 	mounted() {},
 
-	methods: {},
+	methods: {
+		activeSave() {},
+		teamChoiceClick() {
+			console.log('team')
+		},
+		clickEditBtn() {},
+	},
 }
 </script>
 <style lang="scss">
