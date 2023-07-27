@@ -53,6 +53,7 @@ export default {
 				.dispatch('me')
 				.then(async res => {
 					console.log(res)
+					this.$store.state.loading = false
 					this.$store.state.meData = res.me
 					this.$store.state.dashBoardList = [
 						{
