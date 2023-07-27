@@ -17,7 +17,7 @@
 		<v-layout>
 			<v-flex xs8><datatable :datatable="table"/></v-flex>
 			<v-flex xs4 class="ml-10 mt-5">
-				<v-layout v-for="(edit, index) in rightEdit" :key="index" style="border-top:1px solid black">
+				<v-layout v-for="(edit, index) in rightEdit" :key="index" :style="index === 0 ? 'border-top:1px solid black' : ''">
 					<v-flex class="notice_right_table" xs2>
 						{{ edit.title }}
 					</v-flex>

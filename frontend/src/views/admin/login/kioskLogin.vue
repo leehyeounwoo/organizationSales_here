@@ -101,7 +101,6 @@ export default {
 		if (sessionStorage.getItem('reserveLite-t')) {
 			this.$router.push('/').catch(() => {})
 		}
-		console.log(11)
 	},
 	computed: {
 		nowWidth() {

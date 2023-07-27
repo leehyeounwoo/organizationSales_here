@@ -87,10 +87,9 @@ export default {
 		},
 	},
 	async created() {
-		console.log(33)
-		// if (!sessionStorage.getItem('reserveLite-t')) {
-		// 	this.$router.push({ name: 'kioskLogin' }).catch(() => {})
-		// }
+		if (!sessionStorage.getItem('reserveLite-t')) {
+			this.$router.push({ name: 'kioskLogin' }).catch(() => {})
+		}
 		// else {
 		// this.meData()
 		// }
