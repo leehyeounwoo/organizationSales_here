@@ -43,7 +43,7 @@
 								<v-layout class="pt-3">
 									<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 									<v-flex>
-										<v-btn class="ml-2 new_biz_btn">주소복사</v-btn>
+										<v-btn elevation="0" class="ml-2 new_biz_btn">주소복사</v-btn>
 									</v-flex>
 								</v-layout>
 							</v-flex>
@@ -55,7 +55,7 @@
 										<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 									</v-flex>
 									<v-flex xs4>
-										<v-btn class="ml-2 file_btn">
+										<v-btn elevation="0" class="ml-2 file_btn">
 											<v-img max-width="14" class="mr-1" src="@/assets/images/input_btn.png" />파일 업로드
 										</v-btn>
 									</v-flex>
@@ -107,10 +107,10 @@
 										</v-radio-group>
 									</v-flex>
 									<v-flex>
-										<v-btn class="etc_btn" style="width:60px">적용</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="width:60px">적용</v-btn>
 									</v-flex>
 									<v-flex>
-										<v-btn class="etc_btn" style="">계정정보 발송</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="">계정정보 발송</v-btn>
 									</v-flex>
 								</v-layout>
 							</v-flex>
@@ -335,6 +335,7 @@ export default {
 	font-size: 12px !important;
 	font-weight: normal;
 	border-radius: 0 !important;
+	border: 1px solid #cfdcdd;
 }
 .file_btn {
 	width: 115px !important;
@@ -344,6 +345,7 @@ export default {
 	font-size: 12px !important;
 	font-weight: normal;
 	border-radius: 0 !important;
+	border: 1px solid #9a9c9b;
 }
 .file_sample {
 	min-width: unset !important;
@@ -396,5 +398,6 @@ export default {
 	font-size: 12px !important;
 	font-weight: normal;
 	border-radius: 0 !important;
+	border: 1px solid #cfdcdd;
 }
 </style>

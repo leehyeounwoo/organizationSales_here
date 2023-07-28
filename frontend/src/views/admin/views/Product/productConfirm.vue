@@ -12,15 +12,17 @@
 			</v-flex>
 			<v-btn class="ml-3 search_btn" color="#009dac">적용</v-btn>
 		</v-layout>
+		<datatable :datatable="productTable" class="mt-5"></datatable>
 	</div>
 </template>
 
 <script>
-import { selectBox } from '@/components/index.js'
+import { selectBox, datatable } from '@/components/index.js'
 
 export default {
 	components: {
 		selectBox,
+		datatable,
 	},
 	data() {
 		return {
@@ -47,6 +49,21 @@ export default {
 				hideDetail: true,
 				outlined: true,
 				class: 'searchSel',
+			},
+			productTable: {
+				headers: [
+					{ text: '요청 상담사', value: '', width: '12%' },
+					{ text: '홀딩 요청 상품', value: '', width: '15%' },
+					{ text: '홀딩요청시간', value: '', width: '13%' },
+					{ text: '배정 요청 처리', value: '', width: '25%' },
+					{ text: '상태', value: '', width: '35%' },
+				],
+				class: 'datatablehover3',
+				items: [],
+				noweditting: '',
+				itemsPerPage: 10,
+				page: 1,
+				pageCount: 0,
 			},
 		}
 	},

@@ -12,15 +12,17 @@
 			</v-flex>
 			<v-btn class="ml-3 search_btn" color="#009dac">적용</v-btn>
 		</v-layout>
+		<datatable :datatable="productManager"></datatable>
 	</div>
 </template>
 
 <script>
-import { selectBox } from '@/components/index.js'
+import { selectBox, datatable } from '@/components/index.js'
 
 export default {
 	components: {
 		selectBox,
+		datatable,
 	},
 	data() {
 		return {
@@ -47,6 +49,22 @@ export default {
 				hideDetail: true,
 				outlined: true,
 				class: 'searchSel',
+			},
+			productManager: {
+				headers: [
+					{ text: '주택형', value: '', width: '6%' },
+					{ text: '동', value: '', width: '5%' },
+					{ text: '호수', value: '', width: '5%' },
+					{ text: '담당자', value: '', width: '19%' },
+					{ text: '배정', value: '', width: '30%' },
+					{ text: '상태', value: '', width: '35%' },
+				],
+				class: 'datatablehover3',
+				items: [],
+				noweditting: '',
+				itemsPerPage: 10,
+				page: 1,
+				pageCount: 0,
 			},
 		}
 	},
