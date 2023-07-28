@@ -2053,24 +2053,18 @@ export const createGotowork = gql`
 		$startWork: DateTime
 		$endWork: DateTime
 		$status: ENUM_GOTOWORKS_STATUS
-		$business: ID
 		$vacation: ID
 	) {
 		createGotowork(
-			input: {
-				data: {
-					date: $date
-					user: $user
-					startWork: $startWork
-					endWork: $endWork
-					status: $status
-					business: $business
-					vacation: $vacation
-				}
-			}
+			input: { data: { date: $date, user: $user, startWork: $startWork, endWork: $endWork, status: $status, vacation: $vacation } }
 		) {
 			gotowork {
 				id
+				vacation {
+					id
+					vacationType
+					vacationDate
+				}
 			}
 		}
 	}
@@ -2091,6 +2085,43 @@ export const deleteGotowork = gql`
 		deleteGotowork(input: { where: { id: $id } }) {
 			gotowork {
 				id
+			}
+		}
+	}
+`
+export const updateVacation = gql`
+	mutation updateVacation(
+		$id: ID!
+		$user: ID
+		$gotowork: ID
+		$status: String
+		$adminId: String
+		$viewStatus: Boolean
+		$vacationDate: Date
+		$type: String
+		$comment: String
+	) {
+		updateVacation(
+			input: {
+				where: { id: $id }
+				data: {
+					status: $status
+					adminId: $adminId
+					adminName: $adminName
+					viewStatus: $viewStatus
+					user: $user
+					gotowork: $gotowork
+					vacationDate: $vacationDate
+					type: $type
+					comment: $comment
+				}
+			}
+		) {
+			vacation {
+				id
+				gotowork {
+					id
+				}
 			}
 		}
 	}

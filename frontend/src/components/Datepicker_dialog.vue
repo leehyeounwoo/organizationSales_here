@@ -2,7 +2,7 @@
 	<v-dialog v-model="dialog" :return-value.sync="date" persistent width="fit-content">
 		<template v-slot:activator="{ on, attrs }">
 			<v-text-field
-				v-model="picker.date"
+				v-model="comma"
 				outlined
 				:class="picker.class + (disable ? ' disabled_txtField' : '')"
 				dense
@@ -41,12 +41,28 @@
 </template>
 
 <script>
+import moment from 'moment'
+import 'moment/locale/ko'
+
 export default {
 	props: {
 		picker: Object,
 		disable: Boolean,
 		allowed_dates: Function,
+		language: String,
 		// disabledata: Function,
+	},
+	computed: {
+		comma() {
+			// let data =
+			if (this.language === 'ko') {
+				return moment(this.picker.date)
+					.locale('ko')
+					.format('YYYY년-MM월-DD일(ddd)')
+			} else {
+				return this.picker.date
+			}
+		},
 	},
 	data() {
 		return {

@@ -655,11 +655,16 @@
               }
             }
           },
-          "status": {
-            "type": "string"
-          },
           "vacationType": {
             "type": "string"
+          },
+          "vacationStatus": {
+            "type": "string",
+            "enum": [
+              "agree",
+              "disagree",
+              "waiting"
+            ]
           },
           "published_at": {
             "type": "datetime"
@@ -689,11 +694,16 @@
           "user": {
             "type": "string"
           },
-          "status": {
-            "type": "string"
-          },
           "vacationType": {
             "type": "string"
+          },
+          "vacationStatus": {
+            "type": "string",
+            "enum": [
+              "agree",
+              "disagree",
+              "waiting"
+            ]
           },
           "published_at": {
             "type": "datetime"

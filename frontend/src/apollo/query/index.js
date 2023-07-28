@@ -676,12 +676,14 @@ export const users = gql`
 					phoneNumber
 				}
 			}
-			vacations {
+			vacations(where: { vacationDate: $date }) {
 				id
-				status
+				vacationStatus
 				created_at
 				vacationDate
+				vacationReason
 				viewStatus
+				vacationType
 			}
 		}
 	}

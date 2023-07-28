@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "07/28/2023 9:10:41 AM"
+    "x-generation-date": "07/28/2023 10:42:22 AM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -6053,10 +6053,10 @@
               "user": {
                 "type": "string"
               },
-              "status": {
+              "vacationType": {
                 "type": "string"
               },
-              "vacationType": {
+              "vacationStatus": {
                 "type": "string"
               },
               "published_at": {
@@ -6698,11 +6698,16 @@
               }
             }
           },
-          "status": {
-            "type": "string"
-          },
           "vacationType": {
             "type": "string"
+          },
+          "vacationStatus": {
+            "type": "string",
+            "enum": [
+              "agree",
+              "disagree",
+              "waiting"
+            ]
           },
           "published_at": {
             "type": "datetime"
@@ -6732,11 +6737,16 @@
           "user": {
             "type": "string"
           },
-          "status": {
-            "type": "string"
-          },
           "vacationType": {
             "type": "string"
+          },
+          "vacationStatus": {
+            "type": "string",
+            "enum": [
+              "agree",
+              "disagree",
+              "waiting"
+            ]
           },
           "published_at": {
             "type": "datetime"
@@ -7217,10 +7227,10 @@
                 "user": {
                   "type": "string"
                 },
-                "status": {
+                "vacationType": {
                   "type": "string"
                 },
-                "vacationType": {
+                "vacationStatus": {
                   "type": "string"
                 },
                 "published_at": {

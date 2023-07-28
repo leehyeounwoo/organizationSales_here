@@ -80,22 +80,10 @@
 								</v-layout>
 							</v-flex>
 							<v-flex class="nomal-input-type px-2" xs9 v-if="index === 0">
-								<!-- <v-radio-group v-model="right.radio" row class="project_message">
-									<v-radio
-										label="승인"
-										value="agree"
-										:readonly="setdialog.editData.vacationData?.status ? setdialog.editData.vacationData.status !== 'waiting' : ''"
-										color="#2699FB"
-										@click="click_radio()"
-									></v-radio>
-									<v-radio
-										label="반려"
-										value="disagree"
-										:readonly="setdialog.editData.vacationData?.status ? setdialog.editData.vacationData.status !== 'waiting' : ''"
-										color="#2699FB"
-										@click="click_radio()"
-									></v-radio>
-								</v-radio-group> -->
+								<v-radio-group v-model="right.radio" row class="project_message">
+									<v-radio label="승인" value="agree" color="#2699FB" @click="click_radio()"></v-radio>
+									<v-radio label="반려" value="disagree" color="#2699FB" @click="click_radio()"></v-radio>
+								</v-radio-group>
 							</v-flex>
 							<v-flex class="nomal-input-type px-2" xs9 v-else>
 								<txtField class="bizInput" v-model="right.value" :txtField="right.txtfield"></txtField>
@@ -334,23 +322,24 @@ export default {
 		},
 
 		async clickSave() {
+			console.log(this.setdialog.editData)
 			this.$store.state.loading = true
 			if (this.rightInfoBottom[0].radio === 'agree') {
 				let input = {
-					status: this.setdialog.editData.vacationData.type,
-					date: this.setdialog.editData.vacationData.vacationDate,
-					business: this.setdialog.editData.all.business.id,
-					users_permissions_user: this.setdialog.editData.userId,
+					vacationType: this.setdialog.editData.vacationData.vacationType,
+					vacationDate: this.setdialog.editData.vacationData.vacationDate,
+					user: this.setdialog.editData.id,
 					vacation: this.setdialog.editData.vacationData.id,
 				}
+
 				await this.$store.dispatch('createGotowork', input).then(res => {
+					console.log(res)
 					let input2 = {
 						id: this.setdialog.editData.vacationData.id,
-						adminName: this.$store.state.meData.name,
-						adminId: this.$store.state.meData.id,
-						status: 'agree',
+						status: this.setdialog.editData.vacationData.vacationType,
 						gotowork: res.createGotowork.gotowork.id,
 					}
+					console.log(input2)
 					this.$store.dispatch('updateVacation', input2).then(() => {
 						this.sweetDialog.open = false
 						this.setdialog.dialog = false
@@ -383,12 +372,25 @@ export default {
 			}
 			this.sweetDialog.open = true
 		},
+		async getworkTime() {
+			this.$store.state.loading = true
+
+			let input = {
+				user: this.setdialog.editData.all.id,
+			}
+			await this.$store.dispatch('gotoWork', input).then(res => {
+				console.log(res)
+				this.leftInfoTop[6].value = res.gotoworks.length + '일'
+				this.$store.state.loading = false
+			})
+		},
 	},
 	watch: {
 		setdialog: {
 			deep: true,
-			handler() {
+			async handler() {
 				if (this.setdialog.dialog) {
+					console.log(this.setdialog.editData)
 					if (this.setdialog.edit) {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
@@ -396,19 +398,17 @@ export default {
 						this.leftInfoTop[3].value = this.setdialog.editData.title ? this.setdialog.editData.title : '-'
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
 						this.leftInfoTop[5].value = this.setdialog.editData.team
-						this.leftInfoTop[6].value = this.$moment().diff(this.$moment(this.setdialog.editData.created_at), 'day') + '일'
-						this.leftInfoTop[7].value = this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format(
-							'YYYY-MM-DD',
-						)
+
+						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format('YYYY-MM-DD')
 						this.rightInfoTop[1].value =
-							this.setdialog.editData.vacationData.type === 'vacation'
+							this.setdialog.editData.vacationData.vacationType === 'vacation'
 								? '휴가'
-								: this.setdialog.editData.vacationData.type === 'afternoonVacation'
+								: this.setdialog.editData.vacationData.vacationType === 'afternoonVacation'
 								? '오후 반차'
 								: '오전 반차'
 						this.rightInfoTop[2].value = this.setdialog.editData.vacationData.vacationDate
 						this.rightInfoTop[2].value2 = this.setdialog.editData.vacationData.vacationDate
-						this.rightInfoTop[3].value = this.setdialog.editData.vacationData.reason
+						this.rightInfoTop[3].value = this.setdialog.editData.vacationData.vacationReason
 						if (this.setdialog.editData.vacationData.status !== 'waiting') {
 							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationData.status
 							this.rightInfoBottom[1].value = this.setdialog.editData.vacationData.comment
@@ -418,6 +418,8 @@ export default {
 							this.rightInfoBottom[1].value = ''
 							this.rightInfoBottom[1].txtfield.readonly = false
 						}
+
+						await this.getworkTime()
 					}
 				}
 			},

@@ -35,11 +35,16 @@
       "model": "user",
       "via": "vacations"
     },
-    "status": {
-      "type": "string"
-    },
     "vacationType": {
       "type": "string"
+    },
+    "vacationStatus": {
+      "type": "enumeration",
+      "enum": [
+        "agree",
+        "disagree",
+        "waiting"
+      ]
     }
   }
 }

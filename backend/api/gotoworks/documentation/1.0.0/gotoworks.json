@@ -572,10 +572,10 @@
               "user": {
                 "type": "string"
               },
-              "status": {
+              "vacationType": {
                 "type": "string"
               },
-              "vacationType": {
+              "vacationStatus": {
                 "type": "string"
               },
               "published_at": {

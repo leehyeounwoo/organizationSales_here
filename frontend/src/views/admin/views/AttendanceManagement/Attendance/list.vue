@@ -2,8 +2,10 @@
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
 			<v-layout align-center justify-start>
-				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;">
-					{{ date_filter(date) }}
+				<v-flex>
+					<div class="d-flex align-center date_picker2 ml-3 mr-2" style="width:200px;">
+						<DatepickerDialog :picker="date_picker" language="ko" @change="click_date_picker"></DatepickerDialog>
+					</div>
 				</v-flex>
 				<v-flex>
 					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
@@ -15,6 +17,7 @@
 					<v-btn class="search_btn_type2" color="#FFFFFF" elevation="0" @click="click_date_now">오늘</v-btn>
 				</v-flex>
 			</v-layout>
+
 			<v-layout align-center justify-end>
 				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
 					<selectBox :sel="searchsel1" :class="'searchSel'" style="font-size:12px"></selectBox>
@@ -216,9 +219,11 @@
 
 <script>
 import { selectBox, txtField } from '@/components/index.js'
-import { saveDialog } from '@/components'
+import { saveDialog, DatepickerDialog } from '@/components'
 import detail from './detail.vue'
 import vacationStatus from './vacationStatus.vue'
+// import moment from 'moment'
+// import 'moment/locale/ko'
 
 export default {
 	components: {
@@ -227,6 +232,7 @@ export default {
 		detail,
 		vacationStatus,
 		saveDialog,
+		DatepickerDialog,
 	},
 
 	data() {
@@ -363,6 +369,7 @@ export default {
 			})
 		},
 		async viewUsers(input) {
+			console.log(input)
 			this.$store.state.loading = true
 			await this.$store
 				.dispatch('users', input)
@@ -437,7 +444,7 @@ export default {
 						let vactionIndex = element.vacations.findIndex(el => el.vacationDate === this.$moment(this.date).format('YYYY-MM-DD'))
 						if (vactionIndex !== -1) {
 							listData.vacationData = element.vacations[vactionIndex]
-							listData.vacation = element.vacations[vactionIndex].status
+							listData.vacation = element.vacations[vactionIndex].vacationStatus
 						} else {
 							listData.vacation = '-'
 						}
@@ -500,26 +507,7 @@ export default {
 				await this.viewUsers(range)
 			}
 		},
-		date_filter(val) {
-			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
-		},
+
 		update() {
 			let input = {
 				date: this.$moment(this.date).format('YYYY-MM-DD'),
@@ -527,42 +515,42 @@ export default {
 
 			this.usersView(input)
 		},
+
 		click_date_before() {
 			let input = {
-				date: this.$moment(this.date)
+				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 			}
+			console.log(input, '22')
 
 			this.viewUsers(input)
 
-			this.date = this.$moment(this.date).subtract(1, 'd')
+			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		click_date_next() {
 			let input = {
-				date: this.$moment(this.date)
+				date: this.$moment(this.date_picker.date)
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 			}
-
+			console.log(input, '22')
 			this.viewUsers(input)
-			this.date = this.$moment(this.date).add(1, 'd')
+			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		click_date_now() {
 			let input = {
 				date: this.$moment().format('YYYY-MM-DD'),
 			}
-
+			console.log(input, '22')
 			this.viewUsers(input)
-			this.date = this.$moment()
+			this.date_picker.date = this.$moment()
 		},
 		click_date_picker() {
 			let input = {
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.business.id
-			}
+			console.log(input, '22')
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
