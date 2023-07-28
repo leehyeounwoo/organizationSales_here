@@ -64,7 +64,7 @@ export default {
 
 						{
 							title: '물건 배정',
-							name: '',
+							name: 'productManagement',
 							click: false,
 						},
 
