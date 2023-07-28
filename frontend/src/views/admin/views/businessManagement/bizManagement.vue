@@ -54,13 +54,10 @@ export default {
 					// 2
 					{
 						title: '근무시간 설정',
-						type: 'txtfield',
-						value: '',
-						txtfield: {
-							maxlength: '255',
-							outlined: true,
-							hideDetail: true,
-							errorMessage: '',
+						type: 'time',
+						worktime: {
+							start: '',
+							end: '',
 						},
 					},
 					// 3

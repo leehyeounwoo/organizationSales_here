@@ -25,6 +25,36 @@
 								<txtField class="pt-3 bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 							</v-flex>
 						</v-flex>
+						<v-flex xs9 v-else-if="left.type === 'time'" class="table_right_white px-2 biz_table_right">
+							<v-flex xs6 class="pt-3">
+								<v-layout>
+									<v-flex xs6 @click="edit_time">
+										<v-text-field
+											v-model="left.worktime.start"
+											outlined
+											dense
+											readonly
+											hide-details="true"
+											append-icon="mdi-calendar"
+											class="worktime_picker small_font bizInput"
+										></v-text-field>
+									</v-flex>
+									<div class="px-1">~</div>
+									<v-flex xs6 @click="edit_time">
+										<v-text-field
+											v-model="left.worktime.end"
+											outlined
+											dense
+											readonly
+											hide-details="true"
+											append-icon="mdi-calendar"
+											class="worktime_picker small_font bizInput"
+										></v-text-field>
+									</v-flex>
+								</v-layout>
+							</v-flex>
+							<timePickerDialog :setdialog="editTimePicker" @click="save_time" />
+						</v-flex>
 						<v-flex xs9 v-else-if="left.type === 'selectBox'" class="table_right_white px-2 biz_table_right">
 							<v-flex class="pt-3" xs7>
 								<v-layout>
@@ -127,6 +157,8 @@
 
 <script>
 import { txtField, selectBox } from '@/components/index.js'
+import timePickerDialog from './timePickerDialog.vue'
+
 export default {
 	props: {
 		setdialog: Object,
@@ -134,6 +166,7 @@ export default {
 	components: {
 		txtField,
 		selectBox,
+		timePickerDialog,
 	},
 	data() {
 		return {
@@ -307,7 +340,21 @@ export default {
 					},
 				},
 			],
+			editTimePicker: {
+				dialog: false,
+				start: '',
+				end: '',
+			},
 		}
+	},
+	methods: {
+		edit_time() {
+			this.editTimePicker.dialog = true
+		},
+		save_time(picker) {
+			this.editTimePicker.dialog = false
+			this.setdialog.items[2].worktime.start = picker
+		},
 	},
 }
 </script>
@@ -399,5 +446,16 @@ export default {
 	font-weight: normal;
 	border-radius: 0 !important;
 	border: 1px solid #cfdcdd;
+}
+.worktime_picker {
+	.v-icon.v-icon {
+		color: #009dac;
+	}
+	.v-input__slot {
+		padding: 0 8px !important;
+	}
+	.v-input__append-inner {
+		margin-top: 3px !important;
+	}
 }
 </style>
