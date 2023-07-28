@@ -330,14 +330,17 @@ export default {
 					vacationDate: this.setdialog.editData.vacationData.vacationDate,
 					user: this.setdialog.editData.id,
 					vacation: this.setdialog.editData.vacationData.id,
+					date: this.$moment().format('YYYY-MM-DD'),
+					status: 'vacation',
 				}
 
 				await this.$store.dispatch('createGotowork', input).then(res => {
 					console.log(res)
 					let input2 = {
 						id: this.setdialog.editData.vacationData.id,
-						status: this.setdialog.editData.vacationData.vacationType,
+						vacationStatus: 'agree',
 						gotowork: res.createGotowork.gotowork.id,
+						adminId: this.$store.state.meData.id,
 					}
 					console.log(input2)
 					this.$store.dispatch('updateVacation', input2).then(() => {

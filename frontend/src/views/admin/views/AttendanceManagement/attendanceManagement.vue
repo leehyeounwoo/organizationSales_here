@@ -10,14 +10,6 @@
 					</span>
 				</v-layout>
 			</v-flex>
-			<v-flex xs4>
-				<v-layout align-center>
-					<div class=" mr-1"></div>
-					<span class="admin_title">
-						* 관리자 체크시 사유작성
-					</span>
-				</v-layout>
-			</v-flex>
 		</v-layout>
 		<v-spacer></v-spacer>
 		<v-tabs :color="'#0ca2b0'" background-color="#F4F8FD" v-model="tab" class="reservationTab mt-5" slider-size="1">

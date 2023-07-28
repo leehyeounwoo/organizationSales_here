@@ -2060,10 +2060,12 @@ export const createGotowork = gql`
 		) {
 			gotowork {
 				id
+				status
 				vacation {
 					id
 					vacationType
 					vacationDate
+					vacationStatus
 				}
 			}
 		}
@@ -2094,25 +2096,24 @@ export const updateVacation = gql`
 		$id: ID!
 		$user: ID
 		$gotowork: ID
-		$status: String
+		$vacationStatus: ENUM_VACATION_VACATIONSTATUS
 		$adminId: String
 		$viewStatus: Boolean
 		$vacationDate: Date
-		$type: String
+		$vacationType: String
 		$comment: String
 	) {
 		updateVacation(
 			input: {
 				where: { id: $id }
 				data: {
-					status: $status
+					vacationStatus: $vacationStatus
 					adminId: $adminId
-					adminName: $adminName
 					viewStatus: $viewStatus
 					user: $user
 					gotowork: $gotowork
 					vacationDate: $vacationDate
-					type: $type
+					vacationType: $vacationType
 					comment: $comment
 				}
 			}
