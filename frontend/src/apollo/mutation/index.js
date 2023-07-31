@@ -2066,6 +2066,7 @@ export const createGotowork = gql`
 					vacationType
 					vacationDate
 					vacationStatus
+					comment
 				}
 			}
 		}

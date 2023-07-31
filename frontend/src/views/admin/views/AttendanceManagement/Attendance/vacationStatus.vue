@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { txtField, sweetAlert } from '@/components'
+import { txtField, sweetAlert } from '@/components/index.js'
 export default {
 	components: {
 		txtField,
@@ -353,10 +353,9 @@ export default {
 			} else {
 				let input2 = {
 					id: this.setdialog.editData.vacationData.id,
-					adminName: this.$store.state.meData.name,
 					comment: this.rightInfoBottom[1].value,
 					adminId: this.$store.state.meData.id,
-					status: 'disagree',
+					vacationStatus: 'disagree',
 				}
 				this.$store.dispatch('updateVacation', input2).then(() => {
 					this.sweetDialog.open = false
@@ -412,12 +411,13 @@ export default {
 						this.rightInfoTop[2].value = this.setdialog.editData.vacationData.vacationDate
 						this.rightInfoTop[2].value2 = this.setdialog.editData.vacationData.vacationDate
 						this.rightInfoTop[3].value = this.setdialog.editData.vacationData.vacationReason
-						if (this.setdialog.editData.vacationData.status !== 'waiting') {
-							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationData.status
+						if (this.setdialog.editData.vacationData.vacationStatus !== 'waiting') {
+							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationData.vacationStatus
 							this.rightInfoBottom[1].value = this.setdialog.editData.vacationData.comment
 							this.rightInfoBottom[1].txtfield.readonly = true
 						} else {
-							this.rightInfoBottom[0].radio = 'agree'
+							this.rightInfoBottom[0].radio = 'disagree'
+							this.rightInfoBottom[1].txtfield.disable = false
 							this.rightInfoBottom[1].value = ''
 							this.rightInfoBottom[1].txtfield.readonly = false
 						}

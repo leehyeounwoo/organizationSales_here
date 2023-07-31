@@ -684,6 +684,7 @@ export const users = gql`
 				vacationReason
 				viewStatus
 				vacationType
+				comment
 			}
 		}
 	}
