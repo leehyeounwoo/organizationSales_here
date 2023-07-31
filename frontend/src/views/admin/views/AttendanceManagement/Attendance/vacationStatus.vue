@@ -379,10 +379,11 @@ export default {
 
 			let input = {
 				user: this.setdialog.editData.all.id,
+				status_check: ['startWork', 'endWork'],
 			}
 			await this.$store.dispatch('gotoWork', input).then(res => {
 				console.log(res)
-				this.leftInfoTop[6].value = res.gotoworks.length + '일'
+				this.leftInfoTop[6].value = res.gotoworksConnection.aggregate.count + '일'
 				this.$store.state.loading = false
 			})
 		},
@@ -398,10 +399,10 @@ export default {
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
 						this.leftInfoTop[3].value = this.setdialog.editData.title ? this.setdialog.editData.title : '-'
-						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
+						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:MM')
 						this.leftInfoTop[5].value = this.setdialog.editData.team
 
-						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format('YYYY-MM-DD')
+						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format('YYYY-MM-DD HH:mm:ss')
 						this.rightInfoTop[1].value =
 							this.setdialog.editData.vacationData.vacationType === 'vacation'
 								? '휴가'
