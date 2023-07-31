@@ -594,6 +594,12 @@
                 "phoneNumber": {
                   "type": "string"
                 },
+                "rankId": {
+                  "type": "string"
+                },
+                "businessID": {
+                  "type": "string"
+                },
                 "created_by": {
                   "type": "string"
                 },

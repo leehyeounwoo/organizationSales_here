@@ -1494,6 +1494,12 @@
           },
           "phoneNumber": {
             "type": "string"
+          },
+          "rankId": {
+            "type": "string"
+          },
+          "businessID": {
+            "type": "string"
           }
         }
       },
@@ -1557,6 +1563,12 @@
             }
           },
           "phoneNumber": {
+            "type": "string"
+          },
+          "rankId": {
+            "type": "string"
+          },
+          "businessID": {
             "type": "string"
           },
           "created_by": {

@@ -93,10 +93,16 @@
       "via": "user"
     },
     "vacations": {
-      "via": "user",
-      "collection": "vacation"
+      "collection": "vacation",
+      "via": "user"
     },
     "phoneNumber": {
+      "type": "string"
+    },
+    "rankId": {
+      "type": "string"
+    },
+    "businessID": {
       "type": "string"
     }
   }

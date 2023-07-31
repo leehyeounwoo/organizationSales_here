@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/vacations": {
+    "/ranks": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -12,7 +12,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Vacation"
+                    "$ref": "#/components/schemas/Rank"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Vacation"
+          "Rank"
         ],
         "parameters": [
           {
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacation"
+                  "$ref": "#/components/schemas/Rank"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Vacation"
+          "Rank"
         ],
         "requestBody": {
           "description": "",
@@ -247,14 +247,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewVacation"
+                "$ref": "#/components/schemas/NewRank"
               }
             }
           }
         }
       }
     },
-    "/vacations/count": {
+    "/ranks/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -306,12 +306,12 @@
         },
         "summary": "",
         "tags": [
-          "Vacation"
+          "Rank"
         ],
         "parameters": []
       }
     },
-    "/vacations/{id}": {
+    "/ranks/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +321,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacation"
+                  "$ref": "#/components/schemas/Rank"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Vacation"
+          "Rank"
         ],
         "parameters": [
           {
@@ -383,7 +383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacation"
+                  "$ref": "#/components/schemas/Rank"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Vacation"
+          "Rank"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewVacation"
+                "$ref": "#/components/schemas/NewRank"
               }
             }
           }
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Vacation"
+          "Rank"
         ],
         "parameters": [
           {
@@ -514,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Vacation": {
+      "Rank": {
         "required": [
           "id"
         ],
@@ -522,22 +522,13 @@
           "id": {
             "type": "string"
           },
-          "vacationDate": {
+          "rankName": {
             "type": "string"
           },
-          "vacationReason": {
-            "type": "string"
-          },
-          "adminId": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "viewStatus": {
+          "useYn": {
             "type": "boolean"
           },
-          "gotowork": {
+          "team": {
             "required": [
               "id"
             ],
@@ -545,26 +536,17 @@
               "id": {
                 "type": "string"
               },
-              "startWork": {
-                "type": "datetime"
-              },
-              "endWork": {
-                "type": "datetime"
-              },
-              "date": {
+              "teamName": {
                 "type": "string"
               },
-              "status": {
-                "type": "string"
+              "useYn": {
+                "type": "boolean"
               },
-              "vacation": {
-                "type": "string"
-              },
-              "user": {
-                "type": "string"
-              },
-              "business": {
-                "type": "string"
+              "ranks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "published_at": {
                 "type": "datetime"
@@ -577,139 +559,21 @@
               }
             }
           },
-          "user": {
-            "required": [
-              "id",
-              "username",
-              "email"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "confirmed": {
-                "type": "boolean"
-              },
-              "blocked": {
-                "type": "boolean"
-              },
-              "role": {
-                "type": "string"
-              },
-              "salesPhoneNumber": {
-                "type": "string"
-              },
-              "bank": {
-                "type": "string"
-              },
-              "accountNumber": {
-                "type": "string"
-              },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "businessRegistration": {
-                "type": "string"
-              },
-              "businessNumber": {
-                "type": "string"
-              },
-              "gotoworks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "vacations": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "rankId": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "vacationType": {
-            "type": "string"
-          },
-          "vacationStatus": {
-            "type": "string",
-            "enum": [
-              "agree",
-              "disagree",
-              "waiting"
-            ]
-          },
           "published_at": {
             "type": "datetime"
           }
         }
       },
-      "NewVacation": {
+      "NewRank": {
         "properties": {
-          "vacationDate": {
+          "rankName": {
             "type": "string"
           },
-          "vacationReason": {
-            "type": "string"
-          },
-          "adminId": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "viewStatus": {
+          "useYn": {
             "type": "boolean"
           },
-          "gotowork": {
+          "team": {
             "type": "string"
-          },
-          "user": {
-            "type": "string"
-          },
-          "vacationType": {
-            "type": "string"
-          },
-          "vacationStatus": {
-            "type": "string",
-            "enum": [
-              "agree",
-              "disagree",
-              "waiting"
-            ]
           },
           "published_at": {
             "type": "datetime"
@@ -726,7 +590,7 @@
   },
   "tags": [
     {
-      "name": "Vacation"
+      "name": "Rank"
     }
   ]
 }

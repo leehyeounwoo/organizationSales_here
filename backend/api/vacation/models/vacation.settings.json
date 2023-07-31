@@ -31,9 +31,9 @@
       "via": "vacation"
     },
     "user": {
+      "via": "vacations",
       "plugin": "users-permissions",
-      "model": "user",
-      "via": "vacations"
+      "model": "user"
     },
     "vacationType": {
       "type": "string"

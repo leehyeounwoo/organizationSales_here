@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ranks",
+  "info": {
+    "name": "rank"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "rankName": {
+      "type": "string"
+    },
+    "useYn": {
+      "type": "boolean"
+    },
+    "team": {
+      "via": "ranks",
+      "model": "team"
+    }
+  }
+}
