@@ -1500,6 +1500,9 @@
           },
           "businessID": {
             "type": "string"
+          },
+          "teamID": {
+            "type": "string"
           }
         }
       },
@@ -1569,6 +1572,9 @@
             "type": "string"
           },
           "businessID": {
+            "type": "string"
+          },
+          "teamID": {
             "type": "string"
           },
           "created_by": {

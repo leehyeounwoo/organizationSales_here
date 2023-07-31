@@ -104,6 +104,9 @@
     },
     "businessID": {
       "type": "string"
+    },
+    "teamID": {
+      "type": "string"
     }
   }
 }

@@ -653,6 +653,9 @@
               "businessID": {
                 "type": "string"
               },
+              "teamID": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
