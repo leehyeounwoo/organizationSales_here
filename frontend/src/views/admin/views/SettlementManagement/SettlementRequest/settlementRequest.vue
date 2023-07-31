@@ -43,7 +43,7 @@
 			</v-flex>
 			<v-flex xs4 class="ml-10">
 				<v-layout style="border-top:1px solid black">
-					<v-flex class="notice_right_table" xs2>
+					<v-flex class="notice_right_table" xs3 style="height: 50px;">
 						계약자
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
@@ -51,31 +51,31 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs2>
+					<v-flex class="notice_right_table" xs3 style="height: 50px;">
 						계약물건
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2"> </v-flex>
 				</v-layout>
 
 				<v-layout>
-					<v-flex class="notice_right_table" xs2>
+					<v-flex class="notice_right_table" xs3>
 						정산요청이력
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2" style="height:163px">
 						<v-layout justify-center align-center>
-							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
-								대분류
+							<v-flex xs5 class="client_table_style" style="border-right: 1px solid #C8C8C8">
+								날짜
 							</v-flex>
 							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
-								상품명
+								내용
 							</v-flex>
-							<v-flex xs4 class="client_table_style">
-								세부분류
+							<v-flex xs3 class="client_table_style">
+								상태
 							</v-flex>
 						</v-layout>
 						<v-layout wrap class="client_table_body_style">
 							<v-layout align-center v-for="(data, index) in detailData.interest_product" :key="data.main.value + index">
-								<v-flex xs4 style="min-width:0px; margin:0px 7px;">
+								<v-flex xs5 style="min-width:0px; margin:0px 7px;">
 									<selectBox
 										:sel="data.main"
 										:readonly="true"
@@ -94,36 +94,17 @@
 									></selectBox>
 								</v-flex>
 								<v-flex xs4 style="min-width:0px; margin:0px 7px; display: flex;">
-									<v-btn
-										class="detail_etc_btn py-2"
-										style="margin: 0 auto;"
-										small
-										:color="'#9A9C9B'"
-										depressed
-										@click="click_detail_path(data)"
-										>자세히 보기</v-btn
-									>
+									<v-btn class="detail_etc_btn py-2" style="margin: 0 auto;" small :color="'#9A9C9B'" depressed --> >자세히 보기</v-btn>
 								</v-flex>
 							</v-layout>
 						</v-layout>
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs2>
+					<v-flex class="notice_right_table" xs3>
 						증빙서류
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2" style="height:163px">
-						<v-layout justify-center align-center>
-							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
-								대분류
-							</v-flex>
-							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
-								상품명
-							</v-flex>
-							<v-flex xs4 class="client_table_style">
-								세부분류
-							</v-flex>
-						</v-layout>
 						<v-layout wrap class="client_table_body_style">
 							<v-layout align-center v-for="(data, index) in detailData.contract_product" :key="data.main.value + index">
 								<v-flex xs4 style="margin:0px 7px;">
@@ -160,7 +141,7 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs2>
+					<v-flex class="notice_right_table" xs3 style="height: 40px;">
 						처리
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
@@ -226,16 +207,16 @@ export default {
 				headers: [
 					{ text: '직원명', value: 'data1', align: 'center', width: '7%' },
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
-					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '10%' },
-					{ text: '팀', value: 'team', align: 'center', width: '7%' },
-					{ text: '계약일', value: 'data5', align: 'center', width: '7%' },
-					{ text: '계약물건', value: 'data3', align: 'center', width: '10%' },
-					{ text: '요청일', value: 'data4', align: 'center', width: '10%' },
-					{ text: '차수', value: 'data6', align: 'center', width: '8%' },
-					{ text: '상태', value: 'data7', align: 'center', width: '8%' },
-					{ text: '비고', value: 'etc', align: 'center', width: '7%' },
+					{ text: '영업번호', value: 'salesPhoneNumer', align: 'center', width: '10%' },
+					{ text: '팀', value: 'teamID', align: 'center', width: '7%' },
+					{ text: '계약일', value: '', align: 'center', width: '7%' },
+					{ text: '계약물건', value: '', align: 'center', width: '10%' },
+					{ text: '요청일', value: '', align: 'center', width: '10%' },
+					{ text: '차수', value: '', align: 'center', width: '8%' },
+					{ text: '상태', value: '', align: 'center', width: '8%' },
+					{ text: '비고', value: '', align: 'center', width: '7%' },
 				],
-				headerCheck: false,
+
 				items: [],
 				select_items: [],
 				json_fields: {
@@ -376,7 +357,9 @@ export default {
 		}
 	},
 
-	async created() {},
+	async created() {
+		await this.me()
+	},
 	mounted() {},
 
 	methods: {
@@ -448,7 +431,7 @@ export default {
 				date: this.$moment(this.date).format('YYYY-MM-DD'),
 			}
 
-			this.usersView(input)
+			this.viewUsers(input)
 		},
 		click_date_before() {
 			let input = {
@@ -749,5 +732,13 @@ export default {
 }
 .notice_right_table3 {
 	border-bottom: 1px solid #c8c8c8;
+}
+
+.client_table_style {
+	background-color: #e9ecf4;
+	font-size: 13px;
+	text-align: center;
+	line-height: 29px;
+	height: 29px;
 }
 </style>
