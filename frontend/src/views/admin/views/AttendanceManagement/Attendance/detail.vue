@@ -548,7 +548,7 @@ export default {
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
 						this.leftInfoTop[5].value = this.setdialog.editData.team
 							? this.setdialog.editData.team +
-							  (this.setdialog.editData.all.rankId === '1' ? '/' + '상담사' : '/' + this.setdialog.editData.all.rankId)
+							  (this.setdialog.editData.all.rankId ? '/' + '상담사' : '/' + this.setdialog.editData.all.rankId)
 							: '-'
 
 						this.leftInfoTop[7].value = this.setdialog.editData.teamID

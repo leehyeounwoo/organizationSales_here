@@ -522,7 +522,7 @@
           "id": {
             "type": "string"
           },
-          "teamName": {
+          "title": {
             "type": "string"
           },
           "useYn": {
@@ -566,7 +566,7 @@
       },
       "NewTeam": {
         "properties": {
-          "teamName": {
+          "title": {
             "type": "string"
           },
           "useYn": {

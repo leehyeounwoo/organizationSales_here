@@ -11,7 +11,7 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "teamName": {
+    "title": {
       "type": "string"
     },
     "useYn": {

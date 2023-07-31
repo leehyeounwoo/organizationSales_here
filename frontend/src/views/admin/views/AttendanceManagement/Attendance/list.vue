@@ -351,6 +351,7 @@ export default {
 	async created() {
 		this.$store.state.loading = true
 		await this.me()
+		await this.getTeams()
 		let input = {
 			start: 0,
 			limit: 10,
@@ -368,9 +369,31 @@ export default {
 				console.log(this.$store.state.meData)
 			})
 		},
+		async getTeams() {
+			let data = {}
+
+			await this.$store.dispatch('teams', data).then(res => {
+				this.searchsel1.items = JSON.parse(JSON.stringify(res.teams))
+				this.searchsel1.items.unshift('전체')
+				this.searchsel1.value = '전체'
+			})
+		},
 		async viewUsers(input) {
 			console.log(input)
 			this.$store.state.loading = true
+			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
+				input.team = this.searchsel1.value.id
+			}
+
+			if (this.search_project) {
+				input.username = this.search_project
+			} else {
+				input
+			}
+			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
+				input.teamID = this.searchsel1.value.id
+			}
+			console.log(input)
 			await this.$store
 				.dispatch('users', input)
 				.then(res => {
@@ -511,7 +534,7 @@ export default {
 				date: this.$moment(this.date).format('YYYY-MM-DD'),
 			}
 
-			this.usersView(input)
+			this.viewUsers(input)
 		},
 
 		click_date_before() {
@@ -663,10 +686,8 @@ export default {
 		},
 		async SearchBiz() {
 			let data = { date: this.$moment(this.date).format('YYYY-MM-DD') }
-			if (this.$store.state.meData.role.id !== '4') {
-				data.business = this.$store.state.meData.business.id
-			}
-			await this.usersView(data)
+
+			await this.viewUsers(data)
 		},
 		gotoWorkDialogOpen(item) {
 			console.log('클릭')

@@ -536,7 +536,7 @@
               "id": {
                 "type": "string"
               },
-              "teamName": {
+              "title": {
                 "type": "string"
               },
               "useYn": {

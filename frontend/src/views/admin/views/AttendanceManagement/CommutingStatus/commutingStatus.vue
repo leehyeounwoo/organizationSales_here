@@ -374,6 +374,12 @@ export default {
 		},
 		viewUsers(data) {
 			this.$store.state.loading = true
+			if (this.search_project) {
+				data.username = this.search_project
+			} else {
+				data
+			}
+
 			this.$store
 				.dispatch('users', data)
 				.then(res => {

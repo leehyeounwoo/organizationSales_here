@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "07/31/2023 3:17:17 PM"
+    "x-generation-date": "07/31/2023 4:41:08 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -7610,7 +7610,7 @@
               "id": {
                 "type": "string"
               },
-              "teamName": {
+              "title": {
                 "type": "string"
               },
               "useYn": {
@@ -7668,7 +7668,7 @@
           "id": {
             "type": "string"
           },
-          "teamName": {
+          "title": {
             "type": "string"
           },
           "useYn": {
@@ -7712,7 +7712,7 @@
       },
       "NewTeam": {
         "properties": {
-          "teamName": {
+          "title": {
             "type": "string"
           },
           "useYn": {

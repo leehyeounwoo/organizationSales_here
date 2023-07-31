@@ -645,13 +645,13 @@ export const reserveusers = gql`
 `
 // admin
 export const users = gql`
-	query users($date: Date, $status: String, $date_gte: Date, $date_lte: Date) {
+	query users($date: Date, $teamID: String, $username: String, $status: String, $date_gte: Date, $date_lte: Date) {
 		usersConnection {
 			aggregate {
 				count
 			}
 		}
-		users {
+		users(where: { username: $username, teamID: $teamID }) {
 			id
 			businessID
 			created_at
@@ -1377,6 +1377,16 @@ export const gotoWork = gql`
 				id
 				username
 			}
+		}
+	}
+`
+
+export const teams = gql`
+	query teams($id: ID, $useYn: Boolean) {
+		teams(where: { id: $id, useYn: $useYn }) {
+			id
+			useYn
+			title
 		}
 	}
 `
