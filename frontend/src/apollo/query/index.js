@@ -645,7 +645,7 @@ export const reserveusers = gql`
 `
 // admin
 export const users = gql`
-	query users($date: Date, $status: String) {
+	query users($date: Date, $status: String, $date_gte: Date, $date_lte: Date) {
 		usersConnection {
 			aggregate {
 				count
@@ -653,6 +653,7 @@ export const users = gql`
 		}
 		users {
 			id
+			businessID
 			created_at
 			updated_at
 			username
@@ -667,10 +668,11 @@ export const users = gql`
 			phoneNumber
 			bank
 			accountNumber
-			gotoworks(where: { date: $date, status: $status }) {
+			gotoworks(where: { date: $date, status: $status, date_gte: $date_gte, date_lte: $date_lte }) {
 				id
 				status
 				startWork
+				date
 				endWork
 				business {
 					phoneNumber
@@ -686,6 +688,8 @@ export const users = gql`
 				vacationType
 				comment
 			}
+			rankId
+			teamID
 		}
 	}
 `
@@ -1358,7 +1362,7 @@ export const gotoWork = gql`
 		$date_gte: String
 		$date_lte: String
 	) {
-		gotoworksConnection(where: { user: $user, status_in: $status_check }) {
+		gotoworksConnection(where: { user: $user, status_in: $status_check, date_gte: $date_gte, date_lte: $date_lte }) {
 			aggregate {
 				count
 			}

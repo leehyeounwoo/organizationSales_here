@@ -389,9 +389,7 @@ export default {
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 							: '-'
 						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
-						listData.team = element.team ? element.title : '-'
-						listData.team = element.team?.title
-						listData.rank = element.rank?.title
+						listData.team = element.teamID ? element.teamID + '팀' : '-'
 						listData.history = element.history ? element.history : []
 
 						if (element.gotoworks.length > 0) {

@@ -365,9 +365,12 @@ export default {
 				user: this.setdialog.editData.all.id,
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
+				status_check: ['startWork', 'endWork'],
 			}
+			console.log(input)
 			await this.$store.dispatch('gotoWork', input).then(res => {
-				this.leftInfoTop[8].value = res.gotoworks.length + '일'
+				console.log(res)
+				this.leftInfoTop[8].value = res.gotoworksConnection.aggregate.count + '일'
 				let li = []
 				let start = this.start_date_picker.date
 				let end = this.$moment(this.end_date_picker.date)
@@ -393,6 +396,15 @@ export default {
 						obj.workStatus = this.workStatusChange(res.gotoworks[idx].status)
 						li.push(obj)
 					} else {
+						let input2 = {
+							user: this.setdialog.editData.all.id,
+							date_gte: this.start_date_picker.date,
+							date_lte: this.end_date_picker.date,
+							status_check: ['vacation'],
+						}
+						this.$store.dispatch('gotoWork', input2).then(res => {
+							this.leftInfoTop[9].value = res.gotoworksConnection.aggregate.count + '일'
+						})
 						obj.len = '-'
 						obj.startWork = '-'
 						obj.endWork = '-'
@@ -532,11 +544,14 @@ export default {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
-						this.leftInfoTop[3].value = this.setdialog.editData.all.startDate
-						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD')
-						this.leftInfoTop[5].value = this.setdialog.editData.team ? this.setdialog.editData.team : '-'
+						this.leftInfoTop[3].value = this.setdialog.editData.all.businessID
+						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
+						this.leftInfoTop[5].value = this.setdialog.editData.team
+							? this.setdialog.editData.team +
+							  (this.setdialog.editData.all.rankId === '1' ? '/' + '상담사' : '/' + this.setdialog.editData.all.rankId)
+							: '-'
 
-						this.leftInfoTop[7].value = this.setdialog.editData.rank
+						this.leftInfoTop[7].value = this.setdialog.editData.teamID
 
 						this.changeTable.items = this.setdialog.editData.history
 

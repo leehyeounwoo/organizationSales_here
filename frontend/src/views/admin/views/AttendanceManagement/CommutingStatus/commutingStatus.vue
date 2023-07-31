@@ -1,8 +1,8 @@
 <template>
-	<div style="width: 100%">
+	<div style="width: 100%; max-width: 100%; ">
 		<v-layout wrap>
 			<v-flex>
-				<v-layout align-center class="header_search mt-1">
+				<v-layout align-center class="header_search mt-1" style="width: calc(100% - 200px);">
 					<v-layout align-center justify-end>
 						<div class="d-flex align-center date_picker2" style="width:115px">
 							<DatepickerDialog :picker="start_date_picker"></DatepickerDialog>
@@ -62,17 +62,19 @@
 										</v-checkbox>
 									</td>
 									<td>
-										{{ d.name }}
+										{{ d.username }}
 									</td>
 									<td style="border-right:1px solid #d1d1d1; ">{{ d.gotoworks.filter(x => x.status === 'endWork').length }}일</td>
 									<td v-for="(hd, i) in headers.slice(3, headers.length)" :key="i">
 										<div v-if="d.gotoworks.filter(x => x.date === hd.text).length > 0" style="border:1px solid #d1d1d1; min-width:100px;">
 											<v-layout style="color:#606060; font-size:0.75rem; ">
-												<v-flex xs6 style="background-color:#f99f9f; border-right:1px solid #a5a4a4;">{{
-													d.gotoworks.filter(x => x.date === hd.text)[0].startWork
-														? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].startWork).format('HH:mm')
-														: '-'
-												}}</v-flex>
+												<v-flex xs6 style="background-color:#f99f9f; border-right:1px solid #a5a4a4;"
+													>{{
+														d.gotoworks.filter(x => x.date === hd.text)[0].startWork
+															? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].startWork).format('HH:mm')
+															: '-'
+													}}
+												</v-flex>
 												<v-flex xs6 style="background-color:#D4D3FC;">{{
 													d.gotoworks.filter(x => x.date === hd.text)[0].endWork
 														? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].endWork).format('HH:mm')
@@ -90,7 +92,6 @@
 															  )
 															: '-'
 													}}
-													<!-- d.gotoworks.filter(x => x.date === hd.text)[0].date  -->
 												</v-flex>
 											</v-layout>
 											<v-layout style="color:#606060; font-size:0.75rem;">
@@ -147,6 +148,15 @@ export default {
 		selectBox,
 		txtField,
 	},
+	async created() {
+		await this.me()
+		this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
+		let data = {
+			data_gte: this.start_date_picker.date,
+			date_lte: this.end_date_picker.date,
+		}
+		await this.viewUsers(data)
+	},
 	data() {
 		return {
 			sweetInfo: {
@@ -201,8 +211,10 @@ export default {
 			},
 			table: {
 				headers: [
-					{ text: '상담사', value: 'name', align: 'center', width: '100px' },
-					{ text: '근무일수', value: 'amount', align: 'center', width: '100px' },
+					{ text: '상담사', value: 'username', align: 'center', width: '100px' },
+					{ text: '팀', value: 'team', align: 'center', width: '100px' },
+					{ text: '근무일', value: 'amount', align: 'center', width: '100px' },
+					{ text: '휴무일', value: 'holiday', align: 'center', width: '100px' },
 				],
 				headerCheck: false,
 				items: [],
@@ -266,17 +278,14 @@ export default {
 			let data = {
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
-				_or: [{ role: 3 }, { bothLogin: true }],
 			}
 			if (this.searchsel1.value === '상담사 이름') {
 				data.name = this.search_project
 			} else {
 				data.phone = this.search_project
 			}
-			if (this.$store.state.meData.role.id !== '4') {
-				data.business = this.$store.state.meData.business.id
-			}
-			this.usersView(data)
+
+			this.viewUsers(data)
 		},
 
 		timeCheck(start, end) {
@@ -363,11 +372,12 @@ export default {
 					.format('YYYY-MM-DD')
 			}
 		},
-		usersView(data) {
+		viewUsers(data) {
 			this.$store.state.loading = true
 			this.$store
 				.dispatch('users', data)
 				.then(res => {
+					console.log(res)
 					for (let index = 0; index < res.users.length; index++) {
 						const element = res.users[index]
 						element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
@@ -390,6 +400,7 @@ export default {
 						// }
 					}
 					this.table.items = res.users
+					console.log(this.table.items)
 					this.$store.state.loading = false
 				})
 				.catch(err => {
@@ -419,28 +430,28 @@ export default {
 				.catch(() => {})
 		},
 	},
-	watch: {
-		setdialog: {
-			deep: true,
-			async handler() {
-				if (this.setdialog.dialog) {
-					await this.me()
-					this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
-					let data = {
-						date_gte: this.start_date_picker.date,
-						date_lte: this.end_date_picker.date,
-						_or: [{ role: 3 }, { bothLogin: true }],
-					}
-					if (this.$store.state.meData.role.id !== '4') {
-						data.business = this.$store.state.meData.business.id
-					}
-					await this.usersView(data)
-					this.selected = []
-					this.excelData = []
-				}
-			},
-		},
-	},
+	// watch: {
+	// 	setdialog: {
+	// 		deep: true,
+	// 		async handler() {
+	// 			if (this.setdialog.dialog) {
+	// 				await this.me()
+	// 				this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
+	// 				let data = {
+	// 					date_gte: this.start_date_picker.date,
+	// 					date_lte: this.end_date_picker.date,
+	// 					_or: [{ role: 3 }, { bothLogin: true }],
+	// 				}
+	// 				if (this.$store.state.meData.role.id !== '4') {
+	// 					data.business = this.$store.state.meData.business.id
+	// 				}
+	// 				await this.viewUsers(data)
+	// 				this.selected = []
+	// 				this.excelData = []
+	// 			}
+	// 		},
+	// 	},
+	// },
 }
 </script>
 
@@ -517,6 +528,8 @@ export default {
 }
 
 .table_style_1 > .v-data-table__wrapper {
+	max-width: calc(100% - 200px);
+	width: calc(100% - 200px);
 	overflow: auto;
 	table {
 		border-right: 1px solid #d1d1d1;
@@ -565,6 +578,8 @@ export default {
 }
 
 .table_style_1 > .v-data-table__wrapper > table {
+	max-width: calc(100% - 200px);
+	width: calc(100% - 200px);
 	tbody {
 		tr {
 			// td:not(:last-of-type) {
