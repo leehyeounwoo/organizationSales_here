@@ -65,7 +65,7 @@
 						계약고객 현황
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
-						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
+						<datatable :datatable="detailTable" :teamChoiceClick="teamChoiceClick" class="detailTable_client"> </datatable>
 					</v-flex>
 				</v-layout>
 			</v-flex>
@@ -86,7 +86,7 @@
 			name="근태관리 엑셀리스트"
 		>
 		</download-excel>
-
+		<teamEdit :setdialog="teamEditDialog"></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 	</div>
 </template>
@@ -95,6 +95,7 @@
 import { selectBox, txtField, datatable, btn } from '@/components/index.js'
 import { saveDialog } from '@/components'
 import downloadExcel from 'vue-json-excel'
+import teamEdit from '../../viewItem/teamEditDialog.vue'
 
 export default {
 	components: {
@@ -104,10 +105,97 @@ export default {
 		datatable,
 		btn,
 		downloadExcel,
+		teamEdit,
 	},
 
 	data() {
 		return {
+			teamEditDialog: {
+				dialog: false,
+				items: [
+					// 0
+					{
+						title: '사업지 명',
+						type: 'txtfield',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							autocomplete: 'off',
+						},
+					},
+					// 1
+					{
+						title: '대표번호',
+						type: 'txtfield',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							autocomplete: 'off',
+						},
+					},
+					// 2
+					{
+						title: '근무시간 설정',
+						type: 'time',
+						worktime: {
+							start: '',
+							end: '',
+						},
+					},
+					// 3
+					{
+						title: '홀딩시간 설정',
+						type: 'selectBox',
+						value: '',
+						selectBox: {
+							value: '30분',
+							items: ['10분', '30분', '60분'],
+							hideDetail: true,
+							outlined: true,
+							class: 'small_font bizInput',
+						},
+						selectBox2: {
+							value: '120분',
+							items: ['60분', '90분', '120분'],
+							hideDetail: true,
+							outlined: true,
+							class: 'small_font bizInput',
+						},
+					},
+					// 4
+					{
+						title: '출퇴근 스캔 URL',
+						type: 'scan',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+						},
+					},
+					// 5
+					{
+						title: '상품 등록',
+						type: 'product',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							placeholder: '※ 참여가능 그룹 업로드',
+							readonly: true,
+						},
+					},
+				],
+			},
 			rightEdit: [
 				{
 					title: '프로필 사진',
@@ -453,7 +541,7 @@ export default {
 	methods: {
 		activeSave() {},
 		teamChoiceClick() {
-			console.log('team')
+			this.teamEditDialog.dialog = true
 		},
 		clickEditBtn() {},
 	},

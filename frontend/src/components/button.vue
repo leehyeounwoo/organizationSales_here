@@ -14,17 +14,20 @@
 		@click="$emit('click', $event)"
 		:height="btn.height"
 		:disabled="disabled"
+		:tile="btn.tile"
 		:icon="btn.icon"
 		:dark="btn.dark"
 		:ripple="false"
 		:text="btn.text"
 		:rounded="btn.rounded"
-		:color="btn.color !== undefined ? btn.color : $store.state.PointColor1"
+		:color="btn.color !== undefined ? btn.color : ''"
 	>
+		<!-- $store.state.PointColor1 -->
+		<v-icon v-if="btn.frontIconMdi" :size="btn.frontIconSize" :color="btn.frontIconColor">{{ btn.frontBtn_icon }}</v-icon>
 		<div :class="btn.classtxt">
 			{{ btn_txt }}
 		</div>
-		<v-icon v-if="btn.iconMdi" :size="btn.iconSize" :color="btn.iconColor">{{ btn_icon }}</v-icon>
+		<v-icon v-if="btn.backIconMdi" :size="btn.backIconSize" :color="btn.backIconColor">{{ btn.backBtn_icon }}</v-icon>
 	</v-btn>
 </template>
 
