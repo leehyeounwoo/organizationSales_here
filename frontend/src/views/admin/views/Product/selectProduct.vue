@@ -21,8 +21,6 @@ import { selectBox, datatable } from '@/components/index.js'
 
 export default {
 	async created() {
-		this.$store.state.loading = true
-		await this.medata()
 		await this.product_table()
 	},
 	components: {
@@ -57,9 +55,9 @@ export default {
 			},
 			productManager: {
 				headers: [
-					{ text: '주택형', value: '', width: '6%' },
-					{ text: '동', value: '', width: '5%' },
-					{ text: '호수', value: '', width: '5%' },
+					{ text: '주택형', value: 'housingType', width: '6%' },
+					{ text: '동', value: 'dong', width: '5%' },
+					{ text: '호수', value: 'ho', width: '5%' },
 					{ text: '담당자', value: '', width: '19%' },
 					{ text: '배정', value: '', width: '30%' },
 					{ text: '상태', value: '', width: '35%' },
@@ -74,15 +72,9 @@ export default {
 		}
 	},
 	methods: {
-		medata() {
-			this.$store.dispatch('me').then(res => {
-				console.log(res)
-			})
-		},
 		product_table() {
-			this.$store.dispatch('product').then(res => {
-				console.log(res)
-				this.$store.state.loading = false
+			this.$store.dispatch('products').then(res => {
+				this.productManager.items = res.products
 			})
 		},
 	},
