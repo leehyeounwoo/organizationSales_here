@@ -140,7 +140,7 @@
 
 <script>
 import { txtField, selectBox } from '@/components/index.js'
-import TimePickerDialog from './TimePickerDialog.vue'
+import TimePickerDialog from './timePickerDialog.vue'
 
 export default {
 	props: {
