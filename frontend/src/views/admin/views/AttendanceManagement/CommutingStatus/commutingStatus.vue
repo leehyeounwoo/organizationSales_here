@@ -64,8 +64,13 @@
 									<td>
 										{{ d.username }}
 									</td>
-									<td style="border-right:1px solid #d1d1d1; ">{{ d.gotoworks.filter(x => x.status === 'endWork').length }}일</td>
-									<td v-for="(hd, i) in headers.slice(3, headers.length)" :key="i">
+									<td style="border-right:1px solid #d1d1d1; ">{{ d.teamID }}팀 / {{ d.rankId === '1' ? '상담사' : '' }}</td>
+									<td style="border-right:1px solid #d1d1d1; ">
+										{{ d.gotoworks.filter(x => x.status === 'endWork').length }}Day <br />
+										{{ allTimeCheck(d.gotoworks) }}
+									</td>
+									<td style="border-right:1px solid #d1d1d1; ">{{ d.gotoworks.filter(x => x.status === 'vacation').length }}Day</td>
+									<td v-for="(hd, i) in headers.slice(5, headers.length)" :key="i">
 										<div v-if="d.gotoworks.filter(x => x.date === hd.text).length > 0" style="border:1px solid #d1d1d1; min-width:100px;">
 											<v-layout style="color:#606060; font-size:0.75rem; ">
 												<v-flex xs6 style="background-color:#f99f9f; border-right:1px solid #a5a4a4;"
@@ -213,7 +218,7 @@ export default {
 				headers: [
 					{ text: '상담사', value: 'username', align: 'center', width: '100px' },
 					{ text: '팀', value: 'team', align: 'center', width: '100px' },
-					{ text: '근무일', value: 'amount', align: 'center', width: '100px' },
+					{ text: '근무일', value: 'workday', align: 'center', width: '100px' },
 					{ text: '휴무일', value: 'holiday', align: 'center', width: '100px' },
 				],
 				headerCheck: false,
@@ -300,6 +305,26 @@ export default {
 					timeData = hour + '시간' + minute + '분'
 				}
 				return timeData
+			} else {
+				return '-'
+			}
+		},
+		allTimeCheck(gotoworks) {
+			if (gotoworks && gotoworks.length > 0) {
+				const moment = require('moment')
+				let totalMinutes = 0
+
+				for (const gw of gotoworks) {
+					if (gw.status !== 'vacation') {
+						let minutes = moment.duration(this.$moment(gw.endWork).diff(this.$moment(gw.startWork))).asMinutes()
+						totalMinutes += minutes
+					}
+				}
+
+				const hours = Math.floor(totalMinutes / 60)
+				const formattedTime = `${hours}Hours`
+
+				return formattedTime
 			} else {
 				return '-'
 			}
@@ -419,7 +444,9 @@ export default {
 			let result = []
 			this.table.headers = [
 				{ text: '상담사', value: 'name', align: 'center', width: '100px' },
-				{ text: '근무일수', value: 'amount', align: 'center', width: '100px' },
+				{ text: '팀', value: 'team', align: 'center', width: '100px' },
+				{ text: '근무일', value: 'workday', align: 'center', width: '100px' },
+				{ text: '휴무일', value: 'holiday', align: 'center', width: '100px' },
 			]
 			for (let index = 0; index < count; index++) {
 				let day = this.$moment(startDate)
@@ -436,28 +463,6 @@ export default {
 				.catch(() => {})
 		},
 	},
-	// watch: {
-	// 	setdialog: {
-	// 		deep: true,
-	// 		async handler() {
-	// 			if (this.setdialog.dialog) {
-	// 				await this.me()
-	// 				this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
-	// 				let data = {
-	// 					date_gte: this.start_date_picker.date,
-	// 					date_lte: this.end_date_picker.date,
-	// 					_or: [{ role: 3 }, { bothLogin: true }],
-	// 				}
-	// 				if (this.$store.state.meData.role.id !== '4') {
-	// 					data.business = this.$store.state.meData.business.id
-	// 				}
-	// 				await this.viewUsers(data)
-	// 				this.selected = []
-	// 				this.excelData = []
-	// 			}
-	// 		},
-	// 	},
-	// },
 }
 </script>
 
@@ -578,6 +583,20 @@ export default {
 					border-left: 1px solid #d1d1d1;
 					border-right: 1px solid #d1d1d1;
 				}
+				th:nth-child(4) {
+					position: sticky;
+					left: 165px;
+					z-index: 2 !important;
+					border-left: 1px solid #d1d1d1;
+					border-right: 1px solid #d1d1d1;
+				}
+				th:nth-child(5) {
+					position: sticky;
+					left: 165px;
+					z-index: 2 !important;
+					border-left: 1px solid #d1d1d1;
+					border-right: 1px solid #d1d1d1;
+				}
 			}
 		}
 	}
@@ -611,6 +630,20 @@ export default {
 				// border-right: 1px solid #d1d1d1;
 			}
 			td:nth-child(3) {
+				position: sticky;
+				left: 165px;
+				z-index: 2 !important;
+				border-left: 1px solid #d1d1d1;
+				border-right: 1px solid #d1d1d1;
+			}
+			th:nth-child(4) {
+				position: sticky;
+				left: 165px;
+				z-index: 2 !important;
+				border-left: 1px solid #d1d1d1;
+				border-right: 1px solid #d1d1d1;
+			}
+			th:nth-child(5) {
 				position: sticky;
 				left: 165px;
 				z-index: 2 !important;

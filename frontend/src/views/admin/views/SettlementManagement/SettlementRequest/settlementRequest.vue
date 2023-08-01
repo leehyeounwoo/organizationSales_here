@@ -64,39 +64,14 @@
 					<v-flex xs10 class="notice_right_table2" style="height:163px">
 						<v-layout justify-center align-center>
 							<v-flex xs5 class="client_table_style" style="border-right: 1px solid #C8C8C8">
-								날짜
+								<span class="borderRightSubFont">날짜</span>
 							</v-flex>
 							<v-flex xs4 class="client_table_style" style="border-right: 1px solid #C8C8C8">
-								내용
+								<span class="borderRightSubFont">내용</span>
 							</v-flex>
 							<v-flex xs3 class="client_table_style">
-								상태
+								<span class="borderRightSubFont">상태</span>
 							</v-flex>
-						</v-layout>
-						<v-layout wrap class="client_table_body_style">
-							<v-layout align-center v-for="(data, index) in detailData.interest_product" :key="data.main.value + index">
-								<v-flex xs5 style="min-width:0px; margin:0px 7px;">
-									<selectBox
-										:sel="data.main"
-										:readonly="true"
-										class="searchSel px-1"
-										:class="index === 0 ? 'py-2' : 'pb-2'"
-										style="font-size:12px"
-									></selectBox>
-								</v-flex>
-								<v-flex xs4 style="min-width:0px; margin:0px 7px;">
-									<selectBox
-										:sel="data.product"
-										:readonly="true"
-										class="searchSel pr-1"
-										:class="index === 0 ? 'py-2' : 'pb-2'"
-										style="font-size:12px"
-									></selectBox>
-								</v-flex>
-								<v-flex xs4 style="min-width:0px; margin:0px 7px; display: flex;">
-									<v-btn class="detail_etc_btn py-2" style="margin: 0 auto;" small :color="'#9A9C9B'" depressed --> >자세히 보기</v-btn>
-								</v-flex>
-							</v-layout>
 						</v-layout>
 					</v-flex>
 				</v-layout>
@@ -104,48 +79,18 @@
 					<v-flex class="notice_right_table" xs3>
 						증빙서류
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2" style="height:163px">
-						<v-layout wrap class="client_table_body_style">
-							<v-layout align-center v-for="(data, index) in detailData.contract_product" :key="data.main.value + index">
-								<v-flex xs4 style="margin:0px 7px;">
-									<selectBox
-										:sel="data.main"
-										:readonly="true"
-										class="searchSel  px-1"
-										:class="index === 0 ? 'py-2' : 'pb-2'"
-										style="font-size:12px"
-									></selectBox>
-								</v-flex>
-								<v-flex xs4 style="margin:0px 7px;">
-									<selectBox
-										:sel="data.product"
-										:readonly="true"
-										class="searchSel pr-1"
-										:class="index === 0 ? 'py-2' : 'pb-2'"
-										style="font-size:12px"
-									></selectBox>
-								</v-flex>
-								<v-flex xs4 style="margin:0px 7px; display: flex;">
-									<v-btn
-										class="detail_etc_btn py-2"
-										style="margin:0 auto;"
-										small
-										:color="'#9A9C9B'"
-										depressed
-										@click="click_detail_path(data)"
-										>자세히 보기</v-btn
-									>
-								</v-flex>
-							</v-layout>
-						</v-layout>
-					</v-flex>
+					<v-flex xs10 class="notice_right_table2" style="height:163px"> </v-flex>
 				</v-layout>
 				<v-layout>
 					<v-flex class="notice_right_table" xs3 style="height: 40px;">
 						처리
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2">
-						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
+					<v-flex xs10 class="notice_right_table2" style="height:40px; display: flex; align-items: center;">
+						<v-radio-group v-model="agreeType" :value="true" hide-details row class="notice_radio ma-3">
+							<v-radio class="mb-0 mr-2" label="요청 승인" :value="true" color="#009dac" :ripple="false"></v-radio>
+							<v-radio class="mb-0" label="반려" :value="false" color="#009dac" :ripple="false"></v-radio>
+						</v-radio-group>
+						<v-btn class="ml-2 search_btn2" style="width: 100%; " color="#3e7ccc"><v-icon>mdi-check</v-icon>적용</v-btn>
 					</v-flex>
 				</v-layout>
 			</v-flex>
@@ -165,6 +110,7 @@ export default {
 	data() {
 		return {
 			date: this.$moment(),
+			agreeType: false,
 			startTimeDialog: false,
 			endTimeDialog: false,
 			startTime: '',
@@ -205,16 +151,16 @@ export default {
 			holiDay: 0,
 			settlementTable: {
 				headers: [
-					{ text: '직원명', value: 'data1', align: 'center', width: '7%' },
+					{ text: '직원명', value: 'data1', align: 'center', width: '10%' },
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
 					{ text: '영업번호', value: 'salesPhoneNumer', align: 'center', width: '10%' },
 					{ text: '팀', value: 'teamID', align: 'center', width: '7%' },
-					{ text: '계약일', value: '', align: 'center', width: '7%' },
+					{ text: '계약일', value: '', align: 'center', width: '10%' },
 					{ text: '계약물건', value: '', align: 'center', width: '10%' },
-					{ text: '요청일', value: '', align: 'center', width: '10%' },
-					{ text: '차수', value: '', align: 'center', width: '8%' },
-					{ text: '상태', value: '', align: 'center', width: '8%' },
-					{ text: '비고', value: '', align: 'center', width: '7%' },
+					{ text: '요청일', value: '', align: 'center', width: '15%' },
+					{ text: '차수', value: '', align: 'center', width: '10%' },
+					{ text: '상태', value: '', align: 'center', width: '5%' },
+					{ text: '비고', value: '', align: 'center', width: '10%' },
 				],
 
 				items: [],
@@ -234,90 +180,6 @@ export default {
 				page: 1,
 				pageCount: 0,
 				total: 0,
-			},
-			detailData: {
-				id: '',
-				name: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '고객명',
-				},
-				phone: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '연락처',
-				},
-				sex: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '성별',
-					items: ['남자', '여자'],
-					outlined: true,
-				},
-				age: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '연령대',
-					items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-					outlined: true,
-				},
-				inflow: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '유입경로',
-					items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
-					outlined: true,
-				},
-				status: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '고객상태',
-					items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
-					outlined: true,
-				},
-				counselor_business: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '지점',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'business_title',
-				},
-				counselor_team: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '부서',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'title',
-				},
-				counselor_name: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '상담사명',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'name',
-				},
-				origin_main_data: [],
-				interest_product: [],
-				contract_product: [],
 			},
 
 			searchsel: {
@@ -740,5 +602,31 @@ export default {
 	text-align: center;
 	line-height: 29px;
 	height: 29px;
+}
+
+.borderRightSubFont {
+	width: 26px;
+	height: 17px;
+	font-family: MalgunGothic;
+	font-size: 13px;
+	font-weight: bold;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: center;
+	color: #333;
+}
+
+.search_btn2 {
+	width: 100px !important;
+	height: 25px !important;
+	margin-right: 10px !important;
+	padding: 0 10px !important;
+	font-size: 13px;
+	font-weight: bold;
+	.v-btn__content {
+		color: #fff;
+	}
 }
 </style>

@@ -904,7 +904,7 @@ export default {
 	left: 0px;
 }
 .notice_right_table {
-	background-color: #f5f5f5;
+	background-color: #e9ecf4;
 	font-size: 12px;
 	font-weight: bold;
 	display: flex;
