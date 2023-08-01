@@ -62,7 +62,15 @@ export const users = gql`
 		}
 	}
 `
-
+export const ranks = gql`
+	query ranks($idArr: [ID]) {
+		ranks(where: { id: $idArr }) {
+			id
+			rankName
+			useYn
+		}
+	}
+`
 export const gotoWork = gql`
 	query gotoWorks(
 		$date: Date
@@ -93,8 +101,8 @@ export const gotoWork = gql`
 `
 
 export const teams = gql`
-	query teams($id: ID, $idArr: [ID], $useYn: Boolean) {
-		teams(where: { id: $id, idArr: $idArr, useYn: $useYn }) {
+	query teams($idArr: [ID], $useYn: Boolean) {
+		teams(where: { id: $idArr, useYn: $useYn }) {
 			id
 			useYn
 			title

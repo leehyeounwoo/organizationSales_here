@@ -552,7 +552,12 @@ export default {
 			idArr: this.teamArrData,
 		}
 
-		await this.teams(teamsViewData)
+		await this.teamsView(teamsViewData)
+		const ranksViewData = {
+			idArr: this.rankArrData,
+		}
+
+		await this.ranksView(ranksViewData)
 		await this.dataSetting()
 
 		// console.log(this.rankArrData)
@@ -562,10 +567,19 @@ export default {
 
 	methods: {
 		async dataSetting() {
-			let arrData = []
-			console.log(this.userData)
+			// let arrData = []
 			console.log(this.teamData)
-			console.log(arrData)
+			console.log(this.rankData)
+			for (let index = 0; index < this.userData.length; index++) {
+				const element = this.userData[index]
+				console.log(element)
+				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
+				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
+				element.team = `${teamTitle}(${rankTitle})`
+			}
+			this.table.items = this.userData
+			// arrData =
+			// 			console.log(arrData)
 		},
 		editUserData(val) {
 			// console.log(val)
@@ -573,7 +587,7 @@ export default {
 			this.rightEdit[1].txtField.value = val.bank
 			this.rightEdit[1].txtField2.value = val.accountNumber
 		},
-		async teams(teamsViewData) {
+		async teamsView(teamsViewData) {
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(res => {
@@ -585,11 +599,22 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
+		async ranksView(teamsViewData) {
+			await this.$store
+				.dispatch('ranks', teamsViewData)
+				.then(res => {
+					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
 		async usersView(usersViewData) {
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
-					this.userArrData = res.users
+					this.userData = res.users
 					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
 					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
 				})

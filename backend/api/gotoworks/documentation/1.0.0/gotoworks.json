@@ -668,6 +668,9 @@
               "teamID": {
                 "type": "string"
               },
+              "workingStatus": {
+                "type": "boolean"
+              },
               "created_by": {
                 "type": "string"
               },

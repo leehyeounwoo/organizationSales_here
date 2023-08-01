@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import apollo from '../apollo/config'
 // import axios from 'axios'
 import { login, createGotowork, updateGotowork, deleteGotowork, updateVacation } from '../apollo/mutation'
-import { me, users, gotoWork, teams, products } from '../apollo/query'
+import { me, users, gotoWork, teams, products, ranks } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
@@ -217,6 +217,27 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: teams,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		ranks({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: ranks,
 						variables: input,
 						context: {
 							headers: {

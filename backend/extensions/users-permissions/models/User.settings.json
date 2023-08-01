@@ -107,6 +107,9 @@
     },
     "teamID": {
       "type": "string"
+    },
+    "workingStatus": {
+      "type": "boolean"
     }
   }
 }
