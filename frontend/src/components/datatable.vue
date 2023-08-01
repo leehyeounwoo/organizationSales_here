@@ -1444,6 +1444,29 @@
 					{{ item.content }}
 				</div>
 			</template>
+			<!-- 물건배정 담당자 -->
+			<template v-slot:[`item.manager`]="{}">
+				<v-layout>
+					<v-flex xs5 class="mr-1">
+						<selectBox :sel="datatable.product_manager" style="font-size:12px"></selectBox>
+					</v-flex>
+					<v-flex xs3 class="mr-1">
+						<selectBox :sel="datatable.team" style="font-size:12px"></selectBox>
+					</v-flex>
+					<v-flex xs4>
+						<selectBox :sel="datatable.user" style="font-size:12px"></selectBox>
+					</v-flex>
+				</v-layout>
+			</template>
+			<!-- 물건배정 - 배정 -->
+			<template v-slot:[`item.holdTime`]="{}">
+				<v-layout>
+					<v-flex xs3 class="mr-1">
+						<selectBox :sel="datatable.select_holding" style="font-size:12px"></selectBox>
+					</v-flex>
+					<v-flex xs2>asdf</v-flex>
+				</v-layout>
+			</template>
 		</v-data-table>
 
 		<!--고객 관리 - 캠페인 고객 관리 - 자세히 보기 -->
