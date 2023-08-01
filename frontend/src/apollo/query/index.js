@@ -55,6 +55,8 @@ export const users = gql`
 				vacationType
 				comment
 			}
+			bank
+			accountNumber
 			rankId
 			teamID
 		}

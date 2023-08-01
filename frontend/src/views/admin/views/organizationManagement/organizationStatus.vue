@@ -15,7 +15,9 @@
 			</v-flex>
 		</v-layout>
 		<v-layout>
-			<v-flex xs8><datatable :datatable="table" :teamChoiceClick="teamChoiceClick"/></v-flex>
+			<v-flex xs8>
+				<datatable :datatable="table" :teamChoiceClick="teamChoiceClick" @click="editUserData" />
+			</v-flex>
 			<v-flex xs4 class="ml-10 mt-5">
 				<v-layout v-for="(edit, index) in rightEdit" :key="index" :style="index === 0 ? 'border-top:1px solid black' : ''">
 					<v-flex class="notice_right_table" xs2>
@@ -466,8 +468,8 @@ export default {
 			holiDay: 0,
 			table: {
 				headers: [
-					{ text: '상담사', value: 'data1', align: 'center' },
-					{ text: '연락처', value: 'data2', align: 'center' },
+					{ text: '상담사', value: 'username', align: 'center' },
+					{ text: '연락처', value: 'phoneNumber', align: 'center' },
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center' },
 					{ text: '등록일', value: 'created_at', align: 'center' },
 					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false },
@@ -491,8 +493,8 @@ export default {
 				},
 				itemsPerPage: 10,
 				page: 1,
-				pageCount: 0,
-				total: 0,
+				pageCount: 1,
+				total: 1,
 			},
 
 			searchsel: {
@@ -544,11 +546,18 @@ export default {
 	mounted() {},
 
 	methods: {
+		editUserData(val) {
+			console.log(val)
+			console.log(this.rightEdit)
+			this.rightEdit[1].txtField.value = val.bank
+			this.rightEdit[1].txtField2.value = val.accountNumber
+		},
 		usersView(usersViewData) {
 			this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
 					console.log(res)
+					this.table.items = res.users
 				})
 				.catch(err => {
 					console.log(err)

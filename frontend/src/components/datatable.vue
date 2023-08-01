@@ -699,6 +699,12 @@
 					{{ index + 1 }}
 				</div>
 			</template>
+			<!-- username -->
+			<template v-slot:[`item.username`]="{ item }">
+				<div>
+					{{ item.username }}
+				</div>
+			</template>
 			<!-- talk_no -->
 			<template v-slot:[`item.talk_no`]="{ index }">
 				<div>
