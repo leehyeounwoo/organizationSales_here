@@ -2382,7 +2382,7 @@ export default {
 	}
 }
 .datatablehover > .v-data-table > .v-data-footer {
-	justify-content: center;
+	justify-content: end;
 	padding-right: 0px;
 	.v-data-footer__select {
 		margin-left: 0px;
