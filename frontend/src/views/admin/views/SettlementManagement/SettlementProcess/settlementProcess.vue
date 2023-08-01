@@ -52,7 +52,7 @@
 					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
 						계약 내용
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2">
+					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
 						<v-layout>
 							<v-flex>
 								<span>계약일</span>
@@ -67,9 +67,9 @@
 					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
 						수수료
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
+					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
 						<div style="display: flex;">
-							<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-3"></txtField>
+							<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-1"></txtField>
 							<span>원</span>
 						</div>
 					</v-flex>
@@ -364,6 +364,7 @@ export default {
 					퇴근시간: 'data4',
 					'신청 연차 관리': 'vaction',
 				},
+
 				itemsPerPage: 10,
 				page: 1,
 				pageCount: 0,
@@ -888,7 +889,7 @@ export default {
 }
 
 .search_box_admin2 {
-	width: 60%;
+	width: 80%;
 	.v-input__control {
 		.v-input__slot {
 			min-height: 28px !important;

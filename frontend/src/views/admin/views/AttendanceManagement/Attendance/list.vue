@@ -33,6 +33,8 @@
 		<v-data-table
 			:headers="table.headers"
 			:items="table.items"
+			show-select
+			v-model="selected"
 			item-key="id"
 			class="elevation-0 table_style_2 mt-2"
 			:footer-props="{
