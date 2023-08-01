@@ -534,6 +534,12 @@ export default {
 				backCol: 'white',
 			},
 			search_project: '',
+			userArrData: [],
+			userData: [],
+			teamArrData: [],
+			teamData: [],
+			rankArrData: [],
+			rankData: [],
 		}
 	},
 
@@ -541,23 +547,51 @@ export default {
 		const usersViewData = {
 			role: 3,
 		}
-		this.usersView(usersViewData)
+		await this.usersView(usersViewData)
+		const teamsViewData = {
+			idArr: this.teamArrData,
+		}
+
+		await this.teams(teamsViewData)
+		await this.dataSetting()
+
+		// console.log(this.rankArrData)
+		this.$store.state.loading = false
 	},
 	mounted() {},
 
 	methods: {
+		async dataSetting() {
+			let arrData = []
+			console.log(this.userData)
+			console.log(this.teamData)
+			console.log(arrData)
+		},
 		editUserData(val) {
-			console.log(val)
-			console.log(this.rightEdit)
+			// console.log(val)
+			// console.log(this.rightEdit)
 			this.rightEdit[1].txtField.value = val.bank
 			this.rightEdit[1].txtField2.value = val.accountNumber
 		},
-		usersView(usersViewData) {
-			this.$store
+		async teams(teamsViewData) {
+			await this.$store
+				.dispatch('teams', teamsViewData)
+				.then(res => {
+					this.teamData = res.teams
+					// console.log(res.teams)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async usersView(usersViewData) {
+			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
-					console.log(res)
-					this.table.items = res.users
+					this.userArrData = res.users
+					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
+					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
 				})
 				.catch(err => {
 					console.log(err)

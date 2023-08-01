@@ -93,8 +93,8 @@ export const gotoWork = gql`
 `
 
 export const teams = gql`
-	query teams($id: ID, $useYn: Boolean) {
-		teams(where: { id: $id, useYn: $useYn }) {
+	query teams($id: ID, $idArr: [ID], $useYn: Boolean) {
+		teams(where: { id: $id, idArr: $idArr, useYn: $useYn }) {
 			id
 			useYn
 			title
