@@ -535,10 +535,26 @@ export default {
 		}
 	},
 
-	async created() {},
+	async created() {
+		const usersViewData = {
+			role: 3,
+		}
+		this.usersView(usersViewData)
+	},
 	mounted() {},
 
 	methods: {
+		usersView(usersViewData) {
+			this.$store
+				.dispatch('users', usersViewData)
+				.then(res => {
+					console.log(res)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
 		activeSave() {},
 		teamChoiceClick() {
 			this.teamEditDialog.dialog = true

@@ -26,6 +26,12 @@
     "assignments": {
       "collection": "assignment",
       "via": "product"
+    },
+    "choiceYn": {
+      "type": "boolean"
+    },
+    "assignmentID": {
+      "type": "string"
     }
   }
 }

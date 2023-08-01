@@ -77,16 +77,18 @@
 						<v-flex>
 							<txtField class="bizInput px-2" v-model="addTxtfield.value" :txtField="addTxtfield"></txtField>
 						</v-flex>
-						<v-flex>
-							<!-- <btn class="save_biz"><v-icon>mdi-check</v-icon>저장</btn> -->
+						<v-flex pr-1>
+							<btn :btn="addBtn" :btn_txt="'추가'"></btn>
 						</v-flex>
-						<v-flex>
-							<!-- <btn class="save_biz"><v-icon>mdi-check</v-icon>저장</btn> -->
+						<v-flex pr-1>
+							<btn :btn="saveBtn" :btn_txt="'적용'"></btn>
 						</v-flex>
 					</v-layout>
 				</v-flex>
 				<v-layout justify-end>
-					<!-- <btn class="mt-4 save_biz"><v-icon>mdi-check</v-icon>저장</btn> -->
+					<v-flex xs1>
+						<btn :btn="completeBtn" :btn_txt="'확인'"></btn>
+					</v-flex>
 				</v-layout>
 			</v-layout>
 		</div>
@@ -131,9 +133,19 @@ export default {
 				frontIconColor: 'white',
 				frontBtn_icon: 'mdi-check',
 			},
+			completeBtn: {
+				class: '',
+				classtxt: '',
+				width: '100%',
+				dense: true,
+				small: true,
+				color: '#c8c8c8',
+				tile: true,
+				dark: true,
+			},
 			selectBox: {
-				value: '30분',
-				items: ['10분', '30분', '60분'],
+				value: '사용',
+				items: ['사용', '미사용'],
 				hideDetail: true,
 				outlined: true,
 				class: 'small_font bizInput',

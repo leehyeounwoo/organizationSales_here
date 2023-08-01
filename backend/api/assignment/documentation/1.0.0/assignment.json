@@ -557,6 +557,12 @@
                   "type": "string"
                 }
               },
+              "choiceYn": {
+                "type": "boolean"
+              },
+              "assignmentID": {
+                "type": "string"
+              },
               "published_at": {
                 "type": "datetime"
               },
