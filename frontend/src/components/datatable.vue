@@ -1464,7 +1464,30 @@
 					<v-flex xs3 class="mr-1">
 						<selectBox :sel="datatable.select_holding" style="font-size:12px"></selectBox>
 					</v-flex>
-					<v-flex xs2>asdf</v-flex>
+					<v-flex xs2>
+						<TimepickerDialog :setdialog="datatable.holdingTime1" @input="holdingStart"></TimepickerDialog>
+					</v-flex>
+					<div class="px-1">~</div>
+					<v-flex xs2>
+						<TimepickerDialog :setdialog="datatable.holdingTime2" @input="holdingEnd"></TimepickerDialog>
+					</v-flex>
+					<v-flex xs2 class="mx-1">
+						<selectBox :sel="datatable.holdingTime3" style="font-size:12px"></selectBox>
+					</v-flex>
+					<v-spacer></v-spacer>
+					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">배정</v-btn>
+				</v-layout>
+			</template>
+			<!-- 물건배정 - 상태 -->
+			<template v-slot:[`item.product_status`]="{}">
+				<v-layout>
+					<div class="d-flex align-center justify-center status_box mr-1">1팀</div>
+					<div class="d-flex align-center justify-center status_box mr-1">강백호</div>
+					<div class="d-flex align-center justify-center status_box mr-1">종일</div>
+					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">09:00 ~ 12:00</div>
+					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div>
+					<v-spacer></v-spacer>
+					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">해제</v-btn>
 				</v-layout>
 			</template>
 		</v-data-table>
@@ -1508,6 +1531,7 @@
 </template>
 
 <script>
+import TimepickerDialog from '../views/admin/viewItem/timePickerDialog.vue'
 import btn from './button'
 import { selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
 // import { sweetAlert } from '@/components/index'
@@ -1523,6 +1547,7 @@ export default {
 		txtField,
 		txtFieldStyle,
 		selectBoxStyle,
+		TimepickerDialog,
 	},
 	data() {
 		return {
@@ -1934,6 +1959,14 @@ export default {
 		},
 	},
 	methods: {
+		holdingStart(picker) {
+			this.datatable.holdingTime1.dialog = false
+			this.datatable.holdingTime1.time = picker
+		},
+		holdingEnd(picker) {
+			this.datatable.holdingTime2.dialog = false
+			this.datatable.holdingTime2.time = picker
+		},
 		mainPhoneMask(val) {
 			if (val.length === 11) {
 				return val.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-****-$3`)
@@ -2512,5 +2545,19 @@ export default {
 			}
 		}
 	}
+}
+.product_table {
+	border: 1px solid #cfdcdd !important;
+	border-radius: 0;
+	.v-btn__content {
+		color: black;
+	}
+}
+.status_box {
+	width: 60px;
+	border: 1px solid #c5c5c5;
+	background: #f6f6f6;
+	font-size: 13px;
+	height: 26px;
 }
 </style>

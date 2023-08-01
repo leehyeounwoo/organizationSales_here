@@ -35,8 +35,13 @@ export default {
 
 <style lang="scss">
 .worktime_picker {
+	.v-input__icon {
+		min-width: 15px;
+		width: 15px;
+	}
 	.v-icon.v-icon {
 		color: #009dac;
+		font-size: 20px;
 	}
 	.v-input__slot {
 		padding: 0 8px !important;
