@@ -28,32 +28,15 @@
 						<v-flex xs9 v-else-if="left.type === 'time'" class="table_right_white px-2 biz_table_right">
 							<v-flex xs6 class="pt-3">
 								<v-layout>
-									<v-flex xs6 @click="edit_time">
-										<v-text-field
-											v-model="left.worktime.start"
-											outlined
-											dense
-											readonly
-											hide-details="true"
-											append-icon="mdi-calendar"
-											class="worktime_picker small_font bizInput"
-										></v-text-field>
+									<v-flex xs6>
+										<TimePickerDialog :setdialog="editTimePicker1" @input="save_time1" />
 									</v-flex>
 									<div class="px-1">~</div>
-									<v-flex xs6 @click="edit_time">
-										<v-text-field
-											v-model="left.worktime.end"
-											outlined
-											dense
-											readonly
-											hide-details="true"
-											append-icon="mdi-calendar"
-											class="worktime_picker small_font bizInput"
-										></v-text-field>
+									<v-flex xs6>
+										<TimePickerDialog :setdialog="editTimePicker2" @input="save_time2" />
 									</v-flex>
 								</v-layout>
 							</v-flex>
-							<timePickerDialog :setdialog="editTimePicker" @click="save_time" />
 						</v-flex>
 						<v-flex xs9 v-else-if="left.type === 'selectBox'" class="table_right_white px-2 biz_table_right">
 							<v-flex class="pt-3" xs7>
@@ -157,7 +140,7 @@
 
 <script>
 import { txtField, selectBox } from '@/components/index.js'
-import timePickerDialog from './timePickerDialog.vue'
+import TimePickerDialog from './TimePickerDialog.vue'
 
 export default {
 	props: {
@@ -166,7 +149,7 @@ export default {
 	components: {
 		txtField,
 		selectBox,
-		timePickerDialog,
+		TimePickerDialog,
 	},
 	data() {
 		return {
@@ -340,20 +323,24 @@ export default {
 					},
 				},
 			],
-			editTimePicker: {
+			editTimePicker1: {
 				dialog: false,
-				start: '',
-				end: '',
+				time: '',
+			},
+			editTimePicker2: {
+				dialog: false,
+				time: '',
 			},
 		}
 	},
 	methods: {
-		edit_time() {
-			this.editTimePicker.dialog = true
+		save_time1(picker) {
+			this.editTimePicker1.dialog = false
+			this.editTimePicker1.time = picker
 		},
-		save_time(picker) {
-			this.editTimePicker.dialog = false
-			this.setdialog.items[2].worktime.start = picker
+		save_time2(picker) {
+			this.editTimePicker2.dialog = false
+			this.editTimePicker2.time = picker
 		},
 	},
 }
