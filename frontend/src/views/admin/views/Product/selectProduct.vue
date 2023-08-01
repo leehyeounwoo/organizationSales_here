@@ -20,6 +20,11 @@
 import { selectBox, datatable } from '@/components/index.js'
 
 export default {
+	async created() {
+		this.$store.state.loading = true
+		await this.medata()
+		await this.product_table()
+	},
 	components: {
 		selectBox,
 		datatable,
@@ -67,6 +72,19 @@ export default {
 				pageCount: 0,
 			},
 		}
+	},
+	methods: {
+		medata() {
+			this.$store.dispatch('me').then(res => {
+				console.log(res)
+			})
+		},
+		product_table() {
+			this.$store.dispatch('product').then(res => {
+				console.log(res)
+				this.$store.state.loading = false
+			})
+		},
 	},
 }
 </script>

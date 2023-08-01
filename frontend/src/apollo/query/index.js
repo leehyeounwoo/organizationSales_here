@@ -101,8 +101,8 @@ export const teams = gql`
 `
 
 export const product = gql`
-	query($id: ID!, $housingType: String, $dong: String, $ho: String) {
-		product(where: { id: $id, housingType: $housingType, dong: $dong, ho: $ho }) {
+	query($id: ID!) {
+		product(id: $id) {
 			id
 			housingType
 			dong
