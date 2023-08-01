@@ -434,15 +434,4 @@ export default {
 	border-radius: 0 !important;
 	border: 1px solid #cfdcdd;
 }
-.worktime_picker {
-	.v-icon.v-icon {
-		color: #009dac;
-	}
-	.v-input__slot {
-		padding: 0 8px !important;
-	}
-	.v-input__append-inner {
-		margin-top: 3px !important;
-	}
-}
 </style>
