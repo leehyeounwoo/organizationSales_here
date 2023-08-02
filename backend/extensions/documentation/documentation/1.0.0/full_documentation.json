@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "08/02/2023 1:47:03 PM"
+    "x-generation-date": "08/02/2023 2:43:56 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -8215,6 +8215,9 @@
               "workingStatus": {
                 "type": "boolean"
               },
+              "settlementID": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -9056,6 +9059,9 @@
               "workingStatus": {
                 "type": "boolean"
               },
+              "settlementID": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -9268,6 +9274,9 @@
                 },
                 "workingStatus": {
                   "type": "boolean"
+                },
+                "settlementID": {
+                  "type": "string"
                 },
                 "created_by": {
                   "type": "string"
@@ -9637,6 +9646,9 @@
           },
           "workingStatus": {
             "type": "boolean"
+          },
+          "settlementID": {
+            "type": "string"
           }
         }
       },
@@ -9713,6 +9725,9 @@
           },
           "workingStatus": {
             "type": "boolean"
+          },
+          "settlementID": {
+            "type": "string"
           },
           "created_by": {
             "type": "string"

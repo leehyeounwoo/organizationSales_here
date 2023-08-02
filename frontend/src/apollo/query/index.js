@@ -26,6 +26,7 @@ export const users = gql`
 			username
 			email
 			blocked
+			settlementID
 			role {
 				id
 				name

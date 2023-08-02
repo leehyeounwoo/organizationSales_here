@@ -219,7 +219,7 @@ export default {
 			productArrData: [],
 			settlementData: [],
 			settlementArrData: [],
-			listData: [],
+			list: [],
 		}
 	},
 
@@ -260,36 +260,25 @@ export default {
 				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
 
 				element.teamID = `${teamTitle} / ${rankTitle}`
-				this.listData.teamID = element.teamID
+				this.list.teamID = element.teamID
 			}
-			const wrapListData = [
-				{
-					username: this.listData.username,
-					created_at: this.listData.created_at,
-					degree: this.listData.degree,
-					id: this.listData.id,
-					phoneNumber: this.listData.phoneNumber,
-					product: this.listData.product,
-					salesPhoneNumber: this.listData.salesPhoneNumber,
-					settlementStatus: this.listData.settlementStatus,
-					contractDate: this.listData.contractDate,
-					teamID: this.listData.teamID,
-				},
-			]
-			this.settlementTable.items = wrapListData
+
+			this.settlementTable.items = this.list
 		},
 
 		async settlementView() {
 			await this.$store.dispatch('settlements').then(res => {
-				console.log(res)
-				this.settlementData = res.settlements
 				res.settlements.forEach(element => {
-					this.listData.settlements = element
-					this.listData.id = element.id
-					this.listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD HH:mm')
-					this.listData.contractDate = this.$moment(element.contractDate).format('YYYY-MM-DD HH:mm')
-					this.listData.settlementStatus = element.settlementStatus
-					this.listData.degree = element.degree
+					let listData = {}
+					listData.settlements = element
+					listData.id = element.id
+					listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD HH:mm')
+					listData.contractDate = this.$moment(element.contractDate).format('YYYY-MM-DD HH:mm')
+					listData.settlementStatus = element.settlementStatus
+					listData.degree = element.degree
+					listData.userID = element.userID
+					listData.ProductID = element.ProductID
+					this.list.push(listData)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
 				this.productArrData = res.settlements.filter(x => x.ProductID).map(x => x.ProductID)
@@ -302,11 +291,16 @@ export default {
 				.then(res => {
 					this.userData = res.users
 					res.users.forEach(element => {
-						this.listData.users = element
-						this.listData.username = element.username
-						this.listData.phoneNumber = element.phoneNumber
-						this.listData.salesPhoneNumber = element.salesPhoneNumber
-						this.listData.teamID = element.teamID
+						let checkArr = element.settlementID.split('_')
+						for (let items of this.list) {
+							if (checkArr.includes(items.id)) {
+								items.users = element
+								items.username = element.username
+								items.phoneNumber = element.phoneNumber
+								items.salesPhoneNumber = element.salesPhoneNumber
+								items.teamID = element.teamID
+							}
+						}
 					})
 					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
 					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
@@ -341,11 +335,14 @@ export default {
 		},
 
 		async productsView(productsViewData) {
-			await this.$store.dispatch('products', productsViewData).then(res =>
-				res.products.forEach(element => {
-					this.listData.products = element
-					this.listData.product = element.housingType + '' + element.dong + +'' + '동' + element.ho + '호'
-				}),
+			await this.$store.dispatch('products', productsViewData).then(
+				res =>
+					res.products.forEach(element => {
+						let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
+						listData.products = element
+						listData.product = element.housingType + '' + element.dong + +'' + '동' + element.ho + '호'
+					}),
+				console.log(this.list),
 			)
 		},
 
