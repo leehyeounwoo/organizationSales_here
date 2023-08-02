@@ -7,12 +7,14 @@
 		<datatable :datatable="table" class="mt-5" :detailClick="product_detail"></datatable>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" />
+		<productDetail :setdialog="table_detail" />
 	</div>
 </template>
 
 <script>
 import { txtField, datatable } from '@/components/index.js'
 import createBusiness from '../../viewItem/createBusiness.vue'
+import productDetail from '../../viewItem/productDetail.vue'
 
 export default {
 	created() {
@@ -23,6 +25,7 @@ export default {
 		txtField,
 		datatable,
 		createBusiness,
+		productDetail,
 	},
 	data() {
 		return {
@@ -112,6 +115,10 @@ export default {
 					},
 				],
 			},
+			table_detail: {
+				dialog: false,
+				item: [],
+			},
 			search_business: '',
 			search: {
 				maxlength: '255',
@@ -150,7 +157,8 @@ export default {
 			this.createDialog.dialog = true
 		},
 		product_detail(item) {
-			console.log(item)
+			this.table_detail.item = item
+			this.table_detail.dialog = true
 		},
 	},
 }
