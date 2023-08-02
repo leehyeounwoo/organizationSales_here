@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/settlement-edit-logs",
+      "handler": "settlement-edit-log.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/settlement-edit-logs/count",
+      "handler": "settlement-edit-log.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/settlement-edit-logs/:id",
+      "handler": "settlement-edit-log.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/settlement-edit-logs",
+      "handler": "settlement-edit-log.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/settlement-edit-logs/:id",
+      "handler": "settlement-edit-log.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/settlement-edit-logs/:id",
+      "handler": "settlement-edit-log.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

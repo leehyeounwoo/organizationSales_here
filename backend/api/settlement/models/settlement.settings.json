@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "settlements",
+  "info": {
+    "name": "Settlement"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "ProductID": {
+      "type": "string"
+    },
+    "contractDate": {
+      "type": "date"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "agree",
+        "waiting",
+        "disagree"
+      ]
+    },
+    "degree": {
+      "type": "string"
+    }
+  }
+}

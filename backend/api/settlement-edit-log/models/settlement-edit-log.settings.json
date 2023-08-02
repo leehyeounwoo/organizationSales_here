@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "settlement_edit_logs",
+  "info": {
+    "name": "SettlementEditLog"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "editDetail": {
+      "type": "text"
+    },
+    "editStatus": {
+      "type": "enumeration",
+      "enum": [
+        "agree",
+        "waiting",
+        "disagree"
+      ]
+    }
+  }
+}

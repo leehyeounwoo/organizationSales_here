@@ -983,6 +983,15 @@
 					<!-- <btn :btn="deleteBtn" btn_txt=right-btn" :click="clickDeleteBtn" /> -->
 				</v-layout>
 			</template>
+			<!-- detailEtc -->
+			<template v-slot:[`item.detailEtc`]="{ item }">
+				<v-layout class="dt-align-set" justify-center>
+					<v-btn class="ml-2" small @click="nameClick(item)" :color="'#f3f3ff'" depressed>자세히 보기</v-btn>
+					<!-- <v-btn class="ml-2" small @click="deleteacskey(item)" dark :color="$store.state.PointColor2" depressed>삭제</v-btn> -->
+					<!-- <btn :btn="editBtn" btn_txt="수정" :click="clickEditBtn" /> -->
+					<!-- <btn :btn="deleteBtn" btn_txt=right-btn" :click="clickDeleteBtn" /> -->
+				</v-layout>
+			</template>
 			<template v-slot:[`item.etcQR`]="{ item }">
 				<v-layout class="dt-align-set" justify-center>
 					<v-btn

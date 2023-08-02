@@ -381,7 +381,6 @@ export default {
 			})
 		},
 		async viewUsers(input) {
-			console.log(input)
 			this.$store.state.loading = true
 			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
 				input.team = this.searchsel1.value.id
@@ -545,7 +544,6 @@ export default {
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 			}
-			console.log(input, '22')
 
 			this.viewUsers(input)
 
@@ -557,7 +555,7 @@ export default {
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 			}
-			console.log(input, '22')
+
 			this.viewUsers(input)
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
@@ -565,7 +563,6 @@ export default {
 			let input = {
 				date: this.$moment().format('YYYY-MM-DD'),
 			}
-			console.log(input, '22')
 			this.viewUsers(input)
 			this.date_picker.date = this.$moment()
 		},

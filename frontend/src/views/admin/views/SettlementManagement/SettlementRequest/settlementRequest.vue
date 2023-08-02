@@ -32,14 +32,7 @@
 		</v-layout>
 		<v-layout class="mt-4">
 			<v-flex xs8>
-				<datatable
-					:datatable="settlementTable"
-					class="notice_table"
-					excelType="clientManagement"
-					excelUseYn="true"
-					@pagination="pagination"
-				>
-				</datatable>
+				<datatable :datatable="settlementTable" class="notice_table" @pagination="pagination" />
 			</v-flex>
 			<v-flex xs4 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -151,18 +144,18 @@ export default {
 			holiDay: 0,
 			settlementTable: {
 				headers: [
-					{ text: '직원명', value: 'data1', align: 'center', width: '10%' },
-					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
-					{ text: '영업번호', value: 'salesPhoneNumer', align: 'center', width: '10%' },
-					{ text: '팀', value: 'teamID', align: 'center', width: '7%' },
-					{ text: '계약일', value: '', align: 'center', width: '10%' },
-					{ text: '계약물건', value: '', align: 'center', width: '10%' },
-					{ text: '요청일', value: '', align: 'center', width: '15%' },
-					{ text: '차수', value: '', align: 'center', width: '10%' },
-					{ text: '상태', value: '', align: 'center', width: '5%' },
-					{ text: '비고', value: '', align: 'center', width: '10%' },
+					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '10%' },
+					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
+					{ text: '영업번호', sortable: false, value: 'salesPhoneNumber', align: 'center', width: '10%' },
+					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '10%' },
+					{ text: '계약일', sortable: false, value: '', align: 'center', width: '10%' },
+					{ text: '계약물건', sortable: false, value: 'data5', align: 'center', width: '10%' },
+					{ text: '요청일', sortable: false, value: 'data5', align: 'center', width: '15%' },
+					{ text: '차수', sortable: false, value: 'data5', align: 'center', width: '10%' },
+					{ text: '상태', sortable: false, value: 'data5', align: 'center', width: '5%' },
+					{ text: '비고', sortable: false, value: 'detailEtc', align: 'center', width: '5%' },
 				],
-
+				headerCheck: false,
 				items: [],
 				select_items: [],
 				json_fields: {
@@ -178,8 +171,8 @@ export default {
 				},
 				itemsPerPage: 10,
 				page: 1,
-				pageCount: 0,
-				total: 0,
+				pageCount: 1,
+				total: 1,
 			},
 
 			searchsel: {
@@ -216,11 +209,30 @@ export default {
 			date_picker: {
 				date: this.$moment().format('YYYY-MM-DD'),
 			},
+			userArrData: [],
+			userData: [],
+			teamArrData: [],
+			teamData: [],
+			rankArrData: [],
+			rankData: [],
 		}
 	},
 
 	async created() {
 		await this.me()
+		const usersViewData = {
+			role: 3,
+		}
+		await this.usersView(usersViewData)
+		const teamsViewData = {
+			idArr: this.teamArrData,
+		}
+		await this.teamsView(teamsViewData)
+		const ranksViewData = {
+			idArr: this.rankArrData,
+		}
+		await this.ranksView(ranksViewData)
+		await this.dataSetting()
 	},
 	mounted() {},
 
@@ -230,6 +242,58 @@ export default {
 				this.$store.state.meData = res.data
 				console.log(this.$store.state.meData)
 			})
+		},
+		async dataSetting() {
+			// let arrData = []
+			console.log(this.teamData)
+			console.log(this.rankData)
+			for (let index = 0; index < this.userData.length; index++) {
+				const element = this.userData[index]
+				console.log(element)
+				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
+				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
+
+				element.teamID = `${teamTitle} / ${rankTitle}`
+			}
+			this.settlementTable.items = this.userData
+			console.log('아이템', this.settlementTable.items)
+		},
+		async usersView(usersViewData) {
+			await this.$store
+				.dispatch('users', usersViewData)
+				.then(res => {
+					console.log(res)
+					this.userData = res.users
+					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
+					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async teamsView(teamsViewData) {
+			await this.$store
+				.dispatch('teams', teamsViewData)
+				.then(res => {
+					this.teamData = res.teams
+					// console.log(res.teams)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async ranksView(teamsViewData) {
+			await this.$store
+				.dispatch('ranks', teamsViewData)
+				.then(res => {
+					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
 		},
 
 		async pagination(item) {
