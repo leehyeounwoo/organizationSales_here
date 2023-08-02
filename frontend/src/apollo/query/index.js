@@ -159,5 +159,10 @@ export const settlements = gql`
 			updated_at
 			degree
 		}
+		attachment {
+			id
+			name
+			url
+		}
 	}
 `

@@ -42,8 +42,8 @@
 					<v-flex xs10 class="notice_right_table2">
 						<v-layout>
 							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
-								<span id="usernameSpan"></span>
-								<span id="phoneNumberSpan"></span>
+								<span id="usernameSpan" class="spanClass"></span>
+								<span id="phoneNumberSpan" class="spanClass"></span>
 							</v-flex>
 						</v-layout>
 					</v-flex>
@@ -53,7 +53,7 @@
 						계약물건
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
-						<span id="productSpan"></span>
+						<span id="productSpan" class="spanClass ml-3"></span>
 					</v-flex>
 				</v-layout>
 
@@ -768,5 +768,17 @@ export default {
 	.v-btn__content {
 		color: #fff;
 	}
+}
+
+.spanClass {
+	font-family: MalgunGothic;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 3.64;
+	letter-spacing: normal;
+	text-align: center;
+	color: #333;
 }
 </style>
