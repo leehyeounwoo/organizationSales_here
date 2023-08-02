@@ -1600,6 +1600,12 @@ export default {
 	},
 	data() {
 		return {
+			workingStatusSelectBox: {
+				items: ['재직', '퇴사'],
+				hideDetail: true,
+				outlined: true,
+				class: 'small_font bizInput',
+			},
 			sweetInfo: {
 				open: false,
 				title: '',
