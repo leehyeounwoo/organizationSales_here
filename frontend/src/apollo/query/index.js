@@ -12,13 +12,13 @@ export const me = gql`
 	}
 `
 export const users = gql`
-	query users($date: Date, $teamID: String, $username: String, $status: String, $date_gte: Date, $date_lte: Date, $role: ID) {
+	query users($idArr: [ID], $date: Date, $teamID: String, $username: String, $status: String, $date_gte: Date, $date_lte: Date, $role: ID) {
 		usersConnection {
 			aggregate {
 				count
 			}
 		}
-		users(where: { username: $username, teamID: $teamID, role: $role }) {
+		users(where: { id: $idArr, username: $username, teamID: $teamID, role: $role }) {
 			id
 			businessID
 			created_at
@@ -112,8 +112,8 @@ export const teams = gql`
 `
 
 export const products = gql`
-	query($housingType: String, $dong: String, $ho: String) {
-		products(where: { housingType: $housingType, dong: $dong, ho: $ho }) {
+	query($idArr: [ID], $housingType: String, $dong: String, $ho: String) {
+		products(where: { id: $idArr, housingType: $housingType, dong: $dong, ho: $ho }) {
 			id
 			housingType
 			dong
@@ -138,6 +138,21 @@ export const businesses = gql`
 			splitHoldingTime
 			maximumHoldingTime
 			created_at
+		}
+	}
+`
+
+export const settlements = gql`
+	query settlements {
+		settlements {
+			id
+			ProductID
+			userID
+			contractDate
+			settlementStatus
+			created_at
+			updated_at
+			degree
 		}
 	}
 `

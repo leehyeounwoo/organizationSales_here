@@ -15,7 +15,7 @@
       "type": "string"
     },
     "contractDate": {
-      "type": "date"
+      "type": "datetime"
     },
     "settlementStatus": {
       "type": "enumeration",

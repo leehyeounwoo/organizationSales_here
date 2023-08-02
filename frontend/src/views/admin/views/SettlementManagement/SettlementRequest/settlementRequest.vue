@@ -148,11 +148,11 @@ export default {
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'salesPhoneNumber', align: 'center', width: '10%' },
 					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '10%' },
-					{ text: '계약일', sortable: false, value: '', align: 'center', width: '10%' },
-					{ text: '계약물건', sortable: false, value: 'data5', align: 'center', width: '10%' },
-					{ text: '요청일', sortable: false, value: 'data5', align: 'center', width: '15%' },
-					{ text: '차수', sortable: false, value: 'data5', align: 'center', width: '10%' },
-					{ text: '상태', sortable: false, value: 'data5', align: 'center', width: '5%' },
+					{ text: '계약일', sortable: false, value: 'contractDate', align: 'center', width: '10%' },
+					{ text: '계약물건', sortable: false, value: 'product', align: 'center', width: '10%' },
+					{ text: '요청일', sortable: false, value: 'created_at', align: 'center', width: '15%' },
+					{ text: '차수', sortable: false, value: 'degree', align: 'center', width: '10%' },
+					{ text: '상태', sortable: false, value: 'settlementStatus', align: 'center', width: '5%' },
 					{ text: '비고', sortable: false, value: 'detailEtc', align: 'center', width: '5%' },
 				],
 				headerCheck: false,
@@ -215,15 +215,25 @@ export default {
 			teamData: [],
 			rankArrData: [],
 			rankData: [],
+			productData: [],
+			productArrData: [],
+			settlementData: [],
+			settlementArrData: [],
+			listData: [],
 		}
 	},
 
 	async created() {
 		await this.me()
+		await this.settlementView()
 		const usersViewData = {
-			role: 3,
+			idArr: this.userArrData,
 		}
 		await this.usersView(usersViewData)
+		const productsViewData = {
+			idArr: this.productArrData,
+		}
+		await this.productsView(productsViewData)
 		const teamsViewData = {
 			idArr: this.teamArrData,
 		}
@@ -240,13 +250,9 @@ export default {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.data
-				console.log(this.$store.state.meData)
 			})
 		},
 		async dataSetting() {
-			// let arrData = []
-			console.log(this.teamData)
-			console.log(this.rankData)
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
 				console.log(element)
@@ -254,16 +260,54 @@ export default {
 				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
 
 				element.teamID = `${teamTitle} / ${rankTitle}`
+				this.listData.teamID = element.teamID
 			}
-			this.settlementTable.items = this.userData
-			console.log('아이템', this.settlementTable.items)
+			const wrapListData = [
+				{
+					username: this.listData.username,
+					created_at: this.listData.created_at,
+					degree: this.listData.degree,
+					id: this.listData.id,
+					phoneNumber: this.listData.phoneNumber,
+					product: this.listData.product,
+					salesPhoneNumber: this.listData.salesPhoneNumber,
+					settlementStatus: this.listData.settlementStatus,
+					contractDate: this.listData.contractDate,
+					teamID: this.listData.teamID,
+				},
+			]
+			this.settlementTable.items = wrapListData
 		},
+
+		async settlementView() {
+			await this.$store.dispatch('settlements').then(res => {
+				console.log(res)
+				this.settlementData = res.settlements
+				res.settlements.forEach(element => {
+					this.listData.settlements = element
+					this.listData.id = element.id
+					this.listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD HH:mm')
+					this.listData.contractDate = this.$moment(element.contractDate).format('YYYY-MM-DD HH:mm')
+					this.listData.settlementStatus = element.settlementStatus
+					this.listData.degree = element.degree
+				})
+				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
+				this.productArrData = res.settlements.filter(x => x.ProductID).map(x => x.ProductID)
+			})
+		},
+
 		async usersView(usersViewData) {
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
-					console.log(res)
 					this.userData = res.users
+					res.users.forEach(element => {
+						this.listData.users = element
+						this.listData.username = element.username
+						this.listData.phoneNumber = element.phoneNumber
+						this.listData.salesPhoneNumber = element.salesPhoneNumber
+						this.listData.teamID = element.teamID
+					})
 					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
 					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
 				})
@@ -294,6 +338,15 @@ export default {
 					console.log(err)
 					this.$store.state.loading = false
 				})
+		},
+
+		async productsView(productsViewData) {
+			await this.$store.dispatch('products', productsViewData).then(res =>
+				res.products.forEach(element => {
+					this.listData.products = element
+					this.listData.product = element.housingType + '' + element.dong + +'' + '동' + element.ho + '호'
+				}),
+			)
 		},
 
 		async pagination(item) {
