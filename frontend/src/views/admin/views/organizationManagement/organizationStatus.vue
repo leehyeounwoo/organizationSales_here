@@ -473,7 +473,7 @@ export default {
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center' },
 					{ text: '등록일', value: 'created_at', align: 'center' },
 					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false },
-					{ text: '재직상태', value: 'data5', align: 'center' },
+					{ text: '재직상태', value: 'workingStatus', align: 'center' },
 					{ text: '비고', value: 'etc', align: 'center' },
 				],
 				showselect: true,
@@ -491,6 +491,7 @@ export default {
 					퇴근시간: 'data4',
 					'신청 연차 관리': 'vaction',
 				},
+
 				itemsPerPage: 10,
 				page: 1,
 				pageCount: 1,
@@ -575,7 +576,8 @@ export default {
 				console.log(element)
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
 				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
-				element.team = `${teamTitle}(${rankTitle})`
+				element.teamTitle = teamTitle
+				element.rankTitle = rankTitle
 			}
 			this.table.items = this.userData
 			// arrData =
@@ -904,7 +906,7 @@ export default {
 	left: 0px;
 }
 .notice_right_table {
-	background-color: #e9ecf4;
+	background-color: #f5f5f5;
 	font-size: 12px;
 	font-weight: bold;
 	display: flex;

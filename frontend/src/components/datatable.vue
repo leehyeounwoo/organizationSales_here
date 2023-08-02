@@ -709,7 +709,35 @@
 			<template v-slot:[`item.workingStatus`]="{ item }">
 				<div>
 					<!-- {{ item.workingStatus }} -->
-					<selectBox :sel="item.useYn" class="table_small_sel" @change="change_default"></selectBox>
+					<selectBoxValue
+						:sel="workingStatusSelectBox"
+						:value="item.workingStatus ? '재직' : '퇴사'"
+						class="table_small_sel"
+						@change="change_default"
+					></selectBoxValue>
+				</div>
+			</template>
+			<!-- team -->
+			<template v-slot:[`item.team`]="{ item }">
+				<div>
+					<v-layout>
+						<v-flex xs6 pr-1>
+							<selectBoxValue
+								:sel="workingStatusSelectBox"
+								:value="item.teamTitle"
+								class="table_small_sel"
+								@change="change_default"
+							></selectBoxValue>
+						</v-flex>
+						<v-flex xs6 pl-1>
+							<selectBoxValue
+								:sel="workingStatusSelectBox"
+								:value="item.rankTitle"
+								class="table_small_sel"
+								@change="change_default"
+							></selectBoxValue>
+						</v-flex>
+					</v-layout>
 				</div>
 			</template>
 			<!-- talk_no -->
@@ -1553,7 +1581,7 @@
 <script>
 import TimepickerDialog from '../views/admin/viewItem/timePickerDialog.vue'
 import btn from './button'
-import { selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
+import { selectBoxValue, selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
 // import { sweetAlert } from '@/components/index'
 
 import downloadExcel from 'vue-json-excel'
@@ -1568,6 +1596,7 @@ export default {
 		txtFieldStyle,
 		selectBoxStyle,
 		TimepickerDialog,
+		selectBoxValue,
 	},
 	data() {
 		return {
