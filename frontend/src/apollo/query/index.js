@@ -123,3 +123,20 @@ export const products = gql`
 		}
 	}
 `
+export const businesses = gql`
+	query($name: String) {
+		businesses(where: { name: $name }) {
+			id
+			name
+			phoneNumber
+			workingHoursStart
+			workingHoursEnd
+			manager
+			managerPhoneNumber
+			workCheckURL
+			splitHoldingTime
+			maximumHoldingTime
+			created_at
+		}
+	}
+`

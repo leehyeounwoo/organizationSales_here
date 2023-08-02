@@ -1490,6 +1490,10 @@
 					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">해제</v-btn>
 				</v-layout>
 			</template>
+			<!-- 물건배정 - 상태 -->
+			<template v-slot:[`item.business_manager`]="{ item }">
+				<div>{{ item.manager }}</div>
+			</template>
 		</v-data-table>
 
 		<!--고객 관리 - 캠페인 고객 관리 - 자세히 보기 -->

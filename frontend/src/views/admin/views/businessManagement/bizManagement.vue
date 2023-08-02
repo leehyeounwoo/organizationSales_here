@@ -4,7 +4,7 @@
 			<txtField class="search_box_type" v-model="search_business" :txtField="search"></txtField>
 			<v-btn class="ml-3 search_btn" color="#009dac"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 		</v-layout>
-		<datatable :datatable="table" class="mt-5"></datatable>
+		<datatable :datatable="table" class="mt-5" :detailClick="product_detail"></datatable>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" />
 	</div>
@@ -15,6 +15,10 @@ import { txtField, datatable } from '@/components/index.js'
 import createBusiness from '../../viewItem/createBusiness.vue'
 
 export default {
+	created() {
+		this.$store.state.loading = true
+		this.first_business()
+	},
 	components: {
 		txtField,
 		datatable,
@@ -116,15 +120,15 @@ export default {
 			},
 			table: {
 				headers: [
-					{ text: '사업지명', value: '' },
-					{ text: '대표번호', value: '' },
-					{ text: '생성일', value: '' },
-					{ text: '근무시간', value: '' },
-					{ text: '담당자', value: '' },
-					{ text: '연락처', value: '' },
-					{ text: '출퇴근 스캔 URL', value: '' },
+					{ text: '사업지명', value: 'name' },
+					{ text: '대표번호', value: 'phoneNumber' },
+					{ text: '생성일', value: 'created_at' },
+					{ text: '근무시간', value: 'workTime' },
+					{ text: '담당자', value: 'business_manager' },
+					{ text: '연락처', value: 'managerPhoneNumber' },
+					{ text: '출퇴근 스캔 URL', value: 'workCheckURL' },
 					{ text: '등록상품', value: '' },
-					{ text: '비고', value: '' },
+					{ text: '비고', value: 'etc_detail' },
 				],
 				class: 'datatablehover3',
 				items: [],
@@ -136,8 +140,17 @@ export default {
 		}
 	},
 	methods: {
+		first_business() {
+			this.$store.dispatch('businesses').then(res => {
+				this.table.items = res.businesses
+				this.$store.state.loading = false
+			})
+		},
 		createBiz() {
 			this.createDialog.dialog = true
+		},
+		product_detail(item) {
+			console.log(item)
 		},
 	},
 }

@@ -20,6 +20,7 @@
 import { selectBox, datatable } from '@/components/index.js'
 
 export default {
+	created() {},
 	components: {
 		selectBox,
 		datatable,
@@ -52,8 +53,8 @@ export default {
 			},
 			productTable: {
 				headers: [
-					{ text: '요청 상담사', value: '', width: '12%' },
-					{ text: '홀딩 요청 상품', value: '', width: '15%' },
+					{ text: '요청 상담사', value: 'product_counselor', width: '12%' },
+					{ text: '홀딩 요청 상품', value: 'holding_product', width: '15%' },
 					{ text: '홀딩요청시간', value: '', width: '13%' },
 					{ text: '배정 요청 처리', value: '', width: '25%' },
 					{ text: '상태', value: '', width: '35%' },
