@@ -721,22 +721,27 @@
 			<template v-slot:[`item.team`]="{ item }">
 				<div>
 					<v-layout>
-						<v-flex xs6 pr-1>
-							<selectBoxValue
-								:sel="workingStatusSelectBox"
+						<v-flex xs5 pr-1>
+							<selectBoxValueItems
+								:sel="teamTileSelectBox"
 								:value="item.teamTitle"
+								:items="item.teamItems"
 								class="table_small_sel"
 								@change="change_default"
-							></selectBoxValue>
+							></selectBoxValueItems>
 						</v-flex>
-						<v-flex xs6 pl-1>
-							<selectBoxValue
-								:sel="workingStatusSelectBox"
+						<v-flex xs5 pl-1>
+							<selectBoxValueItems
+								:sel="rankNameSelectBox"
+								:items="item.rankItems"
 								:value="item.rankTitle"
 								class="table_small_sel"
 								@change="change_default"
-							></selectBoxValue>
+							></selectBoxValueItems>
 						</v-flex>
+						<v-fles xs2>
+							<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>이력보기</v-btn>
+						</v-fles>
 					</v-layout>
 				</div>
 			</template>
@@ -1581,7 +1586,7 @@
 <script>
 import TimepickerDialog from '../views/admin/viewItem/timePickerDialog.vue'
 import btn from './button'
-import { selectBoxValue, selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
+import { selectBoxValueItems, selectBoxValue, selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
 // import { sweetAlert } from '@/components/index'
 
 import downloadExcel from 'vue-json-excel'
@@ -1597,6 +1602,7 @@ export default {
 		selectBoxStyle,
 		TimepickerDialog,
 		selectBoxValue,
+		selectBoxValueItems,
 	},
 	data() {
 		return {
@@ -1605,6 +1611,20 @@ export default {
 				hideDetail: true,
 				outlined: true,
 				class: 'small_font bizInput',
+			},
+			teamTileSelectBox: {
+				hideDetail: true,
+				outlined: true,
+				class: 'small_font bizInput',
+				itemValue: 'id',
+				itemText: 'title',
+			},
+			rankNameSelectBox: {
+				hideDetail: true,
+				outlined: true,
+				class: 'small_font bizInput',
+				itemValue: 'id',
+				itemText: 'rankName',
 			},
 			sweetInfo: {
 				open: false,

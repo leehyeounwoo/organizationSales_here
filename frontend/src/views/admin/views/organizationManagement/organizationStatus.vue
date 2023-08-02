@@ -468,13 +468,13 @@ export default {
 			holiDay: 0,
 			table: {
 				headers: [
-					{ text: '상담사', value: 'username', align: 'center' },
-					{ text: '연락처', value: 'phoneNumber', align: 'center' },
-					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center' },
-					{ text: '등록일', value: 'created_at', align: 'center' },
-					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false },
-					{ text: '재직상태', value: 'workingStatus', align: 'center' },
-					{ text: '비고', value: 'etc', align: 'center' },
+					{ text: '상담사', value: 'username', align: 'center', width: '10%' },
+					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '15%' },
+					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '15%' },
+					{ text: '등록일', value: 'created_at', align: 'center', width: '15%' },
+					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false, width: '25%' },
+					{ text: '재직상태', value: 'workingStatus', align: 'center', width: '10%' },
+					{ text: '비고', value: 'etc', align: 'center', width: '5%' },
 				],
 				showselect: true,
 				headerCheck: false,
@@ -568,24 +568,21 @@ export default {
 
 	methods: {
 		async dataSetting() {
-			// let arrData = []
-			console.log(this.teamData)
-			console.log(this.rankData)
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-				console.log(element)
-				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
+
+				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].id
+				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].id
+				element.teamItems = this.teamData
+				element.rankItems = this.rankData
 				element.teamTitle = teamTitle
 				element.rankTitle = rankTitle
 			}
 			this.table.items = this.userData
-			// arrData =
-			// 			console.log(arrData)
+			console.log(this.teamData)
+			console.log(this.rankData)
 		},
 		editUserData(val) {
-			// console.log(val)
-			// console.log(this.rightEdit)
 			this.rightEdit[1].txtField.value = val.bank
 			this.rightEdit[1].txtField2.value = val.accountNumber
 		},
