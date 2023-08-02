@@ -59,6 +59,7 @@ export const users = gql`
 			accountNumber
 			rankId
 			teamID
+			workingStatus
 		}
 	}
 `

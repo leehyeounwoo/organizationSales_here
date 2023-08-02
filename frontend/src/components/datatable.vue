@@ -705,6 +705,13 @@
 					{{ item.username }}
 				</div>
 			</template>
+			<!-- workingStatus -->
+			<template v-slot:[`item.workingStatus`]="{ item }">
+				<div>
+					<!-- {{ item.workingStatus }} -->
+					<selectBox :sel="item.useYn" class="table_small_sel" @change="change_default"></selectBox>
+				</div>
+			</template>
 			<!-- talk_no -->
 			<template v-slot:[`item.talk_no`]="{ index }">
 				<div>
