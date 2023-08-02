@@ -546,6 +546,9 @@
               "disagree"
             ]
           },
+          "settlementID": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -563,6 +566,9 @@
               "waiting",
               "disagree"
             ]
+          },
+          "settlementID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

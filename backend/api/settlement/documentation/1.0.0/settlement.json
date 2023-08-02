@@ -539,6 +539,9 @@
           "degree": {
             "type": "string"
           },
+          "userID": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -561,6 +564,9 @@
             ]
           },
           "degree": {
+            "type": "string"
+          },
+          "userID": {
             "type": "string"
           },
           "published_at": {

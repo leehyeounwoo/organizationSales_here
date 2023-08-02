@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "settlement_edit_logs",
   "info": {
-    "name": "SettlementEditLog"
+    "name": "SettlementEditLog",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -20,6 +21,9 @@
         "waiting",
         "disagree"
       ]
+    },
+    "settlementID": {
+      "type": "string"
     }
   }
 }
