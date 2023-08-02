@@ -528,7 +528,7 @@
           "contractDate": {
             "type": "string"
           },
-          "state": {
+          "settlementStatus": {
             "type": "string",
             "enum": [
               "agree",
@@ -555,7 +555,7 @@
           "contractDate": {
             "type": "string"
           },
-          "state": {
+          "settlementStatus": {
             "type": "string",
             "enum": [
               "agree",

@@ -17,7 +17,7 @@
     "contractDate": {
       "type": "date"
     },
-    "state": {
+    "settlementStatus": {
       "type": "enumeration",
       "enum": [
         "agree",

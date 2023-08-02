@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "08/02/2023 11:42:49 AM"
+    "x-generation-date": "08/02/2023 11:47:07 AM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -8784,7 +8784,7 @@
           "contractDate": {
             "type": "string"
           },
-          "state": {
+          "settlementStatus": {
             "type": "string",
             "enum": [
               "agree",
@@ -8811,7 +8811,7 @@
           "contractDate": {
             "type": "string"
           },
-          "state": {
+          "settlementStatus": {
             "type": "string",
             "enum": [
               "agree",
