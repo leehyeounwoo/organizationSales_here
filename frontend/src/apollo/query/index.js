@@ -26,7 +26,6 @@ export const users = gql`
 			username
 			email
 			blocked
-			settlementID
 			role {
 				id
 				name
@@ -145,6 +144,11 @@ export const businesses = gql`
 
 export const settlements = gql`
 	query settlements {
+		settlementsConnection {
+			aggregate {
+				count
+			}
+		}
 		settlements {
 			id
 			ProductID

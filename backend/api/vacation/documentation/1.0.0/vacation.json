@@ -659,9 +659,6 @@
               "workingStatus": {
                 "type": "boolean"
               },
-              "settlementID": {
-                "type": "string"
-              },
               "created_by": {
                 "type": "string"
               },

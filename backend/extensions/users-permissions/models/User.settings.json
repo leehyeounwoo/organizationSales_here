@@ -110,9 +110,6 @@
     },
     "workingStatus": {
       "type": "boolean"
-    },
-    "settlementID": {
-      "type": "string"
     }
   }
 }

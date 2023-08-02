@@ -32,7 +32,7 @@
 		</v-layout>
 		<v-layout class="mt-4">
 			<v-flex xs8>
-				<datatable :datatable="settlementTable" class="notice_table" @pagination="pagination" />
+				<datatable :datatable="settlementTable" class="notice_table" @pagination="pagination" @click="editUserData" />
 			</v-flex>
 			<v-flex xs4 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -40,14 +40,21 @@
 						계약자
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
-						<v-layout> </v-layout>
+						<v-layout>
+							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
+								<span id="usernameSpan"></span>
+								<span id="phoneNumberSpan"></span>
+							</v-flex>
+						</v-layout>
 					</v-flex>
 				</v-layout>
 				<v-layout>
 					<v-flex class="notice_right_table" xs3 style="height: 50px;">
 						계약물건
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2"> </v-flex>
+					<v-flex xs10 class="notice_right_table2">
+						<span id="productSpan"></span>
+					</v-flex>
 				</v-layout>
 
 				<v-layout>
@@ -150,7 +157,7 @@ export default {
 					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '10%' },
 					{ text: '계약일', sortable: false, value: 'contractDate', align: 'center', width: '10%' },
 					{ text: '계약물건', sortable: false, value: 'product', align: 'center', width: '10%' },
-					{ text: '요청일', sortable: false, value: 'created_at', align: 'center', width: '15%' },
+					{ text: '요청일', sortable: false, value: 'settlementCreated_at', align: 'center', width: '15%' },
 					{ text: '차수', sortable: false, value: 'degree', align: 'center', width: '10%' },
 					{ text: '상태', sortable: false, value: 'settlementStatus', align: 'center', width: '5%' },
 					{ text: '비고', sortable: false, value: 'detailEtc', align: 'center', width: '5%' },
@@ -224,6 +231,7 @@ export default {
 	},
 
 	async created() {
+		this.$store.state.loading = true
 		await this.me()
 		await this.settlementView()
 		const usersViewData = {
@@ -243,6 +251,8 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
+
+		this.$store.state.loading = false
 	},
 	mounted() {},
 
@@ -268,11 +278,12 @@ export default {
 
 		async settlementView() {
 			await this.$store.dispatch('settlements').then(res => {
+				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
 					listData.settlements = element
 					listData.id = element.id
-					listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD HH:mm')
+					listData.settlementCreated_at = this.$moment(element.created_at).format('YYYY-MM-DD HH:mm')
 					listData.contractDate = this.$moment(element.contractDate).format('YYYY-MM-DD HH:mm')
 					listData.settlementStatus = element.settlementStatus
 					listData.degree = element.degree
@@ -291,9 +302,8 @@ export default {
 				.then(res => {
 					this.userData = res.users
 					res.users.forEach(element => {
-						let checkArr = element.settlementID.split('_')
 						for (let items of this.list) {
-							if (checkArr.includes(items.id)) {
+							if (items.userID === element.id) {
 								items.users = element
 								items.username = element.username
 								items.phoneNumber = element.phoneNumber
@@ -340,7 +350,7 @@ export default {
 					res.products.forEach(element => {
 						let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
 						listData.products = element
-						listData.product = element.housingType + '' + element.dong + +'' + '동' + element.ho + '호'
+						listData.product = element.housingType + element.dong + '동' + element.ho + '호'
 					}),
 				console.log(this.list),
 			)
@@ -447,6 +457,22 @@ export default {
 			}
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
+		},
+		editUserData(val) {
+			const usernameSpan = document.getElementById('usernameSpan')
+			if (usernameSpan) {
+				usernameSpan.textContent = `${val.username}`
+			}
+
+			const phoneNumberSpan = document.getElementById('phoneNumberSpan')
+			if (phoneNumberSpan) {
+				phoneNumberSpan.textContent = `${val.phoneNumber}`
+			}
+
+			const productSpan = document.getElementById('productSpan')
+			if (productSpan) {
+				productSpan.textContent = `${val.product}`
+			}
 		},
 	},
 }
