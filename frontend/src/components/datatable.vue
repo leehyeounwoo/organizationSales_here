@@ -1543,6 +1543,15 @@
 			<template v-slot:[`item.business_manager`]="{ item }">
 				<div>{{ item.manager }}</div>
 			</template>
+
+			<!-- 정산관리 - 상태 -->
+			<template v-slot:[`item.settlementStatus`]="{ item }">
+				<div>{{ item.settlementStatus === 'waiting' ? '대기' : item.settlementStatus === 'agree' ? '승인' : '반려' }}</div>
+			</template>
+			<!-- 정산관리 - 차수 -->
+			<template v-slot:[`item.degree`]="{ item }">
+				<div>{{ item.degree + '차' }}</div>
+			</template>
 		</v-data-table>
 
 		<!--고객 관리 - 캠페인 고객 관리 - 자세히 보기 -->
