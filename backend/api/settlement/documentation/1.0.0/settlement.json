@@ -612,6 +612,12 @@
               }
             }
           },
+          "comment": {
+            "type": "string"
+          },
+          "adminName": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -637,6 +643,12 @@
             "type": "string"
           },
           "userID": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "adminName": {
             "type": "string"
           },
           "published_at": {

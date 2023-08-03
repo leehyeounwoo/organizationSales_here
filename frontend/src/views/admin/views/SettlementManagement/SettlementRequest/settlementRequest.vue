@@ -79,7 +79,14 @@
 					<v-flex class="notice_right_table" xs3>
 						증빙서류
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2" style="height:163px"> </v-flex>
+					<v-flex xs10 class="notice_right_table2" style="height:163px; overflow-y: scroll;">
+						<v-layout v-for="(filename, index) in attachmentNameList" :key="index" style="">
+							<v-layout class="attachmentClass" style="height: 100%;">
+								<span class="attachmentSpanClass">{{ filename.name }}</span>
+								<v-icon>mdi-alpha-x-circle-outline</v-icon>
+							</v-layout>
+						</v-layout>
+					</v-flex>
 				</v-layout>
 				<v-layout>
 					<v-flex class="notice_right_table" xs3 style="height: 40px;">
@@ -90,21 +97,22 @@
 							<v-radio class="mb-0 mr-2" label="요청 승인" :value="true" color="#009dac" :ripple="false"></v-radio>
 							<v-radio class="mb-0" label="반려" :value="false" color="#009dac" :ripple="false"></v-radio>
 						</v-radio-group>
-						<v-btn class="ml-2 search_btn2" style="width: 100%; " color="#3e7ccc"><v-icon>mdi-check</v-icon>적용</v-btn>
+						<v-btn @click="openModal" class="ml-2 search_btn2" style="width: 100%; " color="#3e7ccc"><v-icon>mdi-check</v-icon>적용</v-btn>
 					</v-flex>
 				</v-layout>
 			</v-flex>
 		</v-layout>
+		<sweetAlert :dialog="saveDialogStatus" :activeSave="activeSave"></sweetAlert>
 	</div>
 </template>
 <script>
-import { selectBox, txtField, datatable } from '@/components/index.js'
-
+import { selectBox, txtField, datatable, sweetAlert } from '@/components/index.js'
 export default {
 	components: {
 		selectBox,
 		txtField,
 		datatable,
+		sweetAlert,
 	},
 
 	data() {
@@ -123,27 +131,17 @@ export default {
 			},
 			saveDialogStatus: {
 				open: false,
-				content: '저장하시겠습니까?',
-				btnTxt: '저장',
+				title: '',
+				content: ``,
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				cancelBtnText: '취소',
+				modalIcon: 'success',
+				save_type: '',
+				item: {},
+				item_index: null,
 			},
-			newDialog: {
-				dialog: false,
-				edit: false,
-				editData: {},
-				title: '신청 연차 관리',
-			},
-			newDialog2: {
-				dialog: false,
-				edit: false,
-				editData: {},
-				title: '근태정보',
-			},
-			newDialog3: {
-				dialog: false,
-				edit: false,
-				editData: {},
-				title: '출퇴근 리스트',
-			},
+
 			selected: [],
 			allCounselor: 0,
 			work: 0,
@@ -227,6 +225,7 @@ export default {
 			settlementData: [],
 			settlementArrData: [],
 			list: [],
+			attachmentNameList: [],
 		}
 	},
 
@@ -274,6 +273,7 @@ export default {
 			}
 
 			this.settlementTable.items = this.list
+			console.log(this.settlementTable.items)
 		},
 
 		async settlementView() {
@@ -459,6 +459,8 @@ export default {
 			this.date = this.$moment(this.date_picker.date)
 		},
 		editUserData(val) {
+			this.attachmentNameList = []
+			console.log(val)
 			const usernameSpan = document.getElementById('usernameSpan')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -473,6 +475,23 @@ export default {
 			if (productSpan) {
 				productSpan.textContent = `${val.product}`
 			}
+
+			if (val.settlements.attachment.length > 0) {
+				for (let i = 0; i < val.settlements.attachment.length; i++) {
+					this.attachmentNameList.push({ name: val.settlements.attachment[i].name, url: val.settlements.attachment[i].url })
+				}
+				console.log(this.attachmentNameList)
+			}
+		},
+		openModal() {
+			if (this.agreeType === true) {
+				this.saveDialogStatus.title = `정산 요청 승인`
+				this.saveDialogStatus.content = `정산요청을 승인합니다`
+				this.saveDialogStatus.open = true
+			}
+		},
+		deleteAttachment(val) {
+			console.log(val)
 		},
 	},
 }
@@ -780,5 +799,26 @@ export default {
 	letter-spacing: normal;
 	text-align: center;
 	color: #333;
+}
+
+.attachmentClass {
+	height: 28px;
+	margin: 13.3px 15px 9px 11.8px;
+	padding: 5px 10px;
+	border-radius: 3px;
+	background-color: #f2a629;
+}
+
+.attachmentSpanClass {
+	margin: 0 0 1px 0;
+	font-family: MalgunGothic;
+	font-size: 13px;
+	font-weight: bold;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	text-align: left;
+	color: #fff;
 }
 </style>

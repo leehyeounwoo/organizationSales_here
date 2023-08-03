@@ -41,6 +41,12 @@
       ],
       "plugin": "upload",
       "required": false
+    },
+    "comment": {
+      "type": "string"
+    },
+    "adminName": {
+      "type": "string"
     }
   }
 }

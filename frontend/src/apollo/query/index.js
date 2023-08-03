@@ -158,11 +158,11 @@ export const settlements = gql`
 			created_at
 			updated_at
 			degree
-		}
-		attachment {
-			id
-			name
-			url
+			attachment {
+				id
+				name
+				url
+			}
 		}
 	}
 `

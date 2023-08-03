@@ -12,6 +12,7 @@ export default new Vuex.Store({
 		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0 },
 		dashBoardList: [],
 		loading: false,
+		primary: '#3A258F',
 	},
 	mutations: {
 		meData(state, payload) {

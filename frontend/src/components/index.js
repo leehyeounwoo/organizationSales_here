@@ -13,6 +13,7 @@ export { default as txtFieldStyle } from './txtFieldStyle'
 // dialog
 export { default as alertModal } from './dialog/alertModal'
 export { default as saveDialog } from './dialog/saveDialog'
+export { default as noticeDialog } from './dialog/noticeDialog'
 
 // admin
 export { default as datatable } from './datatable'
