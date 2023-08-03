@@ -102,7 +102,7 @@
 				</v-layout>
 			</v-flex>
 		</v-layout>
-		<sweetAlert :dialog="saveDialogStatus" :activeSave="activeSave"></sweetAlert>
+		<sweetAlert :dialog="saveDialogStatus" @click="click_agree"></sweetAlert>
 		<sweetAlert :dialog="sweetDialog_info" @click="click_confirm" />
 	</div>
 </template>
@@ -244,6 +244,7 @@ export default {
 			settlementArrData: [],
 			list: [],
 			attachmentNameList: [],
+			finalSettlementData: [],
 		}
 	},
 
@@ -478,7 +479,10 @@ export default {
 		},
 		editUserData(val) {
 			this.attachmentNameList = []
+			this.finalSettlementData = []
 			console.log(val)
+			this.finalSettlementData = val
+			console.log(this.finalSettlementData)
 			const usernameSpan = document.getElementById('usernameSpan')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -503,13 +507,31 @@ export default {
 		},
 		openModal() {
 			if (this.agreeType === true) {
-				this.saveDialogStatus.title = `정산 요청 승인`
-				this.saveDialogStatus.content = `정산요청을 승인합니다`
-				this.saveDialogStatus.open = true
+				if (this.finalSettlementData.length === 0) {
+					this.sweetDialog_info.title = `승인 처리 실패`
+					this.sweetDialog_info.content = `승인 처리할 데이터가 없습니다`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				} else {
+					this.saveDialogStatus.title = `정산 요청 승인`
+					this.saveDialogStatus.content = `정산요청을 승인합니다`
+					this.saveDialogStatus.open = true
+				}
 			} else {
-				this.sweetDialog_info.title = `정산 요청 반려`
-				this.sweetDialog_info.content = `위의 사유로 정산요청을 반려합니다`
-				this.sweetDialog_info.open = true
+				if (this.finalSettlementData.length === 0) {
+					this.sweetDialog_info.title = `반려 처리 실패`
+					this.sweetDialog_info.content = `반려 처리할 데이터가 없습니다`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				} else {
+					this.sweetDialog_info.title = `정산 요청 반려`
+					this.sweetDialog_info.content = `위의 사유로 정산요청을 반려합니다`
+					this.sweetDialog_info.modalValue = 'no'
+					this.sweetDialog_info.buttonType = 'twoBtn'
+					this.sweetDialog_info.open = true
+				}
 			}
 		},
 		deleteAttachment(val) {
@@ -519,6 +541,9 @@ export default {
 		click_confirm() {
 			console.log('반려!')
 			console.log(this.sweetDialog_info.rejectionReason[0].value)
+		},
+		click_agree() {
+			console.log('승인!')
 		},
 	},
 }
