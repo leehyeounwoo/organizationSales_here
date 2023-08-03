@@ -8,7 +8,7 @@
 		blocking
 	>
 		<div v-if="dialog.modalValue === 'no'">
-			<txtField class="bizInput" v-model="rejectionReason.value" :txtField="rejectionReason.txtfield"> </txtField>
+			<textarea class="search_box_modal" v-model="dialog.rejectionReason[0].value"> </textarea>
 		</div>
 
 		<div style="white-space: pre-line;">
@@ -31,13 +31,11 @@
 </template>
 
 <script>
-import { txtField } from '@/components'
 import { SweetModal } from 'sweet-modal-vue'
 
 export default {
 	components: {
 		SweetModal,
-		txtField,
 	},
 	props: {
 		dialog: Object,
@@ -46,20 +44,6 @@ export default {
 		return {
 			modal: this.$refs.modal,
 			modalclose: false,
-			rejectionReason: [
-				{
-					value: '',
-					txtfield: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						autocomplete: 'off',
-						placeholder: '반려 사유를 입력하세요',
-						readonly: true,
-					},
-				},
-			],
 		}
 	},
 	watch: {
@@ -76,6 +60,9 @@ export default {
 		close() {
 			this.$refs.modal.close()
 			this.$emit('close')
+			if (this.dialog.modalValue === 'no') {
+				this.dialog.rejectionReason[0].value = ''
+			}
 			this.dialog.open = false
 		},
 		changeModalClass(val) {
@@ -117,5 +104,15 @@ export default {
 		height: 26px !important;
 		color: #fff;
 	}
+}
+
+.search_box_modal {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	height: 200px;
+	width: calc(100% - 20%);
+	margin: 0 30px 0 30px;
+	resize: none;
+	overflow-y: hidden;
+	font-size: 13px;
 }
 </style>

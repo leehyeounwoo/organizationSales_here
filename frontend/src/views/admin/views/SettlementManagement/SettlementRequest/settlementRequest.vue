@@ -93,9 +93,9 @@
 						처리
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2" style="height:40px; display: flex; align-items: center;">
-						<v-radio-group v-model="agreeType" :value="true" hide-details row class="notice_radio ma-3">
-							<v-radio class="mb-0 mr-2" label="요청 승인" :value="true" color="#009dac" :ripple="false"></v-radio>
-							<v-radio class="mb-0" label="반려" :value="false" color="#009dac" :ripple="false"></v-radio>
+						<v-radio-group v-model="agreeType" hide-details row class="notice_radio ma-3">
+							<v-radio class="mb-0 mr-2" label="요청 승인" :value="true" color="#009dac"></v-radio>
+							<v-radio class="mb-0" label="반려" :value="false" color="#009dac"></v-radio>
 						</v-radio-group>
 						<v-btn @click="openModal" class="ml-2 search_btn2" style="width: 100%; " color="#3e7ccc"><v-icon>mdi-check</v-icon>적용</v-btn>
 					</v-flex>
@@ -103,7 +103,7 @@
 			</v-flex>
 		</v-layout>
 		<sweetAlert :dialog="saveDialogStatus" :activeSave="activeSave"></sweetAlert>
-		<sweetAlert :dialog="sweetDialog_info" />
+		<sweetAlert :dialog="sweetDialog_info" @click="click_confirm" />
 	</div>
 </template>
 <script>
@@ -153,6 +153,11 @@ export default {
 				saveBtnText: '반려',
 				modalIcon: 'info',
 				modalValue: 'no',
+				rejectionReason: [
+					{
+						value: '',
+					},
+				],
 			},
 
 			selected: [],
@@ -164,7 +169,7 @@ export default {
 				headers: [
 					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '10%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
-					{ text: '영업번호', sortable: false, value: 'salesPhoneNumber', align: 'center', width: '10%' },
+					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
 					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '10%' },
 					{ text: '계약일', sortable: false, value: 'contractDate', align: 'center', width: '10%' },
 					{ text: '계약물건', sortable: false, value: 'product', align: 'center', width: '10%' },
@@ -320,7 +325,7 @@ export default {
 								items.users = element
 								items.username = element.username
 								items.phoneNumber = element.phoneNumber
-								items.salesPhoneNumber = element.salesPhoneNumber
+								items.settlementPhoneNumber = element.salesPhoneNumber
 								items.teamID = element.teamID
 							}
 						}
@@ -509,6 +514,11 @@ export default {
 		},
 		deleteAttachment(val) {
 			console.log(val)
+		},
+
+		click_confirm() {
+			console.log('반려!')
+			console.log(this.sweetDialog_info.rejectionReason[0].value)
 		},
 	},
 }
