@@ -7,6 +7,10 @@
 		hide-close-button
 		blocking
 	>
+		<div v-if="dialog.modalValue === 'no'">
+			<txtField class="bizInput" v-model="rejectionReason.value" :txtField="rejectionReason.txtfield"> </txtField>
+		</div>
+
 		<div style="white-space: pre-line;">
 			{{ dialog.content }}
 		</div>
@@ -27,11 +31,13 @@
 </template>
 
 <script>
+import { txtField } from '@/components'
 import { SweetModal } from 'sweet-modal-vue'
 
 export default {
 	components: {
 		SweetModal,
+		txtField,
 	},
 	props: {
 		dialog: Object,
@@ -40,6 +46,20 @@ export default {
 		return {
 			modal: this.$refs.modal,
 			modalclose: false,
+			rejectionReason: [
+				{
+					value: '',
+					txtfield: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						autocomplete: 'off',
+						placeholder: '반려 사유를 입력하세요',
+						readonly: true,
+					},
+				},
+			],
 		}
 	},
 	watch: {

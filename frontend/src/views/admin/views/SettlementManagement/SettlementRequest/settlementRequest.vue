@@ -103,6 +103,7 @@
 			</v-flex>
 		</v-layout>
 		<sweetAlert :dialog="saveDialogStatus" :activeSave="activeSave"></sweetAlert>
+		<sweetAlert :dialog="sweetDialog_info" />
 	</div>
 </template>
 <script>
@@ -140,6 +141,18 @@ export default {
 				save_type: '',
 				item: {},
 				item_index: null,
+			},
+
+			sweetDialog_info: {
+				// 저장 불가 팝업
+				open: false,
+				title: '저장 불가',
+				content: ``,
+				buttonType: 'twoBtn',
+				cancelBtnText: '취소',
+				saveBtnText: '반려',
+				modalIcon: 'info',
+				modalValue: 'no',
 			},
 
 			selected: [],
@@ -488,6 +501,10 @@ export default {
 				this.saveDialogStatus.title = `정산 요청 승인`
 				this.saveDialogStatus.content = `정산요청을 승인합니다`
 				this.saveDialogStatus.open = true
+			} else {
+				this.sweetDialog_info.title = `정산 요청 반려`
+				this.sweetDialog_info.content = `위의 사유로 정산요청을 반려합니다`
+				this.sweetDialog_info.open = true
 			}
 		},
 		deleteAttachment(val) {

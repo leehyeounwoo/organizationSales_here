@@ -41,7 +41,6 @@
 						:items="table.items"
 						class="elevation-0 table_style_1 mt-2"
 						show-select
-						height="560px"
 						v-model="selected"
 						item-key="name"
 						:footer-props="{
