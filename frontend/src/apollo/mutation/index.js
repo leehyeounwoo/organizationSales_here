@@ -145,8 +145,8 @@ export const updateVacation = gql`
 	}
 `
 export const updateUser = gql`
-	mutation updateUser($id: ID!, $salesPhoneNumber: String) {
-		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber } }) {
+	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankId: String, $teamID: String) {
+		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber, rankId: $rankId, teamID: $teamID } }) {
 			user {
 				id
 			}

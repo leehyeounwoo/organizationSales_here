@@ -740,7 +740,7 @@
 							></selectBoxValueItems>
 						</v-flex>
 						<v-flex xs2>
-							<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>적용하기</v-btn>
+							<v-btn class="ml-2" small @click="teamRankSave(item)" dark :color="$store.state.PointColor2" depressed>적용</v-btn>
 						</v-flex>
 					</v-layout>
 				</div>
@@ -2408,6 +2408,7 @@ export default {
 	props: {
 		search: String,
 		teamChoiceClick: Function,
+		teamRankSave: Function,
 		salesPhoneNumberSave: Function,
 		editUserData: Function,
 		clickrow: Function,

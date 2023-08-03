@@ -20,7 +20,8 @@
 					:datatable="table"
 					:teamChoiceClick="teamChoiceClick"
 					:editUserData="editUserData"
-					:salesPhoneNumberSave="updateUserAction"
+					:salesPhoneNumberSave="salesPhoneNumberSave"
+					:teamRankSave="teamRankSave"
 				/>
 			</v-flex>
 			<v-flex xs3 class="ml-2 mt-5">
@@ -555,6 +556,7 @@ export default {
 	},
 
 	async created() {
+		this.getListAction()
 		// if (!navigator.geolocation) {
 		// 	return alert('위치 정보가 지원되지 않습니다.')
 		// }
@@ -564,40 +566,54 @@ export default {
 		// 	console.log(position)
 		// 	this.computeDistance(position.coords, this.ourCoords)
 		// })
-		this.$store.state.loading = true
-		const usersViewData = {
-			role: 3,
-		}
-		await this.usersView(usersViewData)
-		const teamsViewData = {
-			idArr: this.teamArrData,
-		}
-
-		await this.teamsView(teamsViewData)
-		const ranksViewData = {
-			idArr: this.rankArrData,
-		}
-
-		await this.ranksView(ranksViewData)
-		await this.dataSetting()
-
-		console.log(this.rankArrData)
-		this.$store.state.loading = false
 	},
 	mounted() {},
 
 	methods: {
-		async updateUserAction(val) {
+		teamRankSave(val) {
+			const data = {
+				id: val.id,
+				teamID: val.teamTitle,
+				rankId: val.rankTitle,
+			}
+			console.log(data)
+			// this.updateUserAction(data)
+		},
+		async getListAction() {
+			this.$store.state.loading = true
+			const usersViewData = {
+				role: 3,
+			}
+			await this.usersView(usersViewData)
+			const teamsViewData = {
+				idArr: this.teamArrData,
+			}
+
+			await this.teamsView(teamsViewData)
+			const ranksViewData = {
+				idArr: this.rankArrData,
+			}
+
+			await this.ranksView(ranksViewData)
+			await this.dataSetting()
+
+			console.log(this.rankArrData)
+			this.$store.state.loading = false
+		},
+		salesPhoneNumberSave(val) {
 			const data = {
 				id: val.id,
 				salesPhoneNumber: val.salesPhoneNumber,
 			}
+			this.updateUserAction(data)
+		},
+		async updateUserAction(data) {
+			this.$store.state.loading = true
 			await this.$store
 				.dispatch('updateUser', data)
-				.then(res => {
-					console.log(res)
-
-					// console.log(res.teams)
+				.then(async () => {
+					await this.getListAction()
+					this.$store.state.loading = false
 				})
 				.catch(err => {
 					console.log(err)
