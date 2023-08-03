@@ -164,14 +164,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.new_biz {
-	width: 100px !important;
-	height: 26px !important;
-	padding: 0 10px !important;
-	font-weight: bold;
-	color: white !important;
-	background: #1428a0 !important;
-	border-radius: 0 !important;
-}
-</style>
+<style lang="scss"></style>

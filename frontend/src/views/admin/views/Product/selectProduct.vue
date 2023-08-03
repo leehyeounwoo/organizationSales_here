@@ -16,11 +16,14 @@
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
 		</v-layout>
 		<datatable :datatable="productManager"></datatable>
+		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
+		<holdTimeDetail :setdialog="holdingDetail" />
 	</div>
 </template>
 
 <script>
 import { selectBox, datatable } from '@/components/index.js'
+import holdTimeDetail from '../../viewItem/holdTimeDetail.vue'
 
 export default {
 	async created() {
@@ -29,9 +32,14 @@ export default {
 	components: {
 		selectBox,
 		datatable,
+		holdTimeDetail,
 	},
 	data() {
 		return {
+			holdingDetail: {
+				dialog: false,
+				todayTime: '',
+			},
 			productFilter1: {
 				placeholder: '주택형 선택',
 				value: '',
@@ -127,6 +135,10 @@ export default {
 			this.$store.dispatch('products').then(res => {
 				this.productManager.items = res.products
 			})
+		},
+		holdTimeShow() {
+			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
+			this.holdingDetail.dialog = true
 		},
 	},
 }

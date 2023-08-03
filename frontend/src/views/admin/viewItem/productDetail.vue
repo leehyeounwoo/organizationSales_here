@@ -247,10 +247,6 @@ export default {
 		margin-top: 5px;
 	}
 }
-.table_info {
-	font-size: 13px;
-	color: #ff6600;
-}
 .right_table1 {
 	border-right: 1px solid #d7d8e9;
 	border-left: 1px solid #d7d8e9;
