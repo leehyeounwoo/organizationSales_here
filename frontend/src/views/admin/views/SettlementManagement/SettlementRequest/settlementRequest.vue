@@ -532,6 +532,20 @@ export default {
 					this.sweetDialog_info.buttonType = 'twoBtn'
 					this.sweetDialog_info.open = true
 				}
+
+				if (this.finalSettlementData.settlementStatus === 'disagree') {
+					this.sweetDialog_info.title = `반려 처리 실패`
+					this.sweetDialog_info.content = `이미 반려된 정산요청입니다`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				} else if (this.finalSettlementData.settlementStatus === 'agree') {
+					this.sweetDialog_info.title = `승인 처리 실패`
+					this.sweetDialog_info.content = `이미 승인된 정산요청입니다`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				}
 			}
 		},
 		deleteAttachment(val) {
@@ -539,11 +553,58 @@ export default {
 		},
 
 		click_confirm() {
-			console.log('반려!')
-			console.log(this.sweetDialog_info.rejectionReason[0].value)
+			this.$store.state.loading = true
+
+			if (this.finalSettlementData.settlementStatus === 'waiting') {
+				let input = {
+					id: this.finalSettlementData.id,
+					settlementStatus: 'disagree',
+					updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
+					adminName: this.$store.state.meData.username,
+					comment: this.sweetDialog_info.rejectionReason[0].value,
+				}
+				this.$store
+					.dispatch('updateSettlement', input)
+					.then(() => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `반려 처리 완료`
+						this.saveDialogStatus.content = `정산 요청이 반려되었습니다.`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+					.catch(() => {})
+			}
+			this.$store.state.loading = false
 		},
 		click_agree() {
-			console.log('승인!')
+			this.$store.state.loading = true
+
+			if (this.finalSettlementData.settlementStatus === 'waiting') {
+				let input = {
+					id: this.finalSettlementData.id,
+					settlementStatus: 'agree',
+					updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
+					adminName: this.$store.state.meData.username,
+				}
+				this.$store
+					.dispatch('updateSettlement', input)
+					.then(() => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `승인 처리 완료`
+						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+					.catch(() => {})
+			}
+
+			this.$store.state.loading = false
 		},
 	},
 }

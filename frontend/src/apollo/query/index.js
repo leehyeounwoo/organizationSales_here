@@ -143,13 +143,13 @@ export const businesses = gql`
 `
 
 export const settlements = gql`
-	query settlements {
+	query settlements($id: ID) {
 		settlementsConnection {
 			aggregate {
 				count
 			}
 		}
-		settlements {
+		settlements(where: { id: $id }) {
 			id
 			ProductID
 			userID

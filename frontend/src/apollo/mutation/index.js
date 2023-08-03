@@ -153,3 +153,19 @@ export const updateUser = gql`
 		}
 	}
 `
+
+export const updateSettlement = gql`
+	mutation updateSettlement($id: ID!, $settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS, $adminName: String, $comment: String) {
+		updateSettlement(
+			input: { where: { id: $id }, data: { settlementStatus: $settlementStatus, adminName: $adminName, comment: $comment } }
+		) {
+			settlement {
+				id
+				comment
+				adminName
+				updated_at
+				settlementStatus
+			}
+		}
+	}
+`
