@@ -15,10 +15,10 @@
 			</v-flex>
 		</v-layout>
 		<v-layout>
-			<v-flex xs8>
+			<v-flex xs9>
 				<datatable :datatable="table" :teamChoiceClick="teamChoiceClick" @click="editUserData" />
 			</v-flex>
-			<v-flex xs4 class="ml-10 mt-5">
+			<v-flex xs3 class="ml-2 mt-5">
 				<v-layout v-for="(edit, index) in rightEdit" :key="index" :style="index === 0 ? 'border-top:1px solid black' : ''">
 					<v-flex class="notice_right_table" xs2>
 						{{ edit.title }}
@@ -112,6 +112,11 @@ export default {
 
 	data() {
 		return {
+			ourCoords: {
+				//서울 시청 좌표
+				latitude: 37.5666263, //위도
+				longitude: 126.9783924, //경도
+			},
 			teamEditDialog: {
 				dialog: false,
 				items: [
@@ -261,7 +266,7 @@ export default {
 					},
 				},
 				{
-					title: '신분증 사본 등',
+					title: `신분증 사본`,
 					type: 1,
 					txtField: {
 						value: '',
@@ -469,12 +474,12 @@ export default {
 			table: {
 				headers: [
 					{ text: '상담사', value: 'username', align: 'center', width: '10%' },
-					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '15%' },
-					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '15%' },
-					{ text: '등록일', value: 'created_at', align: 'center', width: '15%' },
+					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '12%' },
+					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '12%' },
+					{ text: '등록일', value: 'created_at', align: 'center', width: '12%' },
 					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false, width: '25%' },
 					{ text: '재직상태', value: 'workingStatus', align: 'center', width: '10%' },
-					{ text: '비고', value: 'etc', align: 'center', width: '5%' },
+					{ text: '비고', value: 'etc', align: 'center', width: '10%' },
 				],
 				showselect: true,
 				headerCheck: false,
@@ -545,21 +550,33 @@ export default {
 	},
 
 	async created() {
-		const usersViewData = {
-			role: 3,
+		console.log(1)
+		// console.log(Geolocation.)
+		if (!navigator.geolocation) {
+			return alert('위치 정보가 지원되지 않습니다.')
 		}
-		await this.usersView(usersViewData)
-		const teamsViewData = {
-			idArr: this.teamArrData,
-		}
+		console.log(navigator.geolocation.getCurrentPosition)
+		navigator.geolocation.getCurrentPosition(position => {
+			console.log(2)
+			console.log(position)
+			this.computeDistance(position.coords, this.ourCoords)
+		})
 
-		await this.teamsView(teamsViewData)
-		const ranksViewData = {
-			idArr: this.rankArrData,
-		}
+		// const usersViewData = {
+		// 	role: 3,
+		// }
+		// await this.usersView(usersViewData)
+		// const teamsViewData = {
+		// 	idArr: this.teamArrData,
+		// }
 
-		await this.ranksView(ranksViewData)
-		await this.dataSetting()
+		// await this.teamsView(teamsViewData)
+		// const ranksViewData = {
+		// 	idArr: this.rankArrData,
+		// }
+
+		// await this.ranksView(ranksViewData)
+		// await this.dataSetting()
 
 		// console.log(this.rankArrData)
 		this.$store.state.loading = false
@@ -567,17 +584,48 @@ export default {
 	mounted() {},
 
 	methods: {
+		degreesToRadians(degrees) {
+			let radians = (degrees * Math.PI) / 180
+			return radians
+		},
+		computeDistance(startCoords, destCoords) {
+			var startLatRads = this.degreesToRadians(startCoords.latitude)
+			var startLongRads = this.degreesToRadians(startCoords.longitude)
+			var destLatRads = this.degreesToRadians(destCoords.latitude)
+			var destLongRads = this.degreesToRadians(destCoords.longitude)
+
+			var Radius = 6371 //지구의 반경(km)
+			var distance =
+				Math.acos(
+					Math.sin(startLatRads) * Math.sin(destLatRads) +
+						Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads),
+				) * Radius
+			console.log(distance)
+			return distance
+		},
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
 
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].id
 				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].id
+				element.salesPhoneNumber_txtField = {
+					value: '',
+					txtfield: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: false,
+						errorMessage: '',
+						placeholder: '',
+						// disable: true,
+					},
+				}
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 				element.teamTitle = teamTitle
 				element.rankTitle = rankTitle
 			}
+
 			this.table.items = this.userData
 			console.log(this.teamData)
 			console.log(this.rankData)
@@ -904,7 +952,7 @@ export default {
 }
 .notice_right_table {
 	background-color: #f5f5f5;
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: bold;
 	display: flex;
 	align-items: center;

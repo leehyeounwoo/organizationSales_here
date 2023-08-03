@@ -745,6 +745,22 @@
 					</v-layout>
 				</div>
 			</template>
+			<!-- salesPhoneNumber -->
+			<template v-slot:[`item.salesPhoneNumber`]="{ item }">
+				<v-layout>
+					<v-flex>
+						<txtField
+							class="bizInput"
+							v-model="item.salesPhoneNumber_txtField.value"
+							:txtField="item.salesPhoneNumber_txtField.txtfield"
+							style="height:27px; margin:auto; background-color:white; border-radius:5px;"
+						></txtField>
+					</v-flex>
+					<v-flex>
+						<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>이력보기</v-btn>
+					</v-flex>
+				</v-layout>
+			</template>
 			<!-- talk_no -->
 			<template v-slot:[`item.talk_no`]="{ index }">
 				<div>
