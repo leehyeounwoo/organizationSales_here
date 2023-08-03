@@ -727,7 +727,7 @@
 								:value="item.teamTitle"
 								:items="item.teamItems"
 								class="table_small_sel"
-								@change="change_default"
+								@change="change_team($event, item)"
 							></selectBoxValueItems>
 						</v-flex>
 						<v-flex xs5 pl-1>
@@ -736,7 +736,7 @@
 								:items="item.rankItems"
 								:value="item.rankTitle"
 								class="table_small_sel"
-								@change="change_default"
+								@change="change_rank($event, item)"
 							></selectBoxValueItems>
 						</v-flex>
 						<v-flex xs2>
@@ -2285,6 +2285,12 @@ export default {
 		},
 
 		change_default() {},
+		change_team(val, item) {
+			item.teamTitle = val
+		},
+		change_rank(val, item) {
+			item.rankTitle = val
+		},
 		pagination(item) {
 			if (item.page > this.page_before.page) {
 				// 다음 페이지
