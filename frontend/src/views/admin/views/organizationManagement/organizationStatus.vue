@@ -16,7 +16,12 @@
 		</v-layout>
 		<v-layout>
 			<v-flex xs9>
-				<datatable :datatable="table" :teamChoiceClick="teamChoiceClick" @click="editUserData" />
+				<datatable
+					:datatable="table"
+					:teamChoiceClick="teamChoiceClick"
+					:editUserData="editUserData"
+					:salesPhoneNumberSave="updateUserAction"
+				/>
 			</v-flex>
 			<v-flex xs3 class="ml-2 mt-5">
 				<v-layout v-for="(edit, index) in rightEdit" :key="index" :style="index === 0 ? 'border-top:1px solid black' : ''">
@@ -582,6 +587,23 @@ export default {
 	mounted() {},
 
 	methods: {
+		async updateUserAction(val) {
+			const data = {
+				id: val.id,
+				salesPhoneNumber: val.salesPhoneNumber,
+			}
+			await this.$store
+				.dispatch('updateUser', data)
+				.then(res => {
+					console.log(res)
+
+					// console.log(res.teams)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
 		// degreesToRadians(degrees) {
 		// 	let radians = (degrees * Math.PI) / 180
 		// 	return radians

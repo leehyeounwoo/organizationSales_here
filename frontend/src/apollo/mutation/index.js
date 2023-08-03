@@ -144,3 +144,12 @@ export const updateVacation = gql`
 		}
 	}
 `
+export const updateUser = gql`
+	mutation updateUser($id: ID!, $salesPhoneNumber: String) {
+		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber } }) {
+			user {
+				id
+			}
+		}
+	}
+`
