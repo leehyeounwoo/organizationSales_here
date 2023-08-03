@@ -475,11 +475,11 @@ export default {
 				headers: [
 					{ text: '상담사', value: 'username', align: 'center', width: '10%' },
 					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '12%' },
-					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '12%' },
+					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '17%' },
 					{ text: '등록일', value: 'created_at', align: 'center', width: '12%' },
 					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false, width: '25%' },
 					{ text: '재직상태', value: 'workingStatus', align: 'center', width: '10%' },
-					{ text: '비고', value: 'etc', align: 'center', width: '10%' },
+					{ text: '비고', value: 'organizationStatusEtc', align: 'center', width: '10%' },
 				],
 				showselect: true,
 				headerCheck: false,
@@ -550,59 +550,57 @@ export default {
 	},
 
 	async created() {
-		console.log(1)
-		// console.log(Geolocation.)
-		if (!navigator.geolocation) {
-			return alert('위치 정보가 지원되지 않습니다.')
+		// if (!navigator.geolocation) {
+		// 	return alert('위치 정보가 지원되지 않습니다.')
+		// }
+		// console.log(navigator.geolocation.getCurrentPosition)
+		// navigator.geolocation.getCurrentPosition(position => {
+		// 	console.log(2)
+		// 	console.log(position)
+		// 	this.computeDistance(position.coords, this.ourCoords)
+		// })
+		this.$store.state.loading = true
+		const usersViewData = {
+			role: 3,
 		}
-		console.log(navigator.geolocation.getCurrentPosition)
-		navigator.geolocation.getCurrentPosition(position => {
-			console.log(2)
-			console.log(position)
-			this.computeDistance(position.coords, this.ourCoords)
-		})
+		await this.usersView(usersViewData)
+		const teamsViewData = {
+			idArr: this.teamArrData,
+		}
 
-		// const usersViewData = {
-		// 	role: 3,
-		// }
-		// await this.usersView(usersViewData)
-		// const teamsViewData = {
-		// 	idArr: this.teamArrData,
-		// }
+		await this.teamsView(teamsViewData)
+		const ranksViewData = {
+			idArr: this.rankArrData,
+		}
 
-		// await this.teamsView(teamsViewData)
-		// const ranksViewData = {
-		// 	idArr: this.rankArrData,
-		// }
+		await this.ranksView(ranksViewData)
+		await this.dataSetting()
 
-		// await this.ranksView(ranksViewData)
-		// await this.dataSetting()
-
-		// console.log(this.rankArrData)
+		console.log(this.rankArrData)
 		this.$store.state.loading = false
 	},
 	mounted() {},
 
 	methods: {
-		degreesToRadians(degrees) {
-			let radians = (degrees * Math.PI) / 180
-			return radians
-		},
-		computeDistance(startCoords, destCoords) {
-			var startLatRads = this.degreesToRadians(startCoords.latitude)
-			var startLongRads = this.degreesToRadians(startCoords.longitude)
-			var destLatRads = this.degreesToRadians(destCoords.latitude)
-			var destLongRads = this.degreesToRadians(destCoords.longitude)
+		// degreesToRadians(degrees) {
+		// 	let radians = (degrees * Math.PI) / 180
+		// 	return radians
+		// },
+		// computeDistance(startCoords, destCoords) {
+		// 	var startLatRads = this.degreesToRadians(startCoords.latitude)
+		// 	var startLongRads = this.degreesToRadians(startCoords.longitude)
+		// 	var destLatRads = this.degreesToRadians(destCoords.latitude)
+		// 	var destLongRads = this.degreesToRadians(destCoords.longitude)
 
-			var Radius = 6371 //지구의 반경(km)
-			var distance =
-				Math.acos(
-					Math.sin(startLatRads) * Math.sin(destLatRads) +
-						Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads),
-				) * Radius
-			console.log(distance)
-			return distance
-		},
+		// 	var Radius = 6371 //지구의 반경(km)
+		// 	var distance =
+		// 		Math.acos(
+		// 			Math.sin(startLatRads) * Math.sin(destLatRads) +
+		// 				Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads),
+		// 		) * Radius
+		// 	console.log(distance)
+		// 	return distance
+		// },
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]

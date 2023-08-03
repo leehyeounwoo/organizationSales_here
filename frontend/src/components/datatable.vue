@@ -740,7 +740,7 @@
 							></selectBoxValueItems>
 						</v-flex>
 						<v-fles xs2>
-							<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>이력보기</v-btn>
+							<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>적용하기</v-btn>
 						</v-fles>
 					</v-layout>
 				</div>
@@ -748,7 +748,7 @@
 			<!-- salesPhoneNumber -->
 			<template v-slot:[`item.salesPhoneNumber`]="{ item }">
 				<v-layout>
-					<v-flex>
+					<v-flex xs8>
 						<txtField
 							class="bizInput"
 							v-model="item.salesPhoneNumber_txtField.value"
@@ -756,9 +756,14 @@
 							style="height:27px; margin:auto; background-color:white; border-radius:5px;"
 						></txtField>
 					</v-flex>
-					<v-flex>
-						<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>이력보기</v-btn>
+					<v-flex xs4>
+						<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>적용</v-btn>
 					</v-flex>
+				</v-layout>
+			</template>
+			<template v-slot:[`item.organizationStatusEtc`]="{ item }">
+				<v-layout class="dt-align-set" justify-center>
+					<v-btn class="ml-2" small @click="nameClick(item)" dark :color="$store.state.PointColor2" depressed>자세히 보기</v-btn>
 				</v-layout>
 			</template>
 			<!-- talk_no -->
