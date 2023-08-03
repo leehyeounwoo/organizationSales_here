@@ -2,7 +2,7 @@
 	<div class="mt-7">
 		<v-layout align-center justify-end class="header_search">
 			<txtField class="search_box_type" v-model="search_business" :txtField="search"></txtField>
-			<v-btn class="ml-3 search_btn" color="#009dac"><v-icon>mdi-magnify</v-icon>조회</v-btn>
+			<v-btn class="ml-3 search_btn" color="#009dac" @click="search_biz"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 		</v-layout>
 		<datatable :datatable="table" class="mt-5" :detailClick="product_detail"></datatable>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
@@ -149,7 +149,12 @@ export default {
 	methods: {
 		first_business() {
 			this.$store.dispatch('businesses').then(res => {
+				res.businesses.forEach(el => {
+					el['startTime'] = el.workingHoursStart.slice(0, 5)
+					el['endTime'] = el.workingHoursEnd.slice(0, 5)
+				})
 				this.table.items = res.businesses
+				console.log(this.table.items)
 				this.$store.state.loading = false
 			})
 		},
@@ -159,6 +164,16 @@ export default {
 		product_detail(item) {
 			this.table_detail.item = item
 			this.table_detail.dialog = true
+		},
+		search_biz() {
+			this.$store.state.loading = true
+			let variable = {
+				name: this.search_business,
+			}
+			this.$store.dispatch('businesses', variable).then(res => {
+				this.table.items = res.businesses
+				this.$store.state.loading = false
+			})
 		},
 	},
 }
