@@ -157,6 +157,7 @@ export const settlements = gql`
 			settlementStatus
 			created_at
 			updated_at
+			paymentDate
 			degree
 			attachment {
 				id
