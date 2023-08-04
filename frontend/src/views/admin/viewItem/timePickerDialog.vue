@@ -10,6 +10,7 @@
 				hide-details="true"
 				append-icon="mdi-calendar"
 				class="worktime_picker small_font bizInput"
+				@click:append="setdialog.dialog = true"
 			></v-text-field>
 		</template>
 		<v-time-picker v-model="picker">
