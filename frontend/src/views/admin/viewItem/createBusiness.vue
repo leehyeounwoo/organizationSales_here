@@ -4,7 +4,7 @@
 			<div class="project_title px-5">
 				<span style="font-size:15px">사업지 관리</span>
 				<v-spacer />
-				<v-icon @click="setdialog.dialog = false" class="title-icon" color="white">mdi-close</v-icon>
+				<v-icon @click="modalClose()" class="title-icon" color="white">mdi-close</v-icon>
 			</div>
 			<v-layout class="pt-7 px-10">
 				<v-flex xs5 class="mr-12">
@@ -122,16 +122,16 @@
 						<v-layout align-center v-for="(right, idx) in right_data" :key="idx" class="right_table_item">
 							<v-flex style="max-width:50px !important; width:50px">{{ right.number }}</v-flex>
 							<v-flex align-self-center style="max-width:126px !important">
-								<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield1"></txtField>
+								<txtField class="bizInput px-2" v-model="right.txtfield1.value" :txtField="right.txtfield1"></txtField>
 							</v-flex>
 							<v-flex align-self-center style="max-width:136px !important">
-								<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield2"></txtField>
+								<txtField class="bizInput px-2" v-model="right.txtfield2.value" :txtField="right.txtfield2"></txtField>
 							</v-flex>
 							<v-flex align-self-center style="max-width:136px !important">
-								<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield3"></txtField>
+								<txtField class="bizInput px-2" v-model="right.txtfield3.value" :txtField="right.txtfield3"></txtField>
 							</v-flex>
 							<v-flex align-self-center style="max-width:136px !important">
-								<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield4"></txtField>
+								<txtField class="bizInput px-2" v-model="right.txtfield4.value" :txtField="right.txtfield4"></txtField>
 							</v-flex>
 							<v-flex>
 								<v-layout align-center>
@@ -152,7 +152,7 @@
 						</v-layout>
 					</div>
 					<v-layout justify-end>
-						<v-btn class="mt-4 save_biz"><v-icon>mdi-check</v-icon>저장</v-btn>
+						<v-btn class="mt-4 save_biz" @click="newBusiness()"><v-icon>mdi-check</v-icon>저장</v-btn>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -178,26 +178,29 @@ export default {
 			right_data: [
 				{
 					number: 1,
-					value: '',
 					txtfield1: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield2: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield3: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield4: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
@@ -206,26 +209,29 @@ export default {
 				},
 				{
 					number: 2,
-					value: '',
 					txtfield1: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield2: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield3: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield4: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
@@ -234,26 +240,29 @@ export default {
 				},
 				{
 					number: 3,
-					value: '',
 					txtfield1: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield2: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield3: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield4: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
@@ -262,26 +271,29 @@ export default {
 				},
 				{
 					number: 4,
-					value: '',
 					txtfield1: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield2: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield3: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield4: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
@@ -290,26 +302,29 @@ export default {
 				},
 				{
 					number: 5,
-					value: '',
 					txtfield1: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield2: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield3: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 					},
 					txtfield4: {
+						value: '',
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
@@ -356,6 +371,37 @@ export default {
 		}
 	},
 	methods: {
+		newBusiness() {
+			this.$store.state.loading = true
+			let data = {
+				name: this.setdialog.items[0].value,
+				phoneNumber: this.setdialog.items[1].value,
+				workingHoursStart: this.editTimePicker1.time + ':00.000',
+				workingHoursEnd: this.editTimePicker2.time + ':00.000',
+				splitHoldingTime: this.setdialog.items[3].selectBox.value,
+				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
+			}
+			this.$store.dispatch('createBusiness', data).then(res => {
+				console.log(res)
+				this.$store.state.loading = false
+			})
+		},
+		modalClose() {
+			this.setdialog.items[0].value = ''
+			this.setdialog.items[1].value = ''
+			this.editTimePicker1.time = ''
+			this.editTimePicker2.time = ''
+			this.setdialog.items[3].selectBox.value = '30분'
+			this.setdialog.items[3].selectBox2.value = '120분'
+			this.setdialog.items[4].value = ''
+			for (let i = 0; i < this.right_data.length; i++) {
+				this.right_data[i].txtfield1.value = ''
+				this.right_data[i].txtfield2.value = ''
+				this.right_data[i].txtfield3.value = ''
+				this.right_data[i].txtfield4.value = ''
+			}
+			this.setdialog.dialog = false
+		},
 		save_time1(picker) {
 			this.editTimePicker1.dialog = false
 			this.editTimePicker1.time = picker

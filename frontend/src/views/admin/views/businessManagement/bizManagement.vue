@@ -191,10 +191,9 @@ export default {
 						el['endTime'] = el.workingHoursEnd.slice(0, 5)
 					}
 				})
+				console.log(res.businesses)
 				this.table.items = res.businesses
-				console.log(this.rowperpageSel.value)
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
-				console.log(this.table.length)
 				this.$store.state.loading = false
 			})
 		},

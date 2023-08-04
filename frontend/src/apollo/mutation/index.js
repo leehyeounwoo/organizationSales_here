@@ -181,3 +181,30 @@ export const updateSettlement = gql`
 		}
 	}
 `
+export const createBusiness = gql`
+	mutation createBusiness(
+		$name: String
+		$phoneNumber: String
+		$workingHoursStart: Time
+		$workingHoursEnd: Time
+		$splitHoldingTime: String
+		$maximumHoldingTime: String
+	) {
+		createBusiness(
+			input: {
+				data: {
+					name: $name
+					phoneNumber: $phoneNumber
+					workingHoursStart: $workingHoursStart
+					workingHoursEnd: $workingHoursEnd
+					splitHoldingTime: $splitHoldingTime
+					maximumHoldingTime: $maximumHoldingTime
+				}
+			}
+		) {
+			business {
+				id
+			}
+		}
+	}
+`
