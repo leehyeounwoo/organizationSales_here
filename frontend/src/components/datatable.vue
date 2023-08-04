@@ -13,7 +13,7 @@
 			:items="datatable.items"
 			:hide-default-footer="datatable.hidedefaultfooter"
 			:page.sync="datatable.page"
-			:items-per-page.sync="datatable.itemsPerPage"
+			:items-per-page="datatable.itemsPerPage"
 			@page-count="datatable.pageCount = $event"
 			:show-select="datatable.showselect"
 			:search="search"
@@ -35,7 +35,7 @@
 						? Math.ceil(datatable.items.length / datatable.itemsPerPage)
 						: Math.ceil(datatable.items.length / 10)
 				} of ${datatable.page ? datatable.page : 1} `,
-				['items-per-page-options']: datatable.itemsPerPage !== -1 ? [5, 10, 15, 20] : [5, 10, 15, 20, -1],
+				['items-per-page-options']: datatable.itemsPerPage !== -1 ? [5, 10, 15, 20, 30] : [5, 10, 15, 20, 30, -1],
 			}"
 			@pagination="pagination"
 			:no-data-text="datatable.noDataText"
@@ -1577,6 +1577,12 @@
 			<template v-slot:[`item.workTime`]="{ item }">
 				<div>{{ item.startTime }} ~ {{ item.endTime }}</div>
 			</template>
+			<!-- 사업지관리 - 등록상품 -->
+			<template v-slot:[`item.select_product`]="{ item }">
+				<v-layout class="dt-align-set ml-0" justify-center>
+					<v-btn class="detail_etc_btn" small @click="productDetailClick(item)" :color="'#9A9C9B'" depressed>자세히 보기</v-btn>
+				</v-layout>
+			</template>
 		</v-data-table>
 
 		<!--고객 관리 - 캠페인 고객 관리 - 자세히 보기 -->
@@ -2438,6 +2444,7 @@ export default {
 		excelType: String,
 		call_excel_data: Function,
 		deleteClick: Function,
+		productDetailClick: Function,
 	},
 }
 </script>

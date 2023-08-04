@@ -4,7 +4,15 @@
 			<txtField class="search_box_type" v-model="search_business" :txtField="search"></txtField>
 			<v-btn class="ml-3 search_btn" color="#009dac" @click="search_biz"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 		</v-layout>
-		<datatable :datatable="table" class="mt-5" :detailClick="product_detail"></datatable>
+		<v-layout justify-end>
+			<v-flex xs1 class="mt-3">
+				<selectBoxText :sel="rowperpageSel" class="searchSel" @change="rowperpageChange"></selectBoxText>
+			</v-flex>
+		</v-layout>
+		<datatable :datatable="table" class="mt-5" :productDetailClick="product_detail" :detailClick="editProduct"></datatable>
+		<div class="text-center mt-4">
+			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
+		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" />
 		<productDetail :setdialog="table_detail" />
@@ -12,23 +20,36 @@
 </template>
 
 <script>
-import { txtField, datatable } from '@/components/index.js'
+import { txtField, datatable, selectBoxText } from '@/components/index.js'
 import createBusiness from '../../viewItem/createBusiness.vue'
 import productDetail from '../../viewItem/productDetail.vue'
 
 export default {
-	created() {
+	async created() {
 		this.$store.state.loading = true
-		this.first_business()
+		this.rowperpageChange()
 	},
 	components: {
 		txtField,
 		datatable,
 		createBusiness,
 		productDetail,
+		selectBoxText,
 	},
 	data() {
 		return {
+			rowperpageSel: {
+				value: 10,
+				errorMessage: '',
+				hideDetail: true,
+				items: [10, 20, 30],
+				fullItem: [],
+				outlined: true,
+				label: '',
+				returnObject: true,
+				itemText: 'name',
+				itemValue: 'id',
+			},
 			createDialog: {
 				dialog: false,
 				items: [
@@ -74,7 +95,7 @@ export default {
 						value: '',
 						selectBox: {
 							value: '30분',
-							items: ['10분', '30분', '60분'],
+							items: ['30분', '60분'],
 							hideDetail: true,
 							outlined: true,
 							class: 'small_font bizInput',
@@ -134,7 +155,7 @@ export default {
 					{ text: '담당자', value: 'business_manager' },
 					{ text: '연락처', value: 'managerPhoneNumber' },
 					{ text: '출퇴근 스캔 URL', value: 'workCheckURL' },
-					{ text: '등록상품', value: '' },
+					{ text: '등록상품', value: 'select_product' },
 					{ text: '비고', value: 'etc_detail' },
 				],
 				class: 'datatablehover3',
@@ -142,19 +163,36 @@ export default {
 				noweditting: '',
 				itemsPerPage: 10,
 				page: 1,
+				length: 1,
+				start: 0,
+				limit: 10000,
 				pageCount: 0,
+				pagination: null,
+				hidedefaultfooter: true,
 			},
 		}
 	},
 	methods: {
+		rowperpageChange() {
+			this.$store.state.loading = true
+			console.log(this.rowperpageSel.value)
+			this.table.itemsPerPage = this.rowperpageSel.value
+			this.first_business()
+		},
 		first_business() {
 			this.$store.dispatch('businesses').then(res => {
 				res.businesses.forEach(el => {
-					el['startTime'] = el.workingHoursStart.slice(0, 5)
-					el['endTime'] = el.workingHoursEnd.slice(0, 5)
+					if (el.workingHoursStart) {
+						el['startTime'] = el.workingHoursStart.slice(0, 5)
+					}
+					if (el.workingHoursEnd) {
+						el['endTime'] = el.workingHoursEnd.slice(0, 5)
+					}
 				})
 				this.table.items = res.businesses
-				console.log(this.table.items)
+				console.log(this.rowperpageSel.value)
+				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
+				console.log(this.table.length)
 				this.$store.state.loading = false
 			})
 		},
@@ -163,6 +201,10 @@ export default {
 		},
 		product_detail(item) {
 			this.table_detail.item = item
+			this.table_detail.dialog = true
+			console.log(item)
+		},
+		editProduct() {
 			this.table_detail.dialog = true
 		},
 		search_biz() {
