@@ -14,7 +14,7 @@
 			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
 		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
-		<createBusiness :setdialog="createDialog" />
+		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" />
 		<productDetail :setdialog="table_detail" />
 	</div>
 </template>

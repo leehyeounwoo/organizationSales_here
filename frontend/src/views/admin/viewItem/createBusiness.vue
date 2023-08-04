@@ -152,29 +152,50 @@
 						</v-layout>
 					</div>
 					<v-layout justify-end>
-						<v-btn class="mt-4 save_biz" @click="newBusiness()"><v-icon>mdi-check</v-icon>저장</v-btn>
+						<v-btn class="mt-4 save_biz" @click="businessCheck()"><v-icon>mdi-check</v-icon>저장</v-btn>
 					</v-layout>
 				</v-flex>
 			</v-layout>
 		</div>
+		<sweetAlert :dialog="sweetDialog" />
+		<sweetAlert :dialog="sweetInfo" />
 	</v-dialog>
 </template>
 
 <script>
-import { txtField, selectBox } from '@/components/index.js'
+import { txtField, selectBox, sweetAlert } from '@/components/index.js'
 import TimePickerDialog from './timePickerDialog.vue'
 
 export default {
 	props: {
 		setdialog: Object,
+		getTable: Function,
 	},
 	components: {
 		txtField,
 		selectBox,
 		TimePickerDialog,
+		sweetAlert,
 	},
 	data() {
 		return {
+			sweetDialog: {
+				open: false,
+				title: '사업지 생성',
+				content: `사업지를 생성합니다.`,
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
+			sweetInfo: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'info',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+			},
 			right_data: [
 				{
 					number: 1,
@@ -371,8 +392,24 @@ export default {
 		}
 	},
 	methods: {
+		businessCheck() {
+			if (this.setdialog.items[0].value === '') {
+				this.sweetInfo.title = '사업지명 입력'
+				this.sweetInfo.content = '사업지명을 입력해주세요'
+				return (this.sweetInfo.open = true)
+			}
+			if (this.setdialog.items[1].value === '') {
+				this.sweetInfo.title = '대표번호 입력'
+				this.sweetInfo.content = '대표번호를 입력해주세요'
+				return (this.sweetInfo.open = true)
+			}
+			if (!this.checkPhone(this.setdialog.items[1].value) && !this.checkCall(this.setdialog.items[1].value)) {
+				this.sweetInfo.title = '대표번호 형식'
+				this.sweetInfo.content = '전화번호 형식이 아닙니다.'
+				return (this.sweetInfo.open = true)
+			}
+		},
 		newBusiness() {
-			this.$store.state.loading = true
 			let data = {
 				name: this.setdialog.items[0].value,
 				phoneNumber: this.setdialog.items[1].value,
@@ -381,9 +418,9 @@ export default {
 				splitHoldingTime: this.setdialog.items[3].selectBox.value,
 				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
 			}
-			this.$store.dispatch('createBusiness', data).then(res => {
-				console.log(res)
-				this.$store.state.loading = false
+			this.$store.dispatch('createBusiness', data).then(() => {
+				this.setdialog.dialog = false
+				this.getTable()
 			})
 		},
 		modalClose() {
@@ -409,6 +446,14 @@ export default {
 		save_time2(picker) {
 			this.editTimePicker2.dialog = false
 			this.editTimePicker2.time = picker
+		},
+		checkPhone(str) {
+			let exp = /^(0[2-8][0-5]?|01[01346-9])-?([1-9]{1}[0-9]{2,3})-?([0-9]{4})$/
+			return exp.test(str)
+		},
+		checkCall(str) {
+			let exp = /^(1544|1566|1577|1588|1644|1688)-?([0-9]{4})$/
+			return exp.test(str)
 		},
 	},
 }
