@@ -80,11 +80,11 @@
 						증빙서류
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2" style="height:163px; overflow-y: scroll;">
-						<v-layout v-for="(filename, index) in attachmentNameList" :key="index" style="">
-							<v-layout class="attachmentClass" style="height: 100%;">
+						<v-layout class="attachmentClass" v-for="(filename, index) in attachmentNameList" :key="index" style="">
+							<v-flex style="width: 100%; height: 100%;" @click="e => viewAttachment(e, filename.url)">
 								<span class="attachmentSpanClass">{{ filename.name }}</span>
-								<v-icon>mdi-alpha-x-circle-outline</v-icon>
-							</v-layout>
+							</v-flex>
+							<v-icon class="attachmentIconClass" @click="deleteAttachment(filename.id)">mdi-alpha-x-circle-outline</v-icon>
 						</v-layout>
 					</v-flex>
 				</v-layout>
@@ -500,7 +500,11 @@ export default {
 
 			if (val.settlements.attachment.length > 0) {
 				for (let i = 0; i < val.settlements.attachment.length; i++) {
-					this.attachmentNameList.push({ name: val.settlements.attachment[i].name, url: val.settlements.attachment[i].url })
+					this.attachmentNameList.push({
+						name: val.settlements.attachment[i].name,
+						url: val.settlements.attachment[i].url,
+						id: val.settlements.attachment[i].id,
+					})
 				}
 				console.log(this.attachmentNameList)
 			}
@@ -549,11 +553,15 @@ export default {
 			}
 		},
 		deleteAttachment(val) {
-			console.log(val)
+			this.attachmentNameList = this.attachmentNameList.filter(item => item.id !== val)
 		},
 
-		click_confirm() {
+		async click_confirm() {
 			this.$store.state.loading = true
+			let li = []
+			for (let item of this.attachmentNameList) {
+				li.push(item.id)
+			}
 
 			if (this.finalSettlementData.settlementStatus === 'waiting') {
 				let input = {
@@ -562,6 +570,7 @@ export default {
 					updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
 					adminName: this.$store.state.meData.username,
 					comment: this.sweetDialog_info.rejectionReason[0].value,
+					attachID: li,
 				}
 				this.$store
 					.dispatch('updateSettlement', input)
@@ -605,6 +614,11 @@ export default {
 			}
 
 			this.$store.state.loading = false
+		},
+		viewAttachment(e, val) {
+			e.stopPropagation()
+			location = process.env.VUE_APP_BACKEND_URL + val
+			window.open(location)
 		},
 	},
 }
@@ -915,22 +929,16 @@ export default {
 }
 
 .attachmentClass {
-	height: 28px;
-	margin: 13.3px 15px 9px 11.8px;
-	padding: 5px 10px;
+	margin: 8px 13px;
 	border-radius: 3px;
+	padding: 4px 12px;
 	background-color: #f2a629;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .attachmentSpanClass {
-	margin: 0 0 1px 0;
-	font-family: MalgunGothic;
 	font-size: 13px;
-	font-weight: bold;
-	font-stretch: normal;
-	font-style: normal;
-	line-height: normal;
-	letter-spacing: normal;
 	text-align: left;
 	color: #fff;
 }

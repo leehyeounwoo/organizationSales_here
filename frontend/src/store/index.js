@@ -1,3 +1,4 @@
+import Axios from 'axios'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import apollo from '../apollo/config'
@@ -82,6 +83,23 @@ export default new Vuex.Store({
 						sessionStorage.setItem(tokenName, data.login.jwt)
 						commit('meData', data.login.user)
 						resolve(data.login.user)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		multipleUpload({}, input) {
+			return new Promise((resolve, reject) => {
+				var formData = new FormData()
+				input.forEach(file => {
+					formData.append('files', file)
+				})
+				let config = { headers: { 'Content-Type': 'multipart/form-data' } }
+				Axios.post(process.env.VUE_APP_BACKEND_URL + '/upload', formData, config)
+					.then(data => {
+						resolve(data)
 					})
 					.catch(err => {
 						reject(err)

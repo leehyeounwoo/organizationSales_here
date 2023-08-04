@@ -155,9 +155,18 @@ export const updateUser = gql`
 `
 
 export const updateSettlement = gql`
-	mutation updateSettlement($id: ID!, $settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS, $adminName: String, $comment: String) {
+	mutation updateSettlement(
+		$id: ID!
+		$attachID: [ID]!
+		$settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS
+		$adminName: String
+		$comment: String
+	) {
 		updateSettlement(
-			input: { where: { id: $id }, data: { settlementStatus: $settlementStatus, adminName: $adminName, comment: $comment } }
+			input: {
+				where: { id: $id }
+				data: { attachment: $attachID, settlementStatus: $settlementStatus, adminName: $adminName, comment: $comment }
+			}
 		) {
 			settlement {
 				id
@@ -165,6 +174,9 @@ export const updateSettlement = gql`
 				adminName
 				updated_at
 				settlementStatus
+				attachment {
+					id
+				}
 			}
 		}
 	}
