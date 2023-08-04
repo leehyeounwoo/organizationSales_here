@@ -157,7 +157,7 @@ export const updateUser = gql`
 export const updateSettlement = gql`
 	mutation updateSettlement(
 		$id: ID!
-		$attachID: [ID]!
+		$attachID: [ID]
 		$settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS
 		$adminName: String
 		$comment: String
