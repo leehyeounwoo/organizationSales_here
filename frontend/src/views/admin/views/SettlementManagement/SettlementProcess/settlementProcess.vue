@@ -32,14 +32,7 @@
 		</v-layout>
 		<v-layout class="mt-4">
 			<v-flex xs6>
-				<datatable
-					:datatable="settlementTable"
-					class="notice_table"
-					excelType="clientManagement"
-					excelUseYn="true"
-					@pagination="pagination"
-				>
-				</datatable>
+				<datatable :datatable="processTable" class="notice_table" @pagination="pagination"> </datatable>
 			</v-flex>
 			<v-flex xs6 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -339,13 +332,13 @@ export default {
 			work: 0,
 			endWork: 0,
 			holiDay: 0,
-			settlementTable: {
+			processTable: {
 				headers: [
-					{ text: '직원명', value: 'data1', align: 'center', width: '7%' },
-					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
-					{ text: '영업번호', value: 'salesPhoneNumer', align: 'center', width: '10%' },
+					{ text: '직원명', value: 'username', align: 'center', width: '7%' },
+					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '10%' },
+					{ text: '영업번호', value: 'settlementPhoneNumber', align: 'center', width: '10%' },
 					{ text: '팀', value: 'teamID', align: 'center', width: '7%' },
-					{ text: '승인일', value: '', align: 'center', width: '7%' },
+					{ text: '승인일', value: 'settlementUpdated_at', align: 'center', width: '7%' },
 					{ text: '상태', value: '', align: 'center', width: '8%' },
 					{ text: '지급예정일', value: '', align: 'center', width: '8%' },
 					{ text: '비고', value: '', align: 'center', width: '7%' },
@@ -367,8 +360,8 @@ export default {
 
 				itemsPerPage: 10,
 				page: 1,
-				pageCount: 0,
-				total: 0,
+				pageCount: 1,
+				total: 1,
 			},
 			detailData: {
 				id: '',
@@ -500,11 +493,48 @@ export default {
 			date_picker: {
 				date: this.$moment().format('YYYY-MM-DD'),
 			},
+			userArrData: [],
+			userData: [],
+			teamArrData: [],
+			teamData: [],
+			rankArrData: [],
+			rankData: [],
+			productData: [],
+			productArrData: [],
+			settlementData: [],
+			settlementArrData: [],
+			list: [],
+			attachmentNameList: [],
+			finalSettlementData: [],
 		}
 	},
 
 	async created() {
+		this.$store.state.loading = true
 		await this.me()
+		const settlementViewData = {
+			settlementStatus: 'agree',
+		}
+		await this.settlementView(settlementViewData)
+		const usersViewData = {
+			idArr: this.userArrData,
+		}
+		await this.usersView(usersViewData)
+		const productsViewData = {
+			idArr: this.productArrData,
+		}
+		await this.productsView(productsViewData)
+		const teamsViewData = {
+			idArr: this.teamArrData,
+		}
+		await this.teamsView(teamsViewData)
+		const ranksViewData = {
+			idArr: this.rankArrData,
+		}
+		await this.ranksView(ranksViewData)
+		await this.dataSetting()
+
+		this.$store.state.loading = false
 	},
 	mounted() {},
 
@@ -515,7 +545,100 @@ export default {
 				console.log(this.$store.state.meData)
 			})
 		},
+		async dataSetting() {
+			for (let index = 0; index < this.userData.length; index++) {
+				const element = this.userData[index]
+				console.log(element)
+				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
+				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
 
+				element.teamID = `${teamTitle} / ${rankTitle}`
+				this.list.teamID = element.teamID
+			}
+
+			this.processTable.items = this.list
+			console.log(this.processTable.items)
+		},
+
+		async settlementView(settlementViewData) {
+			await this.$store.dispatch('settlements', settlementViewData).then(res => {
+				this.processTable.total = res.settlementsConnection.aggregate.count
+				res.settlements.forEach(element => {
+					let listData = {}
+					listData.settlements = element
+					listData.id = element.id
+					listData.settlementCreated_at = this.$moment(element.created_at).format('YYYY-MM-DD HH:mm')
+					listData.contractDate = this.$moment(element.contractDate).format('YYYY-MM-DD HH:mm')
+					listData.settlementStatus = element.settlementStatus
+					listData.settlementUpdated_at = this.$moment(element.updated_at).format('YYYY-MM-DD HH:mm')
+					listData.degree = element.degree
+					listData.userID = element.userID
+					listData.ProductID = element.ProductID
+					this.list.push(listData)
+				})
+				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
+				this.productArrData = res.settlements.filter(x => x.ProductID).map(x => x.ProductID)
+			})
+		},
+		async usersView(usersViewData) {
+			await this.$store
+				.dispatch('users', usersViewData)
+				.then(res => {
+					this.userData = res.users
+					res.users.forEach(element => {
+						for (let items of this.list) {
+							if (items.userID === element.id) {
+								items.users = element
+								items.username = element.username
+								items.phoneNumber = element.phoneNumber
+								items.settlementPhoneNumber = element.salesPhoneNumber
+								items.teamID = element.teamID
+							}
+						}
+					})
+					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
+					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+
+		async productsView(productsViewData) {
+			await this.$store.dispatch('products', productsViewData).then(
+				res =>
+					res.products.forEach(element => {
+						let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
+						listData.products = element
+						listData.product = element.housingType + element.dong + '동' + element.ho + '호'
+					}),
+				console.log(this.list),
+			)
+		},
+		async teamsView(teamsViewData) {
+			await this.$store
+				.dispatch('teams', teamsViewData)
+				.then(res => {
+					this.teamData = res.teams
+					// console.log(res.teams)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async ranksView(teamsViewData) {
+			await this.$store
+				.dispatch('ranks', teamsViewData)
+				.then(res => {
+					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
 		async pagination(item) {
 			if (item.page > this.table.page) {
 				// 다음 페이지
