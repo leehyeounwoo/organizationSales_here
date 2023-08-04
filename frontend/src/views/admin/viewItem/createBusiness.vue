@@ -22,7 +22,29 @@
 						<v-flex xs3 align-self-center class="table_font">{{ left.title }}</v-flex>
 						<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
 							<v-flex xs6>
-								<txtField class="pt-3 bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
+								<txtField
+									v-if="left.title === '대표번호' && left.value.substr(0, 3).includes('02')"
+									class="pt-3 bizInput"
+									v-model="left.value"
+									v-mask="'##-####-####'"
+									:txtField="left.txtfield"
+									style="height:27px; margin:auto"
+								></txtField>
+								<txtField
+									v-else-if="left.title === '대표번호' && !left.value.substr(0, 3).includes('02')"
+									class="pt-3 bizInput"
+									v-model="left.value"
+									v-mask="'###-####-####'"
+									:txtField="left.txtfield"
+									style="height:27px; margin:auto"
+								></txtField>
+								<txtField
+									v-else
+									class="pt-3 bizInput"
+									v-model="left.value"
+									:txtField="left.txtfield"
+									style="height:27px; margin:auto"
+								></txtField>
 							</v-flex>
 						</v-flex>
 						<v-flex xs9 v-else-if="left.type === 'time'" class="table_right_white px-2 biz_table_right">

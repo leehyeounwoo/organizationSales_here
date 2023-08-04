@@ -64,6 +64,7 @@ export default {
 							hideDetail: true,
 							errorMessage: '',
 							autocomplete: 'off',
+							placeholder: '사업지명을 입력해주세요.',
 						},
 					},
 					// 1
@@ -77,6 +78,7 @@ export default {
 							hideDetail: true,
 							errorMessage: '',
 							autocomplete: 'off',
+							placeholder: '##-####-####, ###-####-####',
 						},
 					},
 					// 2

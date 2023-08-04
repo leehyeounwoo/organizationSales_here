@@ -8,6 +8,16 @@ import './plugins/appbus'
 import './plugins/appmain'
 import VueMoment from 'vue-moment'
 import VueMeta from 'vue-meta'
+import io from 'socket.io-client'
+import VueTheMask from 'vue-the-mask'
+
+Vue.use(VueTheMask)
+const socket = io(process.env.VUE_APP_BACKEND_SOCKET, {
+	reconnection: true,
+	transports: ['websocket'],
+})
+Vue.prototype.$socket = socket
+
 Vue.config.productionTip = false
 
 Vue.use(VueMoment)

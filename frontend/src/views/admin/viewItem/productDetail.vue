@@ -268,16 +268,6 @@ export default {
 	background: #f0f2f8;
 	border-right: 1px solid #d7d8e9;
 }
-.right1_btn {
-	border: 1px solid #cfdcdd !important;
-	border-radius: 0;
-	margin-right: 0 !important;
-	width: 100px !important;
-	font-size: 13px !important;
-	.v-btn__content {
-		color: #666666;
-	}
-}
 .refresh_btn {
 	border: 1px solid #cfdcdd !important;
 	border-radius: 0;
