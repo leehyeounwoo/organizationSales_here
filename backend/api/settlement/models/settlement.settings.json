@@ -47,6 +47,9 @@
     },
     "adminName": {
       "type": "string"
+    },
+    "paymentDate": {
+      "type": "date"
     }
   }
 }

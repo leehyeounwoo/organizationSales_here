@@ -1049,7 +1049,7 @@
 			<!-- detailEtc2 -->
 			<template v-slot:[`item.detailEtc2`]="{ item }">
 				<v-layout class="dt-align-set" justify-center>
-					<v-icon small style="border: 1px solid rgba(0, 0, 0, 0.7);" @click="nameClick(item)" depressed>mdi-text-search</v-icon>
+					<v-icon @click="nameClick(item)" depressed>mdi-text-box-search-outline</v-icon>
 				</v-layout>
 			</template>
 			<template v-slot:[`item.etcQR`]="{ item }">

@@ -618,6 +618,9 @@
           "adminName": {
             "type": "string"
           },
+          "paymentDate": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -649,6 +652,9 @@
             "type": "string"
           },
           "adminName": {
+            "type": "string"
+          },
+          "paymentDate": {
             "type": "string"
           },
           "published_at": {
