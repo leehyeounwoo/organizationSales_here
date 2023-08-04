@@ -62,7 +62,12 @@
 					</v-flex>
 					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
 						<div style="display: flex;">
-							<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-1"></txtField>
+							<txtField
+								v-mask="'###,###,###,###,###'"
+								:txtField="charge.txtField"
+								v-model="charge.txtField.value"
+								class="search_box_admin2 ml-1"
+							></txtField>
 							<span>원</span>
 						</div>
 					</v-flex>
@@ -96,21 +101,22 @@
 					<v-flex class="notice_right_table" xs3 style="height: 40px;">
 						지급 회차
 					</v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;"> </v-flex>
 					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;"
-						><txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField>
+						<selectBox :sel="timessel" :class="'searchSel'" style="font-size:12px"></selectBox>
 					</v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;"
-						><txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField>
+					<v-flex
+						v-for="(items, idx) of paymentCircuit"
+						:key="idx"
+						xs3
+						class="notice_right_table2"
+						style="display: flex; justify-content: center;align-items: center;"
+					>
+						<txtField
+							:readonly="items.readonly"
+							:txtField="items.txtField"
+							v-model="items.txtField.value"
+							class="search_box_admin"
+						></txtField>
 					</v-flex>
 				</v-layout>
 				<v-layout>
@@ -118,23 +124,17 @@
 						지급 비율
 					</v-flex>
 					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField>
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;"
-						><txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField>
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
+						<txtField :txtField="paymentRateSum.txtField" v-model="paymentRateSum.txtField.value" class="search_box_admin"></txtField
 					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;"
-						><txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField>
+					<v-flex
+						v-for="(items, idx) of paymentRate"
+						:key="idx"
+						xs3
+						class="notice_right_table2"
+						style="display: flex; justify-content: center;align-items: center;"
+					>
+						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
 					</v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
 				</v-layout>
 				<v-layout>
 					<v-flex class="notice_right_table" xs3 style="height: 40px;">
@@ -143,20 +143,14 @@
 					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
 						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
 					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
-					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
+					<v-flex
+						v-for="(items, idx) of paymentAmount"
+						:key="idx"
+						xs3
+						class="notice_right_table2"
+						style="display: flex; justify-content: center;align-items: center;"
+					>
+						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField
 					></v-flex>
 				</v-layout>
 				<v-flex style="text-align: end;">
@@ -283,12 +277,14 @@
 </template>
 <script>
 import { selectBox, txtField, datatable } from '@/components/index.js'
+import TxtField from '../../../../../components/txtField.vue'
 
 export default {
 	components: {
 		selectBox,
 		txtField,
 		datatable,
+		TxtField,
 	},
 
 	data() {
@@ -309,24 +305,6 @@ export default {
 				content: '저장하시겠습니까?',
 				btnTxt: '저장',
 			},
-			newDialog: {
-				dialog: false,
-				edit: false,
-				editData: {},
-				title: '신청 연차 관리',
-			},
-			newDialog2: {
-				dialog: false,
-				edit: false,
-				editData: {},
-				title: '근태정보',
-			},
-			newDialog3: {
-				dialog: false,
-				edit: false,
-				editData: {},
-				title: '출퇴근 리스트',
-			},
 			selected: [],
 			allCounselor: 0,
 			work: 0,
@@ -343,7 +321,6 @@ export default {
 					{ text: '지급예정일', sortable: false, value: '', align: 'center', width: '8%' },
 					{ text: '비고', sortable: false, value: 'detailEtc2', align: 'center', width: '3%' },
 				],
-
 				items: [],
 				select_items: [],
 				json_fields: {
@@ -363,90 +340,6 @@ export default {
 				pageCount: 1,
 				total: 1,
 			},
-			detailData: {
-				id: '',
-				name: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '고객명',
-				},
-				phone: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '연락처',
-				},
-				sex: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '성별',
-					items: ['남자', '여자'],
-					outlined: true,
-				},
-				age: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '연령대',
-					items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-					outlined: true,
-				},
-				inflow: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '유입경로',
-					items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
-					outlined: true,
-				},
-				status: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '고객상태',
-					items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
-					outlined: true,
-				},
-				counselor_business: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '지점',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'business_title',
-				},
-				counselor_team: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '부서',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'title',
-				},
-				counselor_name: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '상담사명',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'name',
-				},
-				origin_main_data: [],
-				interest_product: [],
-				contract_product: [],
-			},
 
 			searchsel: {
 				value: '',
@@ -458,6 +351,17 @@ export default {
 				returnObject: true,
 				itemText: 'title',
 			},
+
+			timessel: {
+				value: '',
+				errorMessage: '',
+				hideDetail: true,
+				items: ['1차', '2차', '3차', '4차', '5차'],
+				outlined: true,
+				placeholder: '회차선택',
+				returnObject: true,
+				itemText: 'title',
+			},
 			charge: {
 				txtField: {
 					maxlength: '255',
@@ -465,10 +369,205 @@ export default {
 					outlined: true,
 					hideDetail: true,
 					errorMessage: '',
-					placeholder: '',
+					placeholder: '-',
 					readonly: false,
 				},
 			},
+			paymentCircuit: {
+				charge1: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge2: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge3: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge4: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge5: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+			},
+			paymentRateSum: {
+				txtField: {
+					maxlength: '3',
+					value: '',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+					placeholder: '-',
+					readonly: false,
+				},
+			},
+
+			paymentRate: {
+				charge1: {
+					txtField: {
+						maxlength: '3',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge2: {
+					txtField: {
+						maxlength: '3',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge3: {
+					txtField: {
+						maxlength: '3',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge4: {
+					txtField: {
+						maxlength: '3',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge5: {
+					txtField: {
+						maxlength: '3',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+			},
+			paymentsum: {
+				txtField: {
+					maxlength: '255',
+					value: '',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+					placeholder: '-',
+					readonly: true,
+				},
+			},
+			paymentAmount: {
+				charge1: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge2: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge3: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge4: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				charge5: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+			},
+
 			searchsel1: {
 				value: '',
 				errorMessage: '',
@@ -486,10 +585,7 @@ export default {
 				backCol: 'white',
 			},
 			search_project: '',
-			status_Keyword: {
-				value: '전체',
-				items: ['전체', '출근', '정상', '연차', '오전반차', '오후반차', '미확인'],
-			},
+
 			date_picker: {
 				date: this.$moment().format('YYYY-MM-DD'),
 			},
@@ -539,6 +635,11 @@ export default {
 	mounted() {},
 
 	methods: {
+		currecy_locale_string(e, idx) {
+			e.target.value = e.target.value.toLocaleString()
+			this.paymentAmount[`charge${idx + 1}`].txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+		},
+
 		async me() {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.data
@@ -740,6 +841,122 @@ export default {
 			}
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
+		},
+		calculatePaymentAmount(paymentNumber) {
+			paymentAmount = ''
+			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value)
+
+			let charge = Number(this.charge.txtField.value.replace(/,/g, ''))
+
+			let paymentAmount = Number((paymentRate / 100) * charge)
+			paymentAmount = Math.floor(paymentAmount) + ''
+
+			return paymentAmount
+		},
+		calculatePaymentRate(paymentNumber) {
+			paymentRateAmount = ''
+			console.log(paymentNumber)
+			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value)
+			console.log(paymentRate)
+
+			let paymentRateAmount = Number(paymentRate / 100)
+			paymentRateAmount = Math.floor(paymentRateAmount) + ''
+
+			console.log(paymentRateAmount)
+			return paymentRateAmount
+		},
+	},
+	computed: {
+		calculatedPaymentAmount1() {
+			return this.calculatePaymentAmount(1)
+		},
+		calculatedPaymentAmount2() {
+			return this.calculatePaymentAmount(2)
+		},
+		calculatedPaymentAmount3() {
+			return this.calculatePaymentAmount(3)
+		},
+		calculatedPaymentAmount4() {
+			return this.calculatePaymentAmount(4)
+		},
+		calculatedPaymentAmount5() {
+			return this.calculatePaymentAmount(5)
+		},
+		calculatePaymentRate1() {
+			return this.calculatePaymentRate(1)
+		},
+	},
+	watch: {
+		'timessel.value'(newValue) {
+			console.log(newValue)
+			let time = Number(newValue.replace(/차/g, ''))
+			console.log(time)
+			for (let i = 0; i < 5; i++) {
+				this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+				this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+				this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
+				this.paymentRate[`charge${i + 1}`].txtField.value = ''
+				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+			}
+
+			for (let j = 0; j < time; j++) {
+				this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
+				this.paymentRate[`charge${j + 1}`].txtField.readonly = false
+				this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
+			}
+		},
+		'paymentRateSum.txtField.value': {
+			immediate: true, // Trigger the watcher immediately on component mount
+			handler() {
+				// Update each payment amount field whenever payment rate changes
+				this.paymentAmount.charge1.txtField.value = this.calculatePaymentRate(1)
+			},
+		},
+		'paymentRate.charge1.txtField.value': {
+			immediate: true, // Trigger the watcher immediately on component mount
+			handler() {
+				// Update each payment amount field whenever payment rate changes
+				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+			},
+		},
+		'paymentRate.charge2.txtField.value': {
+			immediate: true, // Trigger the watcher immediately on component mount
+			handler() {
+				// Update each payment amount field whenever payment rate changes
+
+				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+			},
+		},
+		'paymentRate.charge3.txtField.value': {
+			immediate: true, // Trigger the watcher immediately on component mount
+			handler() {
+				// Update each payment amount field whenever payment rate changes
+				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
+			},
+		},
+		'paymentRate.charge4.txtField.value': {
+			immediate: true, // Trigger the watcher immediately on component mount
+			handler() {
+				// Update each payment amount field whenever payment rate changes
+				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
+				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
+			},
+		},
+		'paymentRate.charge5.txtField.value': {
+			immediate: true, // Trigger the watcher immediately on component mount
+			handler() {
+				// Update each payment amount field whenever payment rate changes
+				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
+				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
+				this.paymentAmount.charge5.txtField.value = this.calculatePaymentAmount(5)
+			},
 		},
 	},
 }
