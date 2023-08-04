@@ -341,7 +341,7 @@ export default {
 					{ text: '승인일', sortable: false, value: 'settlementUpdated_at', align: 'center', width: '7%' },
 					{ text: '상태', sortable: false, value: '', align: 'center', width: '8%' },
 					{ text: '지급예정일', sortable: false, value: '', align: 'center', width: '8%' },
-					{ text: '비고', sortable: false, value: 'detailEtc', align: 'center', width: '7%' },
+					{ text: '비고', sortable: false, value: 'detailEtc2', align: 'center', width: '3%' },
 				],
 
 				items: [],
