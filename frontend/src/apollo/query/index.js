@@ -144,7 +144,7 @@ export const businesses = gql`
 
 export const settlements = gql`
 	query settlements($id: ID, $settlementStatus: String) {
-		settlementsConnection {
+		settlementsConnection(where: { id: $id, settlementStatus: $settlementStatus }) {
 			aggregate {
 				count
 			}
