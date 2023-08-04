@@ -334,14 +334,14 @@ export default {
 			holiDay: 0,
 			processTable: {
 				headers: [
-					{ text: '직원명', value: 'username', align: 'center', width: '7%' },
-					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '10%' },
-					{ text: '영업번호', value: 'settlementPhoneNumber', align: 'center', width: '10%' },
-					{ text: '팀', value: 'teamID', align: 'center', width: '7%' },
-					{ text: '승인일', value: 'settlementUpdated_at', align: 'center', width: '7%' },
-					{ text: '상태', value: '', align: 'center', width: '8%' },
-					{ text: '지급예정일', value: '', align: 'center', width: '8%' },
-					{ text: '비고', value: '', align: 'center', width: '7%' },
+					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '7%' },
+					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
+					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
+					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '7%' },
+					{ text: '승인일', sortable: false, value: 'settlementUpdated_at', align: 'center', width: '7%' },
+					{ text: '상태', sortable: false, value: '', align: 'center', width: '8%' },
+					{ text: '지급예정일', sortable: false, value: '', align: 'center', width: '8%' },
+					{ text: '비고', sortable: false, value: 'detailEtc', align: 'center', width: '7%' },
 				],
 
 				items: [],

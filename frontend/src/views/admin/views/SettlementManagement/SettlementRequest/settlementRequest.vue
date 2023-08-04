@@ -518,9 +518,17 @@ export default {
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
 				} else {
-					this.saveDialogStatus.title = `정산 요청 승인`
-					this.saveDialogStatus.content = `정산요청을 승인합니다`
-					this.saveDialogStatus.open = true
+					if (this.finalSettlementData.settlementStatus === 'agree' && this.agreeType === true) {
+						this.sweetDialog_info.title = `승인 처리 실패`
+						this.sweetDialog_info.content = `이미 승인된 정산요청입니다`
+						this.sweetDialog_info.modalValue = ''
+						this.sweetDialog_info.buttonType = 'oneBtn'
+						this.sweetDialog_info.open = true
+					} else {
+						this.saveDialogStatus.title = `정산 요청 승인`
+						this.saveDialogStatus.content = `정산요청을 승인합니다`
+						this.saveDialogStatus.open = true
+					}
 				}
 			} else {
 				if (this.finalSettlementData.length === 0) {
@@ -530,25 +538,19 @@ export default {
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
 				} else {
-					this.sweetDialog_info.title = `정산 요청 반려`
-					this.sweetDialog_info.content = `위의 사유로 정산요청을 반려합니다`
-					this.sweetDialog_info.modalValue = 'no'
-					this.sweetDialog_info.buttonType = 'twoBtn'
-					this.sweetDialog_info.open = true
-				}
-
-				if (this.finalSettlementData.settlementStatus === 'disagree') {
-					this.sweetDialog_info.title = `반려 처리 실패`
-					this.sweetDialog_info.content = `이미 반려된 정산요청입니다`
-					this.sweetDialog_info.modalValue = ''
-					this.sweetDialog_info.buttonType = 'oneBtn'
-					this.sweetDialog_info.open = true
-				} else if (this.finalSettlementData.settlementStatus === 'agree') {
-					this.sweetDialog_info.title = `승인 처리 실패`
-					this.sweetDialog_info.content = `이미 승인된 정산요청입니다`
-					this.sweetDialog_info.modalValue = ''
-					this.sweetDialog_info.buttonType = 'oneBtn'
-					this.sweetDialog_info.open = true
+					if (this.finalSettlementData.settlementStatus === 'disagree' && this.agreeType === false) {
+						this.sweetDialog_info.title = `반려 처리 실패`
+						this.sweetDialog_info.content = `이미 반려된 정산요청입니다`
+						this.sweetDialog_info.modalValue = ''
+						this.sweetDialog_info.buttonType = 'oneBtn'
+						this.sweetDialog_info.open = true
+					} else {
+						this.sweetDialog_info.title = `정산 요청 반려`
+						this.sweetDialog_info.content = `위의 사유로 정산요청을 반려합니다`
+						this.sweetDialog_info.modalValue = 'no'
+						this.sweetDialog_info.buttonType = 'twoBtn'
+						this.sweetDialog_info.open = true
+					}
 				}
 			}
 		},
