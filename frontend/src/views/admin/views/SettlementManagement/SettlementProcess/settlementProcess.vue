@@ -349,8 +349,8 @@ export default {
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
 					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '7%' },
 					{ text: '승인일', sortable: false, value: 'settlementUpdated_at', align: 'center', width: '7%' },
-					{ text: '상태', sortable: false, value: '', align: 'center', width: '8%' },
-					{ text: '지급예정일', sortable: false, value: '', align: 'center', width: '8%' },
+					{ text: '상태', sortable: false, value: 'turnStatus', align: 'center', width: '8%' },
+					{ text: '지급예정일', sortable: false, value: 'paymentDate', align: 'center', width: '8%' },
 					{ text: '비고', sortable: false, value: 'detailEtc2', align: 'center', width: '3%' },
 				],
 				items: [],
@@ -694,13 +694,12 @@ export default {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.data
-				console.log(this.$store.state.meData)
 			})
 		},
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-				console.log(element)
+
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
 				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
 
@@ -726,6 +725,18 @@ export default {
 					listData.degree = element.degree
 					listData.userID = element.userID
 					listData.ProductID = element.ProductID
+					if (element.settlement_turn_tables.length !== 0) {
+						for (let i = 0; i < element.settlement_turn_tables.length; i++) {
+							if (element.settlement_turn_tables[i].turnStatus === 'waiting') {
+								listData.paymentDate = element.settlement_turn_tables[i].prePaymentDate
+								listData.turnStatus = element.settlement_turn_tables[i].turnStatus
+							} else {
+								listData.turnStatus = '지급 완료'
+							}
+						}
+					} else {
+						listData.turnStatus = ''
+					}
 					this.list.push(listData)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
@@ -758,14 +769,12 @@ export default {
 		},
 
 		async productsView(productsViewData) {
-			await this.$store.dispatch('products', productsViewData).then(
-				res =>
-					res.products.forEach(element => {
-						let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
-						listData.products = element
-						listData.product = element.housingType + element.dong + '동' + element.ho + '호'
-					}),
-				console.log(this.list),
+			await this.$store.dispatch('products', productsViewData).then(res =>
+				res.products.forEach(element => {
+					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
+					listData.products = element
+					listData.product = element.housingType + element.dong + '동' + element.ho + '호'
+				}),
 			)
 		},
 		async teamsView(teamsViewData) {
@@ -773,7 +782,6 @@ export default {
 				.dispatch('teams', teamsViewData)
 				.then(res => {
 					this.teamData = res.teams
-					// console.log(res.teams)
 				})
 				.catch(err => {
 					console.log(err)
@@ -894,16 +902,10 @@ export default {
 			this.date = this.$moment(this.date_picker.date)
 		},
 		alertRate(val) {
-			console.log(val)
 			let valChange = Number(val.replace('charge', '')) + ''
 			let timeChange = Number(this.timessel.value.replace(/차/g, '')) + ''
 
-			console.log(this.timessel.value)
-			console.log(valChange)
-			console.log(timeChange)
-
 			if (this.timessel.value === '') {
-				console.log(true)
 				this.sweetDialog_false.title = `비율 지정 실패`
 				this.sweetDialog_false.content = `지급 회차를 먼저 선택해주세요`
 				this.sweetDialog_false.modalValue = ''
@@ -964,7 +966,6 @@ export default {
 		},
 
 		openProcessModal() {
-			console.log(this.finalSettlementData)
 			if (this.finalSettlementData.length === 0) {
 				this.sweetDialog_false.title = `저장 실패`
 				this.sweetDialog_false.content = `정산할 직원을 선택해주세요`
@@ -993,8 +994,6 @@ export default {
 		click_agree() {
 			this.$store.state.loading = true
 
-			console.log(this.start_date_picker)
-
 			let start_date = []
 			let finalPaymentAmount = []
 
@@ -1010,12 +1009,17 @@ export default {
 					settlements: this.finalSettlementData.id,
 				}
 
-				this.$store.dispatch('createSettlementTurnTable', data).then(res => {
-					console.log(res)
+				this.$store.dispatch('createSettlementTurnTable', data).then(() => {
+					this.sweetDialog_false.open = false
+					this.$store.state.loading = true
+					this.saveDialogStatus.title = `승인 처리 완료`
+					this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					this.$store.state.loading = false
 				})
 			}
-
-			console.log(start_date, finalPaymentAmount)
 		},
 
 		calculatePaymentAmount(paymentNumber) {
@@ -1080,9 +1084,8 @@ export default {
 	},
 	watch: {
 		'timessel.value'(newValue) {
-			console.log(newValue)
 			let time = Number(newValue.replace(/차/g, ''))
-			console.log(time)
+
 			for (let i = 0; i < 5; i++) {
 				this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
 				this.paymentRate[`charge${i + 1}`].txtField.readonly = true
