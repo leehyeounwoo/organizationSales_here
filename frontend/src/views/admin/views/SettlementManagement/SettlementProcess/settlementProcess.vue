@@ -873,6 +873,13 @@ export default {
 		},
 
 		processRequestData(val) {
+			for (let i = 0; i < 5; i++) {
+				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
+				this.paymentRate[`charge${i + 1}`].txtField.value = ''
+				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+			}
+			this.charge.txtField.value = ''
+			this.timessel.value = ''
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -902,15 +909,12 @@ export default {
 			return paymentAmount
 		},
 		calculatePaymentRate(paymentNumber) {
-			console.log(paymentNumber)
 			paymentRateAmount = ''
 			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value)
-			console.log(paymentRate)
 
 			let paymentRateAmount = Number(paymentRate / 100)
 			paymentRateAmount = Math.floor(paymentRateAmount) + ''
 
-			console.log(paymentRateAmount)
 			return paymentRateAmount
 		},
 		updatePaymentRateSum() {
@@ -921,7 +925,7 @@ export default {
 			}
 			this.paymentRatesum = sum
 			this.$nextTick(() => {
-				this.paymentRateSum.txtField.value = sum
+				this.paymentRateSum.txtField.value = sum + ''
 			})
 		},
 	},
@@ -973,6 +977,7 @@ export default {
 		'paymentRate.charge2.txtField.value': {
 			immediate: true,
 			handler() {
+				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
 				this.updatePaymentRateSum()
 			},
