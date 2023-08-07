@@ -594,8 +594,25 @@ export default {
 
 			this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
-		editUserData(val) {
+		async userViewAction(data) {
+			this.$store.state.loading = true
+			await this.$store
+				.dispatch('users', data)
+				.then(res => {
+					console.log(res)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async editUserData(val) {
+			this.$store.state.loading = true
 			console.log(val)
+			const userViewData = {
+				idArr: [val.id],
+			}
+			await this.userViewAction(userViewData)
 			this.rightEdit[0].txtField.value = val.profile ? val.profile.name : ''
 			this.rightEdit[0].url = val.profile ? val.profile.url : ''
 			this.rightEdit[1].txtField.value = val.bank
@@ -609,6 +626,7 @@ export default {
 			// this.rightEdit[5].txtField1.value = val.ID_Card ? val.ID_Card.name : ''
 			// this.rightEdit[5].txtField2.value = val.ID_Card ? val.ID_Card.name : ''
 			this.rightEdit[5].txtField.value = val.businessRegistration ? val.businessRegistration.name : ''
+			this.$store.state.loading = false
 		},
 		async teamsView(teamsViewData) {
 			await this.$store
