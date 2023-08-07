@@ -580,6 +580,9 @@
                 "managerPassword": {
                   "type": "string"
                 },
+                "code": {
+                  "type": "string"
+                },
                 "published_at": {
                   "type": "datetime"
                 },

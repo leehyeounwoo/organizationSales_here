@@ -51,6 +51,10 @@
     },
     "managerPassword": {
       "type": "password"
+    },
+    "code": {
+      "type": "string",
+      "unique": true
     }
   }
 }

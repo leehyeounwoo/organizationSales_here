@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "send_sms",
+  "info": {
+    "name": "Send-sms",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "receiver": {
+      "type": "string"
+    },
+    "sender": {
+      "type": "string"
+    },
+    "authcode": {
+      "type": "biginteger"
+    }
+  }
+}

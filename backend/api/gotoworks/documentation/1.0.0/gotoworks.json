@@ -632,12 +632,6 @@
               "accountNumber": {
                 "type": "string"
               },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "businessRegistration": {
                 "type": "string"
               },
@@ -739,6 +733,9 @@
                 "type": "string"
               },
               "managerPassword": {
+                "type": "string"
+              },
+              "code": {
                 "type": "string"
               },
               "published_at": {

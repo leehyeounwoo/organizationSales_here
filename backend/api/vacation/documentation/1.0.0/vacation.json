@@ -620,12 +620,6 @@
               "accountNumber": {
                 "type": "string"
               },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "businessRegistration": {
                 "type": "string"
               },
