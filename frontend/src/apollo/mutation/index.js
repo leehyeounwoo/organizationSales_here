@@ -181,6 +181,18 @@ export const updateSettlement = gql`
 		}
 	}
 `
+export const updateNotice = gql`
+	mutation updateNotice($id: ID!, $businesses: [ID]) {
+		updateNotice(input: { where: { id: $id }, data: { businesses: $businesses } }) {
+			notice {
+				id
+				businesses {
+					id
+				}
+			}
+		}
+	}
+`
 export const createBusiness = gql`
 	mutation createBusiness(
 		$name: String

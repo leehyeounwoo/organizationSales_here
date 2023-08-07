@@ -12,6 +12,7 @@ import {
 	updateUser,
 	updateSettlement,
 	createBusiness,
+	updateNotice,
 } from '../apollo/mutation'
 import { me, users, gotoWork, teams, products, ranks, businesses, settlements, notices } from '../apollo/query'
 Vue.use(Vuex)
@@ -380,6 +381,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: createBusiness,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		updateNotice({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: updateNotice,
 						variables: input,
 					})
 					.then(({ data }) => {
