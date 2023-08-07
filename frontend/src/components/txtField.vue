@@ -5,7 +5,7 @@
 			:label="txtField.label"
 			:disabled="txtField.disable"
 			:readonly="txtField.readonly"
-			:value="value"
+			:value="value | comma"
 			:error-messages="txtField.errorMessage"
 			:success-messages="txtField.SuccessMessage"
 			:hide-details="txtField.hideDetail"
@@ -40,6 +40,12 @@
 
 <script>
 export default {
+	filters: {
+		comma(val) {
+			// eslint-disable-next-line no-useless-escape
+			return val.replace(/\,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+		},
+	},
 	props: {
 		value: String,
 		txtField: Object,

@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/settlements": {
+    "/settlement-turn-tables": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -10,9 +10,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Settlement"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -51,7 +52,7 @@
         },
         "summary": "",
         "tags": [
-          "Settlement"
+          "Settlement-turn-table"
         ],
         "parameters": [
           {
@@ -201,72 +202,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Settlement"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Settlement"
-        ],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSettlement"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/settlements/count": {
-      "get": {
-        "deprecated": false,
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "response",
-            "content": {
-              "application/json": {
-                "schema": {
                   "properties": {
-                    "count": {
-                      "type": "integer"
+                    "foo": {
+                      "type": "string"
                     }
                   }
                 }
@@ -306,12 +244,22 @@
         },
         "summary": "",
         "tags": [
-          "Settlement"
+          "Settlement-turn-table"
         ],
-        "parameters": []
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSettlement-turn-table"
+              }
+            }
+          }
+        }
       }
     },
-    "/settlements/{id}": {
+    "/settlement-turn-tables/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +269,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Settlement"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -359,7 +311,64 @@
         },
         "summary": "",
         "tags": [
-          "Settlement"
+          "Settlement-turn-table"
+        ],
+        "parameters": []
+      }
+    },
+    "/settlement-turn-tables/{id}": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Settlement-turn-table"
         ],
         "parameters": [
           {
@@ -383,7 +392,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Settlement"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -421,7 +434,7 @@
         },
         "summary": "",
         "tags": [
-          "Settlement"
+          "Settlement-turn-table"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +442,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewSettlement"
+                "$ref": "#/components/schemas/NewSettlement-turn-table"
               }
             }
           }
@@ -495,7 +508,7 @@
         },
         "summary": "",
         "tags": [
-          "Settlement"
+          "Settlement-turn-table"
         ],
         "parameters": [
           {
@@ -514,7 +527,7 @@
   },
   "components": {
     "schemas": {
-      "Settlement": {
+      "Settlement-turn-table": {
         "required": [
           "id"
         ],
@@ -522,86 +535,51 @@
           "id": {
             "type": "string"
           },
-          "ProductID": {
-            "type": "string"
-          },
-          "contractDate": {
-            "type": "datetime"
-          },
-          "settlementStatus": {
-            "type": "string",
-            "enum": [
-              "agree",
-              "waiting",
-              "disagree"
-            ]
-          },
-          "degree": {
-            "type": "string"
-          },
-          "userID": {
-            "type": "string"
-          },
-          "attachment": {
+          "settlements": {
             "type": "array",
             "items": {
               "required": [
-                "id",
-                "name",
-                "hash",
-                "mime",
-                "size",
-                "url",
-                "provider"
+                "id"
               ],
               "properties": {
                 "id": {
                   "type": "string"
                 },
-                "name": {
+                "ProductID": {
                   "type": "string"
                 },
-                "alternativeText": {
+                "contractDate": {
+                  "type": "datetime"
+                },
+                "settlementStatus": {
                   "type": "string"
                 },
-                "caption": {
+                "degree": {
                   "type": "string"
                 },
-                "width": {
-                  "type": "integer"
-                },
-                "height": {
-                  "type": "integer"
-                },
-                "formats": {
-                  "type": "object"
-                },
-                "hash": {
+                "userID": {
                   "type": "string"
                 },
-                "ext": {
+                "attachment": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "comment": {
                   "type": "string"
                 },
-                "mime": {
+                "adminName": {
                   "type": "string"
                 },
-                "size": {
-                  "type": "number"
-                },
-                "url": {
+                "paymentDate": {
                   "type": "string"
                 },
-                "previewUrl": {
+                "turnTable": {
                   "type": "string"
                 },
-                "provider": {
-                  "type": "string"
-                },
-                "provider_metadata": {
-                  "type": "object"
-                },
-                "related": {
-                  "type": "string"
+                "published_at": {
+                  "type": "datetime"
                 },
                 "created_by": {
                   "type": "string"
@@ -612,46 +590,67 @@
               }
             }
           },
-          "comment": {
+          "PaymentDate": {
             "type": "string"
           },
-          "adminName": {
-            "type": "string"
-          },
-          "paymentDate": {
-            "type": "string"
-          },
-          "turnTable": {
+          "depositFile": {
             "required": [
-              "id"
+              "id",
+              "name",
+              "hash",
+              "mime",
+              "size",
+              "url",
+              "provider"
             ],
             "properties": {
               "id": {
                 "type": "string"
               },
-              "settlements": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "PaymentDate": {
+              "name": {
                 "type": "string"
               },
-              "depositFile": {
+              "alternativeText": {
                 "type": "string"
               },
-              "turnStatus": {
+              "caption": {
                 "type": "string"
               },
-              "prePaymentDate": {
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "formats": {
+                "type": "object"
+              },
+              "hash": {
                 "type": "string"
               },
-              "adminName": {
+              "ext": {
                 "type": "string"
               },
-              "published_at": {
-                "type": "datetime"
+              "mime": {
+                "type": "string"
+              },
+              "size": {
+                "type": "number"
+              },
+              "url": {
+                "type": "string"
+              },
+              "previewUrl": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "provider_metadata": {
+                "type": "object"
+              },
+              "related": {
+                "type": "string"
               },
               "created_by": {
                 "type": "string"
@@ -661,43 +660,46 @@
               }
             }
           },
-          "published_at": {
-            "type": "datetime"
-          }
-        }
-      },
-      "NewSettlement": {
-        "properties": {
-          "ProductID": {
-            "type": "string"
-          },
-          "contractDate": {
-            "type": "datetime"
-          },
-          "settlementStatus": {
+          "turnStatus": {
             "type": "string",
             "enum": [
-              "agree",
               "waiting",
-              "disagree"
+              "complete"
             ]
           },
-          "degree": {
-            "type": "string"
-          },
-          "userID": {
-            "type": "string"
-          },
-          "comment": {
+          "prePaymentDate": {
             "type": "string"
           },
           "adminName": {
             "type": "string"
           },
-          "paymentDate": {
+          "published_at": {
+            "type": "datetime"
+          }
+        }
+      },
+      "NewSettlement-turn-table": {
+        "properties": {
+          "settlements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "PaymentDate": {
             "type": "string"
           },
-          "turnTable": {
+          "turnStatus": {
+            "type": "string",
+            "enum": [
+              "waiting",
+              "complete"
+            ]
+          },
+          "prePaymentDate": {
+            "type": "string"
+          },
+          "adminName": {
             "type": "string"
           },
           "published_at": {
@@ -713,9 +715,5 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "Settlement"
-    }
-  ]
+  "tags": []
 }

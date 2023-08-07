@@ -39,23 +39,24 @@
 					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
 						계약자
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2">
+					<v-flex xs6 class="notice_right_table2">
 						<v-layout>
 							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
 								<span id="spanUsername" class="spanClass"></span>
+								<span id="spanPhoneNumber" class="spanClass"></span>
 							</v-flex>
 						</v-layout>
 					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
+					<v-flex xs2 class="notice_right_table" xs3 style="height: 52.3px;">
 						계약 내용
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
-						<v-layout>
+					<v-flex xs10 class="notice_right_table2">
+						<v-layout style="display: flex; justify-content: space-between;align-items: center;">
 							<v-flex>
-								<span>계약일</span>
+								<span class="spanInfoClass ml-2">계약일 : <span id="contract" class="spanClass"></span> </span>
 							</v-flex>
 							<v-flex>
-								<span>물건</span>
+								<span class="spanInfoClass ml-2">물건 : <span id="product" class="spanClass"></span> </span>
 							</v-flex>
 						</v-layout>
 					</v-flex>
@@ -64,16 +65,18 @@
 					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
 						수수료
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
+					<v-flex xs6 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
 						<div style="display: flex;">
+							<!-- v-mask="'###,###,###,###'"
+							@blur="() => charge.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')" -->
 							<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-1"></txtField>
 							<span>원</span>
 						</div>
 					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
+					<v-flex xs2 class="notice_right_table" xs3 style="height: 52.3px;">
 						지급 계좌 정보
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2">
+					<v-flex xs10 class="notice_right_table2">
 						<v-layout>
 							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
 								<span id="userAccountName" class="spanClass"></span>
@@ -114,8 +117,8 @@
 						v-for="(items, idx) of start_date_picker"
 						:key="idx"
 						xs3
-						class="notice_right_table2"
-						style="display: flex; justify-content: center;align-items: center;"
+						class="notice_right_table2 date_picker3"
+						style="display: flex; justify-content: center;align-items: center; "
 					>
 						<DatepickerDialog :picker="items" class="d-flex align-center date_picker3"></DatepickerDialog>
 					</v-flex>
@@ -133,6 +136,7 @@
 						xs3
 						class="notice_right_table2"
 						style="display: flex; justify-content: center;align-items: center;"
+						@click="alertRate(idx)"
 					>
 						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
 					</v-flex>
@@ -154,7 +158,8 @@
 						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
 					</v-flex>
 				</v-layout>
-				<v-flex style="text-align: end;">
+				<v-flex style="text-align: end; display: flex; justify-content:end ;">
+					<v-checkbox class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
 					<span
 						style="font-size: 12px;
             font-weight: normal;
@@ -166,7 +171,6 @@
             color: #3e7ccc;
             width: 158px;
             height: 16px;
-            margin: 19.8px 13px 16.5px 0;
             font-family: MalgunGothic;"
 						>저장시 정산 일정 문자 발송</span
 					>
@@ -176,6 +180,7 @@
             height: 25px;
             margin: 9.8px 0 17.5px 7px;
             padding: 4px 19px 4px 15.4px;"
+						@click="openProcessModal"
 						><v-icon>mdi-check</v-icon> 정산 일정 저장</v-btn
 					>
 				</v-flex>
@@ -274,10 +279,12 @@
 				</v-flex>
 			</v-flex>
 		</v-layout>
+		<sweetAlert :dialog="sweetDialog_false"></sweetAlert>
+		<sweetAlert :dialog="saveDialogStatus" @click="click_agree"></sweetAlert>
 	</div>
 </template>
 <script>
-import { selectBox, txtField, datatable, DatepickerDialog } from '@/components/index.js'
+import { selectBox, txtField, datatable, DatepickerDialog, sweetAlert } from '@/components/index.js'
 
 export default {
 	components: {
@@ -285,6 +292,7 @@ export default {
 		txtField,
 		datatable,
 		DatepickerDialog,
+		sweetAlert,
 	},
 
 	data() {
@@ -302,8 +310,31 @@ export default {
 			},
 			saveDialogStatus: {
 				open: false,
-				content: '저장하시겠습니까?',
-				btnTxt: '저장',
+				title: '',
+				content: ``,
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				cancelBtnText: '취소',
+				modalIcon: 'success',
+				save_type: '',
+				item: {},
+				item_index: null,
+			},
+			sweetDialog_false: {
+				// 저장 불가 팝업
+				open: false,
+				title: '저장 불가',
+				content: ``,
+				buttonType: 'twoBtn',
+				cancelBtnText: '취소',
+				saveBtnText: '반려',
+				modalIcon: 'info',
+				modalValue: 'no',
+				rejectionReason: [
+					{
+						value: '',
+					},
+				],
 			},
 			selected: [],
 			allCounselor: 0,
@@ -871,6 +902,33 @@ export default {
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
+		alertRate(val) {
+			console.log(val)
+			let valChange = Number(val.replace('charge', '')) + ''
+			let timeChange = Number(this.timessel.value.replace(/차/g, '')) + ''
+
+			console.log(this.timessel.value)
+			console.log(valChange)
+			console.log(timeChange)
+
+			if (this.timessel.value === '') {
+				console.log(true)
+				this.sweetDialog_false.title = `비율 지정 실패`
+				this.sweetDialog_false.content = `지급 회차를 먼저 선택해주세요`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.modalIcon = 'info'
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.open = true
+			}
+			if (valChange > timeChange) {
+				this.sweetDialog_false.title = `비율 지정 실패`
+				this.sweetDialog_false.content = `지정한 지급 회차를 확인해주세요`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.modalIcon = 'info'
+				this.sweetDialog_false.open = true
+			}
+		},
 
 		processRequestData(val) {
 			for (let i = 0; i < 5; i++) {
@@ -878,11 +936,19 @@ export default {
 				this.paymentRate[`charge${i + 1}`].txtField.value = ''
 				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
 			}
+			this.finalSettlementData = []
 			this.charge.txtField.value = ''
 			this.timessel.value = ''
+			this.finalSettlementData = val
+			console.log(val)
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
+			}
+
+			const spanPhoneNumber = document.getElementById('spanPhoneNumber')
+			if (spanPhoneNumber) {
+				spanPhoneNumber.textContent = `${val.phoneNumber}`
 			}
 
 			const userAccountInfo = document.getElementById('userAccountInfo')
@@ -894,7 +960,46 @@ export default {
 			if (userAccountName) {
 				userAccountName.textContent = `${val.users.bank}`
 			}
+
+			const product = document.getElementById('product')
+			if (product) {
+				product.textContent = `${val.product}`
+			}
+
+			const contract = document.getElementById('contract')
+			if (contract) {
+				contract.textContent = `${this.$moment(val.contractDate).format('YYYY-MM-DD')}`
+			}
 		},
+
+		openProcessModal() {
+			console.log(this.finalSettlementData)
+			if (this.finalSettlementData.length === 0) {
+				this.sweetDialog_false.title = `저장 실패`
+				this.sweetDialog_false.content = `정산할 직원을 선택해주세요`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.open = true
+			} else if (this.charge.txtField.value === '') {
+				this.sweetDialog_false.title = `저장 실패`
+				this.sweetDialog_false.content = `수수료를 입력해주세요`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.open = true
+			} else if (this.paymentRateSum.txtField.value !== '100%') {
+				this.sweetDialog_false.title = `저장 실패`
+				this.sweetDialog_false.content = `지급 비율이 100%가 아닙니다`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.open = true
+			} else {
+				this.saveDialogStatus.title = `정산금 지급 일정 저장`
+				this.saveDialogStatus.content = `정산금 지급 일정을 저장합니다`
+				this.saveDialogStatus.open = true
+			}
+		},
+
+		click_agree() {},
 
 		calculatePaymentAmount(paymentNumber) {
 			paymentAmount = ''
@@ -904,7 +1009,9 @@ export default {
 
 			let paymentAmount = Number((paymentRate / 100) * charge)
 
-			paymentAmount = Math.floor(paymentAmount) + ''
+			paymentAmount = Math.floor(paymentAmount)
+				.toString()
+				.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 			return paymentAmount
 		},
@@ -923,9 +1030,17 @@ export default {
 				let paymentRate = Number(this.paymentRate[`charge${i}`].txtField.value)
 				sum += paymentRate
 			}
+			if (sum > 100) {
+				this.sweetDialog_false.title = `비율 지정 실패`
+				this.sweetDialog_false.content = `지급 비율은 100%를 넘을 수 없습니다`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.modalIcon = 'info'
+				this.sweetDialog_false.open = true
+			}
 			this.paymentRatesum = sum
 			this.$nextTick(() => {
-				this.paymentRateSum.txtField.value = sum + ''
+				this.paymentRateSum.txtField.value = sum + '%'
 			})
 		},
 	},
@@ -970,6 +1085,15 @@ export default {
 		'paymentRate.charge1.txtField.value': {
 			immediate: true,
 			handler() {
+				this.paymentAmount.charge5.txtField.value = ''
+				this.paymentAmount.charge2.txtField.value = ''
+				this.paymentAmount.charge3.txtField.value = ''
+				this.paymentAmount.charge4.txtField.value = ''
+				this.paymentRate.charge2.txtField.value = ''
+				this.paymentRate.charge3.txtField.value = ''
+				this.paymentRate.charge4.txtField.value = ''
+				this.paymentRate.charge5.txtField.value = ''
+
 				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
 				this.updatePaymentRateSum()
 			},
@@ -977,7 +1101,12 @@ export default {
 		'paymentRate.charge2.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+				this.paymentRate.charge3.txtField.value = ''
+				this.paymentRate.charge4.txtField.value = ''
+				this.paymentRate.charge5.txtField.value = ''
+				this.paymentAmount.charge5.txtField.value = ''
+				this.paymentAmount.charge3.txtField.value = ''
+				this.paymentAmount.charge4.txtField.value = ''
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
 				this.updatePaymentRateSum()
 			},
@@ -985,8 +1114,10 @@ export default {
 		'paymentRate.charge3.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
-				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+				this.paymentRate.charge4.txtField.value = ''
+				this.paymentRate.charge5.txtField.value = ''
+				this.paymentAmount.charge5.txtField.value = ''
+				this.paymentAmount.charge4.txtField.value = ''
 				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
 				this.updatePaymentRateSum()
 			},
@@ -994,9 +1125,8 @@ export default {
 		'paymentRate.charge4.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
-				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
-				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
+				this.paymentRate.charge5.txtField.value = ''
+				this.paymentAmount.charge5.txtField.value = ''
 				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
 				this.updatePaymentRateSum()
 			},
@@ -1004,10 +1134,6 @@ export default {
 		'paymentRate.charge5.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
-				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
-				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
-				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
 				this.paymentAmount.charge5.txtField.value = this.calculatePaymentAmount(5)
 				this.updatePaymentRateSum()
 			},
@@ -1217,11 +1343,15 @@ export default {
 			.v-input__slot {
 				min-height: 27px !important;
 				height: 27px !important;
+				.v-input__append-inner {
+					display: none;
+				}
 				div {
 					div {
 						button {
 							margin-bottom: 10px;
 							font-size: 20px;
+							display: none;
 						}
 					}
 				}
@@ -1290,5 +1420,17 @@ export default {
 			height: 28px !important;
 		}
 	}
+}
+
+.spanInfoClass {
+	font-family: MalgunGothic;
+	font-size: 14px;
+	font-weight: bold;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 3.64;
+	letter-spacing: normal;
+	text-align: center;
+	color: #333;
 }
 </style>

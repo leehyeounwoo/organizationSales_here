@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/settlement-turn-tables",
+      "handler": "settlement-turn-table.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/settlement-turn-tables/count",
+      "handler": "settlement-turn-table.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/settlement-turn-tables/:id",
+      "handler": "settlement-turn-table.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/settlement-turn-tables",
+      "handler": "settlement-turn-table.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/settlement-turn-tables/:id",
+      "handler": "settlement-turn-table.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/settlement-turn-tables/:id",
+      "handler": "settlement-turn-table.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

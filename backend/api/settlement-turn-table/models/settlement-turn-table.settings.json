@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "settlement_turn_tables",
+  "info": {
+    "name": "SettlementTurnTable",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "settlements": {
+      "collection": "settlement",
+      "via": "turnTable"
+    },
+    "PaymentDate": {
+      "type": "date"
+    },
+    "depositFile": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "turnStatus": {
+      "type": "enumeration",
+      "enum": [
+        "waiting",
+        "complete"
+      ]
+    },
+    "prePaymentDate": {
+      "type": "date"
+    },
+    "adminName": {
+      "type": "string"
+    }
+  }
+}
