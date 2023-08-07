@@ -91,6 +91,7 @@
 				</v-btn>
 			</v-flex>
 		</v-layout>
+
 		<download-excel
 			class="btn btn-default"
 			id="clientExcel"
@@ -250,9 +251,9 @@ export default {
 			},
 			detailTable: {
 				headers: [
-					{ text: '주택형', value: 'history', width: '25%' },
-					{ text: '동', value: 'created_at', width: '25%' },
-					{ text: '호', value: 'result', width: '25%' },
+					{ text: '주택형', value: 'housingType', width: '25%' },
+					{ text: '동', value: 'dong', width: '25%' },
+					{ text: '호', value: 'ho', width: '25%' },
 					{ text: '비고', value: 'result', width: '25%' },
 				],
 				class: 'datatablehover3',
@@ -417,17 +418,14 @@ export default {
 				showselect: true,
 				headerCheck: false,
 				items: [],
-				select_items: [],
+				selected: [],
 				json_fields: {
-					직원명: 'data1',
-					연락처: 'data2',
-					지점: 'position',
-					부서: 'team',
-					직급: 'rank',
-					상태: 'data5',
-					출근시간: 'data3',
-					퇴근시간: 'data4',
-					'신청 연차 관리': 'vaction',
+					상담사: 'username',
+					연락처: 'phoneNumber',
+					영업번호: 'salesPhoneNumber',
+					등록일: 'created_at_format',
+					'팀배정 현황': 'team',
+					재직상태: 'workingStatus',
 				},
 
 				itemsPerPage: 10,
@@ -497,6 +495,12 @@ export default {
 	mounted() {},
 
 	methods: {
+		clickExport() {
+			if (this.table.selected.length === 0) {
+				return alert('상담사를 선택해주세요.')
+			}
+			document.getElementById(`clientExcel`).click()
+		},
 		preview(val) {
 			console.log(val)
 			if (val.url) {
@@ -586,6 +590,8 @@ export default {
 						// disable: true,
 					},
 				}
+				console.log(element)
+				element.created_at_format = this.$moment(element.created_at).format('YYYY-MM-DD')
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 				element.teamTitle = teamTitle
@@ -594,11 +600,27 @@ export default {
 
 			this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
-		async userViewAction(data) {
+		async settlementsViewAction(data) {
 			this.$store.state.loading = true
 			await this.$store
-				.dispatch('users', data)
+				.dispatch('settlements', data)
 				.then(res => {
+					const productData = {
+						idArr: res.settlements.map(x => x.ProductID),
+					}
+					this.productsViewAction(productData)
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async productsViewAction(data) {
+			this.$store.state.loading = true
+			await this.$store
+				.dispatch('products', data)
+				.then(res => {
+					this.detailTable.items = res.products
 					console.log(res)
 				})
 				.catch(err => {
@@ -610,9 +632,9 @@ export default {
 			this.$store.state.loading = true
 			console.log(val)
 			const userViewData = {
-				idArr: [val.id],
+				userID: val.id,
 			}
-			await this.userViewAction(userViewData)
+			await this.settlementsViewAction(userViewData)
 			this.rightEdit[0].txtField.value = val.profile ? val.profile.name : ''
 			this.rightEdit[0].url = val.profile ? val.profile.url : ''
 			this.rightEdit[1].txtField.value = val.bank
