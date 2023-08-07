@@ -88,6 +88,21 @@ export const createGotowork = gql`
 		}
 	}
 `
+export const createNotice = gql`
+	mutation createNotice($title: String, $detail: String, $useYn: Boolean, $fixYn: Boolean, $fileUpload: [ID], $businesses: [ID]) {
+		createNotice(
+			input: { data: { title: $title, detail: $detail, useYn: $useYn, fixYn: $fixYn, fileUpload: $fileUpload, businesses: $businesses } }
+		) {
+			notice {
+				id
+				businesses {
+					id
+					name
+				}
+			}
+		}
+	}
+`
 export const updateGotowork = gql`
 	mutation updateGotowork($id: ID!, $date: Date, $user: ID!, $startWork: DateTime, $endWork: DateTime, $status: ENUM_GOTOWORKS_STATUS) {
 		updateGotowork(

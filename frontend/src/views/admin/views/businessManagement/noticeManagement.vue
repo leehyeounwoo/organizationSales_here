@@ -120,13 +120,13 @@
 							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === false">수정</v-btn>
 						</div>
 						<div>
-							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === true" @click="createNotice">생성</v-btn>
+							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === true" @click="check_notice">생성</v-btn>
 						</div>
 					</div>
 				</v-layout>
 			</v-flex>
 		</v-layout>
-		<sweetAlert :dialog="sweetDialog" />
+		<sweetAlert :dialog="sweetDialog" @click="createNotice" />
 	</div>
 </template>
 
@@ -214,7 +214,20 @@ export default {
 		}
 	},
 	methods: {
-		createNotice() {
+		async createNotice() {
+			// let data = {
+			// 	title: this.title_text,
+			// 	detail: this.content_text,
+			// 	useYn: this.show_value,
+			// 	fixYn: this.checkbox_value,
+			// }
+		},
+		check_notice() {
+			if (this.title_text === '') {
+				return alert('제목을 입력해주세요.')
+			} else if (this.content_text === '') {
+				return alert('내용을 입력해주세요.')
+			}
 			this.sweetDialog.open = true
 		},
 		click_delete_file() {
