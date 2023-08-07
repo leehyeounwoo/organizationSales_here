@@ -41,6 +41,9 @@
     },
     "adminName": {
       "type": "string"
+    },
+    "amount": {
+      "type": "string"
     }
   }
 }

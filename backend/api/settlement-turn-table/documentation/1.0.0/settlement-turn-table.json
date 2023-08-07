@@ -673,6 +673,9 @@
           "adminName": {
             "type": "string"
           },
+          "amount": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -700,6 +703,9 @@
             "type": "string"
           },
           "adminName": {
+            "type": "string"
+          },
+          "amount": {
             "type": "string"
           },
           "published_at": {

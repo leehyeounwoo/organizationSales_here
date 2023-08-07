@@ -407,19 +407,19 @@ export default {
 			},
 
 			start_date_picker: {
-				first_date_picker: {
+				1: {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
-				second_date_picker: {
+				2: {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
-				thrid_date_picker: {
+				3: {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
-				fourth_date_picker: {
+				4: {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
-				fifth_date_picker: {
+				5: {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
 			},
@@ -993,12 +993,15 @@ export default {
 		click_agree() {
 			this.$store.state.loading = true
 
+			console.log(this.start_date_picker)
+
 			let start_date = []
 
 			let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
-			for (let i = 0; i < timesCheck; i++) {
+			for (let i = 1; i <= timesCheck; i++) {
 				start_date.push(this.start_date_picker[i].date)
 			}
+
 			console.log(start_date)
 		},
 

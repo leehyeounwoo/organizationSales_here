@@ -650,6 +650,9 @@
               "adminName": {
                 "type": "string"
               },
+              "amount": {
+                "type": "string"
+              },
               "published_at": {
                 "type": "datetime"
               },
