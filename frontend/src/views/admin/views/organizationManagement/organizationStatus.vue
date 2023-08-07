@@ -73,7 +73,7 @@
 						계약고객 현황
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
-						<datatable :datatable="detailTable" :teamChoiceClick="teamChoiceClick" class="detailTable_client"> </datatable>
+						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
 					</v-flex>
 				</v-layout>
 			</v-flex>
@@ -127,18 +127,7 @@ export default {
 	data() {
 		return {
 			left_data: [],
-			right_data: [
-				{
-					number: 1,
-					value: '',
-					txtfield1: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-				},
-			],
+			right_data: [],
 			ourCoords: {
 				//서울 시청 좌표
 				latitude: 37.5666263, //위도
@@ -146,89 +135,6 @@ export default {
 			},
 			teamEditDialog: {
 				dialog: false,
-				items: [
-					// 0
-					{
-						title: '사업지 명',
-						type: 'txtfield',
-						value: '',
-						txtfield: {
-							maxlength: '255',
-							outlined: true,
-							hideDetail: true,
-							errorMessage: '',
-							autocomplete: 'off',
-						},
-					},
-					// 1
-					{
-						title: '대표번호',
-						type: 'txtfield',
-						value: '',
-						txtfield: {
-							maxlength: '255',
-							outlined: true,
-							hideDetail: true,
-							errorMessage: '',
-							autocomplete: 'off',
-						},
-					},
-					// 2
-					{
-						title: '근무시간 설정',
-						type: 'time',
-						worktime: {
-							start: '',
-							end: '',
-						},
-					},
-					// 3
-					{
-						title: '홀딩시간 설정',
-						type: 'selectBox',
-						value: '',
-						selectBox: {
-							value: '30분',
-							items: ['10분', '30분', '60분'],
-							hideDetail: true,
-							outlined: true,
-							class: 'small_font bizInput',
-						},
-						selectBox2: {
-							value: '120분',
-							items: ['60분', '90분', '120분'],
-							hideDetail: true,
-							outlined: true,
-							class: 'small_font bizInput',
-						},
-					},
-					// 4
-					{
-						title: '출퇴근 스캔 URL',
-						type: 'scan',
-						value: '',
-						txtfield: {
-							maxlength: '255',
-							outlined: true,
-							hideDetail: true,
-							errorMessage: '',
-						},
-					},
-					// 5
-					{
-						title: '상품 등록',
-						type: 'product',
-						value: '',
-						txtfield: {
-							maxlength: '255',
-							outlined: true,
-							hideDetail: true,
-							errorMessage: '',
-							placeholder: '※ 참여가능 그룹 업로드',
-							readonly: true,
-						},
-					},
-				],
 			},
 			rightEdit: [
 				{
@@ -606,14 +512,10 @@ export default {
 				role: 3,
 			}
 			await this.usersView(usersViewData)
-			const teamsViewData = {
-				// idArr: this.teamArrData,
-			}
+			const teamsViewData = {}
 
 			await this.teamsView(teamsViewData)
-			const ranksViewData = {
-				// idArr: this.rankArrData,
-			}
+			const ranksViewData = {}
 
 			await this.ranksView(ranksViewData)
 			await this.dataSetting()
@@ -693,6 +595,16 @@ export default {
 					console.log(res.teams)
 					this.teamData = res.teams
 					this.searchsel1.items = res.teams
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async teamsDialogView(teamsViewData) {
+			await this.$store
+				.dispatch('teams', teamsViewData)
+				.then(res => {
 					for (let index = 0; index < res.teams.length; index++) {
 						const element = res.teams[index]
 						this.left_data.push({
@@ -703,33 +615,56 @@ export default {
 								hideDetail: true,
 								errorMessage: '',
 							},
+							selectBox: {
+								value: element.useYn ? '사용' : '미사용',
+								items: ['사용', '미사용'],
+								hideDetail: true,
+								outlined: true,
+								class: 'small_font bizInput',
+							},
 						})
 					}
-					console.log(this.left_data)
-					// console.log(res.teams)
 				})
 				.catch(err => {
 					console.log(err)
 					this.$store.state.loading = false
 				})
 		},
-		// async teamsItemsView(teamsViewData) {
-		// 	await this.$store
-		// 		.dispatch('teams', teamsViewData)
-		// 		.then(res => {
-		// 			this.teamData = res.teams
-		// 			// console.log(res.teams)
-		// 		})
-		// 		.catch(err => {
-		// 			console.log(err)
-		// 			this.$store.state.loading = false
-		// 		})
-		// },
+
 		async ranksView(teamsViewData) {
 			await this.$store
 				.dispatch('ranks', teamsViewData)
 				.then(res => {
 					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
+		async ranksDialogView(teamsViewData) {
+			await this.$store
+				.dispatch('ranks', teamsViewData)
+				.then(res => {
+					for (let index = 0; index < res.ranks.length; index++) {
+						const element = res.ranks[index]
+						this.right_data.push({
+							value: element.rankName,
+							txtfield1: {
+								maxlength: '255',
+								outlined: true,
+								hideDetail: true,
+								errorMessage: '',
+							},
+							selectBox: {
+								value: element.useYn ? '사용' : '미사용',
+								items: ['사용', '미사용'],
+								hideDetail: true,
+								outlined: true,
+								class: 'small_font bizInput',
+							},
+						})
+					}
 				})
 				.catch(err => {
 					console.log(err)
@@ -761,7 +696,11 @@ export default {
 				})
 		},
 		activeSave() {},
-		teamChoiceClick() {
+		async teamChoiceClick() {
+			const teamsViewData = {}
+			await this.teamsDialogView(teamsViewData)
+			const ranksViewData = {}
+			await this.ranksDialogView(ranksViewData)
 			this.teamEditDialog.dialog = true
 		},
 		clickEditBtn() {},

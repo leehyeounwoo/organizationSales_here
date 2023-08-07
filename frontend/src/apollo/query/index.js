@@ -64,8 +64,8 @@ export const users = gql`
 	}
 `
 export const ranks = gql`
-	query ranks($idArr: [ID]) {
-		ranks(where: { id: $idArr }) {
+	query ranks($idArr: [ID], $useYn: Boolean) {
+		ranks(where: { id: $idArr, useYn: $useYn }) {
 			id
 			rankName
 			useYn
