@@ -1,1 +1,11 @@
 backend/extensions/documentation/documentation/1.0.0/full_documentation.json
+
+# dotenv environment variable files
+.env
+.env.development
+.env.test.local
+.env.production.local
+.env.local
+
+.gitignore
+frontend/.env.development
