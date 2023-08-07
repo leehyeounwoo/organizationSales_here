@@ -60,6 +60,31 @@ export const users = gql`
 			rankId
 			teamID
 			workingStatus
+			copyAccount {
+				id
+				url
+				name
+			}
+			profile {
+				id
+				url
+				name
+			}
+			employmentContract {
+				id
+				url
+				name
+			}
+			ID_Card {
+				id
+				url
+				name
+			}
+			businessRegistration {
+				id
+				url
+				name
+			}
 		}
 	}
 `

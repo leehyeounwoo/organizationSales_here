@@ -512,10 +512,14 @@ export default {
 				role: 3,
 			}
 			await this.usersView(usersViewData)
-			const teamsViewData = {}
+			const teamsViewData = {
+				useYn: true,
+			}
 
 			await this.teamsView(teamsViewData)
-			const ranksViewData = {}
+			const ranksViewData = {
+				useYn: true,
+			}
 
 			await this.ranksView(ranksViewData)
 			await this.dataSetting()
@@ -605,6 +609,7 @@ export default {
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(res => {
+					console.log(res)
 					for (let index = 0; index < res.teams.length; index++) {
 						const element = res.teams[index]
 						this.left_data.push({
@@ -624,6 +629,7 @@ export default {
 							},
 						})
 					}
+					console.log(this.left_data)
 				})
 				.catch(err => {
 					console.log(err)

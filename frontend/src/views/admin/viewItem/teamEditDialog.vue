@@ -23,7 +23,7 @@
 							<txtField class="bizInput px-2" v-model="left.value" :txtField="left.txtfield1"></txtField>
 						</v-flex>
 						<v-flex xs4 align-self-center style="">
-							<selectBox :sel="selectBox" style="font-size:13px; align-items: center;"></selectBox>
+							<selectBox :sel="left.selectBox" style="font-size:13px; align-items: center;"></selectBox>
 						</v-flex>
 					</v-layout>
 					<v-layout
@@ -62,7 +62,7 @@
 							<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield1"></txtField>
 						</v-flex>
 						<v-flex xs4 align-self-center style="">
-							<selectBox :sel="selectBox" style="font-size:13px; align-items: center;"></selectBox>
+							<selectBox :sel="right.selectBox" style="font-size:13px; align-items: center;"></selectBox>
 						</v-flex>
 					</v-layout>
 					<v-layout
