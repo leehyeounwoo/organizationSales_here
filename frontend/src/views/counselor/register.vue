@@ -12,20 +12,17 @@
 				</div>
 				<!-- 문구 -->
 				<div class="header_info">
-					<div class="ml-2 header_title">
-						Join In Our Community
-					</div>
-					<div class="ml-2 header_subTitle">
+					<div class="ml-2 header_subTitle" style="line-height: 44px; font-size: 24px !important;">
 						회원가입
 					</div>
 				</div>
 			</div>
 			<!-- 정보 입력 -->
-			<div class="my-12">
+			<div class="mt-4 mb-12">
 				<!-- 개인정보 입력 -->
 				<div class="px-4 pt-8 pb-4 input_field_white">
 					<p class="input_main_title ">
-						PERSONAL INFORMATION
+						개인정보 입력
 					</p>
 					<!-- 텍스트필드 -->
 
@@ -66,37 +63,30 @@
 								autocomplete="off"
 								color="primary2"
 							></v-text-field>
-							<!-- <v-btn
-									:disabled="sendActive"
-									elevation="0"
-									height="40"
-									width="100"
-									class="ml-4"
-									color="point1"
-									@click="createSendMessage()"
-								>
-									<span style="color:white;	font-weight: bold;"> 인증번호 요청 </span>
-								</v-btn> -->
 						</v-layout>
-						<!-- 전화번호 인증 -->
-						<!-- <v-layout class="mb-2">
-								<v-text-field
-									hideDetails
-									:autofocus="false"
-									class="txtLogin1_border_radius"
-									placeholder="인증번호"
-									outlined
-									type="text"
-									maxlength="13"
-									prepend-inner-icon="mdi-check"
-									dense
-									v-model="siginup.authNumber"
-									autocomplete="off"
-								></v-text-field>
-								<v-btn :disabled="authButton" elevation="0" height="40" width="100" class="ml-4" color="point2" @click="checkAuthNumber()">
-									<span style="color:white;	font-weight: bold;"> 인증번호 확인 </span>
-								</v-btn>
-							</v-layout> -->
+						<p class="input_title mb-2">
+							프로필 사진
+						</p>
+						<v-layout class="mb-2">
+							<v-text-field
+								hideDetails
+								:autofocus="false"
+								class="txtLogin1_border_radius mb-2 mr-2"
+								placeholder="※png, pdf, jpg"
+								outlined
+								type="number"
+								maxlength="255"
+								flat
+								dense
+								readonly
+								v-model="files[0].name"
+								autocomplete="off"
+								color="primary2"
+							></v-text-field>
+							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(0)">
+								<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
+							</v-btn>
+						</v-layout>
 
 						<!-- 계좌번호 -->
 						<p class="input_title mb-2">
@@ -129,9 +119,77 @@
 							autocomplete="off"
 							color="primary2"
 						></v-text-field>
-
+						<p class="input_title mb-2">
+							통장사본
+						</p>
+						<v-layout class="mb-2">
+							<v-text-field
+								hideDetails
+								:autofocus="false"
+								class="txtLogin1_border_radius mb-2 mr-2"
+								placeholder="※png, pdf, jpg"
+								outlined
+								type="number"
+								maxlength="255"
+								flat
+								dense
+								readonly
+								v-model="files[1].name"
+								autocomplete="off"
+								color="primary2"
+							></v-text-field>
+							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(1)">
+								<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
+							</v-btn>
+						</v-layout>
+						<p class="input_title mb-2">
+							근로계약서
+						</p>
+						<v-layout class="mb-2">
+							<v-text-field
+								hideDetails
+								:autofocus="false"
+								class="txtLogin1_border_radius mb-2 mr-2"
+								placeholder="※png, pdf, jpg"
+								outlined
+								type="number"
+								maxlength="255"
+								flat
+								dense
+								readonly
+								v-model="files[2].name"
+								autocomplete="off"
+								color="primary2"
+							></v-text-field>
+							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(2)">
+								<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
+							</v-btn>
+						</v-layout>
+						<p class="input_title mb-2">
+							신분증 사본등 기타 첨부자료
+						</p>
+						<v-layout class="mb-2">
+							<v-text-field
+								hideDetails
+								:autofocus="false"
+								class="txtLogin1_border_radius mb-2 mr-2"
+								placeholder="※png, pdf, jpg"
+								outlined
+								type="number"
+								maxlength="255"
+								flat
+								dense
+								readonly
+								v-model="files[3].name"
+								autocomplete="off"
+								color="primary2"
+							></v-text-field>
+							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(3)">
+								<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
+							</v-btn>
+						</v-layout>
 						<div style="display:flex; align-items:end;">
-							<!-- 회사명								 -->
+							<!-- 회사명-->
 							<p class="input_title mb-2">
 								회사명
 							</p>
@@ -158,7 +216,7 @@
 						></v-text-field>
 						<!-- 사업자등록번호 -->
 						<p class="input_title mb-2">
-							사업자등록번호
+							사업자 등록번호
 						</p>
 						<v-text-field
 							hideDetails
@@ -175,12 +233,35 @@
 							autocomplete="off"
 							color="primary2"
 						></v-text-field>
+						<p class="input_title mb-2">
+							사업자 등록증
+						</p>
+						<v-layout class="mb-2">
+							<v-text-field
+								hideDetails
+								:autofocus="false"
+								class="txtLogin1_border_radius mb-2 mr-2"
+								placeholder="※png, pdf, jpg"
+								outlined
+								type="number"
+								maxlength="255"
+								flat
+								dense
+								readonly
+								v-model="files[4].name"
+								autocomplete="off"
+								color="primary2"
+							></v-text-field>
+							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(4)">
+								<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
+							</v-btn>
+						</v-layout>
 					</div>
 				</div>
 				<!-- 이메일 / 비밀번호 입력 -->
 				<div class="mt-8 px-4 pt-8 pb-10 input_field_white">
 					<p class="input_main_title ">
-						SECURITY
+						로그인 정보
 					</p>
 					<!-- 이메일 -->
 					<p class="input_title mb-2">
@@ -252,17 +333,22 @@
 							@click:append="siginup.pwshow2 = !siginup.pwshow2"
 							color="primary2"
 						></v-text-field>
-						<v-checkbox v-model="siginup.agree" color="primary2" hide-details class="mt-0">
-							<div slot="label" style="font-size:12px; font-weight:300;">
-								I accept the Terms of Use.
-							</div>
-						</v-checkbox>
 					</div>
 				</div>
 				<v-btn elevation="0" height="48" class="loginButton_small mt-10" block color="primary2" @click="register()" rounded>
-					<span style="color:white;	font-weight: bold;"> Sign Up </span>
+					<span style="color:white;	font-weight: bold;"> 등록하기 </span>
 				</v-btn>
 			</div>
+			<input
+				v-for="(i, index) in 5"
+				:key="i"
+				type="file"
+				style="display:none;"
+				:id="'file_upload_' + index"
+				@change="fileUpload($event, index)"
+				accept=".pdf, image/jpg, image/png, image/jpeg"
+			/>
+			<sweetAlert :dialog="sweetInfo" />
 			<!-- <div class="mt-8">
 					<v-btn text>
 						Privacy Policy & Terms of Service.
@@ -273,13 +359,28 @@
 </template>
 
 <script>
-// import { counselorHeader } from '@/components'
+import { sweetAlert } from '@/components'
 export default {
 	components: {
-		// counselorHeader,
+		sweetAlert,
 	},
 	data() {
 		return {
+			sweetInfo: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'info',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+			},
+			files: [
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+			],
 			emailDuplicate: null,
 			authButton: true,
 			sendActive: false,
@@ -306,6 +407,32 @@ export default {
 		}
 	},
 	methods: {
+		open_disable_dialog(data) {
+			// 불가 팝업 열기
+
+			this.sweetInfo.title = data.title
+			this.sweetInfo.content = data.content
+			this.sweetInfo.modalIcon = `info`
+			this.sweetInfo.open = true
+		},
+		// 단일 파일 업로드
+		fileUpload(event, index) {
+			// - 파일형식 및 크기 : jpg, png / 최대 500KB
+			if (event.target.files[0].size / 1024 > 500) {
+				this.files[index] = { file: null, name: '' }
+				return this.open_disable_dialog({
+					title: '용량초과',
+					content: `500kb 이하의 파일을 업로드해주세요.`,
+				})
+			} else {
+				this.files[index].name = String(event.target.files[0].name)
+				this.files[index].file = event.target.files[0]
+				console.log(this.files)
+			}
+		},
+		clickFileUploadImage(index) {
+			document.getElementById('file_upload_' + index).click()
+		},
 		async emailDuplicateAction() {
 			const data = {
 				email: this.siginup.email.toLowerCase(),

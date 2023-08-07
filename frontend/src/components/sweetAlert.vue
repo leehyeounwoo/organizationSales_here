@@ -66,7 +66,6 @@ export default {
 			this.dialog.open = false
 		},
 		changeModalClass(val) {
-			console.log(val)
 			if (val === 'success') return 'success_modal'
 			else if (val === 'info') return 'info_modal'
 			else if (val === 'warning') return 'warning_modal'
