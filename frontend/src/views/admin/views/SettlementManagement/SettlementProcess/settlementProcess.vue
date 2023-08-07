@@ -69,7 +69,7 @@
 						<div style="display: flex;">
 							<!-- v-mask="'###,###,###,###'"
 							@blur="() => charge.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')" -->
-							<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-1"></txtField>
+							<txtField3 :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-1"></txtField3>
 							<span>원</span>
 						</div>
 					</v-flex>
@@ -146,7 +146,7 @@
 						지급 금액
 					</v-flex>
 					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField
+						<txtField3 :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField3
 					></v-flex>
 					<v-flex
 						v-for="(items, idx) of paymentAmount"
@@ -284,15 +284,16 @@
 	</div>
 </template>
 <script>
-import { selectBox, txtField, datatable, DatepickerDialog, sweetAlert } from '@/components/index.js'
+import { selectBox, txtField, txtField3, datatable, DatepickerDialog, sweetAlert } from '@/components/index.js'
 
 export default {
 	components: {
 		selectBox,
-		txtField,
+		txtField3,
 		datatable,
 		DatepickerDialog,
 		sweetAlert,
+		txtField,
 	},
 
 	data() {
@@ -407,29 +408,19 @@ export default {
 
 			start_date_picker: {
 				first_date_picker: {
-					date: this.$moment()
-						.subtract(30, 'days')
-						.format('YYYY-MM-DD'),
+					date: this.$moment().format('YYYY-MM-DD'),
 				},
 				second_date_picker: {
-					date: this.$moment()
-						.subtract(30, 'days')
-						.format('YYYY-MM-DD'),
+					date: this.$moment().format('YYYY-MM-DD'),
 				},
 				thrid_date_picker: {
-					date: this.$moment()
-						.subtract(30, 'days')
-						.format('YYYY-MM-DD'),
+					date: this.$moment().format('YYYY-MM-DD'),
 				},
 				fourth_date_picker: {
-					date: this.$moment()
-						.subtract(30, 'days')
-						.format('YYYY-MM-DD'),
+					date: this.$moment().format('YYYY-MM-DD'),
 				},
 				fifth_date_picker: {
-					date: this.$moment()
-						.subtract(30, 'days')
-						.format('YYYY-MM-DD'),
+					date: this.$moment().format('YYYY-MM-DD'),
 				},
 			},
 			paymentCircuit: {
@@ -999,7 +990,17 @@ export default {
 			}
 		},
 
-		click_agree() {},
+		click_agree() {
+			this.$store.state.loading = true
+
+			let start_date = []
+
+			let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
+			for (let i = 0; i < timesCheck; i++) {
+				start_date.push(this.start_date_picker[i].date)
+			}
+			console.log(start_date)
+		},
 
 		calculatePaymentAmount(paymentNumber) {
 			paymentAmount = ''
