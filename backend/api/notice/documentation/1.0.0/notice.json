@@ -574,6 +574,12 @@
                     "type": "string"
                   }
                 },
+                "managerID": {
+                  "type": "string"
+                },
+                "managerPassword": {
+                  "type": "string"
+                },
                 "published_at": {
                   "type": "datetime"
                 },

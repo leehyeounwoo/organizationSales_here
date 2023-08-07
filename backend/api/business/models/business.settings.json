@@ -45,6 +45,12 @@
     "gotoworks": {
       "collection": "gotoworks",
       "via": "business"
+    },
+    "managerID": {
+      "type": "email"
+    },
+    "managerPassword": {
+      "type": "password"
     }
   }
 }

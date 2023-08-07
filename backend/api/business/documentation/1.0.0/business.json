@@ -635,6 +635,12 @@
               }
             }
           },
+          "managerID": {
+            "type": "string"
+          },
+          "managerPassword": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -677,6 +683,12 @@
             "items": {
               "type": "string"
             }
+          },
+          "managerID": {
+            "type": "string"
+          },
+          "managerPassword": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

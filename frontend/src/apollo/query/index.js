@@ -138,6 +138,7 @@ export const businesses = gql`
 			splitHoldingTime
 			maximumHoldingTime
 			created_at
+			managerID
 		}
 	}
 `

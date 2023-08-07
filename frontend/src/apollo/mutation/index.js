@@ -189,6 +189,8 @@ export const createBusiness = gql`
 		$workingHoursEnd: Time
 		$splitHoldingTime: String
 		$maximumHoldingTime: String
+		$managerID: String
+		$managerPassword: STring
 	) {
 		createBusiness(
 			input: {
@@ -199,6 +201,8 @@ export const createBusiness = gql`
 					workingHoursEnd: $workingHoursEnd
 					splitHoldingTime: $splitHoldingTime
 					maximumHoldingTime: $maximumHoldingTime
+					managerID: $managerID
+					managerPassword: $managerPassword
 				}
 			}
 		) {
