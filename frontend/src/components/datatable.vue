@@ -1598,8 +1598,8 @@
 				<v-layout>
 					<div
 						class="d-flex align-center notice_table_biz px-2 py-1 mr-1"
-						v-for="(biz, i) in item.businesses"
-						:key="i"
+						v-for="(biz, index) in item.businesses"
+						:key="index"
 						@click="deleteNotice(item, biz)"
 					>
 						{{ biz.name }}

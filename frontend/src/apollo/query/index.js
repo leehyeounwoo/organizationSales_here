@@ -167,6 +167,14 @@ export const businesses = gql`
 		}
 	}
 `
+export const businesses_title = gql`
+	query businesses {
+		businesses {
+			id
+			name
+		}
+	}
+`
 export const notices = gql`
 	query($title: String) {
 		notices(where: { title_contains: $title }) {

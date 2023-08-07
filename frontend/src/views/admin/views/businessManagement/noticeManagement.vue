@@ -6,7 +6,7 @@
 		</v-layout>
 		<v-layout class="mt-5">
 			<v-flex xs8>
-				<datatable :datatable="noticeTable" :refreshTable="first_notices" class="notice_table"></datatable>
+				<datatable :datatable="noticeTable" :refreshTable="first_notices" class="notice_table" @click="notice_detail"></datatable>
 			</v-flex>
 			<v-flex xs4 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -19,12 +19,18 @@
 								<selectBox :sel="bizSel" class="searchSel mx-3" style="font-size:12px;"></selectBox>
 							</v-flex>
 							<v-flex xs3 class="my-3" style="text-align:center">
-								<v-btn class="notice_btn" color="#F3F3FF" elevation="0">적용</v-btn>
+								<v-btn class="notice_btn" color="#F3F3FF" elevation="0" @click="addBiz">적용</v-btn>
 							</v-flex>
 							<div style="min-height:50px">
-								<v-layout>
-									<div v-for="(name, i) in bizSel.name" :key="i" class="table_title_wrap py-1 px-2 ma-3 white--text" color="admin_blue">
-										{{ name.title }}
+								<v-layout wrap>
+									<div
+										v-for="(title, i) in bizSel.name"
+										:key="i"
+										class="table_title_wrap py-1 px-2 ma-3 white--text"
+										style="cursor:pointer"
+										@click="removeName(title)"
+									>
+										{{ title.name }}
 										<v-icon class="table_icon">mdi-close</v-icon>
 									</div>
 								</v-layout>
@@ -89,15 +95,17 @@
 						<div class="right_subtable" style="border-bottom:0">
 							<txtField :txtField="notice_file" class="search_box_admin pa-3" style="width:100%;"></txtField>
 							<div class="mr-3">
-								<v-btn class="notice_btn" color="#fff" elevation="0">첨부</v-btn>
-								<input type="file" style="display:none;" id="goods_file" accept=".pdf,.hwp,.csv,.ppt,.png" />
+								<v-btn class="notice_btn" color="#fff" elevation="0" @click="fileUpload">첨부</v-btn>
+								<input type="file" style="display:none;" id="goods_file" accept=".pdf,.hwp,.csv,.ppt,.png" @change="fileUploadChange" />
 							</div>
 						</div>
 						<v-flex xs12 v-if="notice_file.upload.file">
 							<div class="right_subtable" style="border-bottom:0">
 								<div class="px-3 mb-1" style="color:#0500B7; font-size:12px; text-decoration: underline; cursor:pointer">
 									{{ notice_file.upload.name }}
-									<v-icon style="font-size:17px;">mdi-close-circle-outline</v-icon>
+									<v-icon v-if="notice_file.upload.name" style="font-size:17px;" @click="click_delete_file"
+										>mdi-close-circle-outline</v-icon
+									>
 								</div>
 							</div>
 						</v-flex>
@@ -105,37 +113,49 @@
 				</v-layout>
 				<v-layout class="mt-8" justify-space-between>
 					<div>
-						<v-btn class="new_notice_btn" color="#0500B7" elevation="0">초기화</v-btn>
+						<v-btn class="new_notice_btn" color="#0500B7" elevation="0" @click="reset_notice">초기화</v-btn>
 					</div>
 					<div style="display: flex;align-items: center; justify-content: flex-end;">
 						<div class="mr-3">
 							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === false">수정</v-btn>
 						</div>
 						<div>
-							<v-btn class="new_notice_btn" color="#0500B7" elevation="0">생성</v-btn>
+							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === true" @click="createNotice">생성</v-btn>
 						</div>
 					</div>
 				</v-layout>
 			</v-flex>
 		</v-layout>
+		<sweetAlert :dialog="sweetDialog" />
 	</div>
 </template>
 
 <script>
-import { txtField, datatable, selectBox } from '@/components/index.js'
+import { txtField, datatable, selectBox, sweetAlert } from '@/components/index.js'
 
 export default {
 	created() {
 		this.$store.state.loading = true
 		this.first_notices()
+		this.notice_businesses()
 	},
 	components: {
 		txtField,
 		datatable,
 		selectBox,
+		sweetAlert,
 	},
 	data() {
 		return {
+			sweetDialog: {
+				open: false,
+				title: '공지사항 생성',
+				content: `공지사항을 생성합니다.`,
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
 			search_notice: '',
 			search: {
 				maxlength: '255',
@@ -165,7 +185,7 @@ export default {
 				outlined: true,
 				name: [],
 				returnObject: true,
-				itemText: 'title',
+				itemText: 'name',
 			},
 			notice_title: {
 				clearable: false,
@@ -194,10 +214,70 @@ export default {
 		}
 	},
 	methods: {
+		createNotice() {
+			this.sweetDialog.open = true
+		},
+		click_delete_file() {
+			this.notice_file.upload.name = ''
+			this.notice_file.upload.file = ''
+			this.notice_file.upload.update = true
+		},
+		fileUploadChange(val) {
+			this.notice_file.upload.file = val.target.files[0]
+			this.notice_file.upload.name = val.target.files[0].name
+			this.notice_file.upload.update = true
+		},
+		fileUpload() {
+			document.getElementById(`goods_file`).value = ''
+			document.getElementById(`goods_file`).click()
+		},
+		reset_notice() {
+			this.bizSel.value = ''
+			this.bizSel.name = []
+			this.title_text = ''
+			this.content_text = ''
+			this.show_value = true
+			this.checkbox_value = false
+			this.btn_active = false
+		},
+		removeName(item) {
+			for (let i = 0; i < this.bizSel.name.length; i++) {
+				if (this.bizSel.name[i] === item) {
+					this.bizSel.name.splice(i, 1)
+				}
+			}
+		},
+		notice_detail(item) {
+			console.log(item)
+			if (item.businesses && item.businesses.length >= 0) {
+				this.bizSel.name = JSON.parse(JSON.stringify(item.businesses))
+			}
+			this.bizSel.value = ''
+			this.title_text = item.title
+			this.content_text = item.detail
+			this.show_value = item.useYn
+			this.checkbox_value = item.fixYn
+			this.btn_active = true
+		},
+		addBiz() {
+			if (this.bizSel.name.findIndex(x => x.name === this.bizSel.value.name) === -1 && this.bizSel.value) {
+				this.bizSel.name.push(this.bizSel.value)
+			}
+		},
 		first_notices() {
 			this.$store.dispatch('notices').then(res => {
 				this.noticeTable.items = res.notices
 				this.$store.state.loading = false
+			})
+		},
+		notice_businesses() {
+			this.$store.dispatch('businesses_title').then(res => {
+				let businesses = [{ name: '전체', value: 'all' }]
+				res.businesses.forEach(el => {
+					businesses.push({ name: el.name, value: el.id })
+				})
+				this.bizSel.items = businesses
+				console.log(this.bizSel.items)
 			})
 		},
 	},
