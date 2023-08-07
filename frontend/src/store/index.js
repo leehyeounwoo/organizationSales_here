@@ -13,6 +13,7 @@ import {
 	updateSettlement,
 	createBusiness,
 	updateNotice,
+	createSettlementTurnTable,
 	createNotice,
 } from '../apollo/mutation'
 import { me, users, gotoWork, teams, products, ranks, businesses, settlements, notices, businesses_title } from '../apollo/query'
@@ -416,6 +417,19 @@ export default new Vuex.Store({
 						mutation: updateNotice,
 						variables: input,
 					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		createSettlementTurnTable({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({ mutation: createSettlementTurnTable, variables: input })
 					.then(({ data }) => {
 						resolve(data)
 					})

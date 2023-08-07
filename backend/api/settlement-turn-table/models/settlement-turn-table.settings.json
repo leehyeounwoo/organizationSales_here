@@ -11,9 +11,9 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "settlements": {
-      "collection": "settlement",
-      "via": "turnTable"
+    "settlement": {
+      "model": "settlement",
+      "via": "settlement_turn_tables"
     },
     "PaymentDate": {
       "type": "date"

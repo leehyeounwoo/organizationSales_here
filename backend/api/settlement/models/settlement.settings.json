@@ -51,9 +51,9 @@
     "paymentDate": {
       "type": "date"
     },
-    "turnTable": {
-      "via": "settlements",
-      "model": "settlement-turn-table"
+    "settlement_turn_tables": {
+      "via": "settlement",
+      "collection": "settlement-turn-table"
     }
   }
 }

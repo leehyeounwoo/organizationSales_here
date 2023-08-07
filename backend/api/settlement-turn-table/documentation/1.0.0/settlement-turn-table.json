@@ -535,58 +535,58 @@
           "id": {
             "type": "string"
           },
-          "settlements": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "ProductID": {
-                  "type": "string"
-                },
-                "contractDate": {
-                  "type": "datetime"
-                },
-                "settlementStatus": {
-                  "type": "string"
-                },
-                "degree": {
-                  "type": "string"
-                },
-                "userID": {
-                  "type": "string"
-                },
-                "attachment": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "comment": {
-                  "type": "string"
-                },
-                "adminName": {
-                  "type": "string"
-                },
-                "paymentDate": {
-                  "type": "string"
-                },
-                "turnTable": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
+          "settlement": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ProductID": {
+                "type": "string"
+              },
+              "contractDate": {
+                "type": "datetime"
+              },
+              "settlementStatus": {
+                "type": "string"
+              },
+              "degree": {
+                "type": "string"
+              },
+              "userID": {
+                "type": "string"
+              },
+              "attachment": {
+                "type": "array",
+                "items": {
                   "type": "string"
                 }
+              },
+              "comment": {
+                "type": "string"
+              },
+              "adminName": {
+                "type": "string"
+              },
+              "paymentDate": {
+                "type": "string"
+              },
+              "settlement_turn_tables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published_at": {
+                "type": "datetime"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
               }
             }
           },
@@ -683,11 +683,8 @@
       },
       "NewSettlement-turn-table": {
         "properties": {
-          "settlements": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "settlement": {
+            "type": "string"
           },
           "PaymentDate": {
             "type": "string"

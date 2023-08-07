@@ -621,46 +621,46 @@
           "paymentDate": {
             "type": "string"
           },
-          "turnTable": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "settlements": {
-                "type": "array",
-                "items": {
+          "settlement_turn_tables": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "settlement": {
+                  "type": "string"
+                },
+                "PaymentDate": {
+                  "type": "string"
+                },
+                "depositFile": {
+                  "type": "string"
+                },
+                "turnStatus": {
+                  "type": "string"
+                },
+                "prePaymentDate": {
+                  "type": "string"
+                },
+                "adminName": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
                   "type": "string"
                 }
-              },
-              "PaymentDate": {
-                "type": "string"
-              },
-              "depositFile": {
-                "type": "string"
-              },
-              "turnStatus": {
-                "type": "string"
-              },
-              "prePaymentDate": {
-                "type": "string"
-              },
-              "adminName": {
-                "type": "string"
-              },
-              "amount": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
               }
             }
           },
@@ -700,8 +700,11 @@
           "paymentDate": {
             "type": "string"
           },
-          "turnTable": {
-            "type": "string"
+          "settlement_turn_tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "datetime"

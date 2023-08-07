@@ -239,3 +239,26 @@ export const createBusiness = gql`
 		}
 	}
 `
+
+export const createSettlementTurnTable = gql`
+	mutation createSettlementTurnTable(
+		$prePaymentDate: Date
+		$turnStatus: ENUM_SETTLEMENTTURNTABLE_TURNSTATUS
+		$amount: String
+		$settlements: ID!
+	) {
+		createSettlementTurnTable(
+			input: { data: { prePaymentDate: $prePaymentDate, settlement: $settlements, turnStatus: $turnStatus, amount: $amount } }
+		) {
+			settlementTurnTable {
+				prePaymentDate
+				turnStatus
+				amount
+				settlement {
+					id
+					userID
+				}
+			}
+		}
+	}
+`

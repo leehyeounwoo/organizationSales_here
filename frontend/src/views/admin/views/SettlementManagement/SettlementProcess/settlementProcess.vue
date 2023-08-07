@@ -996,13 +996,26 @@ export default {
 			console.log(this.start_date_picker)
 
 			let start_date = []
+			let finalPaymentAmount = []
 
 			let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
 			for (let i = 1; i <= timesCheck; i++) {
 				start_date.push(this.start_date_picker[i].date)
+				finalPaymentAmount.push(this.paymentAmount[`charge${i}`].txtField.value)
+
+				let data = {
+					prePaymentDate: this.start_date_picker[i].date,
+					turnStatus: 'waiting',
+					amount: this.paymentAmount[`charge${i}`].txtField.value,
+					settlements: this.finalSettlementData.id,
+				}
+
+				this.$store.dispatch('createSettlementTurnTable', data).then(res => {
+					console.log(res)
+				})
 			}
 
-			console.log(start_date)
+			console.log(start_date, finalPaymentAmount)
 		},
 
 		calculatePaymentAmount(paymentNumber) {
