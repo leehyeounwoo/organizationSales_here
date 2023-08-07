@@ -31,7 +31,7 @@
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
 						<v-layout v-if="edit.type === 1" class=" py-3 px-1">
-							<v-flex xs8 style="align-self: end;">
+							<v-flex xs8 style="align-self: end;" @click="preview(edit)">
 								<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
 							</v-flex>
 							<v-flex xs4>
@@ -497,6 +497,12 @@ export default {
 	mounted() {},
 
 	methods: {
+		preview(val) {
+			console.log(val)
+			if (val.url) {
+				window.open('http://localhost:5000' + val.url)
+			}
+		},
 		detailSave() {},
 		teamRankSave(val) {
 			const data = {
@@ -589,8 +595,20 @@ export default {
 			this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
 		editUserData(val) {
+			console.log(val)
+			this.rightEdit[0].txtField.value = val.profile ? val.profile.name : ''
+			this.rightEdit[0].url = val.profile ? val.profile.url : ''
 			this.rightEdit[1].txtField.value = val.bank
 			this.rightEdit[1].txtField2.value = val.accountNumber
+			this.rightEdit[2].txtField.value = val.copyAccount ? val.copyAccount.name : ''
+			this.rightEdit[2].url = val.copyAccount ? val.copyAccount.url : ''
+			this.rightEdit[3].txtField.value = val.employmentContract ? val.employmentContract.name : ''
+			this.rightEdit[3].url = val.employmentContract ? val.employmentContract.url : ''
+			this.rightEdit[4].txtField.value = val.ID_Card ? val.ID_Card.name : ''
+			this.rightEdit[4].url = val.ID_Card ? val.ID_Card.url : ''
+			// this.rightEdit[5].txtField1.value = val.ID_Card ? val.ID_Card.name : ''
+			// this.rightEdit[5].txtField2.value = val.ID_Card ? val.ID_Card.name : ''
+			this.rightEdit[5].txtField.value = val.businessRegistration ? val.businessRegistration.name : ''
 		},
 		async teamsView(teamsViewData) {
 			await this.$store
