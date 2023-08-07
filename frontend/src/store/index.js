@@ -18,6 +18,8 @@ Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
 	state: {
+		headerMobileStatus: false,
+		footerMobileStatus: false,
 		leftNavDrawer: true,
 		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0 },
 		dashBoardList: [],

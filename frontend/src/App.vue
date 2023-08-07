@@ -26,6 +26,27 @@ export default {
 			loading: false,
 		}
 	},
+	watch: {
+		// to, form
+		$route() {
+			if (window.location.pathname.includes('counselor')) {
+				if (
+					window.location.pathname.includes('clientManagement') ||
+					window.location.pathname.includes('login') ||
+					window.location.pathname.includes('register')
+				) {
+					this.$store.state.headerMobileStatus = true
+					this.$store.state.footerMobileStatus = false
+				} else {
+					this.$store.state.headerMobileStatus = true
+					this.$store.state.footerMobileStatus = true
+				}
+			} else {
+				this.$store.state.headerMobileStatus = false
+				this.$store.state.footerMobileStatus = false
+			}
+		},
+	},
 	created() {
 		this.$appbus.$on('loading::show', () => {
 			this.loading = true

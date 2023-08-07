@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 // 에러 화면
-import notFound from '../views/errorpage/NotFound.vue'
+// import notFound from '../views/errorpage/NotFound.vue'
 import notAuth from '../views/errorpage/NotAuthenticated.vue'
 
 // 메인 화면
@@ -21,12 +21,77 @@ const settlementManagement = () =>
 	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/SettlementManagement/settlementManagement.vue')
 
 const routes = [
-	{ path: '*', name: 'notfound', component: notFound },
-	{ path: '/block', name: 'block', component: notAuth },
 	{
-		path: '/',
+		path: '/admin/login',
 		component: kioskLogin,
 		name: 'kioskLogin',
+	},
+	{ path: '*', name: 'notfound', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
+	{ path: '/', name: 'mainPage', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
+	{ path: '/block', name: 'block', component: notAuth },
+
+	{
+		path: '/counselor/main',
+		name: 'counselorMain',
+		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue'),
+	},
+
+	// 상담사 화면
+	{
+		path: '/counselors',
+		name: 'counselors',
+		component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/board.vue'),
+		children: [
+			{
+				path: '/counselor/login',
+				name: 'counselorLogin',
+				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/login.vue'),
+			},
+
+			{
+				path: '/counselor/register',
+				name: 'counselorRegister',
+				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/register.vue'),
+			},
+
+			{
+				path: '/counselor/dashboard',
+				name: 'counselorDashboard',
+				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/dashboard.vue'),
+			},
+			// 상담사  - 대시보드
+			{
+				path: '/counselor/bizDashboard/:id',
+				name: 'counselorBizDashboard',
+				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboard.vue'),
+			},
+			// 상담사  - 상담관리
+			{
+				path: '/counselor/reservation/:id',
+				name: 'counselorBizReservation',
+				component: () =>
+					import(
+						/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/counselorBizReservation.vue'
+					),
+			},
+			{
+				path: '/counselor/bizDashboardItem/clientManagement',
+				name: 'counselorClients',
+				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/clientManagement/index.vue'),
+			},
+
+			{
+				path: '/counselor/commuteManagement/manage',
+				component: () => import(/* webpackChunkName: "campaign" */ '../views/counselor/commuteManagement/manage.vue'),
+				name: '/counselor/commuteManagement/manage',
+			},
+			// 공지사항  - 공지사항
+			{
+				path: '/counselor/notice/:id',
+				name: 'counselorNotice',
+				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/notice.vue'),
+			},
+		],
 	},
 	{
 		path: '/KIOSK',
