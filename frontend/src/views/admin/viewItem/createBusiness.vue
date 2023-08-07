@@ -219,6 +219,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						placeholder: '이메일 형식',
 					},
 					txtfield4: {
 						value: '',
@@ -408,6 +409,19 @@ export default {
 				this.sweetInfo.content = '전화번호 형식이 아닙니다.'
 				return (this.sweetInfo.open = true)
 			}
+			for (let i = 0; i < this.right_data.length; i++) {
+				if (this.right_data[i].txtfield3.value) {
+					if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+						this.sweetInfo.title = '이메일 형식'
+						this.sweetInfo.content = '이메일 형식이 아닙니다.'
+						return (this.sweetInfo.open = true)
+					}
+				} else {
+					this.sweetInfo.title = '아이디 입력'
+					this.sweetInfo.content = '아이디를 입력해주세요.'
+					return (this.sweetInfo.open = true)
+				}
+			}
 		},
 		newBusiness() {
 			let data = {
@@ -453,6 +467,10 @@ export default {
 		},
 		checkCall(str) {
 			let exp = /^(1544|1566|1577|1588|1644|1688)-?([0-9]{4})$/
+			return exp.test(str)
+		},
+		checkUrl(str) {
+			let exp = /^([0-9a-zA-Z_.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/
 			return exp.test(str)
 		},
 	},

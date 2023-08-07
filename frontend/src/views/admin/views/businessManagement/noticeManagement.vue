@@ -118,6 +118,9 @@
 import { txtField, datatable, selectBox } from '@/components/index.js'
 
 export default {
+	created() {
+		this.first_notices()
+	},
 	components: {
 		txtField,
 		datatable,
@@ -181,6 +184,13 @@ export default {
 			},
 			btn_active: false,
 		}
+	},
+	methods: {
+		first_notices() {
+			this.$store.dispatch('notices').then(res => {
+				console.log(res)
+			})
+		},
 	},
 }
 </script>

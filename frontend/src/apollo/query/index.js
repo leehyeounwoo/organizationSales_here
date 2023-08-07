@@ -142,6 +142,22 @@ export const businesses = gql`
 		}
 	}
 `
+export const notices = gql`
+	query($title: String) {
+		notices(where: { title_contains: $title }) {
+			id
+			title
+			created_at
+			useYn
+			fixYn
+			detail
+			businesses {
+				id
+				name
+			}
+		}
+	}
+`
 
 export const settlements = gql`
 	query settlements($id: ID, $settlementStatus: String) {

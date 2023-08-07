@@ -13,7 +13,7 @@ import {
 	updateSettlement,
 	createBusiness,
 } from '../apollo/mutation'
-import { me, users, gotoWork, teams, products, ranks, businesses, settlements } from '../apollo/query'
+import { me, users, gotoWork, teams, products, ranks, businesses, settlements, notices } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
@@ -224,6 +224,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: businesses,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		notices({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: notices,
 						variables: input,
 					})
 					.then(({ data }) => {
