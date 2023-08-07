@@ -74,8 +74,6 @@
 								class="txtLogin1_border_radius mb-2 mr-2"
 								placeholder="※png, pdf, jpg"
 								outlined
-								type="number"
-								maxlength="255"
 								flat
 								dense
 								readonly
@@ -129,8 +127,6 @@
 								class="txtLogin1_border_radius mb-2 mr-2"
 								placeholder="※png, pdf, jpg"
 								outlined
-								type="number"
-								maxlength="255"
 								flat
 								dense
 								readonly
@@ -152,8 +148,6 @@
 								class="txtLogin1_border_radius mb-2 mr-2"
 								placeholder="※png, pdf, jpg"
 								outlined
-								type="number"
-								maxlength="255"
 								flat
 								dense
 								readonly
@@ -175,7 +169,6 @@
 								class="txtLogin1_border_radius mb-2 mr-2"
 								placeholder="※png, pdf, jpg"
 								outlined
-								type="number"
 								maxlength="255"
 								flat
 								dense
@@ -243,8 +236,6 @@
 								class="txtLogin1_border_radius mb-2 mr-2"
 								placeholder="※png, pdf, jpg"
 								outlined
-								type="number"
-								maxlength="255"
 								flat
 								dense
 								readonly
@@ -407,12 +398,13 @@ export default {
 		}
 	},
 	methods: {
-		open_disable_dialog(data) {
+		open_disable_dialog(data, info) {
 			// 불가 팝업 열기
 
 			this.sweetInfo.title = data.title
 			this.sweetInfo.content = data.content
-			this.sweetInfo.modalIcon = `info`
+			if (!info) this.sweetInfo.modalIcon = `info`
+			else this.sweetInfo.modalIcon = info
 			this.sweetInfo.open = true
 		},
 		// 단일 파일 업로드
@@ -425,9 +417,8 @@ export default {
 					content: `500kb 이하의 파일을 업로드해주세요.`,
 				})
 			} else {
-				this.files[index].name = String(event.target.files[0].name)
+				this.files[index].name = event.target.files[0].name
 				this.files[index].file = event.target.files[0]
-				console.log(this.files)
 			}
 		},
 		clickFileUploadImage(index) {
@@ -515,79 +506,88 @@ export default {
 		async register() {
 			let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-			if (!this.siginup.name) return alert('이름을 입력해주세요.')
-			else if (!this.siginup.phone) return alert('휴대전화를 입력해주세요.')
-			else if (!(await this.phoneDuplicateAction())) return alert('중복된 휴대전화번호입니다.')
-			else if (!this.siginup.bank) return alert('계좌정보의 은행명을 입력해주세요.')
-			else if (!this.siginup.account) return alert('계좌정보의 계좌번호를 입력해주세요.')
-			// else if (!this.siginup.authNumber) return alert('인증번호를 입력해주세요.')
-			// else if (!this.siginup.authNumberCheck) return alert('인증번호를 확인 해주세요.')
-			else if (!this.siginup.email) return alert('이메일을 입력해주세요.')
-			else if (!this.siginup.password) return alert('비밀번호를 입력해주세요.')
-			else if (!this.siginup.password_re) return alert('비밀번호 확인을 입력해주세요.')
-			else if (!this.siginup.agree) return alert('약관에 동의해 주세요.')
-			else if (!re.test(this.siginup.email)) return alert('정상적인 이메일 형식이 아닙니다.')
-			else if (!(await this.emailDuplicateAction())) return alert('중복된 이메일입니다.')
-			// else if (this.emailDuplicate === null) return alert('이메일 중복확인을 해주세요.')
-			// else if (this.emailDuplicate) return alert('중복된 이메일입니다.')
-			// else if (!this.sendActive) return alert('인증번호 요청을 진행해주세요.')
-			else if (this.siginup.password.length < 6) return alert('비밀번호는 6자리 이상으로 입력해주세요.')
-			else if (this.siginup.password !== this.siginup.password_re) return alert('비밀번호와 비밀번호 확인이 동일하지 않습니다.')
+			if (!this.siginup.name) return this.open_disable_dialog({ title: '등록안내', content: '이름을 입력해주세요.' })
+			else if (!this.siginup.phone) return this.open_disable_dialog({ title: '등록안내', content: '휴대전화를 입력해주세요.' })
+			else if (!this.files[0].file) return this.open_disable_dialog({ title: '등록안내', content: '프로필사진을 업로드 해주세요.' })
+			else if (!(await this.phoneDuplicateAction()))
+				return this.open_disable_dialog({ title: '등록안내', content: '중복된 휴대전화번호입니다.' })
+			else if (!this.siginup.bank) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 은행명을 입력해주세요.' })
+			else if (!this.siginup.account) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 계좌번호를 입력해주세요.' })
+			else if (!this.files[1].file) return this.open_disable_dialog({ title: '등록안내', content: '통장사본을 업로드 해주세요.' })
+			else if (!this.files[2].file) return this.open_disable_dialog({ title: '등록안내', content: '근로계약서를 업로드 해주세요.' })
+			else if (!this.files[3].file)
+				return this.open_disable_dialog({ title: '등록안내', content: '신분증 사본등 기타 첨부자료를 업로드 해주세요.' })
+			else if (!this.siginup.email) return this.open_disable_dialog({ title: '등록안내', content: '이메일을 입력해주세요.' })
+			else if (!this.siginup.password) return this.open_disable_dialog({ title: '등록안내', content: '비밀번호를 입력해주세요.' })
+			else if (!this.siginup.password_re) return this.open_disable_dialog({ title: '등록안내', content: '비밀번호 확인을 입력해주세요.' })
+			else if (!re.test(this.siginup.email))
+				return this.open_disable_dialog({ title: '등록안내', content: '정상적인 이메일 형식이 아닙니다.' })
+			else if (!(await this.emailDuplicateAction())) return this.open_disable_dialog({ title: '등록안내', content: '중복된 이메일입니다.' })
+			else if (this.siginup.password.length < 6)
+				return this.open_disable_dialog({ title: '등록안내', content: '비밀번호는 6자리 이상으로 입력해주세요.' })
+			else if (this.siginup.password !== this.siginup.password_re)
+				return this.open_disable_dialog({ title: '등록안내', content: '비밀번호와 비밀번호 확인이 동일하지 않습니다.' })
 			if (this.siginup.biz) {
-				if (!this.siginup.companyName) return alert('회사명을 입력해주세요.')
-				else if (!this.siginup.companyNumber) return alert('사업자등록번호를 입력해주세요.')
+				if (!this.siginup.companyName) return this.open_disable_dialog({ title: '등록안내', content: '회사명을 입력해주세요.' })
+				else if (!this.siginup.companyNumber)
+					return this.open_disable_dialog({ title: '등록안내', content: '사업자등록번호를 입력해주세요.' })
+				else if (!this.files[4].file) return this.open_disable_dialog({ title: '등록안내', content: '사업자 등록증을 업로드 해주세요.' })
 			}
 
-			let business = {}
-			await this.$store.dispatch('businesses_register').then(res => {
-				business = res.businesses[0]
-			})
-
-			const data = {
-				business: business.id,
-				username: this.siginup.email,
-				email: this.siginup.email.toLowerCase(),
-				password: this.siginup.password,
-				phone: this.siginup.phone,
-				name: this.siginup.name,
-				companyName: this.siginup.companyName,
-				companyNumber: this.siginup.companyNumber,
-				authNumber: Number(this.siginup.authNumber),
-				bank: this.siginup.bank,
-				account: this.siginup.account,
-				confirmed: true,
-				counselorStatus: '재직',
-			}
-			await this.$store
-				.dispatch('register', data)
-				.then(() => {
-					alert('회원가입이 완료되었습니다.')
-					this.$router.push({ name: 'counselorLogin' })
-					this.registerMode = false
-					this.authButton = true
-					this.sendActive = false
-					this.siginup = {
-						name: '',
-						phone: '',
-						authNumber: '',
-						email: '',
-						password: '',
-						password_re: '',
-						companyName: '',
-						companyNumber: '',
-						companyPaper: null,
-						companyPaperName: '',
-						pwshow1: false,
-						pwshow2: false,
-						agree: false,
-						bank: '',
-						account: '',
+			const filesData = this.files.filter(x => x.file !== null)
+			const filesId = []
+			for (let i = 0; i < filesData.length; i++) {
+				const el = filesData[i].file
+				let input = {
+					file: el,
+				}
+				await this.$store.dispatch('upload', input).then(res => {
+					filesId.push(res.data[0].id)
+					if (filesData.length - 1 === i) {
+						const data = {
+							// businessID: business.id,
+							// username: this.siginup.email,
+							// email: this.siginup.email.toLowerCase(),
+							// password: this.siginup.password,
+							// phone: this.siginup.phone,
+							// name: this.siginup.name,
+							// companyName: this.siginup.companyName,
+							// companyNumber: this.siginup.companyNumber,
+							// authNumber: Number(this.siginup.authNumber),
+							// bank: this.siginup.bank,
+							// account: this.siginup.account,
+							// confirmed: true,
+							// counselorStatus: '재직',
+							profile: filesId[0],
+							copyAccount: filesId[1],
+							employmentContract: filesId[2],
+							ID_Card: filesId[3],
+							businessRegistration: this.siginup.biz ? filesId[4] : null,
+						}
+						this.$store
+							.dispatch('register', data)
+							.then(() => {
+								this.open_disable_dialog(
+									{ title: '등록완료', content: '정상적으로 등록 되었습니다. 입력하신 정보로 로그인 하시기 바랍니다.' },
+									'success',
+								)
+								alert('회원가입이 완료되었습니다.')
+								this.$router.push({ name: 'counselorLogin' })
+								this.registerMode = false
+								this.authButton = true
+								this.sendActive = false
+								Object.assign(this.$data, this.$options.data())
+							})
+							.catch(err => {
+								this.open_disable_dialog(
+									{ title: '오류발생', content: '회원가입 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' },
+									'error',
+								)
+								console.log({ err })
+							})
 					}
 				})
-				.catch(err => {
-					alert('회원가입 도중 오류가 발생하였습니다. 관리자에게 문의하세요.')
-					console.log({ err })
-				})
+			}
 		},
 	},
 }

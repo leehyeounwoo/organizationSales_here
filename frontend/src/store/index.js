@@ -104,6 +104,21 @@ export default new Vuex.Store({
 			})
 		},
 		// eslint-disable-next-line no-empty-pattern
+		upload({}, input) {
+			return new Promise((resolve, reject) => {
+				var formData = new FormData()
+				formData.append('files', input.file)
+				let config = { headers: { 'Content-Type': 'multipart/form-data' } }
+				Axios.post(process.env.VUE_APP_BACKEND_URL + '/upload', formData, config)
+					.then(data => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
 		multipleUpload({}, input) {
 			return new Promise((resolve, reject) => {
 				var formData = new FormData()

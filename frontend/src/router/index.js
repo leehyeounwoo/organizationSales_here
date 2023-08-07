@@ -31,7 +31,7 @@ const routes = [
 	{ path: '/block', name: 'block', component: notAuth },
 
 	{
-		path: '/counselor/main',
+		path: '/counselor/main/:code',
 		name: 'counselorMain',
 		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue'),
 	},
