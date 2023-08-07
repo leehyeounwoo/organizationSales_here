@@ -44,6 +44,9 @@
     },
     "amount": {
       "type": "string"
+    },
+    "turnTableDegree": {
+      "type": "string"
     }
   }
 }

@@ -676,6 +676,9 @@
           "amount": {
             "type": "string"
           },
+          "turnTableDegree": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -703,6 +706,9 @@
             "type": "string"
           },
           "amount": {
+            "type": "string"
+          },
+          "turnTableDegree": {
             "type": "string"
           },
           "published_at": {

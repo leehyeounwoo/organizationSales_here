@@ -246,9 +246,18 @@ export const createSettlementTurnTable = gql`
 		$turnStatus: ENUM_SETTLEMENTTURNTABLE_TURNSTATUS
 		$amount: String
 		$settlements: ID!
+		$turnTableDegree: String
 	) {
 		createSettlementTurnTable(
-			input: { data: { prePaymentDate: $prePaymentDate, settlement: $settlements, turnStatus: $turnStatus, amount: $amount } }
+			input: {
+				data: {
+					prePaymentDate: $prePaymentDate
+					settlement: $settlements
+					turnStatus: $turnStatus
+					amount: $amount
+					turnTableDegree: $turnTableDegree
+				}
+			}
 		) {
 			settlementTurnTable {
 				prePaymentDate
@@ -258,6 +267,7 @@ export const createSettlementTurnTable = gql`
 					id
 					userID
 				}
+				turnTableDegree
 			}
 		}
 	}

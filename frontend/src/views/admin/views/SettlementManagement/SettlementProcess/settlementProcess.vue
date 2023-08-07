@@ -1007,6 +1007,7 @@ export default {
 					turnStatus: 'waiting',
 					amount: this.paymentAmount[`charge${i}`].txtField.value,
 					settlements: this.finalSettlementData.id,
+					turnTableDegree: i + '',
 				}
 
 				this.$store.dispatch('createSettlementTurnTable', data).then(() => {
