@@ -506,7 +506,6 @@ export default {
 						id: val.settlements.attachment[i].id,
 					})
 				}
-				console.log(this.attachmentNameList)
 			}
 		},
 		openModal() {

@@ -32,7 +32,7 @@
 		</v-layout>
 		<v-layout class="mt-4">
 			<v-flex xs6>
-				<datatable :datatable="processTable" class="notice_table" @pagination="pagination"> </datatable>
+				<datatable :datatable="processTable" class="notice_table" @pagination="pagination" @click="processRequestData"> </datatable>
 			</v-flex>
 			<v-flex xs6 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -40,7 +40,11 @@
 						계약자
 					</v-flex>
 					<v-flex xs8 class="notice_right_table2">
-						<v-layout> </v-layout>
+						<v-layout>
+							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
+								<span id="spanUsername" class="spanClass"></span>
+							</v-flex>
+						</v-layout>
 					</v-flex>
 					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
 						계약 내용
@@ -62,19 +66,21 @@
 					</v-flex>
 					<v-flex xs8 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
 						<div style="display: flex;">
-							<txtField
-								v-mask="'###,###,###,###,###'"
-								:txtField="charge.txtField"
-								v-model="charge.txtField.value"
-								class="search_box_admin2 ml-1"
-							></txtField>
+							<txtField :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin2 ml-1"></txtField>
 							<span>원</span>
 						</div>
 					</v-flex>
 					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
 						지급 계좌 정보
 					</v-flex>
-					<v-flex xs8 class="notice_right_table2"> </v-flex>
+					<v-flex xs8 class="notice_right_table2">
+						<v-layout>
+							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
+								<span id="userAccountName" class="spanClass"></span>
+								<span id="userAccountInfo" class="spanClass"></span>
+							</v-flex>
+						</v-layout>
+					</v-flex>
 				</v-layout>
 				<v-layout>
 					<v-flex class="notice_right_table" xs3 style="height: 40px;"> </v-flex>
@@ -105,18 +111,13 @@
 						<selectBox :sel="timessel" :class="'searchSel'" style="font-size:12px"></selectBox>
 					</v-flex>
 					<v-flex
-						v-for="(items, idx) of paymentCircuit"
+						v-for="(items, idx) of start_date_picker"
 						:key="idx"
 						xs3
 						class="notice_right_table2"
 						style="display: flex; justify-content: center;align-items: center;"
 					>
-						<txtField
-							:readonly="items.readonly"
-							:txtField="items.txtField"
-							v-model="items.txtField.value"
-							class="search_box_admin"
-						></txtField>
+						<DatepickerDialog :picker="items" class="d-flex align-center date_picker3"></DatepickerDialog>
 					</v-flex>
 				</v-layout>
 				<v-layout>
@@ -150,8 +151,8 @@
 						class="notice_right_table2"
 						style="display: flex; justify-content: center;align-items: center;"
 					>
-						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField
-					></v-flex>
+						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
+					</v-flex>
 				</v-layout>
 				<v-flex style="text-align: end;">
 					<span
@@ -276,15 +277,14 @@
 	</div>
 </template>
 <script>
-import { selectBox, txtField, datatable } from '@/components/index.js'
-import TxtField from '../../../../../components/txtField.vue'
+import { selectBox, txtField, datatable, DatepickerDialog } from '@/components/index.js'
 
 export default {
 	components: {
 		selectBox,
 		txtField,
 		datatable,
-		TxtField,
+		DatepickerDialog,
 	},
 
 	data() {
@@ -371,6 +371,34 @@ export default {
 					errorMessage: '',
 					placeholder: '-',
 					readonly: false,
+				},
+			},
+
+			start_date_picker: {
+				first_date_picker: {
+					date: this.$moment()
+						.subtract(30, 'days')
+						.format('YYYY-MM-DD'),
+				},
+				second_date_picker: {
+					date: this.$moment()
+						.subtract(30, 'days')
+						.format('YYYY-MM-DD'),
+				},
+				thrid_date_picker: {
+					date: this.$moment()
+						.subtract(30, 'days')
+						.format('YYYY-MM-DD'),
+				},
+				fourth_date_picker: {
+					date: this.$moment()
+						.subtract(30, 'days')
+						.format('YYYY-MM-DD'),
+				},
+				fifth_date_picker: {
+					date: this.$moment()
+						.subtract(30, 'days')
+						.format('YYYY-MM-DD'),
 				},
 			},
 			paymentCircuit: {
@@ -602,6 +630,7 @@ export default {
 			list: [],
 			attachmentNameList: [],
 			finalSettlementData: [],
+			paymentRatesum: 0,
 		}
 	},
 
@@ -842,6 +871,24 @@ export default {
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
+
+		processRequestData(val) {
+			const usernameSpan = document.getElementById('spanUsername')
+			if (usernameSpan) {
+				usernameSpan.textContent = `${val.username}`
+			}
+
+			const userAccountInfo = document.getElementById('userAccountInfo')
+			if (userAccountInfo) {
+				userAccountInfo.textContent = `${val.users.accountNumber}`
+			}
+
+			const userAccountName = document.getElementById('userAccountName')
+			if (userAccountName) {
+				userAccountName.textContent = `${val.users.bank}`
+			}
+		},
+
 		calculatePaymentAmount(paymentNumber) {
 			paymentAmount = ''
 			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value)
@@ -849,13 +896,14 @@ export default {
 			let charge = Number(this.charge.txtField.value.replace(/,/g, ''))
 
 			let paymentAmount = Number((paymentRate / 100) * charge)
+
 			paymentAmount = Math.floor(paymentAmount) + ''
 
 			return paymentAmount
 		},
 		calculatePaymentRate(paymentNumber) {
-			paymentRateAmount = ''
 			console.log(paymentNumber)
+			paymentRateAmount = ''
 			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value)
 			console.log(paymentRate)
 
@@ -864,6 +912,17 @@ export default {
 
 			console.log(paymentRateAmount)
 			return paymentRateAmount
+		},
+		updatePaymentRateSum() {
+			let sum = 0
+			for (let i = 1; i <= 5; i++) {
+				let paymentRate = Number(this.paymentRate[`charge${i}`].txtField.value)
+				sum += paymentRate
+			}
+			this.paymentRatesum = sum
+			this.$nextTick(() => {
+				this.paymentRateSum.txtField.value = sum
+			})
 		},
 	},
 	computed: {
@@ -881,9 +940,6 @@ export default {
 		},
 		calculatedPaymentAmount5() {
 			return this.calculatePaymentAmount(5)
-		},
-		calculatePaymentRate1() {
-			return this.calculatePaymentRate(1)
 		},
 	},
 	watch: {
@@ -906,56 +962,49 @@ export default {
 				this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
 			}
 		},
-		'paymentRateSum.txtField.value': {
-			immediate: true, // Trigger the watcher immediately on component mount
-			handler() {
-				// Update each payment amount field whenever payment rate changes
-				this.paymentAmount.charge1.txtField.value = this.calculatePaymentRate(1)
-			},
-		},
+
 		'paymentRate.charge1.txtField.value': {
-			immediate: true, // Trigger the watcher immediately on component mount
+			immediate: true,
 			handler() {
-				// Update each payment amount field whenever payment rate changes
 				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+				this.updatePaymentRateSum()
 			},
 		},
 		'paymentRate.charge2.txtField.value': {
-			immediate: true, // Trigger the watcher immediately on component mount
+			immediate: true,
 			handler() {
-				// Update each payment amount field whenever payment rate changes
-
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+				this.updatePaymentRateSum()
 			},
 		},
 		'paymentRate.charge3.txtField.value': {
-			immediate: true, // Trigger the watcher immediately on component mount
+			immediate: true,
 			handler() {
-				// Update each payment amount field whenever payment rate changes
 				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
 				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
+				this.updatePaymentRateSum()
 			},
 		},
 		'paymentRate.charge4.txtField.value': {
-			immediate: true, // Trigger the watcher immediately on component mount
+			immediate: true,
 			handler() {
-				// Update each payment amount field whenever payment rate changes
 				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
 				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
 				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
+				this.updatePaymentRateSum()
 			},
 		},
 		'paymentRate.charge5.txtField.value': {
-			immediate: true, // Trigger the watcher immediately on component mount
+			immediate: true,
 			handler() {
-				// Update each payment amount field whenever payment rate changes
 				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
 				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
 				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
 				this.paymentAmount.charge5.txtField.value = this.calculatePaymentAmount(5)
+				this.updatePaymentRateSum()
 			},
 		},
 	},
@@ -1156,7 +1205,7 @@ export default {
 	bottom: 15px;
 	left: 0px;
 }
-.date_picker2 {
+.date_picker3 {
 	background-color: #fff !important;
 	div {
 		div {
