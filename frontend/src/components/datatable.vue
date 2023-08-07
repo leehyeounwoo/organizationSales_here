@@ -1579,6 +1579,10 @@
 			<template v-slot:[`item.degree`]="{ item }">
 				<div>{{ item.degree + '차' }}</div>
 			</template>
+			<!-- 정산금 지급 처리 - 상태 -->
+			<template v-slot:[`item.turnStatus`]="{ item }">
+				<div>{{ item.turnStatus === 'waiting' ? '지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-' }}</div>
+			</template>
 			<!-- 사업지관리 - 근무시간 -->
 			<template v-slot:[`item.workTime`]="{ item }">
 				<div>{{ item.startTime }} ~ {{ item.endTime }}</div>

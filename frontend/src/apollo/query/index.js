@@ -214,6 +214,11 @@ export const settlements = gql`
 				name
 				url
 			}
+			settlement_turn_tables {
+				id
+				turnStatus
+				prePaymentDate
+			}
 		}
 	}
 `
