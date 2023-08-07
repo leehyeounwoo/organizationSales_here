@@ -78,11 +78,19 @@
 				</v-layout>
 			</v-flex>
 		</v-layout>
-
-		<v-btn small class="btn-style2" @click="clickExport()">
-			<img src="@/assets/images/excel-img2.png" />
-			엑셀 다운로드
-		</v-btn>
+		<v-layout justify-space-between mt-1>
+			<v-flex>
+				<v-btn small class="btn-style2" @click="clickExport()">
+					<img src="@/assets/images/excel-img2.png" />
+					엑셀 다운로드
+				</v-btn>
+			</v-flex>
+			<v-flex v-if="rightEdit" style="text-align: end;">
+				<v-btn small class="btn-style2" @click="detailSave()">
+					저장
+				</v-btn>
+			</v-flex>
+		</v-layout>
 		<download-excel
 			class="btn btn-default"
 			id="clientExcel"
@@ -525,7 +533,7 @@ export default {
 				hideDetail: true,
 				items: [],
 				outlined: true,
-				placeholder: '팀선택',
+				placeholder: '팀 선택',
 				returnObject: true,
 				itemText: 'title',
 			},
@@ -533,9 +541,9 @@ export default {
 				value: '',
 				errorMessage: '',
 				hideDetail: true,
-				items: [],
+				items: ['전체', '재직', '퇴사'],
 				outlined: true,
-				placeholder: '재직상태',
+				placeholder: '재직 상태',
 				returnObject: true,
 				itemText: 'title',
 			},
@@ -570,14 +578,14 @@ export default {
 	mounted() {},
 
 	methods: {
+		detailSave() {},
 		teamRankSave(val) {
 			const data = {
 				id: val.id,
 				teamID: val.teamTitle,
 				rankId: val.rankTitle,
 			}
-			console.log(data)
-			// this.updateUserAction(data)
+			this.updateUserAction(data)
 		},
 		async getListAction() {
 			this.$store.state.loading = true
@@ -586,18 +594,16 @@ export default {
 			}
 			await this.usersView(usersViewData)
 			const teamsViewData = {
-				idArr: this.teamArrData,
+				// idArr: this.teamArrData,
 			}
 
 			await this.teamsView(teamsViewData)
 			const ranksViewData = {
-				idArr: this.rankArrData,
+				// idArr: this.rankArrData,
 			}
 
 			await this.ranksView(ranksViewData)
 			await this.dataSetting()
-
-			console.log(this.rankArrData)
 			this.$store.state.loading = false
 		},
 		salesPhoneNumberSave(val) {
@@ -642,7 +648,6 @@ export default {
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].id
 				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].id
 				element.salesPhoneNumber_txtField = {
@@ -662,9 +667,7 @@ export default {
 				element.rankTitle = rankTitle
 			}
 
-			this.table.items = this.userData
-			console.log(this.teamData)
-			console.log(this.rankData)
+			this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
 		editUserData(val) {
 			this.rightEdit[1].txtField.value = val.bank
@@ -675,6 +678,8 @@ export default {
 				.dispatch('teams', teamsViewData)
 				.then(res => {
 					this.teamData = res.teams
+					this.searchsel1.items = res.teams
+
 					// console.log(res.teams)
 				})
 				.catch(err => {
@@ -682,6 +687,18 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
+		// async teamsItemsView(teamsViewData) {
+		// 	await this.$store
+		// 		.dispatch('teams', teamsViewData)
+		// 		.then(res => {
+		// 			this.teamData = res.teams
+		// 			// console.log(res.teams)
+		// 		})
+		// 		.catch(err => {
+		// 			console.log(err)
+		// 			this.$store.state.loading = false
+		// 		})
+		// },
 		async ranksView(teamsViewData) {
 			await this.$store
 				.dispatch('ranks', teamsViewData)
@@ -693,6 +710,17 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
+		// async ranksView(teamsViewData) {
+		// 	await this.$store
+		// 		.dispatch('ranks', teamsViewData)
+		// 		.then(res => {
+		// 			this.rankData = res.ranks
+		// 		})
+		// 		.catch(err => {
+		// 			console.log(err)
+		// 			this.$store.state.loading = false
+		// 		})
+		// },
 		async usersView(usersViewData) {
 			await this.$store
 				.dispatch('users', usersViewData)
@@ -982,9 +1010,9 @@ export default {
 	border-radius: 5px;
 	// margin-top: -3rem !important;
 	// margin-left: 92.5rem !important;
-	position: absolute;
-	bottom: 15px;
-	left: 0px;
+	// position: absolute;
+	// bottom: 15px;
+	// left: 0px;
 }
 .notice_right_table {
 	background-color: #f5f5f5;

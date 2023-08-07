@@ -671,6 +671,18 @@
               "workingStatus": {
                 "type": "boolean"
               },
+              "profile": {
+                "type": "string"
+              },
+              "copyAccount": {
+                "type": "string"
+              },
+              "employmentContract": {
+                "type": "string"
+              },
+              "ID_Card": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },

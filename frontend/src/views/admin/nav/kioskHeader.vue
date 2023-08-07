@@ -8,6 +8,9 @@
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
 				<v-layout align-center>
 					<v-layout align-center justify-end style="height:60px">
+						<div>
+							사업지
+						</div>
 						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
 							{{ this.$store.state.meData.name }}
 						</div>
