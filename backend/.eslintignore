@@ -1,3 +1,10 @@
 .cache
 build
+
+backend/extensions/documentation/documentation/1.0.0/full_documentation.json
+
+backend/extensions/users-permissions/documentation/1.0.0/users-permissions-Role.json
+
+backend/extensions/users-permissions/documentation/1.0.0/users-permissions-User.json
+
 **/node_modules/**

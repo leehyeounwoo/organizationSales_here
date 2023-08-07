@@ -17,10 +17,10 @@
 						<v-flex xs4 style="">팀명</v-flex>
 						<v-flex xs4 style="">사용여부</v-flex>
 					</v-layout>
-					<v-layout px-1 align-center v-for="(right, idx) in right_data" :key="idx" class="manageTable">
-						<v-flex xs4 style="">{{ right.number }}</v-flex>
+					<v-layout px-1 align-center v-for="(left, idx) in left_data" :key="idx" class="manageTable">
+						<v-flex xs4 style="">{{ idx + 1 }}</v-flex>
 						<v-flex xs4 align-self-center style="">
-							<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield1"></txtField>
+							<txtField class="bizInput px-2" v-model="left.value" :txtField="left.txtfield1"></txtField>
 						</v-flex>
 						<v-flex xs4 align-self-center style="">
 							<selectBox :sel="selectBox" style="font-size:13px; align-items: center;"></selectBox>
@@ -57,7 +57,7 @@
 						<v-flex xs4 style="">사용여부</v-flex>
 					</v-layout>
 					<v-layout px-1 align-center v-for="(right, idx) in right_data" :key="idx" class="manageTable">
-						<v-flex xs4 style="">{{ right.number }}</v-flex>
+						<v-flex xs4 style="">{{ idx + 1 }}</v-flex>
 						<v-flex xs4 align-self-center style="">
 							<txtField class="bizInput px-2" v-model="right.value" :txtField="right.txtfield1"></txtField>
 						</v-flex>
@@ -101,6 +101,8 @@ import { txtField, selectBox, btn } from '@/components/index.js'
 export default {
 	props: {
 		setdialog: Object,
+		left_data: Array,
+		right_data: Array,
 	},
 	components: {
 		txtField,
@@ -157,18 +159,18 @@ export default {
 				hideDetail: true,
 				errorMessage: '',
 			},
-			right_data: [
-				{
-					number: 1,
-					value: '',
-					txtfield1: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-				},
-			],
+			// right_data: [
+			// {
+			// 	number: 1,
+			// 	value: '',
+			// 	txtfield1: {
+			// 		maxlength: '255',
+			// 		outlined: true,
+			// 		hideDetail: true,
+			// 		errorMessage: '',
+			// 	},
+			// },
+			// ],
 			editTimePicker: {
 				dialog: false,
 				start: '',

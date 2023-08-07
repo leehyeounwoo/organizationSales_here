@@ -102,7 +102,7 @@
 			name="근태관리 엑셀리스트"
 		>
 		</download-excel>
-		<teamEdit :setdialog="teamEditDialog"></teamEdit>
+		<teamEdit :setdialog="teamEditDialog" :left_data="left_data" :right_data="right_data"></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 	</div>
 </template>
@@ -126,6 +126,19 @@ export default {
 
 	data() {
 		return {
+			left_data: [],
+			right_data: [
+				{
+					number: 1,
+					value: '',
+					txtfield1: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+					},
+				},
+			],
 			ourCoords: {
 				//서울 시청 좌표
 				latitude: 37.5666263, //위도
@@ -677,9 +690,22 @@ export default {
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(res => {
+					console.log(res.teams)
 					this.teamData = res.teams
 					this.searchsel1.items = res.teams
-
+					for (let index = 0; index < res.teams.length; index++) {
+						const element = res.teams[index]
+						this.left_data.push({
+							value: element.title,
+							txtfield1: {
+								maxlength: '255',
+								outlined: true,
+								hideDetail: true,
+								errorMessage: '',
+							},
+						})
+					}
+					console.log(this.left_data)
 					// console.log(res.teams)
 				})
 				.catch(err => {

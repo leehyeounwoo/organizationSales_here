@@ -48,12 +48,12 @@ export default {
 		},
 	},
 	created() {
-		this.$appbus.$on('loading::show', () => {
-			this.loading = true
-		})
-		this.$appbus.$on('loading::hide', () => {
-			this.loading = false
-		})
+		// 	this.$appbus.$on('loading::show', () => {
+		// 		this.loading = true
+		// 	})
+		// 	this.$appbus.$on('loading::hide', () => {
+		// 		this.loading = false
+		// 	})
 	},
 }
 </script>
