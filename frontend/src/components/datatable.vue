@@ -1589,6 +1589,24 @@
 					<v-btn class="detail_etc_btn" small @click="productDetailClick(item)" :color="'#9A9C9B'" depressed>자세히 보기</v-btn>
 				</v-layout>
 			</template>
+			<!-- 사업지관리 - 공지사항 관리 -->
+			<template v-slot:[`item.notice_useYn`]="{ item }">
+				<div v-if="item.useYn === true">공개</div>
+				<div v-else-if="item.useYn === false">비공개</div>
+			</template>
+			<template v-slot:[`item.notice_title`]="{ item }">
+				<v-layout>
+					<div
+						class="d-flex align-center notice_table_biz px-2 py-1 mr-1"
+						v-for="(biz, i) in item.businesses"
+						:key="i"
+						@click="deleteNotice(item, biz)"
+					>
+						{{ biz.name }}
+						<v-icon class="ml-1" small>mdi-close-circle-outline</v-icon>
+					</div>
+				</v-layout>
+			</template>
 		</v-data-table>
 
 		<!--고객 관리 - 캠페인 고객 관리 - 자세히 보기 -->
@@ -2080,6 +2098,24 @@ export default {
 		},
 	},
 	methods: {
+		deleteNotice(item, biz) {
+			this.$store.state.loading = true
+			for (let i = 0; i < item.businesses.length; i++) {
+				if (item.businesses[i].id === biz.id) {
+					item.businesses.splice(i, 1)
+				}
+			}
+			let editId = { id: item.id }
+			let li = []
+			item.businesses.forEach(el => {
+				li.push(el.id)
+			})
+			editId.businesses = li
+			let edit = editId
+			this.$store.dispatch('updateNotice', edit).then(() => {
+				this.refreshTable()
+			})
+		},
 		holdingStart(picker) {
 			this.datatable.holdingTime1.dialog = false
 			this.datatable.holdingTime1.time = picker
@@ -2451,6 +2487,7 @@ export default {
 		call_excel_data: Function,
 		deleteClick: Function,
 		productDetailClick: Function,
+		refreshTable: Function,
 	},
 }
 </script>

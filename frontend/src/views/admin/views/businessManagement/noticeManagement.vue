@@ -6,7 +6,7 @@
 		</v-layout>
 		<v-layout class="mt-5">
 			<v-flex xs8>
-				<datatable :datatable="noticeTable" class="notice_table"></datatable>
+				<datatable :datatable="noticeTable" :refreshTable="first_notices" class="notice_table"></datatable>
 			</v-flex>
 			<v-flex xs4 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -21,7 +21,14 @@
 							<v-flex xs3 class="my-3" style="text-align:center">
 								<v-btn class="notice_btn" color="#F3F3FF" elevation="0">적용</v-btn>
 							</v-flex>
-							<v-flex xs12 style="min-height:50px; border-top:1px solid #c8c8c8"></v-flex>
+							<div style="min-height:50px">
+								<v-layout>
+									<div v-for="(name, i) in bizSel.name" :key="i" class="table_title_wrap py-1 px-2 ma-3 white--text" color="admin_blue">
+										{{ name.title }}
+										<v-icon class="table_icon">mdi-close</v-icon>
+									</div>
+								</v-layout>
+							</div>
 						</v-layout>
 					</v-flex>
 				</v-layout>
@@ -119,6 +126,7 @@ import { txtField, datatable, selectBox } from '@/components/index.js'
 
 export default {
 	created() {
+		this.$store.state.loading = true
 		this.first_notices()
 	},
 	components: {
@@ -137,9 +145,9 @@ export default {
 			noticeTable: {
 				headers: [
 					{ text: '제목', value: 'title', width: '30%' },
-					{ text: '공개여부', value: 'notice_status', width: '10%' },
+					{ text: '공개여부', value: 'notice_useYn', width: '10%' },
 					{ text: '작성일', value: 'created_at', width: '15%' },
-					{ text: '적용 사업지', value: 'business_title', width: '45%' },
+					{ text: '적용 사업지', value: 'notice_title', width: '45%' },
 				],
 				class: 'datatablehover3',
 				items: [],
@@ -188,7 +196,8 @@ export default {
 	methods: {
 		first_notices() {
 			this.$store.dispatch('notices').then(res => {
-				console.log(res)
+				this.noticeTable.items = res.notices
+				this.$store.state.loading = false
 			})
 		},
 	},
