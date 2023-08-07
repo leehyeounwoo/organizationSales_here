@@ -32,6 +32,9 @@
     },
     "assignmentID": {
       "type": "string"
+    },
+    "businessID": {
+      "type": "string"
     }
   }
 }

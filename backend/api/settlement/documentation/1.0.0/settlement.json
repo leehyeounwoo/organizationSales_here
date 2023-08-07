@@ -667,6 +667,9 @@
               }
             }
           },
+          "turn": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -708,6 +711,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "turn": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

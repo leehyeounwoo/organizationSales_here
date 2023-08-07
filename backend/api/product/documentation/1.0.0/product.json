@@ -556,6 +556,12 @@
                 "product": {
                   "type": "string"
                 },
+                "splitTime": {
+                  "type": "time"
+                },
+                "userID": {
+                  "type": "string"
+                },
                 "published_at": {
                   "type": "datetime"
                 },
@@ -572,6 +578,9 @@
             "type": "boolean"
           },
           "assignmentID": {
+            "type": "string"
+          },
+          "businessID": {
             "type": "string"
           },
           "published_at": {
@@ -603,6 +612,9 @@
             "type": "boolean"
           },
           "assignmentID": {
+            "type": "string"
+          },
+          "businessID": {
             "type": "string"
           },
           "published_at": {

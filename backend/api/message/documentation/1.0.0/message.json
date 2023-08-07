@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/assignments": {
+    "/messages": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -12,7 +12,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Assignment"
+                    "$ref": "#/components/schemas/Message"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "Message"
         ],
         "parameters": [
           {
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Assignment"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "Message"
         ],
         "requestBody": {
           "description": "",
@@ -247,14 +247,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewAssignment"
+                "$ref": "#/components/schemas/NewMessage"
               }
             }
           }
         }
       }
     },
-    "/assignments/count": {
+    "/messages/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -306,12 +306,12 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "Message"
         ],
         "parameters": []
       }
     },
-    "/assignments/{id}": {
+    "/messages/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +321,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Assignment"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "Message"
         ],
         "parameters": [
           {
@@ -383,7 +383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Assignment"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "Message"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewAssignment"
+                "$ref": "#/components/schemas/NewMessage"
               }
             }
           }
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "Message"
         ],
         "parameters": [
           {
@@ -514,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Assignment": {
+      "Message": {
         "required": [
           "id"
         ],
@@ -522,91 +522,48 @@
           "id": {
             "type": "string"
           },
-          "assignmentTime": {
-            "type": "datetime"
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scheduleGuide",
+              "paymentScheduleInformation",
+              "paymentNotification",
+              "paymentResultGuide"
+            ]
           },
           "useYn": {
             "type": "boolean"
-          },
-          "assignmentStatus": {
-            "type": "boolean"
-          },
-          "product": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "housingType": {
-                "type": "string"
-              },
-              "dong": {
-                "type": "string"
-              },
-              "ho": {
-                "type": "string"
-              },
-              "contractStatus": {
-                "type": "boolean"
-              },
-              "assignments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "choiceYn": {
-                "type": "boolean"
-              },
-              "assignmentID": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "splitTime": {
-            "type": "time"
-          },
-          "userID": {
-            "type": "string"
           },
           "published_at": {
             "type": "datetime"
           }
         }
       },
-      "NewAssignment": {
+      "NewMessage": {
         "properties": {
-          "assignmentTime": {
-            "type": "datetime"
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scheduleGuide",
+              "paymentScheduleInformation",
+              "paymentNotification",
+              "paymentResultGuide"
+            ]
           },
           "useYn": {
             "type": "boolean"
-          },
-          "assignmentStatus": {
-            "type": "boolean"
-          },
-          "product": {
-            "type": "string"
-          },
-          "splitTime": {
-            "type": "time"
-          },
-          "userID": {
-            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -623,7 +580,7 @@
   },
   "tags": [
     {
-      "name": "Assignment"
+      "name": "Message"
     }
   ]
 }

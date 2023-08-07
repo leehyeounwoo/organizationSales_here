@@ -100,7 +100,7 @@
 			:fields="table.json_fields"
 			type="text/csv;charset=utf8"
 			worksheet="My Worksheet"
-			name="근태관리 엑셀리스트"
+			name="상담사 관리 리스트"
 		>
 		</download-excel>
 		<teamEdit :setdialog="teamEditDialog" :left_data="left_data" :right_data="right_data"></teamEdit>
@@ -424,8 +424,8 @@ export default {
 					연락처: 'phoneNumber',
 					영업번호: 'salesPhoneNumber',
 					등록일: 'created_at_format',
-					'팀배정 현황': 'team',
-					재직상태: 'workingStatus',
+					'팀배정 현황': 'team_rank',
+					재직상태: 'workingStatusName',
 				},
 
 				itemsPerPage: 10,
@@ -577,8 +577,10 @@ export default {
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].id
-				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].id
+				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let rankData = this.rankData.filter(x => x.id === element.rankId)[0]
+				let teamTitle = teamData.id
+				let rankTitle = rankData.id
 				element.salesPhoneNumber_txtField = {
 					value: '',
 					txtfield: {
@@ -587,17 +589,16 @@ export default {
 						hideDetail: false,
 						errorMessage: '',
 						placeholder: '',
-						// disable: true,
 					},
 				}
-				console.log(element)
-				element.created_at_format = this.$moment(element.created_at).format('YYYY-MM-DD')
+				element.team_rank = `${teamData.title}(${rankData.rankName})`
+				element.workingStatusName = element.workingStatus ? '재직' : '퇴사'
+				element.created_at_format = this.$moment(element.created_at).format('YYYY년MM월DD일')
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 				element.teamTitle = teamTitle
 				element.rankTitle = rankTitle
 			}
-
 			this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
 		async settlementsViewAction(data) {

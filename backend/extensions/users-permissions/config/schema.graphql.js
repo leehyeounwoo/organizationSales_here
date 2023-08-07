@@ -9,6 +9,7 @@ module.exports = {
       name: String!
       username: String!
       email: String!
+      blocked: Boolean
       role: UsersPermissionsMeRole
       companyName: String
       companyNumber: String
@@ -39,7 +40,6 @@ module.exports = {
       account: String
       confirmed: Boolean
       counselorStatus: String
-
     }
     type emailDuplicate {
       duplicate: JSON

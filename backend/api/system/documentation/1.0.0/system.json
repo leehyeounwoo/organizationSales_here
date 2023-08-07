@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/assignments": {
+    "/systems": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -12,7 +12,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Assignment"
+                    "$ref": "#/components/schemas/System"
                   }
                 }
               }
@@ -51,7 +51,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "System"
         ],
         "parameters": [
           {
@@ -201,7 +201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Assignment"
+                  "$ref": "#/components/schemas/System"
                 }
               }
             }
@@ -239,7 +239,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "System"
         ],
         "requestBody": {
           "description": "",
@@ -247,14 +247,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewAssignment"
+                "$ref": "#/components/schemas/NewSystem"
               }
             }
           }
         }
       }
     },
-    "/assignments/count": {
+    "/systems/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -306,12 +306,12 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "System"
         ],
         "parameters": []
       }
     },
-    "/assignments/{id}": {
+    "/systems/{id}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +321,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Assignment"
+                  "$ref": "#/components/schemas/System"
                 }
               }
             }
@@ -359,7 +359,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "System"
         ],
         "parameters": [
           {
@@ -383,7 +383,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Assignment"
+                  "$ref": "#/components/schemas/System"
                 }
               }
             }
@@ -421,7 +421,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "System"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +429,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewAssignment"
+                "$ref": "#/components/schemas/NewSystem"
               }
             }
           }
@@ -495,7 +495,7 @@
         },
         "summary": "",
         "tags": [
-          "Assignment"
+          "System"
         ],
         "parameters": [
           {
@@ -514,7 +514,7 @@
   },
   "components": {
     "schemas": {
-      "Assignment": {
+      "System": {
         "required": [
           "id"
         ],
@@ -522,65 +522,13 @@
           "id": {
             "type": "string"
           },
-          "assignmentTime": {
-            "type": "datetime"
+          "inputFiles": {
+            "type": "object"
           },
-          "useYn": {
-            "type": "boolean"
+          "businessID": {
+            "type": "string"
           },
-          "assignmentStatus": {
-            "type": "boolean"
-          },
-          "product": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "housingType": {
-                "type": "string"
-              },
-              "dong": {
-                "type": "string"
-              },
-              "ho": {
-                "type": "string"
-              },
-              "contractStatus": {
-                "type": "boolean"
-              },
-              "assignments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "choiceYn": {
-                "type": "boolean"
-              },
-              "assignmentID": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "splitTime": {
-            "type": "time"
-          },
-          "userID": {
+          "turn": {
             "type": "string"
           },
           "published_at": {
@@ -588,24 +536,15 @@
           }
         }
       },
-      "NewAssignment": {
+      "NewSystem": {
         "properties": {
-          "assignmentTime": {
-            "type": "datetime"
+          "inputFiles": {
+            "type": "object"
           },
-          "useYn": {
-            "type": "boolean"
-          },
-          "assignmentStatus": {
-            "type": "boolean"
-          },
-          "product": {
+          "businessID": {
             "type": "string"
           },
-          "splitTime": {
-            "type": "time"
-          },
-          "userID": {
+          "turn": {
             "type": "string"
           },
           "published_at": {
@@ -623,7 +562,7 @@
   },
   "tags": [
     {
-      "name": "Assignment"
+      "name": "System"
     }
   ]
 }

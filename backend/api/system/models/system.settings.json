@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "systems",
+  "info": {
+    "name": "system",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "inputFiles": {
+      "type": "json"
+    },
+    "businessID": {
+      "type": "string"
+    },
+    "turn": {
+      "type": "string"
+    }
+  }
+}

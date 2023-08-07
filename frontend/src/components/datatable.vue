@@ -751,6 +751,7 @@
 					<v-flex xs8>
 						<txtField
 							class="bizInput"
+							v-mask="'###-####-####'"
 							v-model="item.salesPhoneNumber"
 							:txtField="item.salesPhoneNumber_txtField.txtfield"
 							style="height:27px; margin:auto; background-color:white; border-radius:5px;"

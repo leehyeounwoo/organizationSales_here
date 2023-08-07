@@ -99,7 +99,7 @@ export default {
 		this.screenWidth = window.innerWidth
 
 		if (sessionStorage.getItem('reserveLite-t')) {
-			this.$router.push('/').catch(() => {})
+			this.$router.push('/admin/login').catch(() => {})
 		}
 	},
 	computed: {
@@ -154,21 +154,27 @@ export default {
 					})
 					.catch(err => {
 						console.log({ err })
-						if ({ err }.err.message === 'Network error: Network Error') {
-							this.alertModal2.dialog = true
-							this.alertModal2.text = '수신이 원활하지 않습니다. 관리자에게 문의 하세요.'
-						} else if ({ err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].id === 'Auth.form.error.blocked') {
-							this.iderrorMessages = 'Block된 아이디 입니다. 관리자에게 문의 하세요.'
-							this.pwerrorMessages = 'Block된 아이디 입니다. 관리자에게 문의 하세요.'
-							this.alertModal2.dialog = true
-							this.alertModal2.text = 'Block된 아이디 입니다. 관리자에게 문의 하세요.'
-						} else if ({ err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].id === 'Auth.form.error.password.wrong') {
-							let trial = { err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].message
-							this.pwerrorMessages = `패스워드가 정확하지 않습니다. (${trial}/5)`
-						} else {
-							this.iderrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
-							this.pwerrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
-						}
+						// if ({ err }.err.message === 'Network error: Network Error') {
+						// 	this.alertModal2.dialog = true
+						// 	this.alertModal2.text = '수신이 원활하지 않습니다. 관리자에게 문의 하세요.'
+						// } else if ({ err }.err.graphQLErrors.length !== 0) {
+						// 	if ({ err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].id === 'Auth.form.error.blocked') {
+						// 		this.iderrorMessages = 'Block된 아이디 입니다. 관리자에게 문의 하세요.'
+						// 		this.pwerrorMessages = 'Block된 아이디 입니다. 관리자에게 문의 하세요.'
+						// 		this.alertModal2.dialog = true
+						// 		this.alertModal2.text = 'Block된 아이디 입니다. 관리자에게 문의 하세요.'
+						// 	} else if (
+						// 		{ err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].id === 'Auth.form.error.password.wrong'
+						// 	) {
+						// 		let trial = { err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].message
+						// 		this.pwerrorMessages = `패스워드가 정확하지 않습니다. (${trial}/5)`
+						// 	} else {
+						// 		this.iderrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
+						// 		this.pwerrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
+						// 	}
+						// } else {
+						// 	alert('네트워크오류입니다.')
+						// }
 					})
 			}
 		},
