@@ -35,10 +35,6 @@ export const users = gql`
 			phoneNumber
 			bank
 			accountNumber
-
-			bank
-			accountNumber
-			rankID
 			teamID
 			workingStatus
 			copyAccount {
@@ -200,6 +196,16 @@ export const settlements = gql`
 				amount
 				turnTableDegree
 			}
+		}
+	}
+`
+export const messages = gql`
+	query messages($businessID: ID) {
+		messages(where: { businessID: $businessID }) {
+			type
+			title
+			detail
+			useYn
 		}
 	}
 `

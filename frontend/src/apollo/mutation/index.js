@@ -277,3 +277,18 @@ export const createSettlementTurnTable = gql`
 		}
 	}
 `
+export const createMessage = gql`
+	mutation createMessage($title: String, $detail: String, $useYn: Boolean, $type: ENUM_MESSAGE_TYPE, $businessID: String) {
+		createMessage(input: { data: { title: $title, detail: $detail, useYn: $useYn, type: $type, businessID: $businessID } }) {
+			message {
+				id
+				created_at
+				detail
+				useYn
+				type
+				title
+				businessID
+			}
+		}
+	}
+`

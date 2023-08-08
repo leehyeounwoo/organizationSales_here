@@ -420,16 +420,24 @@ export default {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
 				2: {
-					date: this.$moment().format('YYYY-MM-DD'),
+					date: this.$moment(this.date)
+						.add(1, 'd')
+						.format('YYYY-MM-DD'),
 				},
 				3: {
-					date: this.$moment().format('YYYY-MM-DD'),
+					date: this.$moment(this.date)
+						.add(2, 'd')
+						.format('YYYY-MM-DD'),
 				},
 				4: {
-					date: this.$moment().format('YYYY-MM-DD'),
+					date: this.$moment(this.date)
+						.add(3, 'd')
+						.format('YYYY-MM-DD'),
 				},
 				5: {
-					date: this.$moment().format('YYYY-MM-DD'),
+					date: this.$moment(this.date)
+						.add(4, 'd')
+						.format('YYYY-MM-DD'),
 				},
 			},
 			paymentCircuit: {
@@ -724,7 +732,6 @@ export default {
 	},
 
 	async created() {
-		this.$store.state.loading = true
 		await this.me()
 		const settlementViewData = {
 			settlementStatus: 'agree',
@@ -747,8 +754,6 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
-
-		this.$store.state.loading = false
 	},
 	mounted() {},
 

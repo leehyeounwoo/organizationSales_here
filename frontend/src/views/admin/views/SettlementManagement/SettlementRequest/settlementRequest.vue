@@ -249,7 +249,6 @@ export default {
 	},
 
 	async created() {
-		this.$store.state.loading = true
 		await this.me()
 		await this.settlementView()
 		const usersViewData = {
@@ -269,8 +268,6 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
-
-		this.$store.state.loading = false
 	},
 	mounted() {},
 
