@@ -32,16 +32,16 @@
     "maximumHoldingTime": {
       "type": "string"
     },
-    "notice": {
-      "model": "notice",
-      "via": "businesses"
-    },
     "code": {
       "type": "string",
       "unique": true
     },
     "product": {
       "type": "json"
+    },
+    "notices": {
+      "via": "businesses",
+      "collection": "notice"
     }
   }
 }

@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "notices",
   "info": {
-    "name": "notice"
+    "name": "notice",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -17,8 +18,9 @@
       "type": "boolean"
     },
     "businesses": {
-      "via": "notice",
-      "collection": "business"
+      "collection": "business",
+      "via": "notices",
+      "dominant": true
     },
     "fixYn": {
       "type": "boolean"

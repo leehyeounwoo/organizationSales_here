@@ -197,8 +197,13 @@ export const updateSettlement = gql`
 	}
 `
 export const updateNotice = gql`
-	mutation updateNotice($id: ID!, $businesses: [ID]) {
-		updateNotice(input: { where: { id: $id }, data: { businesses: $businesses } }) {
+	mutation updateNotice($id: ID!, $businesses: [ID], $title: String, $detail: String, $useYn: Boolean, $fixYn: Boolean, $fileUpload: [ID]) {
+		updateNotice(
+			input: {
+				where: { id: $id }
+				data: { businesses: $businesses, title: $title, detail: $detail, useYn: $useYn, fixYn: $fixYn, fileUpload: $fileUpload }
+			}
+		) {
 			notice {
 				id
 				businesses {

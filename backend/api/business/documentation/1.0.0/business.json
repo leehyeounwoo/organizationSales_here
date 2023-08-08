@@ -543,54 +543,57 @@
           "maximumHoldingTime": {
             "type": "string"
           },
-          "notice": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "useYn": {
-                "type": "boolean"
-              },
-              "businesses": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "fixYn": {
-                "type": "boolean"
-              },
-              "detail": {
-                "type": "string"
-              },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "code": {
             "type": "string"
           },
           "product": {
             "type": "object"
+          },
+          "notices": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "useYn": {
+                  "type": "boolean"
+                },
+                "businesses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "fixYn": {
+                  "type": "boolean"
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "fileUpload": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "published_at": {
             "type": "datetime"
@@ -620,14 +623,17 @@
           "maximumHoldingTime": {
             "type": "string"
           },
-          "notice": {
-            "type": "string"
-          },
           "code": {
             "type": "string"
           },
           "product": {
             "type": "object"
+          },
+          "notices": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "published_at": {
             "type": "datetime"

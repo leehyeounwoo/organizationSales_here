@@ -117,10 +117,14 @@
 					</div>
 					<div style="display: flex;align-items: center; justify-content: flex-end;">
 						<div class="mr-3">
-							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === false">수정</v-btn>
+							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === false" @click="check_notice('edit')"
+								>수정</v-btn
+							>
 						</div>
 						<div>
-							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === true" @click="check_notice">생성</v-btn>
+							<v-btn class="new_notice_btn" color="#0500B7" elevation="0" :disabled="btn_active === true" @click="check_notice('create')"
+								>생성</v-btn
+							>
 						</div>
 					</div>
 				</v-layout>
@@ -147,14 +151,16 @@ export default {
 	},
 	data() {
 		return {
+			edit_biz_id: '',
 			sweetDialog: {
 				open: false,
-				title: '공지사항 생성',
-				content: `공지사항을 생성합니다.`,
+				title: '공지사항 관리',
+				content: `공지사항을 저장합니다.`,
 				cancelBtnText: '취소',
 				buttonType: 'twoBtn',
 				saveBtnText: '저장',
 				modalIcon: 'success',
+				save_type: '',
 			},
 			search_notice: '',
 			search: {
@@ -225,6 +231,7 @@ export default {
 			})
 		},
 		async createNotice() {
+			console.log(this.show_value)
 			this.$store.state.loading = true
 			let data = {
 				businesses: [],
@@ -247,18 +254,28 @@ export default {
 				}
 			}
 			console.log(data)
-			this.$store.dispatch('createNotice', data).then(res => {
-				console.log(res)
-				this.sweetDialog.open = false
-				this.first_notices()
-			})
+			if (this.sweetDialog.save_type === 'edit') {
+				data['id'] = this.edit_biz_id
+				this.$store.dispatch('updateNotice', data).then(res => {
+					console.log(res)
+					this.sweetDialog.open = false
+					this.first_notices()
+				})
+			} else {
+				this.$store.dispatch('createNotice', data).then(res => {
+					console.log(res)
+					this.sweetDialog.open = false
+					this.first_notices()
+				})
+			}
 		},
-		check_notice() {
+		check_notice(type) {
 			if (this.title_text === '') {
 				return alert('제목을 입력해주세요.')
 			} else if (this.content_text === '') {
 				return alert('내용을 입력해주세요.')
 			}
+			this.sweetDialog.save_type = type
 			this.sweetDialog.open = true
 		},
 		click_delete_file() {
@@ -292,15 +309,17 @@ export default {
 			}
 		},
 		notice_detail(item) {
-			console.log(item)
-			if (item.businesses && item.businesses.length >= 0) {
-				this.bizSel.name = JSON.parse(JSON.stringify(item.businesses))
+			let data = JSON.parse(JSON.stringify(item))
+			console.log(data)
+			if (data.businesses && data.businesses.length >= 0) {
+				this.bizSel.name = data.businesses
 			}
+			this.edit_biz_id = data.id
 			this.bizSel.value = ''
-			this.title_text = item.title
-			this.content_text = item.detail
-			this.show_value = item.useYn
-			this.checkbox_value = item.fixYn
+			this.title_text = data.title
+			this.content_text = data.detail
+			this.show_value = data.useYn
+			this.checkbox_value = data.fixYn
 			this.btn_active = true
 		},
 		addBiz() {
@@ -310,13 +329,19 @@ export default {
 		},
 		first_notices() {
 			this.$store.dispatch('notices').then(res => {
+				res.notices.forEach(el => {
+					el.businesses.forEach(e => {
+						e['value'] = e.id
+					})
+				})
 				this.noticeTable.items = res.notices
+				console.log(this.noticeTable.items)
 				this.$store.state.loading = false
 			})
 		},
 		notice_businesses() {
 			this.$store.dispatch('businesses_title').then(res => {
-				let businesses = [{ name: '전체', value: 'all' }]
+				let businesses = []
 				res.businesses.forEach(el => {
 					businesses.push({ name: el.name, value: el.id })
 				})

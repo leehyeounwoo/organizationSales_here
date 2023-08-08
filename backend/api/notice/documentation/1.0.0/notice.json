@@ -559,14 +559,17 @@
                 "maximumHoldingTime": {
                   "type": "string"
                 },
-                "notice": {
-                  "type": "string"
-                },
                 "code": {
                   "type": "string"
                 },
                 "product": {
                   "type": "object"
+                },
+                "notices": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "published_at": {
                   "type": "datetime"
