@@ -25,6 +25,13 @@ export default new Vuex.Store({
 		headerMobileStatus: false,
 		footerMobileStatus: false,
 		leftNavDrawer: true,
+		businessSelectBox: {
+			items: [],
+			value: '',
+			hideDetail: true,
+			outlined: true,
+			class: 'small_font bizInput',
+		},
 		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0 },
 		dashBoardList: [],
 		loading: false,
