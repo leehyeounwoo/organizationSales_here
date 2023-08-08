@@ -1,7 +1,7 @@
 <template>
 	<div style="width:100%;">
 		<v-layout class="mt-4" xs12>
-			<v-flex xs5 class="mr-3">
+			<v-flex xs4 class="mr-3">
 				<v-layout align-center class="mb-3">
 					<div class="slash mr-1"></div>
 					<span class="title_font">
@@ -20,13 +20,39 @@
 					<v-flex class="notice_right_table" xs2 style="height: 457.3px;">
 						증빙자료
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2"> </v-flex>
+					<v-flex xs10 class="notice_right_table2">
+						<v-layout style="display: flex;">
+							<txtField
+								:txtField="EvidenceField.degree.txtField"
+								v-model="EvidenceField.degree.txtField.value"
+								style="width: 20%;"
+								class="search_box_admin ma-3 ml-5"
+							></txtField>
+							<textarea v-model="etcInfo.txtField.value" style="width: 70%;" class="search_box_modal2 mt-3"></textarea>
+						</v-layout>
+						<v-btn class="infoBtn mt-2" color="#f0f2f8" elevation="0"
+							><span
+								style="	font-family: MalgunGothic;
+	font-size: 14px;"
+								>내용 추가</span
+							></v-btn
+						>
+					</v-flex>
+					<v-flex class="addNewItem"> </v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
+					<v-flex class="notice_right_table" xs2 style="height: auto">
 						기타 안내
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2"> </v-flex>
+					<v-flex xs10 class="notice_right_table2">
+						<textarea
+							v-model="EvidenceField.evidence.txtField.value"
+							placeholder="※ 증빙서류 누락시 정산 승인이 보류 될 수 있으니 확인 후 첨부바랍니다.
+※ pdf, png, jpg파일만 업로드 가능합니다."
+							style="width: 90%; height: 70px;"
+							class="search_box_modal2 pt-2"
+						></textarea>
+					</v-flex>
 				</v-layout>
 				<v-flex style="text-align: end;">
 					<v-btn
@@ -40,7 +66,7 @@
 				</v-flex>
 			</v-flex>
 
-			<v-flex xs7>
+			<v-flex xs8>
 				<v-layout align-center class="mb-3">
 					<div class="slash mr-1"></div>
 					<span class="title_font">
@@ -48,39 +74,53 @@
 					</span>
 				</v-layout>
 				<v-flex style="width:100%; display: flex; justify-content: space-between;">
-					<datatable
-						:teamChoiceClick="teamChoiceClick"
-						style="width: 100%"
-						:datatable="settlementTable"
-						class="notice_table"
-						@pagination="pagination"
-					>
-					</datatable>
+					<datatable style="width: 100%" :datatable="settlementTable" class="notice_table" @pagination="pagination"> </datatable>
 
 					<v-flex xs7 class="ml-4">
 						<v-layout style="border-top:1px solid black">
 							<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
 								제목
 							</v-flex>
-							<v-flex xs10 class="notice_right_table2"> </v-flex>
+							<v-flex xs10 class="notice_right_table2">
+								<txtField
+									:txtField="EvidenceField.title.txtField"
+									v-model="EvidenceField.title.txtField.value"
+									class="search_box_admin ma-3 ml-4"
+								></txtField>
+							</v-flex>
 						</v-layout>
 						<v-layout>
 							<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
 								유형
 							</v-flex>
-							<v-flex xs10 class="notice_right_table2"> </v-flex>
+							<v-flex xs10 class="notice_right_table2">
+								<selectBox :sel="searchsel1" :class="'searchSel ml-4 mt-3'" style="font-size:12px; width: 50%;"></selectBox>
+							</v-flex>
 						</v-layout>
 						<v-layout>
 							<v-flex class="notice_right_table" xs2 style="height: 360.3px;">
 								내용
 							</v-flex>
-							<v-flex xs10 class="notice_right_table2"> </v-flex>
+							<v-flex xs10 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
+								<textarea
+									v-model="EvidenceField.sms.txtField.value"
+									style="width: 90%; height: 90%; margin: 0;"
+									class="search_box_modal2 pt-2 mt-2 ml-2"
+								></textarea>
+							</v-flex>
 						</v-layout>
 						<v-layout>
-							<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
+							<v-flex class="notice_right_table" xs2 style="height: auto;">
 								상태
 							</v-flex>
-							<v-flex xs10 class="notice_right_table2"> </v-flex>
+							<v-flex xs10 class="notice_right_table2" style="display: flex; align-items: center;">
+								<v-radio-group v-model="useType" hide-details row class="notice_radio ma-2 ml-3">
+									<v-radio class="mb-0 mr-5" label="사용" :value="true" color="#009dac"></v-radio>
+									<v-radio class="mb-0" label="미사용" :value="false" color="#009dac"></v-radio>
+								</v-radio-group>
+								<v-btn class="search_btn3" style="width: 50%; " color="#3e7ccc" @click="reset">초기화</v-btn>
+								<v-btn class="ml-2 search_btn3" style="width: 50%; " color="#3e7ccc"><v-icon>mdi-check</v-icon>저장</v-btn>
+							</v-flex>
 						</v-layout>
 					</v-flex>
 				</v-flex>
@@ -89,11 +129,13 @@
 	</div>
 </template>
 <script>
-import { datatable } from '@/components/index.js'
+import { datatable, txtField, selectBox } from '@/components/index.js'
 
 export default {
 	components: {
 		datatable,
+		txtField,
+		selectBox,
 	},
 
 	data() {
@@ -103,6 +145,7 @@ export default {
 			endTimeDialog: false,
 			startTime: '',
 			endTime: '',
+			useType: true,
 			editGotoworkDialog: false,
 			editGotoworkData: {
 				title: '',
@@ -163,90 +206,7 @@ export default {
 				page: 1,
 				pageCount: 0,
 				total: 0,
-			},
-			detailData: {
-				id: '',
-				name: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '고객명',
-				},
-				phone: {
-					value: '',
-					clearable: false,
-					maxlength: '255',
-					outlined: true,
-					backCol: 'white',
-					placeholder: '연락처',
-				},
-				sex: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '성별',
-					items: ['남자', '여자'],
-					outlined: true,
-				},
-				age: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '연령대',
-					items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-					outlined: true,
-				},
-				inflow: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '유입경로',
-					items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
-					outlined: true,
-				},
-				status: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '고객상태',
-					items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
-					outlined: true,
-				},
-				counselor_business: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '지점',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'business_title',
-				},
-				counselor_team: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '부서',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'title',
-				},
-				counselor_name: {
-					value: '',
-					errorMessage: '',
-					hideDetail: true,
-					placeholder: '상담사명',
-					items: [],
-					outlined: true,
-					returnObject: true,
-					itemText: 'name',
-				},
-				origin_main_data: [],
-				interest_product: [],
-				contract_product: [],
+				hidedefaultfooter: true,
 			},
 
 			searchsel: {
@@ -259,7 +219,53 @@ export default {
 				returnObject: true,
 				itemText: 'title',
 			},
-			charge: {
+			EvidenceField: {
+				degree: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '1차',
+						readonly: false,
+					},
+				},
+				evidence: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '',
+						readonly: false,
+					},
+				},
+				title: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '정산금 지급 설정 안내',
+						readonly: false,
+					},
+				},
+				sms: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '',
+						readonly: false,
+					},
+				},
+			},
+			etcInfo: {
 				txtField: {
 					maxlength: '255',
 					value: '',
@@ -274,9 +280,9 @@ export default {
 				value: '',
 				errorMessage: '',
 				hideDetail: true,
-				items: [],
+				items: ['일정 안내', '결과 안내'],
 				outlined: true,
-				placeholder: '팀선택',
+				placeholder: '일정 안내',
 				returnObject: true,
 				itemText: 'title',
 			},
@@ -294,19 +300,53 @@ export default {
 			date_picker: {
 				date: this.$moment().format('YYYY-MM-DD'),
 			},
+			evidenceInfo: {
+				part1: {
+					title: '1차',
+					evidence: ['evidence1', 'evidence2'],
+				},
+				part2: {},
+				part3: {},
+				part4: {},
+				part5: {},
+			},
+
+			userID: [],
+			businessID: [],
 		}
 	},
 
 	async created() {
 		await this.me()
+		const userViewData = {
+			idArr: this.userID,
+		}
+		await this.userView(userViewData)
+		const businessData = {
+			idArr: this.businessID,
+		}
+		await this.businessView(businessData)
 	},
 	mounted() {},
 
 	methods: {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
-				this.$store.state.meData = res.data
-				console.log(this.$store.state.meData)
+				this.$store.state.meData = res.me
+				this.userID = res.me.id
+			})
+		},
+
+		async userView(userViewData) {
+			await this.$store.dispatch('users', userViewData).then(res => {
+				console.log(res.users[0].businessID)
+				this.businessID = res.users[0].businessID
+			})
+		},
+		async businessView(businessData) {
+			await this.$store.dispatch('businesses', businessData).then(res => {
+				console.log(businessData)
+				console.log(res)
 			})
 		},
 
@@ -689,6 +729,34 @@ export default {
 			min-height: 28px !important;
 			height: 28px !important;
 		}
+	}
+}
+.search_box_modal2 {
+	border: 1px solid rgba(0, 0, 0, 1);
+	height: 103px;
+	width: calc(100% - 20%);
+	margin: 0 30px 0 30px;
+	resize: none;
+	overflow-y: auto;
+	font-size: 13px;
+}
+
+.infoBtn {
+	width: calc(100% - 38%);
+	height: 3px;
+	margin-left: 32%;
+
+	border: solid 1px #cfdcdd;
+}
+
+.search_btn3 {
+	width: 50px !important;
+	height: 25px !important;
+	padding: 0 10px !important;
+	font-size: 13px;
+	font-weight: bold;
+	.v-btn__content {
+		color: #fff;
 	}
 }
 </style>

@@ -12,7 +12,7 @@ export const me = gql`
 	}
 `
 export const users = gql`
-	query users($idArr: [ID], $date: Date, $teamID: String, $username: String, $status: String, $date_gte: Date, $date_lte: Date, $role: ID) {
+	query users($idArr: [ID], $teamID: String, $username: String, $role: ID) {
 		usersConnection {
 			aggregate {
 				count
@@ -35,26 +35,7 @@ export const users = gql`
 			phoneNumber
 			bank
 			accountNumber
-			gotoworks(where: { date: $date, status: $status, date_gte: $date_gte, date_lte: $date_lte }) {
-				id
-				status
-				startWork
-				date
-				endWork
-				business {
-					phoneNumber
-				}
-			}
-			vacations(where: { vacationDate: $date }) {
-				id
-				vacationStatus
-				created_at
-				vacationDate
-				vacationReason
-				viewStatus
-				vacationType
-				comment
-			}
+
 			bank
 			accountNumber
 			rankId
@@ -150,20 +131,18 @@ export const products = gql`
 	}
 `
 export const businesses = gql`
-	query($name: String) {
-		businesses(where: { name_contains: $name }) {
+	query($name: String, $idArr: [ID]) {
+		businesses(where: { name_contains: $name, id: $idArr }) {
 			id
 			name
 			phoneNumber
 			workingHoursStart
 			workingHoursEnd
-			manager
-			managerPhoneNumber
+
 			workCheckURL
 			splitHoldingTime
 			maximumHoldingTime
 			created_at
-			managerID
 		}
 	}
 `
@@ -218,6 +197,8 @@ export const settlements = gql`
 				id
 				turnStatus
 				prePaymentDate
+				amount
+				turnTableDegree
 			}
 		}
 	}

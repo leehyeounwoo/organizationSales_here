@@ -42,8 +42,8 @@
 					<v-flex xs6 class="notice_right_table2">
 						<v-layout>
 							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
-								<span id="spanUsername" class="spanClass"></span>
-								<span id="spanPhoneNumber" class="spanClass"></span>
+								<span id="spanUsername" class="spanClass2 mt-4"></span>
+								<span id="spanPhoneNumber" class="spanClass2 mt-4"></span>
 							</v-flex>
 						</v-layout>
 					</v-flex>
@@ -53,10 +53,10 @@
 					<v-flex xs10 class="notice_right_table2">
 						<v-layout style="display: flex; justify-content: space-between;align-items: center;">
 							<v-flex>
-								<span class="spanInfoClass ml-2">계약일 : <span id="contract" class="spanClass"></span> </span>
+								<span class="spanInfoClass ml-2">계약일 : <span id="contract" class="spanClass2"></span> </span>
 							</v-flex>
 							<v-flex>
-								<span class="spanInfoClass ml-2">물건 : <span id="product" class="spanClass"></span> </span>
+								<span class="spanInfoClass ml-2">물건 : <span id="product" class="spanClass2"></span> </span>
 							</v-flex>
 						</v-layout>
 					</v-flex>
@@ -79,8 +79,8 @@
 					<v-flex xs10 class="notice_right_table2">
 						<v-layout>
 							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
-								<span id="userAccountName" class="spanClass"></span>
-								<span id="userAccountInfo" class="spanClass"></span>
+								<span id="userAccountName" class="spanClass2 mt-4"></span>
+								<span id="userAccountInfo" class="spanClass2 mt-4"></span>
 							</v-flex>
 						</v-layout>
 					</v-flex>
@@ -184,74 +184,83 @@
 						><v-icon>mdi-check</v-icon> 정산 일정 저장</v-btn
 					>
 				</v-flex>
-				<v-layout style="border-top:1px solid black">
-					<v-flex class="notice_right_table" xs2 style="height: 40px; "> </v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
-						입금 은행
-					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
-						계좌 번호
-					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
-						금액
-					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
-						지급일
-					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
-						입금증
-					</v-flex>
-				</v-layout>
-				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 40px;">
-						1차
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-				</v-layout>
-				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 40px;">
-						2차
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-				</v-layout>
-				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 40px;">
-						3차
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-				</v-layout>
-				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 40px;">
-						4차
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-				</v-layout>
-				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 40px;">
-						5차
-					</v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-					<v-flex xs3 class="notice_right_table2"> </v-flex>
-				</v-layout>
+				<v-flex>
+					<v-layout style="border-top:1px solid black">
+						<v-flex class="notice_right_table" xs2 style="height: 40px; "> </v-flex>
+						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+							입금 은행
+						</v-flex>
+						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+							계좌 번호
+						</v-flex>
+						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+							금액
+						</v-flex>
+						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+							지급일
+						</v-flex>
+						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+							입금증
+						</v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex class="notice_right_table" xs2 style="height: 40px;">
+							1차
+						</v-flex>
+
+						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
+							<span class="spanClass2"> {{ finalSettlementData.bank }}</span>
+						</v-flex>
+						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
+							<span class="spanClass2">{{ finalSettlementData.accountNumber }}</span>
+						</v-flex>
+						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
+							<span class="spanClass2">{{ finalSettlementData.amount ? finalSettlementData.amount + '원' : '-' }}</span>
+						</v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex class="notice_right_table" xs2 style="height: 40px;">
+							2차
+						</v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex class="notice_right_table" xs2 style="height: 40px;">
+							3차
+						</v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex class="notice_right_table" xs2 style="height: 40px;">
+							4차
+						</v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex class="notice_right_table" xs2 style="height: 40px;">
+							5차
+						</v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+						<v-flex xs3 class="notice_right_table2"> </v-flex>
+					</v-layout>
+				</v-flex>
 				<v-flex style="text-align: end;">
 					<span
 						style="font-size: 12px;
@@ -618,6 +627,64 @@ export default {
 				},
 			},
 
+			paymentDate: {
+				1: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				2: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				3: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				4: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+				5: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: true,
+					},
+				},
+			},
+
 			searchsel1: {
 				value: '',
 				errorMessage: '',
@@ -730,6 +797,9 @@ export default {
 							if (element.settlement_turn_tables[i].turnStatus === 'waiting') {
 								listData.paymentDate = element.settlement_turn_tables[i].prePaymentDate
 								listData.turnStatus = element.settlement_turn_tables[i].turnStatus
+								listData.amount = element.settlement_turn_tables[i].amount
+								listData.turnTableDegree = element.settlement_turn_tables[i].turnTableDegree
+								break
 							} else {
 								listData.turnStatus = '지급 완료'
 							}
@@ -756,6 +826,8 @@ export default {
 								items.phoneNumber = element.phoneNumber
 								items.settlementPhoneNumber = element.salesPhoneNumber
 								items.teamID = element.teamID
+								items.bank = element.bank
+								items.accountNumber = element.accountNumber
 							}
 						}
 					})
@@ -933,7 +1005,7 @@ export default {
 			this.charge.txtField.value = ''
 			this.timessel.value = ''
 			this.finalSettlementData = val
-			console.log(val)
+			console.log('파이널', this.finalSettlementData)
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -1450,6 +1522,18 @@ export default {
 	font-stretch: normal;
 	font-style: normal;
 	line-height: 3.64;
+	letter-spacing: normal;
+	text-align: center;
+	color: #333;
+}
+
+.spanClass2 {
+	font-family: MalgunGothic;
+	font-size: 13px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+
 	letter-spacing: normal;
 	text-align: center;
 	color: #333;
