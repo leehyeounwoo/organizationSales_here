@@ -390,7 +390,7 @@ export default {
 							: el.type === 'paymentScheduleInformation'
 							? '지급 일정 정보'
 							: el.type === 'paymentNotification'
-							? '지급결과 안내'
+							? '지급 결과 안내'
 							: el.type === 'paymentResultGuide'
 							? '지급 알림'
 							: el.type
@@ -505,12 +505,11 @@ export default {
 			this.date = this.$moment(this.date_picker.date)
 		},
 		reset() {
+			this.clickVariation = []
 			this.useType = true
 			this.EvidenceField.sms.txtField.value = ''
 			this.searchsel1.value = ''
 			this.EvidenceField.title.txtField.value = ''
-			console.log(this.$store.state.businessSelectBox.itemValue)
-			console.log(this.$store.state.businessSelectBox.items)
 		},
 		saveEvedenceSMS() {
 			if (this.EvidenceField.sms.txtField.value === '') {
@@ -562,7 +561,7 @@ export default {
 						businessID: this.businessID,
 					}
 
-					this.$store.dispatch('updateMessage', input2).then(() => {
+					this.$store.dispatch('updateMessage', input2).then(res => {
 						this.sweetDialog_info.open = false
 						this.$store.state.loading = true
 						this.saveDialogStatus.title = `수정 완료`
@@ -571,6 +570,10 @@ export default {
 						this.saveDialogStatus.cancelBtnText = '확인'
 						this.saveDialogStatus.open = true
 						this.$store.state.loading = false
+						let data = {
+							businessID: res.messages[0].id,
+						}
+						this.messageView(data)
 					})
 				} else {
 					let realType
@@ -608,20 +611,9 @@ export default {
 		SMSClick(val) {
 			this.clickVariation = []
 			this.clickVariation = val
-			let realType
-			if (this.searchsel1.value === 'scheduleGuide') {
-				realType = '일정 안내'
-			} else if (this.searchsel1.value === 'paymentScheduleInformation') {
-				realType = '지급 일정 정보'
-			} else if (this.searchsel1.value === 'paymentNotification') {
-				realType = '지급 결과 안내'
-			} else {
-				realType = '지급 알림'
-			}
-			console.log(val)
 			this.EvidenceField.title.txtField.value = val.SMStitle
 			this.EvidenceField.sms.txtField.value = val.detail
-			this.searchsel1.value = realType
+			this.searchsel1.value = val.type
 			this.useType = val.useYn === 'true' ? true : false
 		},
 	},
