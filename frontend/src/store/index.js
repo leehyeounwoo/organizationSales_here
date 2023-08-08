@@ -17,6 +17,7 @@ import {
 	createNotice,
 	fileUpload,
 	createMessage,
+	updateMessage,
 } from '../apollo/mutation'
 import { me, users, gotoWork, teams, products, ranks, businesses, settlements, notices, businesses_title, messages } from '../apollo/query'
 Vue.use(Vuex)
@@ -502,6 +503,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: createMessage,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		updateMessage({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: updateMessage,
 						variables: input,
 					})
 					.then(({ data }) => {

@@ -342,6 +342,7 @@ export default {
 
 			userID: [],
 			businessID: [],
+			clickVariation: [],
 		}
 	},
 
@@ -538,37 +539,75 @@ export default {
 		},
 		save_confirm() {
 			this.$store.state.loading = true
-			let realType
-			if (this.searchsel1.value === '일정 안내') {
-				realType = 'scheduleGuide'
-			} else if (this.searchsel1.value === '지급 일정 정보') {
-				realType = 'paymentScheduleInformation'
-			} else if (this.searchsel1.value === '지급 결과 안내') {
-				realType = 'paymentNotification'
-			} else {
-				realType = 'paymentResultGuide'
-			}
 
-			let input = {
-				title: this.EvidenceField.title.txtField.value,
-				detail: this.EvidenceField.sms.txtField.value,
-				useYn: this.useType,
-				type: realType,
-				businessID: this.businessID,
-			}
+			this.$store.dispatch('messages').then(res => {
+				if (this.clickVariation.id === res.messages[0].id) {
+					let realType
+					if (this.searchsel1.value === '일정 안내') {
+						realType = 'scheduleGuide'
+					} else if (this.searchsel1.value === '지급 일정 정보') {
+						realType = 'paymentScheduleInformation'
+					} else if (this.searchsel1.value === '지급 결과 안내') {
+						realType = 'paymentNotification'
+					} else {
+						realType = 'paymentResultGuide'
+					}
 
-			this.$store.dispatch('createMessage', input).then(() => {
-				this.sweetDialog_info.open = false
-				this.$store.state.loading = true
-				this.saveDialogStatus.title = `저장 완료`
-				this.saveDialogStatus.content = `저장이 완료되었습니다`
-				this.saveDialogStatus.buttonType = 'oneBtn'
-				this.saveDialogStatus.cancelBtnText = '확인'
-				this.saveDialogStatus.open = true
-				this.$store.state.loading = false
+					let input2 = {
+						id: this.clickVariation.id,
+						title: this.EvidenceField.title.txtField.value,
+						detail: this.EvidenceField.sms.txtField.value,
+						useYn: this.useType,
+						type: realType,
+						businessID: this.businessID,
+					}
+
+					this.$store.dispatch('updateMessage', input2).then(() => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `수정 완료`
+						this.saveDialogStatus.content = `수정이 완료되었습니다`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+				} else {
+					let realType
+					if (this.searchsel1.value === '일정 안내') {
+						realType = 'scheduleGuide'
+					} else if (this.searchsel1.value === '지급 일정 정보') {
+						realType = 'paymentScheduleInformation'
+					} else if (this.searchsel1.value === '지급 결과 안내') {
+						realType = 'paymentNotification'
+					} else {
+						realType = 'paymentResultGuide'
+					}
+
+					let input = {
+						title: this.EvidenceField.title.txtField.value,
+						detail: this.EvidenceField.sms.txtField.value,
+						useYn: this.useType,
+						type: realType,
+						businessID: this.businessID,
+					}
+
+					this.$store.dispatch('createMessage', input).then(() => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `저장 완료`
+						this.saveDialogStatus.content = `저장이 완료되었습니다`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+				}
 			})
 		},
 		SMSClick(val) {
+			this.clickVariation = []
+			this.clickVariation = val
 			let realType
 			if (this.searchsel1.value === 'scheduleGuide') {
 				realType = '일정 안내'

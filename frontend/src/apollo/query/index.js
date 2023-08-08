@@ -202,6 +202,7 @@ export const settlements = gql`
 export const messages = gql`
 	query messages($businessID: ID) {
 		messages(where: { businessID: $businessID }) {
+			id
 			type
 			title
 			detail
