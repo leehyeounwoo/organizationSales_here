@@ -9,7 +9,7 @@
 				<selectBoxText :sel="rowperpageSel" class="searchSel" @change="rowperpageChange"></selectBoxText>
 			</v-flex>
 		</v-layout>
-		<datatable :datatable="table" class="mt-5" :productDetailClick="product_detail" :detailClick="editProduct"></datatable>
+		<datatable :datatable="table" class="mt-5" :productDetailClick="product_detail" :detailClick="biz_detail"></datatable>
 		<div class="text-center mt-4">
 			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
 		</div>
@@ -27,6 +27,7 @@ import productDetail from '../../viewItem/productDetail.vue'
 export default {
 	async created() {
 		this.$store.state.loading = true
+		this.first_users()
 		this.rowperpageChange()
 	},
 	components: {
@@ -52,10 +53,12 @@ export default {
 			},
 			createDialog: {
 				dialog: false,
+				detail: [],
 				items: [
 					// 0
 					{
 						title: '사업지 명',
+						must: true,
 						type: 'txtfield',
 						value: '',
 						txtfield: {
@@ -70,6 +73,7 @@ export default {
 					// 1
 					{
 						title: '대표번호',
+						must: true,
 						type: 'txtfield',
 						value: '',
 						txtfield: {
@@ -84,6 +88,7 @@ export default {
 					// 2
 					{
 						title: '근무시간 설정',
+						must: false,
 						type: 'time',
 						worktime: {
 							start: '',
@@ -93,6 +98,7 @@ export default {
 					// 3
 					{
 						title: '홀딩시간 설정',
+						must: false,
 						type: 'selectBox',
 						value: '',
 						selectBox: {
@@ -113,6 +119,7 @@ export default {
 					// 4
 					{
 						title: '출퇴근 스캔 URL',
+						must: false,
 						type: 'scan',
 						value: '',
 						txtfield: {
@@ -125,6 +132,7 @@ export default {
 					// 5
 					{
 						title: '상품 등록',
+						must: false,
 						type: 'product',
 						value: '',
 						txtfield: {
@@ -175,6 +183,11 @@ export default {
 		}
 	},
 	methods: {
+		first_users() {
+			this.$store.dispatch('users').then(res => {
+				console.log(res.users)
+			})
+		},
 		rowperpageChange() {
 			this.$store.state.loading = true
 			console.log(this.rowperpageSel.value)
@@ -205,8 +218,10 @@ export default {
 			this.table_detail.dialog = true
 			console.log(item)
 		},
-		editProduct() {
-			this.table_detail.dialog = true
+		biz_detail(item) {
+			this.createDialog.detail = item
+			this.createDialog.dialog = true
+			console.log(this.createDialog)
 		},
 		search_biz() {
 			this.$store.state.loading = true
