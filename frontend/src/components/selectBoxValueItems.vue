@@ -14,12 +14,12 @@
 		@click="$emit('click', $event)"
 		style="min-height:36px;"
 		:return-object="sel.returnObject"
-		:item-text="sel.itemText"
 		:disabled="disable"
 		:readonly="readonly"
 		:placeholder="sel.placeholder"
 		:item-color="sel.itemColor ? sel.itemColor : $store.state.PointColor1"
 		:color="sel.color ? sel.color : $store.state.PointColor1"
+		:item-text="sel.itemText"
 		:item-value="sel.itemValue"
 	>
 	</v-select>

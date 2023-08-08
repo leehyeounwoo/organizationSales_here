@@ -8,9 +8,11 @@
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
 				<v-layout align-center>
 					<v-layout align-center justify-end style="height:60px">
-						<div>
-							사업지
-						</div>
+						<selectBoxValueItems
+							:sel="$store.state.businessSelectBox"
+							v-model="$store.state.businessSelectBox.value"
+							:items="$store.state.businessSelectBox.items"
+						></selectBoxValueItems>
 						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
 							{{ this.$store.state.meData.name }}
 						</div>
@@ -29,7 +31,12 @@
 </template>
 
 <script>
+import { selectBoxValueItems } from '@/components/index'
+
 export default {
+	components: {
+		selectBoxValueItems,
+	},
 	data() {
 		return {
 			defalutImg: location.protocol + '//' + location.host + '/image/default_pic.png',
@@ -93,11 +100,18 @@ export default {
 		if (!sessionStorage.getItem('reserveLite-t')) {
 			this.$router.push({ name: 'kioskLogin' }).catch(() => {})
 		}
+		this.businessView()
 		// else {
 		// this.meData()
 		// }
 	},
 	methods: {
+		businessView() {
+			this.$store.dispatch('businesses').then(res => {
+				console.log(res)
+				this.$store.state.businessSelectBox.items = res.businesses
+			})
+		},
 		// async meData() {
 		// 	this.$store.state.loading = true
 		// 	await this.$store

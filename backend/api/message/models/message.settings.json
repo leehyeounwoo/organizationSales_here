@@ -28,6 +28,9 @@
     },
     "useYn": {
       "type": "boolean"
+    },
+    "businessID": {
+      "type": "string"
     }
   }
 }

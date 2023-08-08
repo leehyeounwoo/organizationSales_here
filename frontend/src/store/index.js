@@ -31,6 +31,8 @@ export default new Vuex.Store({
 			hideDetail: true,
 			outlined: true,
 			class: 'small_font bizInput',
+			itemText: 'name',
+			itemValue: 'id',
 		},
 		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0 },
 		dashBoardList: [],

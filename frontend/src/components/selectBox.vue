@@ -12,7 +12,6 @@
 		:hide-details="sel.hideDetail"
 		@change="$emit('change', $event)"
 		@click="$emit('click', $event)"
-		style="min-height:36px;"
 		:return-object="sel.returnObject"
 		:item-text="sel.itemText"
 		:disabled="disable"
@@ -22,6 +21,7 @@
 		:color="sel.color ? sel.color : $store.state.PointColor1"
 		:item-value="sel.itemValue"
 	>
+		style="min-height:36px;"
 	</v-select>
 </template>
 
