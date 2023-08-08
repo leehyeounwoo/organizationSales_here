@@ -23,12 +23,6 @@
     "workingHoursEnd": {
       "type": "time"
     },
-    "manager": {
-      "type": "string"
-    },
-    "managerPhoneNumber": {
-      "type": "string"
-    },
     "workCheckURL": {
       "type": "string"
     },
@@ -42,19 +36,12 @@
       "model": "notice",
       "via": "businesses"
     },
-    "gotoworks": {
-      "via": "business",
-      "collection": "gotoworks"
-    },
-    "managerID": {
-      "type": "email"
-    },
-    "managerPassword": {
-      "type": "password"
-    },
     "code": {
       "type": "string",
       "unique": true
+    },
+    "product": {
+      "type": "json"
     }
   }
 }

@@ -36,15 +36,6 @@
       "model": "vacation",
       "via": "gotowork"
     },
-    "user": {
-      "plugin": "users-permissions",
-      "model": "user",
-      "via": "gotoworks"
-    },
-    "business": {
-      "model": "business",
-      "via": "gotoworks"
-    },
     "userID": {
       "type": "string"
     }

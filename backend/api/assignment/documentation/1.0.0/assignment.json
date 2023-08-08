@@ -531,57 +531,18 @@
           "assignmentStatus": {
             "type": "boolean"
           },
-          "product": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "housingType": {
-                "type": "string"
-              },
-              "dong": {
-                "type": "string"
-              },
-              "ho": {
-                "type": "string"
-              },
-              "contractStatus": {
-                "type": "boolean"
-              },
-              "assignments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "choiceYn": {
-                "type": "boolean"
-              },
-              "assignmentID": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "splitTime": {
             "type": "time"
           },
           "userID": {
             "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "assignment",
+              "noAssignment"
+            ]
           },
           "published_at": {
             "type": "datetime"
@@ -599,14 +560,18 @@
           "assignmentStatus": {
             "type": "boolean"
           },
-          "product": {
-            "type": "string"
-          },
           "splitTime": {
             "type": "time"
           },
           "userID": {
             "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "assignment",
+              "noAssignment"
+            ]
           },
           "published_at": {
             "type": "datetime"

@@ -560,113 +560,11 @@
               "vacation": {
                 "type": "string"
               },
-              "user": {
-                "type": "string"
-              },
-              "business": {
-                "type": "string"
-              },
               "userID": {
                 "type": "string"
               },
               "published_at": {
                 "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "user": {
-            "required": [
-              "id",
-              "username",
-              "email"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "confirmed": {
-                "type": "boolean"
-              },
-              "blocked": {
-                "type": "boolean"
-              },
-              "role": {
-                "type": "string"
-              },
-              "salesPhoneNumber": {
-                "type": "string"
-              },
-              "bank": {
-                "type": "string"
-              },
-              "accountNumber": {
-                "type": "string"
-              },
-              "businessRegistration": {
-                "type": "string"
-              },
-              "businessNumber": {
-                "type": "string"
-              },
-              "gotoworks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "vacations": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "rankId": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "teamID": {
-                "type": "string"
-              },
-              "workingStatus": {
-                "type": "boolean"
-              },
-              "profile": {
-                "type": "string"
-              },
-              "copyAccount": {
-                "type": "string"
-              },
-              "employmentContract": {
-                "type": "string"
-              },
-              "ID_Card": {
-                "type": "string"
               },
               "created_by": {
                 "type": "string"
@@ -713,9 +611,6 @@
             "type": "boolean"
           },
           "gotowork": {
-            "type": "string"
-          },
-          "user": {
             "type": "string"
           },
           "vacationType": {

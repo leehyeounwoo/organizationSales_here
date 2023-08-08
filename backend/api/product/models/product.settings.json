@@ -20,21 +20,25 @@
     "ho": {
       "type": "string"
     },
-    "contractStatus": {
-      "type": "boolean"
-    },
-    "assignments": {
-      "collection": "assignment",
-      "via": "product"
-    },
     "choiceYn": {
       "type": "boolean"
     },
-    "assignmentID": {
-      "type": "string"
-    },
     "businessID": {
       "type": "string"
+    },
+    "contractStatus": {
+      "type": "enumeration",
+      "enum": [
+        "contract",
+        "noContract"
+      ],
+      "default": "contract"
+    },
+    "editLog": {
+      "type": "json"
+    },
+    "assignment": {
+      "type": "json"
     }
   }
 }

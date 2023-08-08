@@ -534,12 +534,6 @@
           "workingHoursEnd": {
             "type": "time"
           },
-          "manager": {
-            "type": "string"
-          },
-          "managerPhoneNumber": {
-            "type": "string"
-          },
           "workCheckURL": {
             "type": "string"
           },
@@ -592,60 +586,11 @@
               }
             }
           },
-          "gotoworks": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "startWork": {
-                  "type": "datetime"
-                },
-                "endWork": {
-                  "type": "datetime"
-                },
-                "date": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "vacation": {
-                  "type": "string"
-                },
-                "user": {
-                  "type": "string"
-                },
-                "business": {
-                  "type": "string"
-                },
-                "userID": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "managerID": {
-            "type": "string"
-          },
-          "managerPassword": {
-            "type": "string"
-          },
           "code": {
             "type": "string"
+          },
+          "product": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"
@@ -666,12 +611,6 @@
           "workingHoursEnd": {
             "type": "time"
           },
-          "manager": {
-            "type": "string"
-          },
-          "managerPhoneNumber": {
-            "type": "string"
-          },
           "workCheckURL": {
             "type": "string"
           },
@@ -684,20 +623,11 @@
           "notice": {
             "type": "string"
           },
-          "gotoworks": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "managerID": {
-            "type": "string"
-          },
-          "managerPassword": {
-            "type": "string"
-          },
           "code": {
             "type": "string"
+          },
+          "product": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"

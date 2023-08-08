@@ -30,11 +30,6 @@
       "via": "vacation",
       "model": "gotoworks"
     },
-    "user": {
-      "plugin": "users-permissions",
-      "model": "user",
-      "via": "vacations"
-    },
     "vacationType": {
       "type": "string"
     },

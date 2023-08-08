@@ -20,15 +20,18 @@
     "assignmentStatus": {
       "type": "boolean"
     },
-    "product": {
-      "via": "assignments",
-      "model": "product"
-    },
     "splitTime": {
       "type": "time"
     },
     "userID": {
       "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "assignment",
+        "noAssignment"
+      ]
     }
   }
 }

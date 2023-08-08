@@ -77,14 +77,6 @@
     "businessNumber": {
       "type": "string"
     },
-    "gotoworks": {
-      "via": "user",
-      "collection": "gotoworks"
-    },
-    "vacations": {
-      "via": "user",
-      "collection": "vacation"
-    },
     "phoneNumber": {
       "type": "string"
     },
@@ -98,7 +90,8 @@
       "type": "string"
     },
     "workingStatus": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "profile": {
       "model": "file",
@@ -143,6 +136,9 @@
       ],
       "plugin": "upload",
       "required": false
+    },
+    "company": {
+      "type": "string"
     }
   }
 }

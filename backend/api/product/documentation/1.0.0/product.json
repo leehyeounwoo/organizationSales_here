@@ -531,57 +531,25 @@
           "ho": {
             "type": "string"
           },
-          "contractStatus": {
-            "type": "boolean"
-          },
-          "assignments": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "assignmentTime": {
-                  "type": "datetime"
-                },
-                "useYn": {
-                  "type": "boolean"
-                },
-                "assignmentStatus": {
-                  "type": "boolean"
-                },
-                "product": {
-                  "type": "string"
-                },
-                "splitTime": {
-                  "type": "time"
-                },
-                "userID": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "choiceYn": {
             "type": "boolean"
           },
-          "assignmentID": {
-            "type": "string"
-          },
           "businessID": {
             "type": "string"
+          },
+          "contractStatus": {
+            "type": "string",
+            "default": "contract",
+            "enum": [
+              "contract",
+              "noContract"
+            ]
+          },
+          "editLog": {
+            "type": "object"
+          },
+          "assignment": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"
@@ -599,23 +567,25 @@
           "ho": {
             "type": "string"
           },
-          "contractStatus": {
-            "type": "boolean"
-          },
-          "assignments": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "choiceYn": {
             "type": "boolean"
           },
-          "assignmentID": {
-            "type": "string"
-          },
           "businessID": {
             "type": "string"
+          },
+          "contractStatus": {
+            "type": "string",
+            "default": "contract",
+            "enum": [
+              "contract",
+              "noContract"
+            ]
+          },
+          "editLog": {
+            "type": "object"
+          },
+          "assignment": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"

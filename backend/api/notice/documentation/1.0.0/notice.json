@@ -550,12 +550,6 @@
                 "workingHoursEnd": {
                   "type": "time"
                 },
-                "manager": {
-                  "type": "string"
-                },
-                "managerPhoneNumber": {
-                  "type": "string"
-                },
                 "workCheckURL": {
                   "type": "string"
                 },
@@ -568,20 +562,11 @@
                 "notice": {
                   "type": "string"
                 },
-                "gotoworks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "managerID": {
-                  "type": "string"
-                },
-                "managerPassword": {
-                  "type": "string"
-                },
                 "code": {
                   "type": "string"
+                },
+                "product": {
+                  "type": "object"
                 },
                 "published_at": {
                   "type": "datetime"
