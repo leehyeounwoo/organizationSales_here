@@ -2,7 +2,7 @@
 	<div class="mt-7">
 		<v-layout align-center justify-end class="header_search">
 			<txtField class="search_box_type" v-model="search_notice" :txtField="search"></txtField>
-			<v-btn class="ml-3 search_btn" color="#009dac"><v-icon>mdi-magnify</v-icon>조회</v-btn>
+			<v-btn class="ml-3 search_btn" color="#009dac" @click="searchNotice"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 		</v-layout>
 		<v-layout class="mt-5">
 			<v-flex xs8>
@@ -214,13 +214,44 @@ export default {
 		}
 	},
 	methods: {
+		searchNotice() {
+			this.$store.state.loading = true
+			let data = {
+				title: this.search_notice,
+			}
+			this.$store.dispatch('notices', data).then(res => {
+				this.noticeTable.items = res.notices
+				this.$store.state.loading = false
+			})
+		},
 		async createNotice() {
-			// let data = {
-			// 	title: this.title_text,
-			// 	detail: this.content_text,
-			// 	useYn: this.show_value,
-			// 	fixYn: this.checkbox_value,
-			// }
+			this.$store.state.loading = true
+			let data = {
+				businesses: [],
+				title: this.title_text,
+				detail: this.content_text,
+				useYn: this.show_value,
+				fixYn: this.checkbox_value,
+			}
+			if (this.notice_file.upload.update) {
+				let file_input = {
+					file: this.notice_file.upload.file,
+				}
+				await this.$store.dispatch('fileUpload', file_input).then(res => {
+					data['fileUpload'] = res.upload.id
+				})
+			}
+			if (this.bizSel.name.length > 0) {
+				for (let i = 0; i < this.bizSel.name.length; i++) {
+					data.businesses.push(this.bizSel.name[i].value)
+				}
+			}
+			console.log(data)
+			this.$store.dispatch('createNotice', data).then(res => {
+				console.log(res)
+				this.sweetDialog.open = false
+				this.first_notices()
+			})
 		},
 		check_notice() {
 			if (this.title_text === '') {
