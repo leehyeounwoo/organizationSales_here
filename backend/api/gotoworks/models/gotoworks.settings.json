@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "gotoworks",
   "info": {
-    "name": "gotoworks"
+    "name": "gotoworks",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -32,17 +33,20 @@
       ]
     },
     "vacation": {
-      "via": "gotowork",
-      "model": "vacation"
+      "model": "vacation",
+      "via": "gotowork"
     },
     "user": {
-      "via": "gotoworks",
       "plugin": "users-permissions",
-      "model": "user"
+      "model": "user",
+      "via": "gotoworks"
     },
     "business": {
-      "via": "gotoworks",
-      "model": "business"
+      "model": "business",
+      "via": "gotoworks"
+    },
+    "userID": {
+      "type": "string"
     }
   }
 }

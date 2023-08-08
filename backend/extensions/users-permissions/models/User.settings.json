@@ -78,12 +78,12 @@
       "type": "string"
     },
     "gotoworks": {
-      "collection": "gotoworks",
-      "via": "user"
+      "via": "user",
+      "collection": "gotoworks"
     },
     "vacations": {
-      "collection": "vacation",
-      "via": "user"
+      "via": "user",
+      "collection": "vacation"
     },
     "phoneNumber": {
       "type": "string"

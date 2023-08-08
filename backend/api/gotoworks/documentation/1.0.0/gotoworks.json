@@ -578,6 +578,9 @@
               "vacationStatus": {
                 "type": "string"
               },
+              "userID": {
+                "type": "string"
+              },
               "published_at": {
                 "type": "datetime"
               },
@@ -749,6 +752,9 @@
               }
             }
           },
+          "userID": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -784,6 +790,9 @@
             "type": "string"
           },
           "business": {
+            "type": "string"
+          },
+          "userID": {
             "type": "string"
           },
           "published_at": {

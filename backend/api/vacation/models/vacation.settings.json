@@ -27,13 +27,13 @@
       "type": "boolean"
     },
     "gotowork": {
-      "model": "gotoworks",
-      "via": "vacation"
+      "via": "vacation",
+      "model": "gotoworks"
     },
     "user": {
-      "via": "vacations",
       "plugin": "users-permissions",
-      "model": "user"
+      "model": "user",
+      "via": "vacations"
     },
     "vacationType": {
       "type": "string"
@@ -45,6 +45,9 @@
         "disagree",
         "waiting"
       ]
+    },
+    "userID": {
+      "type": "string"
     }
   }
 }

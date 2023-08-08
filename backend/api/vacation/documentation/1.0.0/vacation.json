@@ -566,6 +566,9 @@
               "business": {
                 "type": "string"
               },
+              "userID": {
+                "type": "string"
+              },
               "published_at": {
                 "type": "datetime"
               },
@@ -684,6 +687,9 @@
               "waiting"
             ]
           },
+          "userID": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -722,6 +728,9 @@
               "disagree",
               "waiting"
             ]
+          },
+          "userID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

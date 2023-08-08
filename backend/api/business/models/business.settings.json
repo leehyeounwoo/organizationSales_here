@@ -43,8 +43,8 @@
       "via": "businesses"
     },
     "gotoworks": {
-      "collection": "gotoworks",
-      "via": "business"
+      "via": "business",
+      "collection": "gotoworks"
     },
     "managerID": {
       "type": "email"
