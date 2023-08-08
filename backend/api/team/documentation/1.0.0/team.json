@@ -528,36 +528,8 @@
           "useYn": {
             "type": "boolean"
           },
-          "ranks": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "rankName": {
-                  "type": "string"
-                },
-                "useYn": {
-                  "type": "boolean"
-                },
-                "team": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -572,11 +544,8 @@
           "useYn": {
             "type": "boolean"
           },
-          "ranks": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

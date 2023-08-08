@@ -11,17 +11,8 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "assignmentTime": {
-      "type": "datetime"
-    },
     "useYn": {
       "type": "boolean"
-    },
-    "assignmentStatus": {
-      "type": "boolean"
-    },
-    "splitTime": {
-      "type": "time"
     },
     "userID": {
       "type": "string"
@@ -30,8 +21,42 @@
       "type": "enumeration",
       "enum": [
         "assignment",
-        "noAssignment"
+        "counselorNoAssignment",
+        "noAssignment",
+        "reject"
       ]
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "time",
+        "allday",
+        "now"
+      ],
+      "default": "time"
+    },
+    "start": {
+      "type": "time"
+    },
+    "end": {
+      "type": "time"
+    },
+    "productID": {
+      "type": "string"
+    },
+    "orderType": {
+      "type": "enumeration",
+      "enum": [
+        "admin",
+        "couselor"
+      ],
+      "default": "admin"
+    },
+    "holdingTime": {
+      "type": "string"
+    },
+    "businessID": {
+      "type": "string"
     }
   }
 }

@@ -522,17 +522,8 @@
           "id": {
             "type": "string"
           },
-          "assignmentTime": {
-            "type": "datetime"
-          },
           "useYn": {
             "type": "boolean"
-          },
-          "assignmentStatus": {
-            "type": "boolean"
-          },
-          "splitTime": {
-            "type": "time"
           },
           "userID": {
             "type": "string"
@@ -541,8 +532,42 @@
             "type": "string",
             "enum": [
               "assignment",
-              "noAssignment"
+              "counselorNoAssignment",
+              "noAssignment",
+              "reject"
             ]
+          },
+          "type": {
+            "type": "string",
+            "default": "time",
+            "enum": [
+              "time",
+              "allday",
+              "now"
+            ]
+          },
+          "start": {
+            "type": "time"
+          },
+          "end": {
+            "type": "time"
+          },
+          "productID": {
+            "type": "string"
+          },
+          "orderType": {
+            "type": "string",
+            "default": "admin",
+            "enum": [
+              "admin",
+              "couselor"
+            ]
+          },
+          "holdingTime": {
+            "type": "string"
+          },
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -551,17 +576,8 @@
       },
       "NewAssignment": {
         "properties": {
-          "assignmentTime": {
-            "type": "datetime"
-          },
           "useYn": {
             "type": "boolean"
-          },
-          "assignmentStatus": {
-            "type": "boolean"
-          },
-          "splitTime": {
-            "type": "time"
           },
           "userID": {
             "type": "string"
@@ -570,8 +586,42 @@
             "type": "string",
             "enum": [
               "assignment",
-              "noAssignment"
+              "counselorNoAssignment",
+              "noAssignment",
+              "reject"
             ]
+          },
+          "type": {
+            "type": "string",
+            "default": "time",
+            "enum": [
+              "time",
+              "allday",
+              "now"
+            ]
+          },
+          "start": {
+            "type": "time"
+          },
+          "end": {
+            "type": "time"
+          },
+          "productID": {
+            "type": "string"
+          },
+          "orderType": {
+            "type": "string",
+            "default": "admin",
+            "enum": [
+              "admin",
+              "couselor"
+            ]
+          },
+          "holdingTime": {
+            "type": "string"
+          },
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

@@ -17,9 +17,8 @@
     "useYn": {
       "type": "boolean"
     },
-    "ranks": {
-      "collection": "rank",
-      "via": "team"
+    "businessID": {
+      "type": "string"
     }
   }
 }

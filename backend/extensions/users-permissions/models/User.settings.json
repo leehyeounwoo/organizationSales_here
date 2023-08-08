@@ -80,7 +80,7 @@
     "phoneNumber": {
       "type": "string"
     },
-    "rankId": {
+    "rankID": {
       "type": "string"
     },
     "businessID": {
@@ -139,6 +139,9 @@
     },
     "company": {
       "type": "string"
+    },
+    "editLog": {
+      "type": "json"
     }
   }
 }

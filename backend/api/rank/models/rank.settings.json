@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "ranks",
   "info": {
-    "name": "rank"
+    "name": "rank",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -16,9 +17,8 @@
     "useYn": {
       "type": "boolean"
     },
-    "team": {
-      "via": "ranks",
-      "model": "team"
+    "businessID": {
+      "type": "string"
     }
   }
 }

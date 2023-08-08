@@ -11,24 +11,12 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "vacationDate": {
-      "type": "date"
-    },
-    "vacationReason": {
-      "type": "richtext"
-    },
-    "adminId": {
-      "type": "string"
-    },
-    "comment": {
-      "type": "string"
-    },
-    "viewStatus": {
-      "type": "boolean"
+    "rejectComment": {
+      "type": "text"
     },
     "gotowork": {
-      "via": "vacation",
-      "model": "gotoworks"
+      "model": "gotoworks",
+      "via": "vacation"
     },
     "vacationType": {
       "type": "string"
@@ -43,6 +31,18 @@
     },
     "userID": {
       "type": "string"
+    },
+    "start": {
+      "type": "date"
+    },
+    "end": {
+      "type": "date"
+    },
+    "vacationReason": {
+      "type": "text"
+    },
+    "adminInfo": {
+      "type": "json"
     }
   }
 }

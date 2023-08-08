@@ -40,8 +40,11 @@
       "type": "json"
     },
     "notices": {
-      "via": "businesses",
-      "collection": "notice"
+      "collection": "notice",
+      "via": "businesses"
+    },
+    "location": {
+      "type": "string"
     }
   }
 }

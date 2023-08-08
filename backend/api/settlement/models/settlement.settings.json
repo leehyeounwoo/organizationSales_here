@@ -42,14 +42,11 @@
       "plugin": "upload",
       "required": false
     },
-    "comment": {
+    "rejectComment": {
       "type": "string"
     },
     "adminName": {
       "type": "string"
-    },
-    "paymentDate": {
-      "type": "date"
     },
     "settlement_turn_tables": {
       "collection": "settlement-turn-table",
@@ -57,6 +54,24 @@
     },
     "turn": {
       "type": "string"
+    },
+    "totalPrice": {
+      "type": "biginteger"
+    },
+    "name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "birth": {
+      "type": "string"
+    },
+    "location": {
+      "type": "text"
+    },
+    "subLocation": {
+      "type": "text"
     }
   }
 }

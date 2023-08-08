@@ -595,6 +595,9 @@
               }
             }
           },
+          "location": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -634,6 +637,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "location": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

@@ -18,15 +18,15 @@
       "type": "boolean"
     },
     "businesses": {
-      "collection": "business",
       "via": "notices",
+      "collection": "business",
       "dominant": true
     },
     "fixYn": {
       "type": "boolean"
     },
     "detail": {
-      "type": "string"
+      "type": "text"
     },
     "fileUpload": {
       "collection": "file",

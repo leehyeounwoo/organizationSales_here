@@ -571,6 +571,9 @@
                     "type": "string"
                   }
                 },
+                "location": {
+                  "type": "string"
+                },
                 "published_at": {
                   "type": "datetime"
                 },

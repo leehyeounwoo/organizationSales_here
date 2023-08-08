@@ -564,13 +564,10 @@
                   "type": "string"
                 }
               },
-              "comment": {
+              "rejectComment": {
                 "type": "string"
               },
               "adminName": {
-                "type": "string"
-              },
-              "paymentDate": {
                 "type": "string"
               },
               "settlement_turn_tables": {
@@ -580,6 +577,24 @@
                 }
               },
               "turn": {
+                "type": "string"
+              },
+              "totalPrice": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "birth": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "subLocation": {
                 "type": "string"
               },
               "published_at": {
@@ -676,10 +691,16 @@
           "adminName": {
             "type": "string"
           },
-          "amount": {
+          "turnTableDegree": {
             "type": "string"
           },
-          "turnTableDegree": {
+          "amount": {
+            "type": "integer"
+          },
+          "bank": {
+            "type": "string"
+          },
+          "bankAccount": {
             "type": "string"
           },
           "published_at": {
@@ -708,10 +729,16 @@
           "adminName": {
             "type": "string"
           },
-          "amount": {
+          "turnTableDegree": {
             "type": "string"
           },
-          "turnTableDegree": {
+          "amount": {
+            "type": "integer"
+          },
+          "bank": {
+            "type": "string"
+          },
+          "bankAccount": {
             "type": "string"
           },
           "published_at": {

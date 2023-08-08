@@ -522,20 +522,8 @@
           "id": {
             "type": "string"
           },
-          "vacationDate": {
+          "rejectComment": {
             "type": "string"
-          },
-          "vacationReason": {
-            "type": "string"
-          },
-          "adminId": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "viewStatus": {
-            "type": "boolean"
           },
           "gotowork": {
             "required": [
@@ -546,10 +534,10 @@
                 "type": "string"
               },
               "startWork": {
-                "type": "datetime"
+                "type": "time"
               },
               "endWork": {
-                "type": "datetime"
+                "type": "time"
               },
               "date": {
                 "type": "string"
@@ -588,6 +576,18 @@
           "userID": {
             "type": "string"
           },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "vacationReason": {
+            "type": "string"
+          },
+          "adminInfo": {
+            "type": "object"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -595,20 +595,8 @@
       },
       "NewVacation": {
         "properties": {
-          "vacationDate": {
+          "rejectComment": {
             "type": "string"
-          },
-          "vacationReason": {
-            "type": "string"
-          },
-          "adminId": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "viewStatus": {
-            "type": "boolean"
           },
           "gotowork": {
             "type": "string"
@@ -626,6 +614,18 @@
           },
           "userID": {
             "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "vacationReason": {
+            "type": "string"
+          },
+          "adminInfo": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"

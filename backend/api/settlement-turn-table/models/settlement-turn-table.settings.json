@@ -42,10 +42,16 @@
     "adminName": {
       "type": "string"
     },
-    "amount": {
+    "turnTableDegree": {
       "type": "string"
     },
-    "turnTableDegree": {
+    "amount": {
+      "type": "biginteger"
+    },
+    "bank": {
+      "type": "string"
+    },
+    "bankAccount": {
       "type": "string"
     }
   }

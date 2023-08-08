@@ -12,10 +12,10 @@
   },
   "attributes": {
     "startWork": {
-      "type": "datetime"
+      "type": "time"
     },
     "endWork": {
-      "type": "datetime"
+      "type": "time"
     },
     "date": {
       "type": "date"
@@ -33,8 +33,8 @@
       ]
     },
     "vacation": {
-      "model": "vacation",
-      "via": "gotowork"
+      "via": "gotowork",
+      "model": "vacation"
     },
     "userID": {
       "type": "string"
