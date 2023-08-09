@@ -130,6 +130,7 @@ export default {
 							outlined: true,
 							hideDetail: true,
 							errorMessage: '',
+							disable: true,
 						},
 					},
 					// 5
@@ -228,6 +229,7 @@ export default {
 			this.createDialog.type = 'edit'
 			this.createDialog.items[0].value = item.name
 			this.createDialog.items[1].value = item.phoneNumber
+			this.createDialog.items[4].value = item.code
 			console.log(this.createDialog)
 			this.createDialog.dialog = true
 		},

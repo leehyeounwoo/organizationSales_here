@@ -145,10 +145,10 @@ export const businesses = gql`
 			phoneNumber
 			workingHoursStart
 			workingHoursEnd
-
 			workCheckURL
 			splitHoldingTime
 			maximumHoldingTime
+			code
 			created_at
 		}
 	}

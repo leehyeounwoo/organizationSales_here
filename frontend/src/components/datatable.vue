@@ -1596,6 +1596,9 @@
 			<template v-slot:[`item.managerPhoneNumber`]="{ item }">
 				<div>{{ item.manager ? item.manager.phoneNumber : '' }}</div>
 			</template>
+			<template v-slot:[`item.workCheckURL`]="{ item }">
+				<div>{{ item.code ? item.code : '' }}</div>
+			</template>
 			<!-- 사업지관리 - 등록상품 -->
 			<template v-slot:[`item.select_product`]="{ item }">
 				<v-layout class="dt-align-set ml-0" justify-center>

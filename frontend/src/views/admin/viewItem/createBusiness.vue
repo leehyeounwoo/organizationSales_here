@@ -146,7 +146,10 @@
 											<v-radio color="#009dac" label="해제" :value="false"></v-radio>
 										</v-radio-group>
 									</v-flex>
-									<v-flex>
+									<v-flex v-if="setdialog.type === 'create'">
+										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">생성</v-btn>
+									</v-flex>
+									<v-flex v-else>
 										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">적용</v-btn>
 									</v-flex>
 									<v-flex>
@@ -237,178 +240,6 @@ export default {
 						type: 'password',
 					},
 				},
-				{
-					number: 2,
-					user_confirmed: '',
-
-					txtfield1: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
-				{
-					number: 3,
-					user_confirmed: '',
-
-					txtfield1: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
-				{
-					number: 4,
-					user_confirmed: '',
-
-					txtfield1: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
-				{
-					number: 5,
-					user_confirmed: '',
-
-					txtfield1: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
-				{
-					number: 6,
-					user_confirmed: '',
-
-					value: '',
-					txtfield1: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
 			],
 		}
 	},
@@ -445,9 +276,11 @@ export default {
 				password: item.txtfield4.value,
 				confirmed: item.user_confirmed,
 			}
-			this.$store.dispatch('register', data).then(res => {
-				console.log(res)
-			})
+			if (this.setdialog.type === 'create') {
+				this.$store.dispatch('register', data).then(res => {
+					console.log(res)
+				})
+			}
 		},
 		businessCheck() {
 			if (this.setdialog.items[0].value === '') {
@@ -585,6 +418,7 @@ export default {
 	font-size: 14px;
 	border-bottom: 1px solid #c8c8c8;
 	border-left: 1px solid #c8c8c8;
+	border-right: 1px solid #c8c8c8;
 }
 .save_biz {
 	width: 100px !important;
