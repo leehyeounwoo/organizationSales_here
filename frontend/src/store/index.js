@@ -18,6 +18,7 @@ import {
 	fileUpload,
 	createMessage,
 	updateMessage,
+	register,
 } from '../apollo/mutation'
 import {
 	me,
@@ -532,6 +533,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: updateMessage,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		register({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: register,
 						variables: input,
 					})
 					.then(({ data }) => {

@@ -163,6 +163,16 @@ export const updateVacation = gql`
 		}
 	}
 `
+export const register = gql`
+	mutation register($email: String!, $password: String!, $username: String!, $phoneNumber: String) {
+		register(input: { email: $email, password: $password, username: $username, phoneNumber: $phoneNumber }) {
+			jwt
+			user {
+				id
+			}
+		}
+	}
+`
 export const updateUser = gql`
 	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankId: String, $teamID: String) {
 		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber, rankId: $rankId, teamID: $teamID } }) {

@@ -141,7 +141,7 @@
 							<v-flex>
 								<v-layout align-center>
 									<v-flex class="pl-3" style="max-width:150px">
-										<v-radio-group row class="system-radio-label">
+										<v-radio-group v-model="right.user_confirmed" row class="system-radio-label">
 											<v-radio color="#009dac" label="지정" :value="true"></v-radio>
 											<v-radio color="#009dac" label="해제" :value="false"></v-radio>
 										</v-radio-group>
@@ -184,6 +184,7 @@ export default {
 	},
 	data() {
 		return {
+			user_confirmed: '',
 			sweetDialog: {
 				open: false,
 				title: '사업지 생성',
@@ -204,6 +205,7 @@ export default {
 			right_data: [
 				{
 					number: 1,
+					user_confirmed: '',
 					txtfield1: {
 						value: '',
 						maxlength: '255',
@@ -237,6 +239,8 @@ export default {
 				},
 				{
 					number: 2,
+					user_confirmed: '',
+
 					txtfield1: {
 						value: '',
 						maxlength: '255',
@@ -270,6 +274,8 @@ export default {
 				},
 				{
 					number: 3,
+					user_confirmed: '',
+
 					txtfield1: {
 						value: '',
 						maxlength: '255',
@@ -303,6 +309,8 @@ export default {
 				},
 				{
 					number: 4,
+					user_confirmed: '',
+
 					txtfield1: {
 						value: '',
 						maxlength: '255',
@@ -336,6 +344,8 @@ export default {
 				},
 				{
 					number: 5,
+					user_confirmed: '',
+
 					txtfield1: {
 						value: '',
 						maxlength: '255',
@@ -369,6 +379,8 @@ export default {
 				},
 				{
 					number: 6,
+					user_confirmed: '',
+
 					value: '',
 					txtfield1: {
 						maxlength: '255',
@@ -421,6 +433,21 @@ export default {
 		},
 		checkManager(item) {
 			console.log(item)
+			if (!item.txtfield3.value) {
+				this.sweetInfo.title = '아이디 입력'
+				this.sweetInfo.content = '아이디를 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			let data = {
+				username: item.txtfield1.value,
+				phoneNumber: item.txtfield2.value,
+				email: item.txtfield3.value,
+				password: item.txtfield4.value,
+				confirmed: item.user_confirmed,
+			}
+			this.$store.dispatch('register', data).then(res => {
+				console.log(res)
+			})
 		},
 		businessCheck() {
 			if (this.setdialog.items[0].value === '') {
