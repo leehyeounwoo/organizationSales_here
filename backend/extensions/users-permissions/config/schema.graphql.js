@@ -30,17 +30,17 @@ module.exports = {
       username: String!
       email: String!
       password: String!
-      name: String
-      companyName: String
-      companyNumber: String
-      companyPaper: ID
-      authNumber: Int
-      phone: String
       bank: String
-      businessID: String
-      account: String
-      confirmed: Boolean
-      counselorStatus: String
+      salesPhoneNumber: String
+      accountNumber: String
+      businessRegistration: ID
+      profile: ID
+      copyAccount: ID
+      employmentContract: ID
+      iD_Card: ID
+      company: String
+      rankID: String
+      editLog: JSON
     }
     type emailDuplicate {
       duplicate: JSON

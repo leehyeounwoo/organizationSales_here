@@ -11,6 +11,8 @@ const _ = require("lodash");
 const grant = require("grant-koa");
 const { sanitizeEntity, getAbsoluteServerUrl } = require("strapi-utils");
 const crypto = require("crypto");
+// const jwt_decode = require("jwt-decode"); //npmpackage
+
 const emailRegExp =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const formatError = (error) => [
@@ -19,6 +21,9 @@ const formatError = (error) => [
 
 module.exports = {
   async callback(ctx) {
+    console.log(ctx);
+    console.log(ctx.provider);
+    console.log(ctx.request.body);
     const provider = ctx.params.provider || "local";
     const params = ctx.request.body;
 
@@ -265,6 +270,76 @@ module.exports = {
       params.passwordConfirmation &&
       params.password !== params.passwordConfirmation
     ) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: "Auth.form.error.password.matching",
+          message: "Passwords do not match.",
+        })
+      );
+    } else {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: "Auth.form.error.params.provide",
+          message: "Incorrect params provided.",
+        })
+      );
+    }
+  },
+  async editPassword(ctx) {
+    const params = _.assign({}, ctx.request.body, ctx.params);
+    // console.log(params);
+    // let test = await strapi
+    //   .query("user", "users-permissions")
+    //   .findOne({ email: `${params.email}` });
+
+    // identifier: String!
+    //       password: String!
+    //       provider: String = "local"
+    // let test1 = await strapi.plugins[
+    //   "users-permissions"
+    // ].controllers.auth.callback({
+    //   identifier: `${params.email}`,
+    //   password: `${params.password}`,
+    // });
+    // console.log(test1);
+    // ("user", "users-permissions")
+    //       .register({ email: `${params.email}`, password: `${params.password}` });
+
+    // console.log(test);
+    // ---------------
+    if (params.password && params.newPassword && params.email) {
+      const user = await strapi
+        .query("user", "users-permissions")
+        .findOne({ email: `${params.email}` });
+      if (!user) {
+        return ctx.badRequest(
+          null,
+          formatError({
+            id: "Auth.form.error.code.provide",
+            message: "Incorrect code provided.",
+          })
+        );
+      }
+      const password = await strapi.plugins[
+        "users-permissions"
+      ].services.user.hashPassword({
+        password: params.newpassword,
+      });
+      // Update the user.
+      await strapi
+        .query("user", "users-permissions")
+        .update({ id: user.id }, { password });
+      ctx.send({
+        jwt: strapi.plugins["users-permissions"].services.jwt.issue({
+          id: user.id,
+        }),
+        user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+          model: strapi.query("user", "users-permissions").model,
+        }),
+      });
+    } else if (params.password && params.newpassword) {
       return ctx.badRequest(
         null,
         formatError({

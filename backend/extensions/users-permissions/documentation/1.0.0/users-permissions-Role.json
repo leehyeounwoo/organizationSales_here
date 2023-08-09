@@ -567,34 +567,16 @@
                 "accountNumber": {
                   "type": "string"
                 },
-                "fileUpload": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "businessRegistration": {
                   "type": "string"
                 },
                 "businessNumber": {
                   "type": "string"
                 },
-                "gotoworks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "vacations": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "phoneNumber": {
                   "type": "string"
                 },
-                "rankId": {
+                "rankID": {
                   "type": "string"
                 },
                 "businessID": {
@@ -617,6 +599,12 @@
                 },
                 "ID_Card": {
                   "type": "string"
+                },
+                "company": {
+                  "type": "string"
+                },
+                "editLog": {
+                  "type": "object"
                 },
                 "created_by": {
                   "type": "string"

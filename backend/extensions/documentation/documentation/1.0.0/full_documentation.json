@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "08/07/2023 4:59:50 PM"
+    "x-generation-date": "08/09/2023 4:22:42 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -1563,6 +1563,517 @@
         "summary": "",
         "tags": [
           "Gotoworks"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/messages": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Message"
+        ],
+        "parameters": [
+          {
+            "name": "_limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results possible",
+            "schema": {
+              "type": "integer"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort according to a specific field.",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_start",
+            "in": "query",
+            "required": false,
+            "description": "Skip a specific number of entries (especially useful for pagination)",
+            "schema": {
+              "type": "integer"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "=",
+            "in": "query",
+            "required": false,
+            "description": "Get entries that matches exactly your input",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_ne",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are not equals to something",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_lt",
+            "in": "query",
+            "required": false,
+            "description": "Get record that are lower than a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_lte",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are lower than or equal to a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_gt",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are greater than a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_gte",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are greater than  or equal a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_contains",
+            "in": "query",
+            "required": false,
+            "description": "Get records that contains a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_containss",
+            "in": "query",
+            "required": false,
+            "description": "Get records that contains (case sensitive) a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_in",
+            "in": "query",
+            "required": false,
+            "description": "Get records that matches any value in the array of values",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_nin",
+            "in": "query",
+            "required": false,
+            "description": "Get records that doesn't match any value in the array of values",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deprecated": false
+          }
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "description": "Create a new record",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Message"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessage"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/count": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Message"
+        ],
+        "parameters": []
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Message"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "deprecated": false,
+        "description": "Update a record",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Message"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessage"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "deprecated": false,
+        "description": "Delete a record",
+        "responses": {
+          "200": {
+            "description": "deletes a single record based on the ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Message"
         ],
         "parameters": [
           {
@@ -3635,6 +4146,530 @@
         ]
       }
     },
+    "/send-sms": {
+      "get": {
+        "deprecated": false,
+        "description": "Find all the send-sms's records",
+        "responses": {
+          "200": {
+            "description": "Retrieve send-sms document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Send-sms"
+        ],
+        "parameters": [
+          {
+            "name": "_limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results possible",
+            "schema": {
+              "type": "integer"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort according to a specific field.",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_start",
+            "in": "query",
+            "required": false,
+            "description": "Skip a specific number of entries (especially useful for pagination)",
+            "schema": {
+              "type": "integer"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "=",
+            "in": "query",
+            "required": false,
+            "description": "Get entries that matches exactly your input",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_ne",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are not equals to something",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_lt",
+            "in": "query",
+            "required": false,
+            "description": "Get record that are lower than a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_lte",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are lower than or equal to a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_gt",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are greater than a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_gte",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are greater than  or equal a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_contains",
+            "in": "query",
+            "required": false,
+            "description": "Get records that contains a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_containss",
+            "in": "query",
+            "required": false,
+            "description": "Get records that contains (case sensitive) a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_in",
+            "in": "query",
+            "required": false,
+            "description": "Get records that matches any value in the array of values",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_nin",
+            "in": "query",
+            "required": false,
+            "description": "Get records that doesn't match any value in the array of values",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deprecated": false
+          }
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "description": "Create a new send-sms record",
+        "responses": {
+          "200": {
+            "description": "Retrieve send-sms document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Send-sms"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSend-sms"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-sms/count": {
+      "get": {
+        "deprecated": false,
+        "description": "Retrieve the numver of send-sms documents",
+        "responses": {
+          "200": {
+            "description": "Retrieve send-sms document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Send-sms"
+        ],
+        "parameters": []
+      }
+    },
+    "/send-sms/{id}": {
+      "get": {
+        "deprecated": false,
+        "description": "Find one send-sms record",
+        "responses": {
+          "200": {
+            "description": "Retrieve send-sms document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Send-sms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "deprecated": false,
+        "description": "Update a single send-sms record",
+        "responses": {
+          "200": {
+            "description": "Retrieve send-sms document(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Send-sms"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSend-sms"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "deprecated": false,
+        "description": "Delete a single send-sms record",
+        "responses": {
+          "200": {
+            "description": "deletes a single send-sms based on the ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Send-sms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/settlement-edit-logs": {
       "get": {
         "deprecated": false,
@@ -5179,6 +6214,517 @@
         "summary": "",
         "tags": [
           "Settlement"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/systems": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/System"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "System"
+        ],
+        "parameters": [
+          {
+            "name": "_limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results possible",
+            "schema": {
+              "type": "integer"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort according to a specific field.",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_start",
+            "in": "query",
+            "required": false,
+            "description": "Skip a specific number of entries (especially useful for pagination)",
+            "schema": {
+              "type": "integer"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "=",
+            "in": "query",
+            "required": false,
+            "description": "Get entries that matches exactly your input",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_ne",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are not equals to something",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_lt",
+            "in": "query",
+            "required": false,
+            "description": "Get record that are lower than a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_lte",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are lower than or equal to a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_gt",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are greater than a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_gte",
+            "in": "query",
+            "required": false,
+            "description": "Get records that are greater than  or equal a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_contains",
+            "in": "query",
+            "required": false,
+            "description": "Get records that contains a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_containss",
+            "in": "query",
+            "required": false,
+            "description": "Get records that contains (case sensitive) a value",
+            "schema": {
+              "type": "string"
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_in",
+            "in": "query",
+            "required": false,
+            "description": "Get records that matches any value in the array of values",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deprecated": false
+          },
+          {
+            "name": "_nin",
+            "in": "query",
+            "required": false,
+            "description": "Get records that doesn't match any value in the array of values",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "deprecated": false
+          }
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "description": "Create a new record",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "System"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSystem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/systems/count": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "System"
+        ],
+        "parameters": []
+      }
+    },
+    "/systems/{id}": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "System"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "deprecated": false,
+        "description": "Update a record",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "System"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSystem"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "deprecated": false,
+        "description": "Delete a record",
+        "responses": {
+          "200": {
+            "description": "deletes a single record based on the ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "System"
         ],
         "parameters": [
           {
@@ -8325,57 +9871,52 @@
           "id": {
             "type": "string"
           },
-          "assignmentTime": {
-            "type": "datetime"
-          },
           "useYn": {
             "type": "boolean"
           },
-          "assignmentStatus": {
-            "type": "boolean"
+          "userID": {
+            "type": "string"
           },
-          "product": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "housingType": {
-                "type": "string"
-              },
-              "dong": {
-                "type": "string"
-              },
-              "ho": {
-                "type": "string"
-              },
-              "contractStatus": {
-                "type": "boolean"
-              },
-              "assignments": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "choiceYn": {
-                "type": "boolean"
-              },
-              "assignmentID": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
+          "status": {
+            "type": "string",
+            "enum": [
+              "assignment",
+              "counselorNoAssignment",
+              "noAssignment",
+              "reject"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "default": "time",
+            "enum": [
+              "time",
+              "allday",
+              "now"
+            ]
+          },
+          "start": {
+            "type": "time"
+          },
+          "end": {
+            "type": "time"
+          },
+          "productID": {
+            "type": "string"
+          },
+          "orderType": {
+            "type": "string",
+            "default": "admin",
+            "enum": [
+              "admin",
+              "couselor"
+            ]
+          },
+          "holdingTime": {
+            "type": "string"
+          },
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -8384,16 +9925,51 @@
       },
       "NewAssignment": {
         "properties": {
-          "assignmentTime": {
-            "type": "datetime"
-          },
           "useYn": {
             "type": "boolean"
           },
-          "assignmentStatus": {
-            "type": "boolean"
+          "userID": {
+            "type": "string"
           },
-          "product": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "assignment",
+              "counselorNoAssignment",
+              "noAssignment",
+              "reject"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "default": "time",
+            "enum": [
+              "time",
+              "allday",
+              "now"
+            ]
+          },
+          "start": {
+            "type": "time"
+          },
+          "end": {
+            "type": "time"
+          },
+          "productID": {
+            "type": "string"
+          },
+          "orderType": {
+            "type": "string",
+            "default": "admin",
+            "enum": [
+              "admin",
+              "couselor"
+            ]
+          },
+          "holdingTime": {
+            "type": "string"
+          },
+          "businessID": {
             "type": "string"
           },
           "published_at": {
@@ -8427,12 +10003,6 @@
           "workingHoursEnd": {
             "type": "time"
           },
-          "manager": {
-            "type": "string"
-          },
-          "managerPhoneNumber": {
-            "type": "string"
-          },
           "workCheckURL": {
             "type": "string"
           },
@@ -8442,50 +10012,13 @@
           "maximumHoldingTime": {
             "type": "string"
           },
-          "notice": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "useYn": {
-                "type": "boolean"
-              },
-              "businesses": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "fixYn": {
-                "type": "boolean"
-              },
-              "detail": {
-                "type": "string"
-              },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
+          "code": {
+            "type": "string"
           },
-          "gotoworks": {
+          "product": {
+            "type": "object"
+          },
+          "notices": {
             "type": "array",
             "items": {
               "required": [
@@ -8495,26 +10028,29 @@
                 "id": {
                   "type": "string"
                 },
-                "startWork": {
-                  "type": "datetime"
-                },
-                "endWork": {
-                  "type": "datetime"
-                },
-                "date": {
+                "title": {
                   "type": "string"
                 },
-                "status": {
+                "useYn": {
+                  "type": "boolean"
+                },
+                "businesses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "fixYn": {
+                  "type": "boolean"
+                },
+                "detail": {
                   "type": "string"
                 },
-                "vacation": {
-                  "type": "string"
-                },
-                "user": {
-                  "type": "string"
-                },
-                "business": {
-                  "type": "string"
+                "fileUpload": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "published_at": {
                   "type": "datetime"
@@ -8528,10 +10064,7 @@
               }
             }
           },
-          "managerID": {
-            "type": "string"
-          },
-          "managerPassword": {
+          "location": {
             "type": "string"
           },
           "published_at": {
@@ -8553,12 +10086,6 @@
           "workingHoursEnd": {
             "type": "time"
           },
-          "manager": {
-            "type": "string"
-          },
-          "managerPhoneNumber": {
-            "type": "string"
-          },
           "workCheckURL": {
             "type": "string"
           },
@@ -8568,19 +10095,19 @@
           "maximumHoldingTime": {
             "type": "string"
           },
-          "notice": {
+          "code": {
             "type": "string"
           },
-          "gotoworks": {
+          "product": {
+            "type": "object"
+          },
+          "notices": {
             "type": "array",
             "items": {
               "type": "string"
             }
           },
-          "managerID": {
-            "type": "string"
-          },
-          "managerPassword": {
+          "location": {
             "type": "string"
           },
           "published_at": {
@@ -8603,10 +10130,10 @@
             "type": "string"
           },
           "startWork": {
-            "type": "datetime"
+            "type": "time"
           },
           "endWork": {
-            "type": "datetime"
+            "type": "time"
           },
           "date": {
             "type": "string"
@@ -8631,25 +10158,10 @@
               "id": {
                 "type": "string"
               },
-              "vacationDate": {
+              "rejectComment": {
                 "type": "string"
-              },
-              "vacationReason": {
-                "type": "string"
-              },
-              "adminId": {
-                "type": "string"
-              },
-              "comment": {
-                "type": "string"
-              },
-              "viewStatus": {
-                "type": "boolean"
               },
               "gotowork": {
-                "type": "string"
-              },
-              "user": {
                 "type": "string"
               },
               "vacationType": {
@@ -8658,6 +10170,21 @@
               "vacationStatus": {
                 "type": "string"
               },
+              "userID": {
+                "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
+              },
+              "vacationReason": {
+                "type": "string"
+              },
+              "adminInfo": {
+                "type": "object"
+              },
               "published_at": {
                 "type": "datetime"
               },
@@ -8669,168 +10196,8 @@
               }
             }
           },
-          "user": {
-            "required": [
-              "id",
-              "username",
-              "email"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "confirmed": {
-                "type": "boolean"
-              },
-              "blocked": {
-                "type": "boolean"
-              },
-              "role": {
-                "type": "string"
-              },
-              "salesPhoneNumber": {
-                "type": "string"
-              },
-              "bank": {
-                "type": "string"
-              },
-              "accountNumber": {
-                "type": "string"
-              },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "businessRegistration": {
-                "type": "string"
-              },
-              "businessNumber": {
-                "type": "string"
-              },
-              "gotoworks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "vacations": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "rankId": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "teamID": {
-                "type": "string"
-              },
-              "workingStatus": {
-                "type": "boolean"
-              },
-              "profile": {
-                "type": "string"
-              },
-              "copyAccount": {
-                "type": "string"
-              },
-              "employmentContract": {
-                "type": "string"
-              },
-              "ID_Card": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "business": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "workingHoursStart": {
-                "type": "time"
-              },
-              "workingHoursEnd": {
-                "type": "time"
-              },
-              "manager": {
-                "type": "string"
-              },
-              "managerPhoneNumber": {
-                "type": "string"
-              },
-              "workCheckURL": {
-                "type": "string"
-              },
-              "splitHoldingTime": {
-                "type": "string"
-              },
-              "maximumHoldingTime": {
-                "type": "string"
-              },
-              "notice": {
-                "type": "string"
-              },
-              "gotoworks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "managerID": {
-                "type": "string"
-              },
-              "managerPassword": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
+          "userID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -8840,10 +10207,10 @@
       "NewGotoworks": {
         "properties": {
           "startWork": {
-            "type": "datetime"
+            "type": "time"
           },
           "endWork": {
-            "type": "datetime"
+            "type": "time"
           },
           "date": {
             "type": "string"
@@ -8863,10 +10230,75 @@
           "vacation": {
             "type": "string"
           },
-          "user": {
+          "userID": {
             "type": "string"
           },
-          "business": {
+          "published_at": {
+            "type": "datetime"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        }
+      },
+      "Message": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scheduleGuide",
+              "paymentScheduleInformation",
+              "paymentNotification",
+              "paymentResultGuide"
+            ]
+          },
+          "useYn": {
+            "type": "boolean"
+          },
+          "businessID": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "datetime"
+          }
+        }
+      },
+      "NewMessage": {
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scheduleGuide",
+              "paymentScheduleInformation",
+              "paymentNotification",
+              "paymentResultGuide"
+            ]
+          },
+          "useYn": {
+            "type": "boolean"
+          },
+          "businessID": {
             "type": "string"
           },
           "published_at": {
@@ -8916,12 +10348,6 @@
                 "workingHoursEnd": {
                   "type": "time"
                 },
-                "manager": {
-                  "type": "string"
-                },
-                "managerPhoneNumber": {
-                  "type": "string"
-                },
                 "workCheckURL": {
                   "type": "string"
                 },
@@ -8931,19 +10357,19 @@
                 "maximumHoldingTime": {
                   "type": "string"
                 },
-                "notice": {
+                "code": {
                   "type": "string"
                 },
-                "gotoworks": {
+                "product": {
+                  "type": "object"
+                },
+                "notices": {
                   "type": "array",
                   "items": {
                     "type": "string"
                   }
                 },
-                "managerID": {
-                  "type": "string"
-                },
-                "managerPassword": {
+                "location": {
                   "type": "string"
                 },
                 "published_at": {
@@ -9119,48 +10545,25 @@
           "ho": {
             "type": "string"
           },
-          "contractStatus": {
-            "type": "boolean"
-          },
-          "assignments": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "assignmentTime": {
-                  "type": "datetime"
-                },
-                "useYn": {
-                  "type": "boolean"
-                },
-                "assignmentStatus": {
-                  "type": "boolean"
-                },
-                "product": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "choiceYn": {
             "type": "boolean"
           },
-          "assignmentID": {
+          "businessID": {
             "type": "string"
+          },
+          "contractStatus": {
+            "type": "string",
+            "default": "contract",
+            "enum": [
+              "contract",
+              "noContract"
+            ]
+          },
+          "editLog": {
+            "type": "object"
+          },
+          "assignment": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"
@@ -9178,20 +10581,25 @@
           "ho": {
             "type": "string"
           },
-          "contractStatus": {
-            "type": "boolean"
-          },
-          "assignments": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "choiceYn": {
             "type": "boolean"
           },
-          "assignmentID": {
+          "businessID": {
             "type": "string"
+          },
+          "contractStatus": {
+            "type": "string",
+            "default": "contract",
+            "enum": [
+              "contract",
+              "noContract"
+            ]
+          },
+          "editLog": {
+            "type": "object"
+          },
+          "assignment": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"
@@ -9218,36 +10626,8 @@
           "useYn": {
             "type": "boolean"
           },
-          "team": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "useYn": {
-                "type": "boolean"
-              },
-              "ranks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -9262,8 +10642,52 @@
           "useYn": {
             "type": "boolean"
           },
-          "team": {
+          "businessID": {
             "type": "string"
+          },
+          "published_at": {
+            "type": "datetime"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        }
+      },
+      "Send-sms": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "authcode": {
+            "type": "integer"
+          },
+          "published_at": {
+            "type": "datetime"
+          }
+        }
+      },
+      "NewSend-sms": {
+        "properties": {
+          "receiver": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "authcode": {
+            "type": "integer"
           },
           "published_at": {
             "type": "datetime"
@@ -9338,58 +10762,76 @@
           "id": {
             "type": "string"
           },
-          "settlements": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "ProductID": {
-                  "type": "string"
-                },
-                "contractDate": {
-                  "type": "datetime"
-                },
-                "settlementStatus": {
-                  "type": "string"
-                },
-                "degree": {
-                  "type": "string"
-                },
-                "userID": {
-                  "type": "string"
-                },
-                "attachment": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "comment": {
-                  "type": "string"
-                },
-                "adminName": {
-                  "type": "string"
-                },
-                "paymentDate": {
-                  "type": "string"
-                },
-                "turnTable": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
+          "settlement": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ProductID": {
+                "type": "string"
+              },
+              "contractDate": {
+                "type": "datetime"
+              },
+              "settlementStatus": {
+                "type": "string"
+              },
+              "degree": {
+                "type": "string"
+              },
+              "userID": {
+                "type": "string"
+              },
+              "attachment": {
+                "type": "array",
+                "items": {
                   "type": "string"
                 }
+              },
+              "rejectComment": {
+                "type": "string"
+              },
+              "adminName": {
+                "type": "string"
+              },
+              "settlement_turn_tables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "turn": {
+                "type": "string"
+              },
+              "totalPrice": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "birth": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "subLocation": {
+                "type": "string"
+              },
+              "published_at": {
+                "type": "datetime"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
               }
             }
           },
@@ -9476,6 +10918,18 @@
           "adminName": {
             "type": "string"
           },
+          "turnTableDegree": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "bank": {
+            "type": "string"
+          },
+          "bankAccount": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -9483,11 +10937,8 @@
       },
       "NewSettlement-turn-table": {
         "properties": {
-          "settlements": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "settlement": {
+            "type": "string"
           },
           "PaymentDate": {
             "type": "string"
@@ -9503,6 +10954,18 @@
             "type": "string"
           },
           "adminName": {
+            "type": "string"
+          },
+          "turnTableDegree": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "bank": {
+            "type": "string"
+          },
+          "bankAccount": {
             "type": "string"
           },
           "published_at": {
@@ -9614,54 +11077,84 @@
               }
             }
           },
-          "comment": {
+          "rejectComment": {
             "type": "string"
           },
           "adminName": {
             "type": "string"
           },
-          "paymentDate": {
-            "type": "string"
-          },
-          "turnTable": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "settlements": {
-                "type": "array",
-                "items": {
+          "settlement_turn_tables": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "settlement": {
+                  "type": "string"
+                },
+                "PaymentDate": {
+                  "type": "string"
+                },
+                "depositFile": {
+                  "type": "string"
+                },
+                "turnStatus": {
+                  "type": "string"
+                },
+                "prePaymentDate": {
+                  "type": "string"
+                },
+                "adminName": {
+                  "type": "string"
+                },
+                "turnTableDegree": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "integer"
+                },
+                "bank": {
+                  "type": "string"
+                },
+                "bankAccount": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
                   "type": "string"
                 }
-              },
-              "PaymentDate": {
-                "type": "string"
-              },
-              "depositFile": {
-                "type": "string"
-              },
-              "turnStatus": {
-                "type": "string"
-              },
-              "prePaymentDate": {
-                "type": "string"
-              },
-              "adminName": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
               }
             }
+          },
+          "turn": {
+            "type": "string"
+          },
+          "totalPrice": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "birth": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "subLocation": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -9690,16 +11183,81 @@
           "userID": {
             "type": "string"
           },
-          "comment": {
+          "rejectComment": {
             "type": "string"
           },
           "adminName": {
             "type": "string"
           },
-          "paymentDate": {
+          "settlement_turn_tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "turn": {
             "type": "string"
           },
-          "turnTable": {
+          "totalPrice": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "birth": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "subLocation": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "datetime"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        }
+      },
+      "System": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "inputFiles": {
+            "type": "object"
+          },
+          "businessID": {
+            "type": "string"
+          },
+          "turn": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "datetime"
+          }
+        }
+      },
+      "NewSystem": {
+        "properties": {
+          "inputFiles": {
+            "type": "object"
+          },
+          "businessID": {
+            "type": "string"
+          },
+          "turn": {
             "type": "string"
           },
           "published_at": {
@@ -9727,36 +11285,8 @@
           "useYn": {
             "type": "boolean"
           },
-          "ranks": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "rankName": {
-                  "type": "string"
-                },
-                "useYn": {
-                  "type": "boolean"
-                },
-                "team": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -9771,11 +11301,8 @@
           "useYn": {
             "type": "boolean"
           },
-          "ranks": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"
@@ -9796,20 +11323,8 @@
           "id": {
             "type": "string"
           },
-          "vacationDate": {
+          "rejectComment": {
             "type": "string"
-          },
-          "vacationReason": {
-            "type": "string"
-          },
-          "adminId": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "viewStatus": {
-            "type": "boolean"
           },
           "gotowork": {
             "required": [
@@ -9820,10 +11335,10 @@
                 "type": "string"
               },
               "startWork": {
-                "type": "datetime"
+                "type": "time"
               },
               "endWork": {
-                "type": "datetime"
+                "type": "time"
               },
               "date": {
                 "type": "string"
@@ -9834,10 +11349,7 @@
               "vacation": {
                 "type": "string"
               },
-              "user": {
-                "type": "string"
-              },
-              "business": {
+              "userID": {
                 "type": "string"
               },
               "published_at": {
@@ -9851,108 +11363,6 @@
               }
             }
           },
-          "user": {
-            "required": [
-              "id",
-              "username",
-              "email"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "confirmed": {
-                "type": "boolean"
-              },
-              "blocked": {
-                "type": "boolean"
-              },
-              "role": {
-                "type": "string"
-              },
-              "salesPhoneNumber": {
-                "type": "string"
-              },
-              "bank": {
-                "type": "string"
-              },
-              "accountNumber": {
-                "type": "string"
-              },
-              "fileUpload": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "businessRegistration": {
-                "type": "string"
-              },
-              "businessNumber": {
-                "type": "string"
-              },
-              "gotoworks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "vacations": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "rankId": {
-                "type": "string"
-              },
-              "businessID": {
-                "type": "string"
-              },
-              "teamID": {
-                "type": "string"
-              },
-              "workingStatus": {
-                "type": "boolean"
-              },
-              "profile": {
-                "type": "string"
-              },
-              "copyAccount": {
-                "type": "string"
-              },
-              "employmentContract": {
-                "type": "string"
-              },
-              "ID_Card": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "vacationType": {
             "type": "string"
           },
@@ -9963,6 +11373,21 @@
               "disagree",
               "waiting"
             ]
+          },
+          "userID": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "vacationReason": {
+            "type": "string"
+          },
+          "adminInfo": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"
@@ -9971,25 +11396,10 @@
       },
       "NewVacation": {
         "properties": {
-          "vacationDate": {
+          "rejectComment": {
             "type": "string"
-          },
-          "vacationReason": {
-            "type": "string"
-          },
-          "adminId": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "viewStatus": {
-            "type": "boolean"
           },
           "gotowork": {
-            "type": "string"
-          },
-          "user": {
             "type": "string"
           },
           "vacationType": {
@@ -10002,6 +11412,21 @@
               "disagree",
               "waiting"
             ]
+          },
+          "userID": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "vacationReason": {
+            "type": "string"
+          },
+          "adminInfo": {
+            "type": "object"
           },
           "published_at": {
             "type": "datetime"
@@ -10119,34 +11544,16 @@
                 "accountNumber": {
                   "type": "string"
                 },
-                "fileUpload": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "businessRegistration": {
                   "type": "string"
                 },
                 "businessNumber": {
                   "type": "string"
                 },
-                "gotoworks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "vacations": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "phoneNumber": {
                   "type": "string"
                 },
-                "rankId": {
+                "rankID": {
                   "type": "string"
                 },
                 "businessID": {
@@ -10169,6 +11576,12 @@
                 },
                 "ID_Card": {
                   "type": "string"
+                },
+                "company": {
+                  "type": "string"
+                },
+                "editLog": {
+                  "type": "object"
                 },
                 "created_by": {
                   "type": "string"
@@ -10292,76 +11705,6 @@
           "accountNumber": {
             "type": "string"
           },
-          "fileUpload": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id",
-                "name",
-                "hash",
-                "mime",
-                "size",
-                "url",
-                "provider"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "alternativeText": {
-                  "type": "string"
-                },
-                "caption": {
-                  "type": "string"
-                },
-                "width": {
-                  "type": "integer"
-                },
-                "height": {
-                  "type": "integer"
-                },
-                "formats": {
-                  "type": "object"
-                },
-                "hash": {
-                  "type": "string"
-                },
-                "ext": {
-                  "type": "string"
-                },
-                "mime": {
-                  "type": "string"
-                },
-                "size": {
-                  "type": "number"
-                },
-                "url": {
-                  "type": "string"
-                },
-                "previewUrl": {
-                  "type": "string"
-                },
-                "provider": {
-                  "type": "string"
-                },
-                "provider_metadata": {
-                  "type": "object"
-                },
-                "related": {
-                  "type": "string"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "businessRegistration": {
             "required": [
               "id",
@@ -10432,102 +11775,10 @@
           "businessNumber": {
             "type": "string"
           },
-          "gotoworks": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "startWork": {
-                  "type": "datetime"
-                },
-                "endWork": {
-                  "type": "datetime"
-                },
-                "date": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "vacation": {
-                  "type": "string"
-                },
-                "user": {
-                  "type": "string"
-                },
-                "business": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "vacations": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "vacationDate": {
-                  "type": "string"
-                },
-                "vacationReason": {
-                  "type": "string"
-                },
-                "adminId": {
-                  "type": "string"
-                },
-                "comment": {
-                  "type": "string"
-                },
-                "viewStatus": {
-                  "type": "boolean"
-                },
-                "gotowork": {
-                  "type": "string"
-                },
-                "user": {
-                  "type": "string"
-                },
-                "vacationType": {
-                  "type": "string"
-                },
-                "vacationStatus": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "phoneNumber": {
             "type": "string"
           },
-          "rankId": {
+          "rankID": {
             "type": "string"
           },
           "businessID": {
@@ -10537,7 +11788,8 @@
             "type": "string"
           },
           "workingStatus": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": false
           },
           "profile": {
             "required": [
@@ -10806,6 +12058,12 @@
                 "type": "string"
               }
             }
+          },
+          "company": {
+            "type": "string"
+          },
+          "editLog": {
+            "type": "object"
           }
         }
       },
@@ -10856,22 +12114,10 @@
           "businessNumber": {
             "type": "string"
           },
-          "gotoworks": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "vacations": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "phoneNumber": {
             "type": "string"
           },
-          "rankId": {
+          "rankID": {
             "type": "string"
           },
           "businessID": {
@@ -10881,7 +12127,14 @@
             "type": "string"
           },
           "workingStatus": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": false
+          },
+          "company": {
+            "type": "string"
+          },
+          "editLog": {
+            "type": "object"
           },
           "created_by": {
             "type": "string"
@@ -10926,6 +12179,9 @@
       "name": "Gotoworks"
     },
     {
+      "name": "Message"
+    },
+    {
       "name": "Notice"
     },
     {
@@ -10936,6 +12192,9 @@
     },
     {
       "name": "Settlement"
+    },
+    {
+      "name": "System"
     },
     {
       "name": "Team"
