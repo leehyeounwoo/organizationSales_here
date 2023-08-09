@@ -1588,6 +1588,14 @@
 			<template v-slot:[`item.workTime`]="{ item }">
 				<div>{{ item.startTime }} ~ {{ item.endTime }}</div>
 			</template>
+			<!-- 사업지관리 - 담당자 -->
+			<template v-slot:[`item.businessManager`]="{ item }">
+				<div>{{ item.manager ? item.manager.username : '' }}</div>
+			</template>
+			<!-- 사업지관리 - 연락처 -->
+			<template v-slot:[`item.managerPhoneNumber`]="{ item }">
+				<div>{{ item.manager ? item.manager.phoneNumber : '' }}</div>
+			</template>
 			<!-- 사업지관리 - 등록상품 -->
 			<template v-slot:[`item.select_product`]="{ item }">
 				<v-layout class="dt-align-set ml-0" justify-center>

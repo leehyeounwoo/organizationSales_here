@@ -27,8 +27,7 @@ import productDetail from '../../viewItem/productDetail.vue'
 export default {
 	async created() {
 		this.$store.state.loading = true
-		this.first_users()
-		this.rowperpageChange()
+		await this.rowperpageChange()
 	},
 	components: {
 		txtField,
@@ -162,7 +161,7 @@ export default {
 					{ text: '대표번호', value: 'phoneNumber' },
 					{ text: '생성일', value: 'created_at' },
 					{ text: '근무시간', value: 'workTime' },
-					{ text: '담당자', value: 'business_manager' },
+					{ text: '담당자', value: 'businessManager' },
 					{ text: '연락처', value: 'managerPhoneNumber' },
 					{ text: '출퇴근 스캔 URL', value: 'workCheckURL' },
 					{ text: '등록상품', value: 'select_product' },
@@ -183,11 +182,6 @@ export default {
 		}
 	},
 	methods: {
-		first_users() {
-			this.$store.dispatch('users').then(res => {
-				console.log(res.users)
-			})
-		},
 		rowperpageChange() {
 			this.$store.state.loading = true
 			console.log(this.rowperpageSel.value)
@@ -195,7 +189,7 @@ export default {
 			this.first_business()
 		},
 		first_business() {
-			this.$store.dispatch('businesses').then(res => {
+			this.$store.dispatch('businesses').then(async res => {
 				res.businesses.forEach(el => {
 					if (el.workingHoursStart) {
 						el['startTime'] = el.workingHoursStart.slice(0, 5)
@@ -204,8 +198,14 @@ export default {
 						el['endTime'] = el.workingHoursEnd.slice(0, 5)
 					}
 				})
-				console.log(res.businesses)
+				await this.$store.dispatch('businessManager').then(res_user => {
+					res.businesses.forEach(e => {
+						let manager = res_user.users.filter(user => e.id === user.businessID)
+						e['manager'] = manager.length > 0 ? manager[0] : null
+					})
+				})
 				this.table.items = res.businesses
+				console.log(this.table.items)
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 				this.$store.state.loading = false
 			})
