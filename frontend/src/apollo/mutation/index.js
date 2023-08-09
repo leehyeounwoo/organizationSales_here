@@ -10,6 +10,10 @@ export const login = gql`
 				username
 				blocked
 				email
+				workingStatus
+				role {
+					name
+				}
 			}
 		}
 	}

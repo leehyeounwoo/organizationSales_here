@@ -23,6 +23,7 @@ module.exports = {
       goalActive: Boolean
       confirmed: Boolean
       counselorStatus: String
+      workingStatus: Boolean
     }
     input UsersPermissionsRegisterInput {
       role: ID

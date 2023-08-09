@@ -84,18 +84,28 @@
 				<termsDialog :dialog="dialogData" />
 			</div>
 		</div>
+		<sweetAlert :dialog="sweetInfo" />
 	</v-layout>
 </template>
 
 <script>
 import termsDialog from './termsDialog.vue'
-
+import { sweetAlert } from '@/components'
 export default {
 	components: {
 		termsDialog,
+		sweetAlert,
 	},
 	data() {
 		return {
+			sweetInfo: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'info',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+			},
 			dialogData: { open: false },
 			pwshow: false,
 			// 아이디 에러메세지
@@ -108,6 +118,15 @@ export default {
 		}
 	},
 	methods: {
+		open_disable_dialog(data, info) {
+			// 불가 팝업 열기
+
+			this.sweetInfo.title = data.title
+			this.sweetInfo.content = data.content
+			if (!info) this.sweetInfo.modalIcon = `info`
+			else this.sweetInfo.modalIcon = info
+			this.sweetInfo.open = true
+		},
 		login() {
 			if (!this.userid) {
 				this.iderrorMessages = 'Please enter your EMAIL.'
@@ -122,24 +141,33 @@ export default {
 				return
 			} else {
 				const data = {
-					identifier: this.userid,
+					username: this.userid,
 					password: this.password,
 				}
 				this.$store
 					.dispatch('login', data)
 					.then(res => {
-						if (res.user && res.user.role.id === '3' && res.user.counselorStatus && res.user.counselorStatus !== '퇴사') {
+						console.log(res)
+						if (!res.user.workingStatus) {
+							return this.open_disable_dialog({
+								title: '퇴사 OR 재직 미승인',
+								content: '퇴사처리 OR 재직 미승인 되었습니다. 관리자에게 문의하세요.',
+							})
+						}
+						if (res.user && res.user.role.name === 'Counselor') {
 							this.$router.push({
-								name: 'counselorBizDashboard',
-								params: { id: res.user.business.id },
+								name: 'counselorDashboard',
 							})
 						} else {
-							alert('관리자 승인이 필요합니다. 관리자에게 문의하세요')
+							return this.open_disable_dialog({
+								title: '상담사만 접속가능',
+								content: '상담사만 접속가능한 로그인 페이지 입니다.',
+							})
 						}
 					})
 					.catch(() => {
-						this.iderrorMessages = 'Your ID or Password is incorrect.'
-						this.pwerrorMessages = 'Your ID or Password is incorrect.'
+						this.iderrorMessages = '이메일 OR 비밀번호가 틀렸습니다.'
+						this.pwerrorMessages = '이메일 OR 비밀번호가 틀렸습니다.'
 					})
 			}
 		},

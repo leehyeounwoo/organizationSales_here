@@ -58,12 +58,14 @@ const routes = [
 				path: '/counselor/dashboard',
 				name: 'counselorDashboard',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/dashboard.vue'),
+				meta: { requiresAuth: true },
 			},
 			// 상담사  - 대시보드
 			{
 				path: '/counselor/bizDashboard/:id',
 				name: 'counselorBizDashboard',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboard.vue'),
+				meta: { requiresAuth: true },
 			},
 			// 상담사  - 상담관리
 			{
@@ -73,23 +75,27 @@ const routes = [
 					import(
 						/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/counselorBizReservation.vue'
 					),
+				meta: { requiresAuth: true },
 			},
 			{
 				path: '/counselor/bizDashboardItem/clientManagement',
 				name: 'counselorClients',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/clientManagement/index.vue'),
+				meta: { requiresAuth: true },
 			},
 
 			{
 				path: '/counselor/commuteManagement/manage',
 				component: () => import(/* webpackChunkName: "campaign" */ '../views/counselor/commuteManagement/manage.vue'),
 				name: '/counselor/commuteManagement/manage',
+				meta: { requiresAuth: true },
 			},
 			// 공지사항  - 공지사항
 			{
 				path: '/counselor/notice/:id',
 				name: 'counselorNotice',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/notice.vue'),
+				meta: { requiresAuth: true },
 			},
 		],
 	},
@@ -97,6 +103,7 @@ const routes = [
 		path: '/KIOSK',
 		name: 'KIOSK',
 		component: KIOSK,
+		meta: { requiresAuth: true },
 		children: [
 			{
 				path: '/',
