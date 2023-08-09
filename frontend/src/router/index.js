@@ -58,7 +58,7 @@ const routes = [
 				path: '/counselor/dashboard',
 				name: 'counselorDashboard',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/dashboard.vue'),
-				meta: { requiresAuth: true },
+				// meta: { requiresAuth: true },
 			},
 			// 상담사  - 대시보드
 			{

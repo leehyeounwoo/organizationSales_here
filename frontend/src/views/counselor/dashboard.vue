@@ -325,20 +325,10 @@ export default {
 			this.$router.push({ name: 'counselorMain' })
 		},
 		me() {
-			this.$store
-				.dispatch('me')
-				.then(res => {
-					this.meData = res
-					if (res.role.name !== 'counselor') {
-						this.$router.push({ name: 'block' })
-						sessionStorage.removeItem('here-t')
-					} else {
-						this.businesses()
-					}
-				})
-				.catch(() => {
-					this.$router.push({ name: 'block' })
-				})
+			this.$store.dispatch('me').then(res => {
+				this.meData = res
+				this.businesses()
+			})
 		},
 	},
 }

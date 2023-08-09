@@ -4,7 +4,12 @@
 			<div @click="logo_click()">
 				<v-img src="/image/counselor_logo_0.png"></v-img>
 			</div>
-
+			<v-spacer></v-spacer>
+			<div>
+				<v-avatar>
+					<img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+				</v-avatar>
+			</div>
 			<div v-if="logout" icon dark @click="logoutClick()" style="cursor:pointer" class="ml-auto">
 				<v-img src="@/assets/images/ico/ico_logout.png" width="20"></v-img>
 			</div>
@@ -22,8 +27,8 @@ export default {
 	},
 	methods: {
 		logoutClick() {
-			sessionStorage.removeItem('here-t')
-			this.$router.push({ name: 'counselorLogin' })
+			sessionStorage.removeItem('reserveLite-t')
+			this.$router.push('/')
 		},
 		logo_click() {
 			if (this.$store.state.meData.business && this.$store.state.meData.business.id) {

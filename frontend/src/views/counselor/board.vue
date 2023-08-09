@@ -1,7 +1,7 @@
 <template>
 	<div style="position:fixed; width: 100%;">
 		<div v-if="$store.state.headerMobileStatus" style="position:fixed; width:100%; ">
-			<counselorHeader :logout="false" />
+			<counselorHeader :logout="session" />
 		</div>
 		<div
 			style="margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#f3f3f3;"
@@ -24,13 +24,11 @@ export default {
 	},
 	data() {
 		return {
+			session: sessionStorage.getItem('reserveLite-t'),
 			mobileHeight: 0,
 		}
 	},
 	async created() {
-		if (this.$route.name !== 'counselorRegister' && this.$route.name !== 'counselorLogin') {
-			await this.me()
-		}
 		this.mobileHeight = window.innerHeight || document.body.clientHeight
 		if (window.location.pathname.includes('counselor')) {
 			this.$store.state.mobileStatus = true
@@ -51,20 +49,6 @@ export default {
 		closeRight() {
 			this.$store.state.bellStatus = false
 			this.$store.state.chatStatus = false
-		},
-		async me() {
-			await this.$store
-				.dispatch('me')
-				.then(res => {
-					if (res.role.name !== 'counselor') {
-						this.$router.push({ name: 'block' })
-						sessionStorage.removeItem('here-t')
-					}
-				})
-				.catch(err => {
-					console.log({ err })
-					this.$router.push({ name: 'block' })
-				})
 		},
 	},
 }

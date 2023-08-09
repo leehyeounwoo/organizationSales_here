@@ -8,6 +8,9 @@ export const me = gql`
 			id
 			username
 			email
+			role {
+				name
+			}
 		}
 	}
 `
