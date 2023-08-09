@@ -31,6 +31,7 @@ module.exports = {
       email: String!
       password: String!
       bank: String
+      phoneNumber: String
       salesPhoneNumber: String
       accountNumber: String
       businessRegistration: ID
