@@ -442,6 +442,7 @@ export default {
 						res2.gotoworks.forEach(element2 => {
 							let workIndex = list.findIndex(item => item.id === element2.userID)
 							console.log(this.$moment(element2.startWork)._i.slice(0, 5))
+							list[workIndex]['gotoworksAll'] = element2
 							list[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
 							list[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
 							list[workIndex]['data5'] =
@@ -559,7 +560,6 @@ export default {
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 				role: '3',
-				userID: this.userIDArr,
 			}
 			this.viewUsers(input)
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
@@ -570,7 +570,6 @@ export default {
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 				role: '3',
-				userID: this.userIDArr,
 			}
 
 			this.viewUsers(input)
@@ -594,35 +593,36 @@ export default {
 		},
 
 		goToWorkStatus(status) {
+			let ifStartWork = this.$moment().format('HH:mm:ss.SSS')
+			let elseStartWork = this.$moment(this.date).format('HH:mm:ss.SSS')
 			console.log(status)
 			if (status.data6) {
 				const data = {
-					id: status.all.gotoworks[0].id,
+					id: status.gotoworksAll.id,
 				}
 				this.deleteGotoworkAction(data)
 			} else {
 				const data = {
 					date: this.$moment(this.date).format('YYYY-MM-DD'),
-					user: status.id,
+					userID: status.id,
 					business: this.searchsel.value.id,
 					status: 'startWork',
 				}
 				if (this.$moment().format('YYYY-MM-DD') === this.date) {
-					data.startWork = this.$moment()
+					data.startWork = ifStartWork
 				} else {
-					data.startWork = this.$moment(this.date)
+					data.startWork = elseStartWork
 				}
 
 				this.createGotoworkAction(data)
 			}
 		},
 		leaveWorkStatus(status) {
-			console.log(status.all.gotoworks[0].id)
 			console.log(status)
 			if (status.data7) {
 				const data = {
-					id: status.all.gotoworks[0].id,
-					user: status.id,
+					id: status.gotoworksAll.id,
+					userID: status.id,
 					endWork: null,
 					status: 'startWork',
 				}
@@ -630,10 +630,10 @@ export default {
 			} else {
 				if (this.$moment(this.date).format('YYYY-MM-DD') === this.$moment(this.$moment().format('YYYY-MM-DD')).format('YYYY-MM-DD')) {
 					const data = {
-						id: status.all.gotoworks[0].id,
-						user: status.id,
+						id: status.gotoworksAll.id,
+						userID: status.id,
 
-						endWork: this.$moment(),
+						endWork: this.$moment().format('HH:mm:ss.SSS'),
 						status: 'endWork',
 					}
 					this.updateGotoworkAction(data)
@@ -641,7 +641,7 @@ export default {
 					const data = {
 						id: status.all.gotoworks[0].id,
 						user: status.id,
-						endWork: this.$moment(this.date),
+						endWork: this.$moment(this.date).format('HH:mm:ss.SSS'),
 						status: 'endWork',
 					}
 					this.updateGotoworkAction(data)
@@ -655,6 +655,7 @@ export default {
 				.then(() => {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
+						role: '3',
 					}
 					this.viewUsers(input)
 				})
@@ -669,6 +670,7 @@ export default {
 				.then(() => {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
+						role: '3',
 					}
 					this.viewUsers(input)
 				})
@@ -682,6 +684,7 @@ export default {
 				.then(() => {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
+						role: '3',
 					}
 					this.viewUsers(input)
 				})

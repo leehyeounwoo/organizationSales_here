@@ -67,27 +67,15 @@ export const multifileUpload = gql`
 	}
 `
 export const createGotowork = gql`
-	mutation createGotowork(
-		$date: Date
-		$user: ID!
-		$startWork: DateTime
-		$endWork: DateTime
-		$status: ENUM_GOTOWORKS_STATUS
-		$vacation: ID
-	) {
-		createGotowork(
-			input: { data: { date: $date, user: $user, startWork: $startWork, endWork: $endWork, status: $status, vacation: $vacation } }
-		) {
+	mutation createGotowork($date: Date, $userID: String, $startWork: Time, $endWork: Time, $status: ENUM_GOTOWORKS_STATUS) {
+		createGotowork(input: { data: { date: $date, userID: $userID, startWork: $startWork, endWork: $endWork, status: $status } }) {
 			gotowork {
 				id
 				status
-				vacation {
-					id
-					vacationType
-					vacationDate
-					vacationStatus
-					comment
-				}
+				startWork
+				endWork
+				date
+				userID
 			}
 		}
 	}
@@ -108,9 +96,9 @@ export const createNotice = gql`
 	}
 `
 export const updateGotowork = gql`
-	mutation updateGotowork($id: ID!, $date: Date, $user: ID!, $startWork: DateTime, $endWork: DateTime, $status: ENUM_GOTOWORKS_STATUS) {
+	mutation updateGotowork($id: ID!, $date: Date, $userID: String!, $startWork: Time, $endWork: Time, $status: ENUM_GOTOWORKS_STATUS) {
 		updateGotowork(
-			input: { where: { id: $id }, data: { date: $date, user: $user, startWork: $startWork, endWork: $endWork, status: $status } }
+			input: { where: { id: $id }, data: { date: $date, userID: $userID, startWork: $startWork, endWork: $endWork, status: $status } }
 		) {
 			gotowork {
 				id
