@@ -67,7 +67,7 @@
 						</v-flex>
 					</v-layout>
 					<v-layout justify-end style="color:black">
-						<v-btn elevation="0" class="refresh_btn mt-2" color="#f0f2f8"><v-icon>mdi-refresh</v-icon></v-btn>
+						<v-btn elevation="0" class="refresh_btn mt-2" color="#f0f2f8"><v-icon small>mdi-refresh</v-icon></v-btn>
 						<v-btn elevation="0" class="search_btn right1_btn mt-2" color="#f0f2f8">신규 항목 등록</v-btn>
 					</v-layout>
 					<v-layout class="my-3" style="border: 1px solid #d7d8e9;">

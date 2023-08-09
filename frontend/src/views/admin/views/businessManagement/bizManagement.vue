@@ -52,7 +52,7 @@ export default {
 			},
 			createDialog: {
 				dialog: false,
-				detail: [],
+				type: 'create',
 				items: [
 					// 0
 					{
@@ -89,9 +89,13 @@ export default {
 						title: '근무시간 설정',
 						must: false,
 						type: 'time',
-						worktime: {
+						worktime1: {
+							dialog: false,
 							start: '',
-							end: '',
+						},
+						worktime2: {
+							dialog: false,
+							start: '',
 						},
 					},
 					// 3
@@ -211,6 +215,7 @@ export default {
 			})
 		},
 		createBiz() {
+			this.createDialog.type = 'create'
 			this.createDialog.dialog = true
 		},
 		product_detail(item) {
@@ -219,9 +224,12 @@ export default {
 			console.log(item)
 		},
 		biz_detail(item) {
-			this.createDialog.detail = item
-			this.createDialog.dialog = true
+			console.log(item)
+			this.createDialog.type = 'edit'
+			this.createDialog.items[0].value = item.name
+			this.createDialog.items[1].value = item.phoneNumber
 			console.log(this.createDialog)
+			this.createDialog.dialog = true
 		},
 		search_biz() {
 			this.$store.state.loading = true

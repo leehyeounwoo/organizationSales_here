@@ -51,11 +51,11 @@
 							<v-flex xs6 class="pt-3">
 								<v-layout>
 									<v-flex xs6>
-										<TimePickerDialog :setdialog="editTimePicker1" @input="save_time1" />
+										<TimePickerDialog :setdialog="left.worktime1" @input="save_time1" />
 									</v-flex>
 									<div class="px-1">~</div>
 									<v-flex xs6>
-										<TimePickerDialog :setdialog="editTimePicker2" @input="save_time2" />
+										<TimePickerDialog :setdialog="left.worktime2" @input="save_time2" />
 									</v-flex>
 								</v-layout>
 							</v-flex>
@@ -162,7 +162,7 @@
 				</v-flex>
 			</v-layout>
 		</div>
-		<sweetAlert :dialog="sweetDialog" />
+		<sweetAlert :dialog="sweetDialog" @click="saveBusiness" />
 		<sweetAlert :dialog="sweetInfo" />
 	</v-dialog>
 </template>
@@ -398,17 +398,27 @@ export default {
 					},
 				},
 			],
-			editTimePicker1: {
-				dialog: false,
-				time: '',
-			},
-			editTimePicker2: {
-				dialog: false,
-				time: '',
-			},
 		}
 	},
 	methods: {
+		saveBusiness() {
+			let data = {
+				name: this.setdialog.items[0].value,
+				phoneNumber: this.setdialog.items[1].value,
+				workingHoursStart: this.setdialog.items[2].worktime1.time + ':00.000',
+				workingHoursEnd: this.setdialog.items[2].worktime2.time + ':00.000',
+				splitHoldingTime: this.setdialog.items[3].selectBox.value,
+				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
+			}
+			if (this.setdialog.type === 'create') {
+				this.$store.dispatch('createBusiness', data).then(res => {
+					console.log(res)
+					this.sweetDialog.open = false
+					this.setdialog.dialog = false
+					this.getTable()
+				})
+			}
+		},
 		checkManager(item) {
 			console.log(item)
 		},
@@ -428,39 +438,22 @@ export default {
 				this.sweetInfo.content = '전화번호 형식이 아닙니다.'
 				return (this.sweetInfo.open = true)
 			}
-			// for (let i = 0; i < this.right_data.length; i++) {
-			// 	if (this.right_data[i].txtfield3.value) {
-			// 		if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
-			// 			this.sweetInfo.title = '이메일 형식'
-			// 			this.sweetInfo.content = '이메일 형식이 아닙니다.'
-			// 			return (this.sweetInfo.open = true)
-			// 		}
-			// 	} else {
-			// 		this.sweetInfo.title = '아이디 입력'
-			// 		this.sweetInfo.content = '아이디를 입력해주세요.'
-			// 		return (this.sweetInfo.open = true)
-			// 	}
-			// }
-		},
-		newBusiness() {
-			let data = {
-				name: this.setdialog.items[0].value,
-				phoneNumber: this.setdialog.items[1].value,
-				workingHoursStart: this.editTimePicker1.time + ':00.000',
-				workingHoursEnd: this.editTimePicker2.time + ':00.000',
-				splitHoldingTime: this.setdialog.items[3].selectBox.value,
-				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
+			for (let i = 0; i < this.right_data.length; i++) {
+				if (this.right_data[i].txtfield3.value) {
+					if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+						this.sweetInfo.title = '이메일 형식'
+						this.sweetInfo.content = '이메일 형식이 아닙니다.'
+						return (this.sweetInfo.open = true)
+					}
+				}
 			}
-			this.$store.dispatch('createBusiness', data).then(() => {
-				this.setdialog.dialog = false
-				this.getTable()
-			})
+			this.sweetDialog.open = true
 		},
 		modalClose() {
 			this.setdialog.items[0].value = ''
 			this.setdialog.items[1].value = ''
-			this.editTimePicker1.time = ''
-			this.editTimePicker2.time = ''
+			this.setdialog.items[2].worktime1.time = ''
+			this.setdialog.items[2].worktime2.time = ''
 			this.setdialog.items[3].selectBox.value = '30분'
 			this.setdialog.items[3].selectBox2.value = '120분'
 			this.setdialog.items[4].value = ''
@@ -473,12 +466,12 @@ export default {
 			this.setdialog.dialog = false
 		},
 		save_time1(picker) {
-			this.editTimePicker1.dialog = false
-			this.editTimePicker1.time = picker
+			this.setdialog.items[2].worktime1.dialog = false
+			this.setdialog.items[2].worktime1.time = picker
 		},
 		save_time2(picker) {
-			this.editTimePicker2.dialog = false
-			this.editTimePicker2.time = picker
+			this.setdialog.items[2].worktime2.dialog = false
+			this.setdialog.items[2].worktime2.time = picker
 		},
 		checkPhone(str) {
 			let exp = /^(0[2-8][0-5]?|01[01346-9])-?([1-9]{1}[0-9]{2,3})-?([0-9]{4})$/
