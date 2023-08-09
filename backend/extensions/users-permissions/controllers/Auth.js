@@ -21,9 +21,6 @@ const formatError = (error) => [
 
 module.exports = {
   async callback(ctx) {
-    console.log(ctx);
-    console.log(ctx.provider);
-    console.log(ctx.request.body);
     const provider = ctx.params.provider || "local";
     const params = ctx.request.body;
 
@@ -289,26 +286,6 @@ module.exports = {
   },
   async editPassword(ctx) {
     const params = _.assign({}, ctx.request.body, ctx.params);
-    // console.log(params);
-    // let test = await strapi
-    //   .query("user", "users-permissions")
-    //   .findOne({ email: `${params.email}` });
-
-    // identifier: String!
-    //       password: String!
-    //       provider: String = "local"
-    // let test1 = await strapi.plugins[
-    //   "users-permissions"
-    // ].controllers.auth.callback({
-    //   identifier: `${params.email}`,
-    //   password: `${params.password}`,
-    // });
-    // console.log(test1);
-    // ("user", "users-permissions")
-    //       .register({ email: `${params.email}`, password: `${params.password}` });
-
-    // console.log(test);
-    // ---------------
     if (params.password && params.newPassword && params.email) {
       const user = await strapi
         .query("user", "users-permissions")
@@ -322,24 +299,38 @@ module.exports = {
           })
         );
       }
-      const password = await strapi.plugins[
+      const validPassword = await strapi.plugins[
         "users-permissions"
-      ].services.user.hashPassword({
-        password: params.newpassword,
-      });
-      // Update the user.
-      await strapi
-        .query("user", "users-permissions")
-        .update({ id: user.id }, { password });
-      ctx.send({
-        jwt: strapi.plugins["users-permissions"].services.jwt.issue({
-          id: user.id,
-        }),
-        user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
-          model: strapi.query("user", "users-permissions").model,
-        }),
-      });
-    } else if (params.password && params.newpassword) {
+      ].services.user.validatePassword(params.password, user.password);
+
+      if (validPassword) {
+        const password = await strapi.plugins[
+          "users-permissions"
+        ].services.user.hashPassword({
+          password: params.newPassword,
+        });
+        // Update the user.
+        await strapi
+          .query("user", "users-permissions")
+          .update({ id: user.id }, { password });
+        ctx.send({
+          jwt: strapi.plugins["users-permissions"].services.jwt.issue({
+            id: user.id,
+          }),
+          user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+            model: strapi.query("user", "users-permissions").model,
+          }),
+        });
+      } else {
+        return ctx.badRequest(
+          null,
+          formatError({
+            id: "Auth.form.error.password.matching",
+            message: "Passwords do not match.",
+          })
+        );
+      }
+    } else if (params.password && params.newPassword) {
       return ctx.badRequest(
         null,
         formatError({
