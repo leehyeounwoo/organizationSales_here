@@ -20,7 +20,19 @@
 					<v-flex class="notice_right_table" xs2 style="height: 457.3px;">
 						증빙자료
 					</v-flex>
+
 					<v-flex xs10 class="notice_right_table2">
+						<div v-for="(item, index) in addedItems" :key="index">
+							<v-layout v-if="addedItems.length > 0" style="border: 1px solid rgba(0, 0, 0, 1);" class="ml-5 ma-3 ">
+								<v-layout class="attachmentClass2">
+									<span class="attachmentSpanClass">{{ item.degree }}</span>
+								</v-layout>
+
+								<v-layout class="attachmentClass">
+									<span class="attachmentSpanClass">{{ item.content.txtField.value }}</span>
+								</v-layout>
+							</v-layout>
+						</div>
 						<v-layout style="display: flex;">
 							<txtField
 								:txtField="EvidenceField.degree.txtField"
@@ -30,15 +42,14 @@
 							></txtField>
 							<textarea v-model="etcInfo.txtField.value" style="width: 70%;" class="search_box_modal2 mt-3"></textarea>
 						</v-layout>
-						<v-btn class="infoBtn mt-2" color="#f0f2f8" elevation="0"
+						<v-btn class="infoBtn mt-2" color="#f0f2f8" elevation="0" @click="addNewItem"
 							><span
 								style="	font-family: MalgunGothic;
-	font-size: 14px;"
+								font-size: 14px;"
 								>내용 추가</span
 							></v-btn
 						>
 					</v-flex>
-					<v-flex class="addNewItem"> </v-flex>
 				</v-layout>
 				<v-layout>
 					<v-flex class="notice_right_table" xs2 style="height: auto">
@@ -343,6 +354,7 @@ export default {
 			userID: [],
 			businessID: [],
 			clickVariation: [],
+			addedItems: [],
 		}
 	},
 
@@ -504,6 +516,27 @@ export default {
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
+		addNewItem() {
+			if (this.addedItems.length < 5) {
+				const newItem = {
+					degree: this.EvidenceField.degree.txtField.value,
+					evidence: { txtField: { ...this.EvidenceField.evidence.txtField } },
+					content: { txtField: { ...this.etcInfo.txtField } },
+				}
+				this.addedItems.push(newItem)
+				this.EvidenceField.degree.txtField.value = ''
+				this.EvidenceField.evidence.txtField.value = ''
+				this.etcInfo.txtField.value = ''
+				console.log(this.addedItems)
+			} else {
+				this.sweetDialog_info.title = `추가 실패`
+				this.sweetDialog_info.content = `지급 안내는 최대 5차까지 가능합니다`
+				this.sweetDialog_info.modalValue = ''
+				this.sweetDialog_info.buttonType = 'oneBtn'
+				this.sweetDialog_info.open = true
+			}
+		},
+
 		reset() {
 			this.clickVariation = []
 			this.useType = true
@@ -922,5 +955,14 @@ export default {
 	.v-btn__content {
 		color: #fff;
 	}
+}
+
+.attachmentClass2 {
+	margin: 8px 13px;
+	border-radius: 3px;
+	padding: 4px 12px;
+	background-color: #f2a629;
+	justify-content: center;
+	align-items: center;
 }
 </style>

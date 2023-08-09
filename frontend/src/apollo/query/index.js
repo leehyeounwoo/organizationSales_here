@@ -94,25 +94,22 @@ export const gotoWork = gql`
 		$status_check: JSON
 		$status: ENUM_GOTOWORKS_STATUS
 		$business: ID
-		$user: ID
+		$userID: [ID!]
 		$date_gte: String
 		$date_lte: String
 	) {
-		gotoworksConnection(where: { user: $user, status_in: $status_check, date_gte: $date_gte, date_lte: $date_lte }) {
+		gotoworksConnection(where: { userID: $userID, status_in: $status_check, date_gte: $date_gte, date_lte: $date_lte }) {
 			aggregate {
 				count
 			}
 		}
-		gotoworks(where: { date: $date, status: $status, business: $business, user: $user, date_gte: $date_gte, date_lte: $date_lte }) {
+		gotoworks(where: { date: $date, status: $status, business: $business, userID: $userID, date_gte: $date_gte, date_lte: $date_lte }) {
 			id
 			date
 			status
 			startWork
 			endWork
-			user {
-				id
-				username
-			}
+			userID
 		}
 	}
 `

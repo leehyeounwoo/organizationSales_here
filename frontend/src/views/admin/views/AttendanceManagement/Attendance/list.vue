@@ -358,6 +358,7 @@ export default {
 			start: 0,
 			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
+			role: '3',
 		}
 		await this.viewUsers(input)
 		this.$store.state.loading = false
@@ -394,21 +395,34 @@ export default {
 			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
 				input.teamID = this.searchsel1.value.id
 			}
+
+			if (this.userIDArr !== []) {
+				input.userID = this.userIDArr
+			}
 			console.log(input)
 			await this.$store
 				.dispatch('users', input)
-				.then(res => {
+				.then(async res => {
+					console.log(res.users)
 					let list = []
 					let workCount = 0
 					let endWorkCount = 0
 					let holiDayCount = 0
-					console.log(res)
+					let userIDArr = []
+
+					for (let i = 0; i < res.users.length; i++) {
+						userIDArr.push(res.users[i].id)
+					}
+
 					res.users.forEach(element => {
 						let listData = {}
 						listData.all = element
 						listData.id = element.id
 						listData.data1 = element.username
 						listData.data2 = element.phoneNumber ? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) : '-'
+						listData.data3 = '-'
+						listData.data4 = '-'
+						listData.data5 = '미확인'
 						listData.salesPhoneNumber = element.salesPhoneNumber
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 							: '-'
@@ -416,65 +430,65 @@ export default {
 						listData.team = element.teamID ? element.teamID + '팀' : '-'
 						listData.history = element.history ? element.history : []
 
-						if (element.gotoworks.length > 0) {
-							listData.data3 =
-								element.gotoworks[0].startWork !== null ? this.$moment(element.gotoworks[0].startWork).format('YYYY-MM-DD HH:mm:ss') : '-'
-							listData.data4 =
-								element.gotoworks[0].endWork !== null ? this.$moment(element.gotoworks[0].endWork).format('YYYY-MM-DD HH:mm:ss') : '-'
-							listData.data5 =
-								element.gotoworks[0].status === 'endWork'
-									? '퇴근'
-									: element.gotoworks[0].status === 'afternoonVacation'
-									? '오후반차'
-									: element.gotoworks[0].status === 'morningVacation'
-									? '오전반차'
-									: element.gotoworks[0].status === 'vacation'
-									? '휴가'
-									: '출근'
-							if (element.gotoworks[0].status === 'vacation') {
-								listData.data6 = true
-								listData.data7 = true
-								listData.data8 = '-'
-							} else {
-								listData.data6 = element.gotoworks[0].startWork ? true : false
-								listData.data7 = element.gotoworks[0].endWork ? true : false
-							}
-
-							if (element.gotoworks[0].startWork && element.gotoworks[0].endWork) {
-								listData.data8 = this.timeCheck(element.gotoworks[0].startWork, element.gotoworks[0].endWork)
-							}
-							if (element.gotoworks[0].status === 'startWork') {
-								workCount = workCount + 1
-							}
-							if (element.gotoworks[0].status === 'endWork') {
-								endWorkCount = endWorkCount + 1
-							}
-							if (
-								element.gotoworks[0].status === 'afternoonVacation' ||
-								element.gotoworks[0].status === 'morningVacation' ||
-								element.gotoworks[0].status === 'vacation'
-							) {
-								holiDayCount = holiDayCount + 1
-							}
-						} else {
-							listData.data3 = '-'
-							listData.data4 = '-'
-							listData.data5 = '미확인'
-							listData.data8 = '-'
-						}
-						element.vacations.reverse()
-						let vactionIndex = element.vacations.findIndex(el => el.vacationDate === this.$moment(this.date).format('YYYY-MM-DD'))
-						if (vactionIndex !== -1) {
-							listData.vacationData = element.vacations[vactionIndex]
-							listData.vacation = element.vacations[vactionIndex].vacationStatus
-						} else {
-							listData.vacation = '-'
-						}
-
 						list.push(listData)
 						this.table.total = res.usersConnection.aggregate.count
 						this.table.page = input.page
 					})
+
+					console.log(userIDArr)
+					await this.$store.dispatch('gotoWork', input).then(res2 => {
+						console.log(res2)
+						console.log(list)
+						res2.gotoworks.forEach(element2 => {
+							let workIndex = list.findIndex(item => item.id === element2.userID)
+							console.log(this.$moment(element2.startWork)._i.slice(0, 5))
+							list[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
+							list[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
+							list[workIndex]['data5'] =
+								element2.status === 'endWork'
+									? '퇴근'
+									: element2.status === 'afternoonVacation'
+									? '오후반차'
+									: element2.status === 'morningVacation'
+									? '오전반차'
+									: element2.status === 'vacation'
+									? '휴가'
+									: '출근'
+							if (element2.status === 'vacation') {
+								list[workIndex]['data6'] = true
+								list[workIndex]['data7'] = true
+								list[workIndex]['data8'] = '-'
+							} else {
+								list[workIndex]['data6'] = element2.startWork ? true : false
+								list[workIndex]['data7'] = element2.endWork ? true : false
+							}
+
+							if (element2.startWork && element2.endWork) {
+								list[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
+							}
+							if (element2.status === 'startWork') {
+								workCount = workCount + 1
+							}
+							if (element2.status === 'endWork') {
+								endWorkCount = endWorkCount + 1
+							}
+							if (element2.status === 'afternoonVacation' || element2.status === 'morningVacation' || element2.status === 'vacation') {
+								holiDayCount = holiDayCount + 1
+							}
+
+							this.table.items = list
+							console.log('최종', this.table.items)
+							// element.vacations.reverse()
+							// let vactionIndex = element.vacations.findIndex(el => el.vacationDate === this.$moment(this.date).format('YYYY-MM-DD'))
+							// if (vactionIndex !== -1) {
+							// 	listData.vacationData = element.vacations[vactionIndex]
+							// 	listData.vacation = element.vacations[vactionIndex].vacationStatus
+							// } else {
+							// 	listData.vacation = '-'
+							// }
+						})
+					})
+
 					this.allCounselor = list.length
 					this.work = workCount
 					this.endWork = endWorkCount
@@ -533,6 +547,7 @@ export default {
 		update() {
 			let input = {
 				date: this.$moment(this.date).format('YYYY-MM-DD'),
+				role: '3',
 			}
 
 			this.viewUsers(input)
@@ -543,10 +558,10 @@ export default {
 				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
+				role: '3',
+				userID: this.userIDArr,
 			}
-
 			this.viewUsers(input)
-
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		click_date_next() {
@@ -554,6 +569,8 @@ export default {
 				date: this.$moment(this.date_picker.date)
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
+				role: '3',
+				userID: this.userIDArr,
 			}
 
 			this.viewUsers(input)
@@ -562,6 +579,7 @@ export default {
 		click_date_now() {
 			let input = {
 				date: this.$moment().format('YYYY-MM-DD'),
+				role: '3',
 			}
 			this.viewUsers(input)
 			this.date_picker.date = this.$moment()
