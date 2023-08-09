@@ -12,13 +12,13 @@ export const me = gql`
 	}
 `
 export const users = gql`
-	query users($idArr: [ID], $teamID: String, $username: String, $role: ID) {
+	query users($idArr: [ID], $teamID: String, $username: String, $role: ID, $businessID_null: Boolean) {
 		usersConnection {
 			aggregate {
 				count
 			}
 		}
-		users(where: { id: $idArr, username: $username, teamID: $teamID, role: $role }) {
+		users(where: { id: $idArr, username: $username, teamID: $teamID, role: $role, businessID_null: $businessID_null }) {
 			id
 			businessID
 			created_at
@@ -35,10 +35,6 @@ export const users = gql`
 			phoneNumber
 			bank
 			accountNumber
-
-			bank
-			accountNumber
-			rankId
 			teamID
 			workingStatus
 			copyAccount {
@@ -75,6 +71,17 @@ export const ranks = gql`
 			id
 			rankName
 			useYn
+		}
+	}
+`
+export const businessManager = gql`
+	query users($id: ID, $username: String, $businessID: String) {
+		users(where: { id: $id, username: $username, businessID: $businessID }) {
+			id
+			businessID
+			username
+			email
+			phoneNumber
 		}
 	}
 `
@@ -200,6 +207,17 @@ export const settlements = gql`
 				amount
 				turnTableDegree
 			}
+		}
+	}
+`
+export const messages = gql`
+	query messages($businessID: ID) {
+		messages(where: { businessID: $businessID }) {
+			id
+			type
+			title
+			detail
+			useYn
 		}
 	}
 `

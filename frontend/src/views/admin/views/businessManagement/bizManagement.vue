@@ -9,7 +9,7 @@
 				<selectBoxText :sel="rowperpageSel" class="searchSel" @change="rowperpageChange"></selectBoxText>
 			</v-flex>
 		</v-layout>
-		<datatable :datatable="table" class="mt-5" :productDetailClick="product_detail" :detailClick="editProduct"></datatable>
+		<datatable :datatable="table" class="mt-5" :productDetailClick="product_detail" :detailClick="biz_detail"></datatable>
 		<div class="text-center mt-4">
 			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
 		</div>
@@ -27,7 +27,7 @@ import productDetail from '../../viewItem/productDetail.vue'
 export default {
 	async created() {
 		this.$store.state.loading = true
-		this.rowperpageChange()
+		await this.rowperpageChange()
 	},
 	components: {
 		txtField,
@@ -52,10 +52,12 @@ export default {
 			},
 			createDialog: {
 				dialog: false,
+				detail: [],
 				items: [
 					// 0
 					{
 						title: '사업지 명',
+						must: true,
 						type: 'txtfield',
 						value: '',
 						txtfield: {
@@ -70,6 +72,7 @@ export default {
 					// 1
 					{
 						title: '대표번호',
+						must: true,
 						type: 'txtfield',
 						value: '',
 						txtfield: {
@@ -84,6 +87,7 @@ export default {
 					// 2
 					{
 						title: '근무시간 설정',
+						must: false,
 						type: 'time',
 						worktime: {
 							start: '',
@@ -93,6 +97,7 @@ export default {
 					// 3
 					{
 						title: '홀딩시간 설정',
+						must: false,
 						type: 'selectBox',
 						value: '',
 						selectBox: {
@@ -113,6 +118,7 @@ export default {
 					// 4
 					{
 						title: '출퇴근 스캔 URL',
+						must: false,
 						type: 'scan',
 						value: '',
 						txtfield: {
@@ -125,6 +131,7 @@ export default {
 					// 5
 					{
 						title: '상품 등록',
+						must: false,
 						type: 'product',
 						value: '',
 						txtfield: {
@@ -154,7 +161,7 @@ export default {
 					{ text: '대표번호', value: 'phoneNumber' },
 					{ text: '생성일', value: 'created_at' },
 					{ text: '근무시간', value: 'workTime' },
-					{ text: '담당자', value: 'business_manager' },
+					{ text: '담당자', value: 'businessManager' },
 					{ text: '연락처', value: 'managerPhoneNumber' },
 					{ text: '출퇴근 스캔 URL', value: 'workCheckURL' },
 					{ text: '등록상품', value: 'select_product' },
@@ -182,7 +189,7 @@ export default {
 			this.first_business()
 		},
 		first_business() {
-			this.$store.dispatch('businesses').then(res => {
+			this.$store.dispatch('businesses').then(async res => {
 				res.businesses.forEach(el => {
 					if (el.workingHoursStart) {
 						el['startTime'] = el.workingHoursStart.slice(0, 5)
@@ -191,8 +198,14 @@ export default {
 						el['endTime'] = el.workingHoursEnd.slice(0, 5)
 					}
 				})
-				console.log(res.businesses)
+				await this.$store.dispatch('businessManager').then(res_user => {
+					res.businesses.forEach(e => {
+						let manager = res_user.users.filter(user => e.id === user.businessID)
+						e['manager'] = manager.length > 0 ? manager[0] : null
+					})
+				})
 				this.table.items = res.businesses
+				console.log(this.table.items)
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 				this.$store.state.loading = false
 			})
@@ -205,8 +218,10 @@ export default {
 			this.table_detail.dialog = true
 			console.log(item)
 		},
-		editProduct() {
-			this.table_detail.dialog = true
+		biz_detail(item) {
+			this.createDialog.detail = item
+			this.createDialog.dialog = true
+			console.log(this.createDialog)
 		},
 		search_biz() {
 			this.$store.state.loading = true

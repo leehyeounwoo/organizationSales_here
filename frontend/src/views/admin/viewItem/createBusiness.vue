@@ -19,7 +19,7 @@
 						:key="index"
 						style="min-height:50px; border-bottom:1px solid #c8c8c8; border-left:1px solid #c8c8c8; border-right:1px solid #c8c8c8"
 					>
-						<v-flex xs3 align-self-center class="table_font">{{ left.title }}</v-flex>
+						<v-flex xs3 align-self-center class="table_font"><span v-if="left.must" style="color:red">* </span>{{ left.title }}</v-flex>
 						<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
 							<v-flex xs6>
 								<txtField
@@ -125,7 +125,12 @@
 								<txtField class="bizInput px-2" v-model="right.txtfield1.value" :txtField="right.txtfield1"></txtField>
 							</v-flex>
 							<v-flex align-self-center style="max-width:136px !important">
-								<txtField class="bizInput px-2" v-model="right.txtfield2.value" :txtField="right.txtfield2"></txtField>
+								<txtField
+									v-mask="'###-####-####'"
+									class="bizInput px-2"
+									v-model="right.txtfield2.value"
+									:txtField="right.txtfield2"
+								></txtField>
 							</v-flex>
 							<v-flex align-self-center style="max-width:136px !important">
 								<txtField class="bizInput px-2" v-model="right.txtfield3.value" :txtField="right.txtfield3"></txtField>
@@ -142,7 +147,7 @@
 										</v-radio-group>
 									</v-flex>
 									<v-flex>
-										<v-btn elevation="0" class="etc_btn" style="width:60px">적용</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">적용</v-btn>
 									</v-flex>
 									<v-flex>
 										<v-btn elevation="0" class="etc_btn" style="">계정정보 발송</v-btn>
@@ -227,6 +232,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						type: 'password',
 					},
 				},
 				{
@@ -251,6 +257,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						placeholder: '이메일 형식',
 					},
 					txtfield4: {
 						value: '',
@@ -258,6 +265,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						type: 'password',
 					},
 				},
 				{
@@ -282,6 +290,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						placeholder: '이메일 형식',
 					},
 					txtfield4: {
 						value: '',
@@ -289,6 +298,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						type: 'password',
 					},
 				},
 				{
@@ -313,6 +323,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						placeholder: '이메일 형식',
 					},
 					txtfield4: {
 						value: '',
@@ -320,6 +331,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						type: 'password',
 					},
 				},
 				{
@@ -344,6 +356,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						placeholder: '이메일 형식',
 					},
 					txtfield4: {
 						value: '',
@@ -351,6 +364,7 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						type: 'password',
 					},
 				},
 				{
@@ -373,12 +387,14 @@ export default {
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						placeholder: '이메일 형식',
 					},
 					txtfield4: {
 						maxlength: '255',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
+						type: 'password',
 					},
 				},
 			],
@@ -393,6 +409,9 @@ export default {
 		}
 	},
 	methods: {
+		checkManager(item) {
+			console.log(item)
+		},
 		businessCheck() {
 			if (this.setdialog.items[0].value === '') {
 				this.sweetInfo.title = '사업지명 입력'
@@ -409,19 +428,19 @@ export default {
 				this.sweetInfo.content = '전화번호 형식이 아닙니다.'
 				return (this.sweetInfo.open = true)
 			}
-			for (let i = 0; i < this.right_data.length; i++) {
-				if (this.right_data[i].txtfield3.value) {
-					if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
-						this.sweetInfo.title = '이메일 형식'
-						this.sweetInfo.content = '이메일 형식이 아닙니다.'
-						return (this.sweetInfo.open = true)
-					}
-				} else {
-					this.sweetInfo.title = '아이디 입력'
-					this.sweetInfo.content = '아이디를 입력해주세요.'
-					return (this.sweetInfo.open = true)
-				}
-			}
+			// for (let i = 0; i < this.right_data.length; i++) {
+			// 	if (this.right_data[i].txtfield3.value) {
+			// 		if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+			// 			this.sweetInfo.title = '이메일 형식'
+			// 			this.sweetInfo.content = '이메일 형식이 아닙니다.'
+			// 			return (this.sweetInfo.open = true)
+			// 		}
+			// 	} else {
+			// 		this.sweetInfo.title = '아이디 입력'
+			// 		this.sweetInfo.content = '아이디를 입력해주세요.'
+			// 		return (this.sweetInfo.open = true)
+			// 	}
+			// }
 		},
 		newBusiness() {
 			let data = {

@@ -74,7 +74,8 @@
 					</span>
 				</v-layout>
 				<v-flex style="width:100%; display: flex; justify-content: space-between;">
-					<datatable style="width: 100%" :datatable="settlementTable" class="notice_table" @pagination="pagination"> </datatable>
+					<datatable style="width: 100%" :datatable="evidenceTable" class="notice_table" @pagination="pagination" @click="SMSClick">
+					</datatable>
 
 					<v-flex xs7 class="ml-4">
 						<v-layout style="border-top:1px solid black">
@@ -119,23 +120,28 @@
 									<v-radio class="mb-0" label="미사용" :value="false" color="#009dac"></v-radio>
 								</v-radio-group>
 								<v-btn class="search_btn3" style="width: 50%; " color="#3e7ccc" @click="reset">초기화</v-btn>
-								<v-btn class="ml-2 search_btn3" style="width: 50%; " color="#3e7ccc"><v-icon>mdi-check</v-icon>저장</v-btn>
+								<v-btn class="ml-2 search_btn3" style="width: 50%; " color="#3e7ccc" @click="saveEvedenceSMS"
+									><v-icon>mdi-check</v-icon>저장</v-btn
+								>
 							</v-flex>
 						</v-layout>
 					</v-flex>
 				</v-flex>
 			</v-flex>
 		</v-layout>
+		<sweetAlert :dialog="sweetDialog_info" />
+		<sweetAlert :dialog="saveDialogStatus" @click="save_confirm" />
 	</div>
 </template>
 <script>
-import { datatable, txtField, selectBox } from '@/components/index.js'
+import { datatable, txtField, selectBox, sweetAlert } from '@/components/index.js'
 
 export default {
 	components: {
 		datatable,
 		txtField,
 		selectBox,
+		sweetAlert,
 	},
 
 	data() {
@@ -154,8 +160,31 @@ export default {
 			},
 			saveDialogStatus: {
 				open: false,
-				content: '저장하시겠습니까?',
-				btnTxt: '저장',
+				title: '',
+				content: ``,
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				cancelBtnText: '취소',
+				modalIcon: 'success',
+				save_type: '',
+				item: {},
+				item_index: null,
+			},
+			sweetDialog_info: {
+				// 저장 불가 팝업
+				open: false,
+				title: '저장 불가',
+				content: ``,
+				buttonType: 'twoBtn',
+				cancelBtnText: '취소',
+				saveBtnText: '반려',
+				modalIcon: 'info',
+				modalValue: 'no',
+				rejectionReason: [
+					{
+						value: '',
+					},
+				],
 			},
 			newDialog: {
 				dialog: false,
@@ -180,12 +209,12 @@ export default {
 			work: 0,
 			endWork: 0,
 			holiDay: 0,
-			settlementTable: {
+			evidenceTable: {
 				headers: [
-					{ text: '유형', value: '', align: 'center', width: '20%' },
-					{ text: '제목', value: '', align: 'center', width: '40%' },
-					{ text: '상태', value: '', align: 'center', width: '15%' },
-					{ text: '비고', value: '', align: 'center', width: '15%' },
+					{ text: '유형', value: 'type', align: 'center', width: '20%' },
+					{ text: '제목', value: 'SMStitle', align: 'center', width: '40%' },
+					{ text: '상태', value: 'SMSuseYn', align: 'center', width: '15%' },
+					{ text: '비고', value: 'detailEtc', align: 'center', width: '15%' },
 				],
 				showselect: true,
 				headerCheck: false,
@@ -204,8 +233,8 @@ export default {
 				},
 				itemsPerPage: 10,
 				page: 1,
-				pageCount: 0,
-				total: 0,
+				pageCount: 1,
+				total: 1,
 				hidedefaultfooter: true,
 			},
 
@@ -280,7 +309,7 @@ export default {
 				value: '',
 				errorMessage: '',
 				hideDetail: true,
-				items: ['일정 안내', '결과 안내'],
+				items: ['일정 안내', '지급 일정 정보', '지급 결과 안내', '지급 알림'],
 				outlined: true,
 				placeholder: '일정 안내',
 				returnObject: true,
@@ -313,6 +342,7 @@ export default {
 
 			userID: [],
 			businessID: [],
+			clickVariation: [],
 		}
 	},
 
@@ -326,6 +356,7 @@ export default {
 			idArr: this.businessID,
 		}
 		await this.businessView(businessData)
+		await this.messageView(businessData)
 	},
 	mounted() {},
 
@@ -344,9 +375,30 @@ export default {
 			})
 		},
 		async businessView(businessData) {
-			await this.$store.dispatch('businesses', businessData).then(res => {
-				console.log(businessData)
-				console.log(res)
+			await this.$store.dispatch('businesses', businessData).then(() => {})
+		},
+
+		async messageView(businessData) {
+			await this.$store.dispatch('messages', businessData).then(res => {
+				let data = res.messages
+				console.log(data)
+
+				data.forEach(el => {
+					el['type'] =
+						el.type === 'scheduleGuide'
+							? '일정 안내'
+							: el.type === 'paymentScheduleInformation'
+							? '지급 일정 정보'
+							: el.type === 'paymentNotification'
+							? '지급 결과 안내'
+							: el.type === 'paymentResultGuide'
+							? '지급 알림'
+							: el.type
+					el['SMStitle'] = el.title
+					el['SMSuseYn'] = el.useYn === 'true' ? '사용' : '미사용'
+				})
+				this.evidenceTable.items = data
+				console.log(this.evidenceTable.items)
 			})
 		},
 
@@ -451,6 +503,118 @@ export default {
 			}
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
+		},
+		reset() {
+			this.clickVariation = []
+			this.useType = true
+			this.EvidenceField.sms.txtField.value = ''
+			this.searchsel1.value = ''
+			this.EvidenceField.title.txtField.value = ''
+		},
+		saveEvedenceSMS() {
+			if (this.EvidenceField.sms.txtField.value === '') {
+				this.sweetDialog_info.title = `저장 실패`
+				this.sweetDialog_info.content = `내용을 입력해주세요`
+				this.sweetDialog_info.modalValue = ''
+				this.sweetDialog_info.buttonType = 'oneBtn'
+				this.sweetDialog_info.open = true
+			} else if (this.EvidenceField.title.txtField.value === '') {
+				this.sweetDialog_info.title = `저장 실패`
+				this.sweetDialog_info.content = `제목을 입력해주세요`
+				this.sweetDialog_info.modalValue = ''
+				this.sweetDialog_info.buttonType = 'oneBtn'
+				this.sweetDialog_info.open = true
+			} else if (this.searchsel1.value === '') {
+				this.sweetDialog_info.title = `저장 실패`
+				this.sweetDialog_info.content = `유형을 선택해주세요`
+				this.sweetDialog_info.modalValue = ''
+				this.sweetDialog_info.buttonType = 'oneBtn'
+				this.sweetDialog_info.open = true
+			} else {
+				this.saveDialogStatus.title = `저장`
+				this.saveDialogStatus.content = `내용을 저장합니다`
+				this.saveDialogStatus.open = true
+			}
+		},
+		save_confirm() {
+			this.$store.state.loading = true
+
+			this.$store.dispatch('messages').then(res => {
+				if (this.clickVariation.id === res.messages[0].id) {
+					let realType
+					if (this.searchsel1.value === '일정 안내') {
+						realType = 'scheduleGuide'
+					} else if (this.searchsel1.value === '지급 일정 정보') {
+						realType = 'paymentScheduleInformation'
+					} else if (this.searchsel1.value === '지급 결과 안내') {
+						realType = 'paymentNotification'
+					} else {
+						realType = 'paymentResultGuide'
+					}
+
+					let input2 = {
+						id: this.clickVariation.id,
+						title: this.EvidenceField.title.txtField.value,
+						detail: this.EvidenceField.sms.txtField.value,
+						useYn: this.useType,
+						type: realType,
+						businessID: this.businessID,
+					}
+
+					this.$store.dispatch('updateMessage', input2).then(res => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `수정 완료`
+						this.saveDialogStatus.content = `수정이 완료되었습니다`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+						let data = {
+							businessID: res.messages[0].id,
+						}
+						this.messageView(data)
+					})
+				} else {
+					let realType
+					if (this.searchsel1.value === '일정 안내') {
+						realType = 'scheduleGuide'
+					} else if (this.searchsel1.value === '지급 일정 정보') {
+						realType = 'paymentScheduleInformation'
+					} else if (this.searchsel1.value === '지급 결과 안내') {
+						realType = 'paymentNotification'
+					} else {
+						realType = 'paymentResultGuide'
+					}
+
+					let input = {
+						title: this.EvidenceField.title.txtField.value,
+						detail: this.EvidenceField.sms.txtField.value,
+						useYn: this.useType,
+						type: realType,
+						businessID: this.businessID,
+					}
+
+					this.$store.dispatch('createMessage', input).then(() => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `저장 완료`
+						this.saveDialogStatus.content = `저장이 완료되었습니다`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+				}
+			})
+		},
+		SMSClick(val) {
+			this.clickVariation = []
+			this.clickVariation = val
+			this.EvidenceField.title.txtField.value = val.SMStitle
+			this.EvidenceField.sms.txtField.value = val.detail
+			this.searchsel1.value = val.type
+			this.useType = val.useYn === 'true' ? true : false
 		},
 	},
 }
