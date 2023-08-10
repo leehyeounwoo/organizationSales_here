@@ -162,8 +162,8 @@ export const register = gql`
 	}
 `
 export const updateUser = gql`
-	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankId: String, $teamID: String) {
-		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber, rankId: $rankId, teamID: $teamID } }) {
+	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankID: String, $teamID: String) {
+		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber, rankID: $rankID, teamID: $teamID } }) {
 			user {
 				id
 			}
@@ -308,6 +308,45 @@ export const updateMessage = gql`
 				type
 				title
 				businessID
+			}
+		}
+	}
+`
+export const userInfoEdit = gql`
+	mutation userInfoEdit(
+		$businessRegistration: ID
+		$profile: ID
+		$copyAccount: ID
+		$employmentContract: ID
+		$iD_Card: ID
+		$teamID: String
+		$rankID: String
+		$phoneNumber: String
+		$bank: String
+		$accountNumber: String
+		$salesPhoneNumber: String
+		$businessNumber: String
+		$businessID: String
+	) {
+		userInfoEdit(
+			input: {
+				businessRegistration: $businessRegistration
+				profile: $profile
+				copyAccount: $copyAccount
+				employmentContract: $employmentContract
+				iD_Card: $iD_Card
+				teamID: $teamID
+				rankID: $rankID
+				phoneNumber: $phoneNumber
+				bank: $bank
+				accountNumber: $accountNumber
+				salesPhoneNumber: $salesPhoneNumber
+				businessNumber: $businessNumber
+				businessID: $businessID
+			}
+		) {
+			user {
+				id
 			}
 		}
 	}

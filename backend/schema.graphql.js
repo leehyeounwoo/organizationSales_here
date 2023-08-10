@@ -37,6 +37,9 @@ module.exports = {
       jwt: String
       user: UsersPermissionsMe!
     }
+    type UsersPermissionsPayload {
+      user: UsersPermissionsMe!
+    }
 
     type UserPermissionsPasswordPayload {
       ok: Boolean!
@@ -52,6 +55,7 @@ module.exports = {
     resetPassword(password: String!, passwordConfirmation: String!, code: String!): UsersPermissionsLoginPayload
     editPassword(password: String!, newPassword: String!, email: String!): UsersPermissionsLoginPayload
     emailConfirmation(confirmation: String!): UsersPermissionsLoginPayload
+    userInfoEdit(input:userInfoEditData): UsersPermissionsPayload
   `,
   resolver: {
     Query: {
@@ -156,6 +160,7 @@ module.exports = {
           };
         },
       },
+
       deleteUser: {
         description: "Delete an existing user",
         resolverOf: "plugins::users-permissions.user.destroy",
@@ -181,6 +186,22 @@ module.exports = {
 
           return {
             user,
+          };
+        },
+      },
+      userInfoEdit: {
+        description: "Update an existing user",
+        resolverOf: "plugins::users-permissions.user.userInfoEdit",
+        resolver: async (obj, options, { context }) => {
+          context.params = _.toPlainObject(options.input.where);
+          context.request.body = _.toPlainObject(options.input.data);
+
+          await strapi.plugins[
+            "users-permissions"
+          ].controllers.user.userInfoEdit(context);
+
+          return {
+            user: context.body.toJSON ? context.body.toJSON() : context.body,
           };
         },
       },

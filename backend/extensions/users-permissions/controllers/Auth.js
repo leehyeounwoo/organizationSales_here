@@ -709,7 +709,20 @@ module.exports = {
       ctx.badRequest(null, formatError(adminError));
     }
   },
+  async userInfoEdit(ctx) {
+    console.log(ctx);
+    // let updateData = {
+    //   ...ctx.request.body,
+    // };
 
+    // if (_.has(ctx.request.body, 'password') && password === user.password) {
+    //   delete updateData.password;
+    // }
+
+    // const data = await strapi.plugins['users-permissions'].services.user.edit({ id }, updateData);
+
+    // ctx.send(sanitizeUser(data));
+  },
   async emailConfirmation(ctx, next, returnUser) {
     const params = ctx.query;
 

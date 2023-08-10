@@ -1,18 +1,18 @@
 <template>
 	<div style="width:100%;">
 		<v-layout align-center class="header_search" justify-end>
-			<v-flex>
-				<span class="mr-4 ml-4">
+			<v-flex style="font-size:0.75rem;">
+				<span class="mr-4 ml-4" style="font-weight:bold;">
 					6개팀 / 120명
 				</span>
-				<span class="mr-2">
-					근무:110명
+				<span class="mr-2 pa-1 blueBox">
+					근무 : 110명
 				</span>
-				<span class="mr-2">
-					휴무:5명
+				<span class="mr-2 pa-1" style="background-color:rgb(79, 213, 72); color:white; border:1px solid black;">
+					휴무 : 5명
 				</span>
-				<span>
-					미확인:5명
+				<span class="pa-1" style="background-color:rgb(213, 175, 72); color:white; border:1px solid black;">
+					미확인 : 5명
 				</span>
 			</v-flex>
 			<v-spacer></v-spacer>
@@ -30,12 +30,12 @@
 			</v-flex>
 		</v-layout>
 		<v-layout>
-			<v-flex xs2>
-				<v-layout>
+			<v-flex xs2 mt-1 style="font-size:0.75rem;">
+				<v-layout justify-center style="border:1px solid black">
 					1팀/20명
 				</v-layout>
 				<v-layout>
-					<v-flex>16명</v-flex>
+					<v-flex class="blueBox">16명</v-flex>
 					<v-flex>2명</v-flex>
 					<v-flex>2명</v-flex>
 				</v-layout>
@@ -123,4 +123,10 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.blueBox {
+	background-color: rgb(72, 72, 213);
+	color: white;
+	border: 1px solid black;
+}
+</style>

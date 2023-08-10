@@ -39,9 +39,25 @@ module.exports = {
       copyAccount: ID
       employmentContract: ID
       iD_Card: ID
+      businessID: String
       company: String
       rankID: String
       editLog: JSON
+    }
+    input userInfoEditData {
+      businessRegistration: ID
+      profile: ID
+      copyAccount: ID
+      employmentContract: ID
+      iD_Card: ID
+      teamID: String
+      rankID: String
+      phoneNumber: String
+      bank: String
+      accountNumber: String
+      salesPhoneNumber: String
+      businessNumber: String
+      businessID: String
     }
     type emailDuplicate {
       duplicate: JSON

@@ -512,7 +512,7 @@ export default {
 			const data = {
 				id: val.id,
 				teamID: val.teamTitle,
-				rankId: val.rankTitle,
+				rankID: val.rankTitle,
 			}
 			this.updateUserAction(data)
 		},
@@ -578,9 +578,21 @@ export default {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
 				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
-				let rankData = this.rankData.filter(x => x.id === element.rankId)[0]
-				let teamTitle = teamData.id
-				let rankTitle = rankData.id
+				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
+
+				let teamTitle = '-'
+				let rankTitle = '-'
+				if (teamData) {
+					teamTitle = teamData.id
+					element.teamTitle = teamTitle
+				}
+				if (rankData) {
+					rankTitle = rankData.id
+					element.rankTitle = rankTitle
+				}
+				if (teamData && rankData) {
+					element.team_rank = `${teamData.title}(${rankData.rankName})`
+				}
 				element.salesPhoneNumber_txtField = {
 					value: '',
 					txtfield: {
@@ -591,13 +603,10 @@ export default {
 						placeholder: '',
 					},
 				}
-				element.team_rank = `${teamData.title}(${rankData.rankName})`
 				element.workingStatusName = element.workingStatus ? '재직' : '퇴사'
 				element.created_at_format = this.$moment(element.created_at).format('YYYY년MM월DD일')
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
-				element.teamTitle = teamTitle
-				element.rankTitle = rankTitle
 			}
 			this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
@@ -753,7 +762,7 @@ export default {
 				.then(res => {
 					this.userData = res.users
 					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
-					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
+					this.rankArrData = res.users.filter(x => x.rankID).map(x => x.rankID)
 				})
 				.catch(err => {
 					console.log(err)
