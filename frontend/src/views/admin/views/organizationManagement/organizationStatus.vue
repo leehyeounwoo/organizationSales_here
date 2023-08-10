@@ -473,9 +473,9 @@ export default {
 			search_project: '',
 			userArrData: [],
 			userData: [],
-			teamArrData: [],
+			// teamArrData: [],
 			teamData: [],
-			rankArrData: [],
+			// rankArrData: [],
 			rankData: [],
 		}
 	},
@@ -761,8 +761,8 @@ export default {
 				.dispatch('users', usersViewData)
 				.then(res => {
 					this.userData = res.users
-					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
-					this.rankArrData = res.users.filter(x => x.rankID).map(x => x.rankID)
+					// this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
+					// this.rankArrData = res.users.filter(x => x.rankID).map(x => x.rankID)
 				})
 				.catch(err => {
 					console.log(err)
