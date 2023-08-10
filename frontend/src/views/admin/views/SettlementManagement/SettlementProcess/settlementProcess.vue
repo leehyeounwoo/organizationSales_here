@@ -203,65 +203,48 @@
 							입금증
 						</v-flex>
 					</v-layout>
-					<v-layout v-for="(items, idx) of amountData" :key="idx">
-						<v-flex class="notice_right_table" xs2 style="height: 40px;">
-							1차
+					<v-layout v-for="degree of 5" :key="degree">
+						<v-flex class="notice_right_table" xs2 style="height: auto;"> {{ degree }}차 </v-flex>
+						<v-flex style="display: flex; justify-content: center; align-items: center;" xs3 class="notice_right_table2">
+							<v-text-field
+								class="amountTextField"
+								:value="amountData[degree - 1] ? amountData[degree - 1].bank : ''"
+								@input="updateBank(degree, $event)"
+								outlined
+								dense
+							></v-text-field>
 						</v-flex>
-
-						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
-							<span class="spanClass2"> {{ items.bank }}</span>
-						</v-flex>
-						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
-							<span class="spanClass2">{{ items.accountNumber }}</span>
+						<v-flex style="display: flex; justify-content: center; align-items: center;" xs3 class="notice_right_table2">
+							<v-text-field
+								:value="amountData[degree - 1] ? amountData[degree - 1].bankAccount : ''"
+								@input="updateBankAccount(degree, $event)"
+								outlined
+								dense
+							></v-text-field>
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-							<span class="spanClass2">{{ items.amount ? items.amount + '원' : '-' }}</span>
+							<span class="spanClass2"> {{ amountData[degree - 1] ? amountData[degree - 1].amount + '원' : '' }}</span>
 						</v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-					</v-layout>
-					<v-layout>
-						<v-flex class="notice_right_table" xs2 style="height: 40px;">
-							2차
+						<v-flex xs3 class="notice_right_table2">
+							<DatepickerDialog :picker="paymentProcess_date_picker[degree]" class="d-flex align-center date_picker3"></DatepickerDialog>
 						</v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-					</v-layout>
-					<v-layout>
-						<v-flex class="notice_right_table" xs2 style="height: 40px;">
-							3차
+						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
+							<div class="pdfFileBox mt-1" @click="pdfFileUpload">
+								<label style="display: block ; font-size: 12px; color: black; cursor:pointer;">
+									{{ pdfLists.length > 0 && pdfLists[degree] && pdfLists[degree].numberList ? pdfLists[degree].numberList.name : '' }}
+								</label>
+							</div>
+							<div @click="pdfFileUpload" style="border: 1px solid rgba(0, 0, 0, 1); width: 20% !important; " class="pdfFileBox mt-1">
+								<v-icon>
+									mdi-tray-arrow-up
+								</v-icon>
+								<input type="file" style="display:none;" id="pdf_files" @change="pdfFileUploadChange" accept="pdf" />
+							</div>
 						</v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-					</v-layout>
-					<v-layout>
-						<v-flex class="notice_right_table" xs2 style="height: 40px;">
-							4차
-						</v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-					</v-layout>
-					<v-layout>
-						<v-flex class="notice_right_table" xs2 style="height: 40px;">
-							5차
-						</v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
-						<v-flex xs3 class="notice_right_table2"> </v-flex>
 					</v-layout>
 				</v-flex>
-				<v-flex style="text-align: end;">
+				<v-flex style="text-align: end; display: flex; justify-content:end ;">
+					<v-checkbox class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
 					<span
 						style="font-size: 12px;
             font-weight: normal;
@@ -273,9 +256,8 @@
             color: #3e7ccc;
             width: 158px;
             height: 16px;
-            margin: 19.8px 13px 16.5px 0;
             font-family: MalgunGothic;"
-						>저장시 정산 일정 문자 발송</span
+						>저장시 입금 확인 문자 발송</span
 					>
 					<v-btn
 						style="background-color: #3e7ccc; color: #fff;  
@@ -283,7 +265,7 @@
             height: 25px;
             margin: 9.8px 0 17.5px 7px;
             padding: 4px 19px 4px 15.4px;"
-						><v-icon>mdi-check</v-icon> 정산 일정 저장</v-btn
+						><v-icon>mdi-check</v-icon> 입금 내용 저장</v-btn
 					>
 				</v-flex>
 			</v-flex>
@@ -312,6 +294,8 @@ export default {
 			endTimeDialog: false,
 			startTime: '',
 			endTime: '',
+			pdfFiles: {},
+			pdfLists: [],
 			editGotoworkDialog: false,
 			editGotoworkData: {
 				title: '',
@@ -416,6 +400,32 @@ export default {
 			},
 
 			start_date_picker: {
+				1: {
+					date: this.$moment().format('YYYY-MM-DD'),
+				},
+				2: {
+					date: this.$moment(this.date)
+						.add(1, 'd')
+						.format('YYYY-MM-DD'),
+				},
+				3: {
+					date: this.$moment(this.date)
+						.add(2, 'd')
+						.format('YYYY-MM-DD'),
+				},
+				4: {
+					date: this.$moment(this.date)
+						.add(3, 'd')
+						.format('YYYY-MM-DD'),
+				},
+				5: {
+					date: this.$moment(this.date)
+						.add(4, 'd')
+						.format('YYYY-MM-DD'),
+				},
+			},
+
+			paymentProcess_date_picker: {
 				1: {
 					date: this.$moment().format('YYYY-MM-DD'),
 				},
@@ -689,6 +699,64 @@ export default {
 						errorMessage: '',
 						placeholder: '-',
 						readonly: true,
+					},
+				},
+			},
+
+			paymentProcess: {
+				bank: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: false,
+					},
+				},
+				bankAccount: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: false,
+					},
+				},
+				amount: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: false,
+					},
+				},
+				paymentDate: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: false,
+					},
+				},
+				5: {
+					txtField: {
+						maxlength: '255',
+						value: '',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '-',
+						readonly: false,
 					},
 				},
 			},
@@ -979,6 +1047,22 @@ export default {
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
+
+		pdfFileUpload() {
+			document.getElementById(`pdf_files`).click()
+		},
+		pdfFileUploadChange(val) {
+			this.pdfFiles.file = val.target.files[0]
+			this.pdfFiles.name = val.target.files[0].name
+			this.pdfFiles.fileUpload = true
+			this.pdfFiles.url = URL.createObjectURL(val.target.files[0])
+			this.pdfFiles.id = ''
+			this.pdfLists.push({ numberList: this.pdfFiles })
+			document.getElementById(`pdf_files`).value = ''
+			this.pdfFiles = {}
+			console.log(this.pdfFiles)
+			console.log(this.pdfLists)
+		},
 		alertRate(val) {
 			let valChange = Number(val.replace('charge', '')) + ''
 			let timeChange = Number(this.timessel.value.replace(/차/g, '')) + ''
@@ -1002,6 +1086,7 @@ export default {
 		},
 
 		processRequestData(val) {
+			console.log(val)
 			for (let i = 0; i < 5; i++) {
 				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
 				this.paymentRate[`charge${i + 1}`].txtField.value = ''
@@ -1147,6 +1232,18 @@ export default {
 			this.$nextTick(() => {
 				this.paymentRateSum.txtField.value = sum + '%'
 			})
+		},
+		updateBank(degree, value) {
+			if (!this.amountData[degree - 1]) {
+				this.amountData[degree - 1] = {}
+			}
+			this.amountData[degree - 1].bank = value
+		},
+		updateBankAccount(degree, value) {
+			if (!this.amountData[degree - 1]) {
+				this.amountData[degree - 1] = {}
+			}
+			this.amountData[degree - 1].bankAccount = value
 		},
 	},
 	computed: {
@@ -1463,6 +1560,10 @@ export default {
 		}
 	}
 }
+
+.v-text-field__details {
+	display: none;
+}
 .btn-style2 {
 	box-shadow: none;
 	background-color: #ffffff;
@@ -1548,5 +1649,19 @@ export default {
 	letter-spacing: normal;
 	text-align: center;
 	color: #333;
+}
+
+.pdfFileBox {
+	border: 2px solid rgba(0, 0, 0, 0.2);
+	max-width: 100%;
+	width: 80%;
+	height: 70%;
+	border-radius: 3px;
+	background-color: #f0f1f2;
+	cursor: pointer;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>
