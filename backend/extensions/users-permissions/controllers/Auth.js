@@ -314,7 +314,12 @@ module.exports = {
           .query("user", "users-permissions")
           .update({ id: user.id }, { password });
         ctx.send({
-          result: true,
+          jwt: strapi.plugins["users-permissions"].services.jwt.issue({
+            id: user.id,
+          }),
+          user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+            model: strapi.query("user", "users-permissions").model,
+          }),
         });
       } else {
         return ctx.badRequest(
