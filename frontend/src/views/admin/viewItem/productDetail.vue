@@ -13,18 +13,33 @@
 			<v-layout align-center class="mx-10 mt-2 header_search">
 				<div class="d-flex align-center" style="font-weight:bold; font-size:13px">
 					<div class="pl-3" style="width:65px">주택형</div>
-					<selectBox class="d-flex align-center" :sel="selectBox1" style="max-width:90px; font-weight:normal"></selectBox>
-					<txtField class="search_box_type" v-model="text1" :txtField="select_text1" style="width:80px !important"></txtField>
+					<selectBox class="d-flex align-center" :sel="setdialog.selectBox1" style="max-width:90px; font-weight:normal"></selectBox>
+					<txtField
+						class="search_box_type"
+						v-model="setdialog.select_text1.value"
+						:txtField="setdialog.select_text1"
+						style="width:80px !important"
+					></txtField>
 				</div>
 				<div class="d-flex align-center ml-5" style="font-weight:bold; font-size:13px">
 					<div style="width:25px">동</div>
-					<selectBox class="d-flex align-center" :sel="selectBox2" style="max-width:90px; font-weight:normal"></selectBox>
-					<txtField class="search_box_type" v-model="text2" :txtField="select_text2" style="width:80px !important"></txtField>
+					<selectBox class="d-flex align-center" :sel="setdialog.selectBox2" style="max-width:90px; font-weight:normal"></selectBox>
+					<txtField
+						class="search_box_type"
+						v-model="setdialog.select_text2.value"
+						:txtField="setdialog.select_text2"
+						style="width:80px !important"
+					></txtField>
 				</div>
 				<div class="d-flex align-center ml-5" style="font-weight:bold; font-size:13px">
 					<div style="width:30px">호수</div>
-					<txtField class="search_box_type" v-model="text3" :txtField="select_text3" style="width:80px !important"></txtField>
-					<selectBox class="d-flex align-center ml-4" :sel="selectBox3" style="max-width:85px; font-weight:normal"></selectBox>
+					<txtField
+						class="search_box_type"
+						v-model="setdialog.select_text3.value"
+						:txtField="setdialog.select_text3"
+						style="width:80px !important"
+					></txtField>
+					<selectBox class="d-flex align-center ml-4" :sel="setdialog.selectBox3" style="max-width:85px; font-weight:normal"></selectBox>
 				</div>
 				<v-btn elevation="0" class="ml-3 search_btn" color="#ffae28" style="width:80px !important">신규등록</v-btn>
 				<v-spacer></v-spacer>
@@ -113,55 +128,10 @@ export default {
 				backCol: 'white',
 			},
 			search_product: '',
-			selectBox1: {
-				placeholder: '주택형',
-				value: '',
-				items: [],
-				hideDetail: true,
-				outlined: true,
-				class: 'small_font searchSel',
-			},
-			select_text1: {
-				value: '',
-				maxlength: '255',
-				outlined: true,
-				backCol: 'white',
-			},
-			text1: '',
-			selectBox2: {
-				placeholder: '동',
-				value: '',
-				items: [],
-				hideDetail: true,
-				outlined: true,
-				class: 'small_font searchSel',
-			},
-			select_text2: {
-				value: '',
-				maxlength: '255',
-				outlined: true,
-				backCol: 'white',
-			},
-			text2: '',
-			select_text3: {
-				value: '',
-				maxlength: '255',
-				outlined: true,
-				backCol: 'white',
-			},
-			text3: '',
-			selectBox3: {
-				placeholder: '상태',
-				value: '',
-				items: ['계약', '미계약'],
-				hideDetail: true,
-				outlined: true,
-				class: 'small_font searchSel',
-			},
 			selectBox4: {
 				placeholder: '상태',
 				value: '',
-				items: ['계약', '미계약'],
+				items: ['전체', '계약', '미계약'],
 				hideDetail: true,
 				outlined: true,
 				class: 'small_font searchSel',
@@ -184,12 +154,12 @@ export default {
 			},
 			productTable: {
 				headers: [
-					{ text: 'No.', value: '' },
-					{ text: '주택형', value: '' },
-					{ text: '동', value: '' },
-					{ text: '호수', value: '' },
-					{ text: '상태', value: '' },
-					{ text: '비고', value: '' },
+					{ text: 'No.', value: 'product_number' },
+					{ text: '주택형', value: 'housingType' },
+					{ text: '동', value: 'dong' },
+					{ text: '호수', value: 'ho' },
+					{ text: '상태', value: 'contractStatus' },
+					{ text: '비고', value: 'product_etc' },
 				],
 				class: 'datatablehover3',
 				items: [],

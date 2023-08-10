@@ -162,10 +162,16 @@ export const register = gql`
 	}
 `
 export const updateUser = gql`
-	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankID: String, $teamID: String) {
-		updateUser(input: { where: { id: $id }, data: { salesPhoneNumber: $salesPhoneNumber, rankID: $rankID, teamID: $teamID } }) {
+	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankID: String, $teamID: String, $businessID: String) {
+		updateUser(
+			input: {
+				where: { id: $id }
+				data: { salesPhoneNumber: $salesPhoneNumber, rankID: $rankID, teamID: $teamID, businessID: $businessID }
+			}
+		) {
 			user {
 				id
+				businessID
 			}
 		}
 	}

@@ -25,9 +25,10 @@ import createBusiness from '../../viewItem/createBusiness.vue'
 import productDetail from '../../viewItem/productDetail.vue'
 
 export default {
-	async created() {
+	created() {
 		this.$store.state.loading = true
-		await this.rowperpageChange()
+		this.rowperpageChange()
+		this.first_product()
 	},
 	components: {
 		txtField,
@@ -148,11 +149,68 @@ export default {
 							readonly: true,
 						},
 					},
+					// 6
+					{
+						title: '사업지 위치',
+						must: false,
+						type: 'location',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							disable: true,
+							placeholder: '위도, 경도',
+						},
+					},
 				],
 			},
 			table_detail: {
 				dialog: false,
 				item: [],
+				selectBox1: {
+					placeholder: '주택형',
+					value: '',
+					items: [],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font searchSel',
+				},
+				select_text1: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					backCol: 'white',
+				},
+				selectBox2: {
+					placeholder: '동',
+					value: '',
+					items: [],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font searchSel',
+				},
+				select_text2: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					backCol: 'white',
+				},
+				select_text3: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					backCol: 'white',
+				},
+				selectBox3: {
+					placeholder: '상태',
+					value: '',
+					items: ['계약', '미계약'],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font searchSel',
+				},
 			},
 			search_business: '',
 			search: {
@@ -187,9 +245,14 @@ export default {
 		}
 	},
 	methods: {
+		first_product() {
+			// this.$store.dispatch('products').then(res => {
+			// 	res.products.forEach(el => {
+			// 	})
+			// })
+		},
 		rowperpageChange() {
 			this.$store.state.loading = true
-			console.log(this.rowperpageSel.value)
 			this.table.itemsPerPage = this.rowperpageSel.value
 			this.first_business()
 		},

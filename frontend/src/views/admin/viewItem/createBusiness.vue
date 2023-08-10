@@ -103,6 +103,18 @@
 								</v-layout>
 							</v-flex>
 						</v-flex>
+						<v-flex xs9 v-else-if="left.type === 'location'" class="table_right_white px-2 biz_table_right">
+							<v-flex xs8>
+								<v-layout class="pt-3">
+									<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
+									<v-flex>
+										<v-btn elevation="0" class="ml-2 new_biz_btn" style="min-width:30px !important; width:30px !important"
+											><v-icon small>mdi-crosshairs</v-icon></v-btn
+										>
+									</v-flex>
+								</v-layout>
+							</v-flex>
+						</v-flex>
 					</v-layout>
 				</v-flex>
 				<v-flex xs7>
@@ -150,7 +162,7 @@
 										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">생성</v-btn>
 									</v-flex>
 									<v-flex v-else>
-										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">적용</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="width:60px">적용</v-btn>
 									</v-flex>
 									<v-flex>
 										<v-btn elevation="0" class="etc_btn" style="">계정정보 발송</v-btn>
@@ -165,6 +177,7 @@
 				</v-flex>
 			</v-layout>
 		</div>
+		<sweetAlert :dialog="sweetDialog1" @click="saveUser" />
 		<sweetAlert :dialog="sweetDialog" @click="saveBusiness" />
 		<sweetAlert :dialog="sweetInfo" />
 	</v-dialog>
@@ -187,11 +200,19 @@ export default {
 	},
 	data() {
 		return {
-			user_confirmed: '',
 			sweetDialog: {
 				open: false,
 				title: '사업지 생성',
 				content: `사업지를 생성합니다.`,
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
+			sweetDialog1: {
+				open: false,
+				title: '관리자 생성',
+				content: `관리자를 생성합니다.`,
 				cancelBtnText: '취소',
 				buttonType: 'twoBtn',
 				saveBtnText: '저장',
@@ -208,7 +229,8 @@ export default {
 			right_data: [
 				{
 					number: 1,
-					user_confirmed: '',
+					detail: [],
+					user_confirmed: true,
 					txtfield1: {
 						value: '',
 						maxlength: '255',
@@ -244,6 +266,22 @@ export default {
 		}
 	},
 	methods: {
+		saveUser() {
+			let data = {
+				username: this.right_data.detail.username,
+				phoneNumber: this.right_data.detail.phoneNumber,
+				email: this.right_data.detail.email,
+				password: this.right_data.detail.password,
+				// confirmed: this.right_data.detail.confirmed,
+			}
+			console.log(data)
+			if (this.setdialog.type === 'create') {
+				this.$store.dispatch('register', data).then(res => {
+					this.right_data['id'] = res.register.user.id
+					this.sweetDialog1.open = false
+				})
+			}
+		},
 		saveBusiness() {
 			let data = {
 				name: this.setdialog.items[0].value,
@@ -255,10 +293,16 @@ export default {
 			}
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('createBusiness', data).then(res => {
-					console.log(res)
-					this.sweetDialog.open = false
-					this.setdialog.dialog = false
-					this.getTable()
+					console.log(res.createBusiness)
+					let adduser = {
+						id: this.right_data.id,
+						businessID: res.createBusiness.id,
+					}
+					this.$store.dispatch('updateUser', adduser).then(() => {
+						this.sweetDialog.open = false
+						this.setdialog.dialog = false
+						this.getTable()
+					})
 				})
 			}
 		},
@@ -269,6 +313,11 @@ export default {
 				this.sweetInfo.content = '아이디를 입력해주세요.'
 				return (this.sweetInfo.open = true)
 			}
+			if (!this.checkUrl(item.txtfield3.value)) {
+				this.sweetInfo.title = '이메일 형식'
+				this.sweetInfo.content = '이메일 형식이 아닙니다'
+				return (this.sweetInfo.open = true)
+			}
 			let data = {
 				username: item.txtfield1.value,
 				phoneNumber: item.txtfield2.value,
@@ -276,11 +325,8 @@ export default {
 				password: item.txtfield4.value,
 				confirmed: item.user_confirmed,
 			}
-			if (this.setdialog.type === 'create') {
-				this.$store.dispatch('register', data).then(res => {
-					console.log(res)
-				})
-			}
+			this.right_data.detail = data
+			this.sweetDialog1.open = true
 		},
 		businessCheck() {
 			if (this.setdialog.items[0].value === '') {
@@ -358,7 +404,7 @@ export default {
 .table_all_gray:nth-last-child(1) {
 	margin-bottom: 50px;
 }
-.table_all_gray:nth-last-child(6) {
+.table_all_gray:nth-last-child(7) {
 	border-top: 1px solid black;
 }
 .biz_table_right {

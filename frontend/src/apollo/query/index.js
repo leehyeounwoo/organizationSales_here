@@ -126,14 +126,15 @@ export const teams = gql`
 `
 
 export const products = gql`
-	query($idArr: [ID], $housingType: String, $dong: String, $ho: String) {
-		products(where: { id: $idArr, housingType: $housingType, dong: $dong, ho: $ho }) {
+	query($idArr: [ID], $housingType: String, $dong: String, $ho: String, $businessID: String) {
+		products(where: { id: $idArr, housingType: $housingType, dong: $dong, ho: $ho, businessID: $businessID }) {
 			id
 			housingType
 			dong
 			ho
 			contractStatus
 			choiceYn
+			businessID
 		}
 	}
 `
@@ -150,6 +151,7 @@ export const businesses = gql`
 			maximumHoldingTime
 			code
 			created_at
+			product
 		}
 	}
 `
