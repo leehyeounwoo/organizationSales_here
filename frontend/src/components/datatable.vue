@@ -993,7 +993,7 @@
 			</template>
 
 			<template v-slot:[`item.startTime`]="{ item }">
-				{{ item.startTime | moment('HH:mm') }}
+				{{ item.startTime | moment('HH:mm.ss.SSS') }}
 			</template>
 
 			<template v-slot:[`item.joinStatus`]="{ item }">

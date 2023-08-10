@@ -34,6 +34,7 @@ import {
 	businesses_title,
 	messages,
 	businessManager,
+	systems,
 } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
@@ -598,6 +599,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: createSystem,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		systems({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: systems,
 						variables: input,
 					})
 					.then(({ data }) => {

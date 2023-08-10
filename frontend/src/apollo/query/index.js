@@ -222,3 +222,14 @@ export const messages = gql`
 		}
 	}
 `
+
+export const systems = gql`
+	query systems($idArr: [ID]) {
+		systems(where: { businessID: $idArr }) {
+			id
+			inputFiles
+			businessID
+			turn
+		}
+	}
+`

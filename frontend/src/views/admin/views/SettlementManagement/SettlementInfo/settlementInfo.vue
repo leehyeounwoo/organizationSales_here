@@ -388,6 +388,7 @@ export default {
 		}
 		await this.businessView(businessData)
 		await this.messageView(businessData)
+		await this.infoView(businessData)
 	},
 	mounted() {},
 
@@ -430,6 +431,22 @@ export default {
 				})
 				this.evidenceTable.items = data
 				console.log(this.evidenceTable.items)
+			})
+		},
+
+		async infoView(businessData) {
+			await this.$store.dispatch('systems', businessData).then(res => {
+				res.systems.forEach(element => {
+					const data = {}
+
+					if (element.turn !== 'etc') {
+						data.degree = element.turn
+						data.evidence = element.inputFiles.evidence
+						this.addedItems.push(data)
+					} else {
+						this.etcInfo.txtField.value = element.inputFiles.evidence
+					}
+				})
 			})
 		},
 
