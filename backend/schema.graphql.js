@@ -38,7 +38,7 @@ module.exports = {
       user: UsersPermissionsMe!
     }
     type UsersPasswordEditPayload {
-      result: String
+      result: Boolean!
     }
     type UsersPermissionsPayload {
       user: UsersPermissionsMe!
@@ -56,7 +56,7 @@ module.exports = {
     register(input: UsersPermissionsRegisterInput!): UsersPermissionsLoginPayload!
     forgotPassword(email: String!): UserPermissionsPasswordPayload
     resetPassword(password: String!, passwordConfirmation: String!, code: String!): UsersPermissionsLoginPayload
-    editPassword(password: String!, newPassword: String!, email: String!): UsersPasswordEditPayload
+    editPassword(password: String!, newPassword: String!, email: String!): UserPermissionsPasswordPayload
     emailConfirmation(confirmation: String!): UsersPermissionsLoginPayload
     userInfoEdit(input:userInfoEditData): UsersPermissionsPayload
   `,
@@ -310,8 +310,7 @@ module.exports = {
           checkBadRequest(output);
 
           return {
-            user: output.user || output,
-            jwt: output.jwt,
+            ok: output.ok || output,
           };
         },
       },

@@ -313,9 +313,7 @@ module.exports = {
         await strapi
           .query("user", "users-permissions")
           .update({ id: user.id }, { password });
-        ctx.send({
-          result: true,
-        });
+        ctx.send({ ok: true });
       } else {
         return ctx.badRequest(
           null,
