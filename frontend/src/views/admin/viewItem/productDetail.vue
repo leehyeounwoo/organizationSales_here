@@ -41,7 +41,7 @@
 					></txtField>
 					<selectBox class="d-flex align-center ml-4" :sel="setdialog.selectBox3" style="max-width:85px; font-weight:normal"></selectBox>
 				</div>
-				<v-btn elevation="0" class="ml-3 search_btn" color="#ffae28" style="width:80px !important">신규등록</v-btn>
+				<v-btn elevation="0" class="ml-3 search_btn" color="#ffae28" style="width:80px !important" @click="checkProduct">신규등록</v-btn>
 				<v-spacer></v-spacer>
 				<selectBox :sel="selectBox4" style="max-width:85px; font-weight:normal"></selectBox>
 				<selectBox class="mx-2" :sel="selectBox5" style="max-width:80px; font-weight:normal"></selectBox>
@@ -104,23 +104,43 @@
 				</v-flex>
 			</v-layout>
 		</div>
+		<sweetAlert :dialog="sweetDialog" @click="createProduct" />
+		<sweetAlert :dialog="sweetInfo" />
 	</v-dialog>
 </template>
 
 <script>
-import { txtField, selectBox, datatable } from '@/components/index.js'
+import { txtField, selectBox, datatable, sweetAlert } from '@/components/index.js'
 
 export default {
 	components: {
 		txtField,
 		selectBox,
 		datatable,
+		sweetAlert,
 	},
 	props: {
 		setdialog: Object,
 	},
 	data() {
 		return {
+			sweetDialog: {
+				open: false,
+				title: '상품 등록',
+				content: `상품을 등록합니다.`,
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
+			sweetInfo: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'info',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+			},
 			search: {
 				value: '',
 				maxlength: '255',
@@ -207,6 +227,79 @@ export default {
 				},
 			],
 		}
+	},
+	methods: {
+		createProduct() {
+			this.$store.state.loading = true
+			console.log(this.setdialog)
+			let data = {
+				businessID: this.setdialog.item.id,
+				ho: this.setdialog.select_text3.value,
+			}
+			if (this.setdialog.selectBox1.value === 'new') {
+				data['housingType'] = this.setdialog.select_text1.value
+			} else {
+				data['housingType'] = this.setdialog.selectBox1.value
+			}
+			if (this.setdialog.selectBox2.value === 'new') {
+				data['dong'] = this.setdialog.select_text2.value
+			} else {
+				data['dong'] = this.setdialog.selectBox2.value
+			}
+			if (this.setdialog.selectBox3.value === '계약') {
+				data['contractStatus'] = 'contract'
+			} else {
+				data['contractStatus'] = 'noContract'
+			}
+			this.$store.dispatch('createProduct', data).then(res => {
+				console.log(res)
+				this.sweetDialog.open = false
+				this.$store.state.loading = false
+			})
+			console.log(data)
+		},
+		checkProduct() {
+			console.log(this.setdialog)
+			if (!this.setdialog.selectBox1.value && !this.setdialog.select_text1.value) {
+				this.sweetInfo.title = '주택형 선택'
+				this.sweetInfo.content = '주택형을 선택 또는 직접 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			if (!this.setdialog.selectBox2.value && !this.setdialog.select_text2.value) {
+				this.sweetInfo.title = '동 선택'
+				this.sweetInfo.content = '동을 선택 또는 직접 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			if (this.setdialog.selectBox1.value !== 'new' && this.setdialog.select_text1.value) {
+				this.sweetInfo.title = '주택형 선택'
+				this.sweetInfo.content = '주택형을 선택 또는 직접 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			} else if (this.setdialog.selectBox1.value == 'new' && !this.setdialog.select_text1.value) {
+				this.sweetInfo.title = '주택형 선택'
+				this.sweetInfo.content = '주택형을 선택 또는 직접 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			if (this.setdialog.selectBox2.value !== 'new' && this.setdialog.select_text2.value) {
+				this.sweetInfo.title = '동 선택'
+				this.sweetInfo.content = '동을 선택 또는 직접 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			} else if (this.setdialog.selectBox2.value == 'new' && !this.setdialog.select_text2.value) {
+				this.sweetInfo.title = '동 선택'
+				this.sweetInfo.content = '동을 선택 또는 직접 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			if (!this.setdialog.select_text3.value) {
+				this.sweetInfo.title = '호수 선택'
+				this.sweetInfo.content = '호수를 입력해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			if (!this.setdialog.selectBox3.value) {
+				this.sweetInfo.title = '계약상태 선택'
+				this.sweetInfo.content = '계약상태를 선택해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			this.sweetDialog.open = true
+		},
 	},
 }
 </script>

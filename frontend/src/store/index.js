@@ -20,6 +20,7 @@ import {
 	updateMessage,
 	register,
 	createSystem,
+	createProduct,
 } from '../apollo/mutation'
 import {
 	me,
@@ -600,6 +601,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: createSystem,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		createProduct({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: createProduct,
 						variables: input,
 					})
 					.then(({ data }) => {

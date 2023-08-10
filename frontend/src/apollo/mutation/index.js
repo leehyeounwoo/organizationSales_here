@@ -252,6 +252,23 @@ export const createBusiness = gql`
 		}
 	}
 `
+export const createProduct = gql`
+	mutation createProduct(
+		$housingType: String
+		$dong: String
+		$ho: String
+		$businessID: String
+		$contractStatus: ENUM_PRODUCT_CONTRACTSTATUS
+	) {
+		createProduct(
+			input: { data: { housingType: $housingType, dong: $dong, ho: $ho, businessID: $businessID, contractStatus: $contractStatus } }
+		) {
+			product {
+				id
+			}
+		}
+	}
+`
 
 export const createSettlementTurnTable = gql`
 	mutation createSettlementTurnTable(
