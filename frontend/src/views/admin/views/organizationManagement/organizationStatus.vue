@@ -485,10 +485,7 @@ export default {
 		// if (!navigator.geolocation) {
 		// 	return alert('위치 정보가 지원되지 않습니다.')
 		// }
-		// console.log(navigator.geolocation.getCurrentPosition)
 		// navigator.geolocation.getCurrentPosition(position => {
-		// 	console.log(2)
-		// 	console.log(position)
 		// 	this.computeDistance(position.coords, this.ourCoords)
 		// })
 	},

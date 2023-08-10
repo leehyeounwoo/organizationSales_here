@@ -37,6 +37,9 @@ module.exports = {
       jwt: String
       user: UsersPermissionsMe!
     }
+    type UserPasswordEditPayload {
+      result: String
+    }
     type UsersPermissionsPayload {
       user: UsersPermissionsMe!
     }

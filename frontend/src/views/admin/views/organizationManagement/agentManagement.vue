@@ -25,9 +25,11 @@
 				<v-btn class="search_btn" color="#5d19ff" @click="SearchBiz()" elevation="0"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 			</v-flex>
 		</v-layout>
-		<v-layout>
+		<v-layout style="max-width:90vw;">
 			<v-flex mr-1 v-for="(team, index) in teamData" :key="index" xs2 style="font-size:0.75rem;">
-				<v-layout mt-1 justify-center style="border:1px solid black"> {{ team.title }}/{{ usersConnectionTeamView(team.id) }}명 </v-layout>
+				<v-layout mt-1 justify-center style="border:1px solid black" @click="dataSetting(team, index)">
+					{{ team.title }}/{{ team.count }} 명
+				</v-layout>
 				<v-layout mt-1 v-if="team.userData">
 					<v-flex mr-1 class="blueBox text-center">16명</v-flex>
 					<v-flex ml-1 mr-1 class="greenBox text-center">2명</v-flex>
@@ -89,10 +91,10 @@ export default {
 	},
 	async created() {
 		this.$store.state.loading = true
-		const usersViewData = {
-			role: 3,
-		}
-		await this.usersView(usersViewData)
+		// const usersViewData = {
+		// 	role: 3,
+		// }
+		// await this.usersView(usersViewData)
 		const teamsViewData = {
 			useYn: true,
 		}
@@ -105,15 +107,26 @@ export default {
 			useYn: true,
 		}
 		await this.ranksView(ranksViewData)
+		for (let index = 0; index < this.teamData.length; index++) {
+			const element = this.teamData[index]
+			const usersConnectionTeamViewData = {
+				teamID: element.id,
+			}
+			await this.usersConnectionTeamView(usersConnectionTeamViewData)
+		}
+		this.teamData = JSON.parse(JSON.stringify(this.teamData))
 		// await this.dataSetting()
 		this.$store.state.loading = false
 	},
 	methods: {
-		async usersView(usersViewData) {
+		async usersView(usersViewData, index) {
+			console.log(usersViewData)
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
-					this.userData = res.users
+					console.log(res)
+					this.teamData[index].userData = res.users
+					this.teamData = JSON.parse(JSON.stringify(this.teamData))
 				})
 				.catch(err => {
 					console.log(err)
@@ -123,8 +136,9 @@ export default {
 		async teamsView(teamsViewData) {
 			await this.$store
 				.dispatch('teams', teamsViewData)
-				.then(res => {
-					this.teamData = JSON.parse(JSON.stringify(res.teams))
+				.then(async res => {
+					this.teamData = res.teams
+					// this.teamData = JSON.parse(JSON.stringify(res.teams))
 				})
 				.catch(err => {
 					console.log(err)
@@ -153,64 +167,31 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
-		async usersConnectionTeamView(teamsViewData) {
-			const data = {
-				teamID: teamsViewData,
-			}
-
+		async usersConnectionTeamView(usersConnectionTeamViewData) {
 			await this.$store
-				.dispatch('usersConnection', data)
+				.dispatch('usersConnection', usersConnectionTeamViewData)
 				.then(res => {
-					return res.usersConnection.aggregate.count
+					this.teamData.filter(x => x.id === usersConnectionTeamViewData.teamID)[0]['count'] = res.usersConnection.aggregate.count
 				})
 				.catch(err => {
 					console.log(err)
 					this.$store.state.loading = false
 				})
 		},
-		async dataSetting() {
-			// console.log(this.userData)
-			// console.log(this.teamData)
-			// console.log(this.rankData)
-			for (let index = 0; index < this.teamData.length; index++) {
-				const element = this.teamData[index]
-				// console.log(this.userData.filter(x => x.teamID === element.id))
-				element.userData = this.userData.filter(x => x.teamID === element.id)
+		async dataSetting(team, index) {
+			this.$store.state.loading = true
+			if (team.userData) {
+				delete team.userData
+				this.teamData = JSON.parse(JSON.stringify(this.teamData))
+				this.$store.state.loading = false
+			} else {
+				const usersViewData = {
+					role: 3,
+					teamID: team.id,
+				}
+				await this.usersView(usersViewData, index)
+				this.$store.state.loading = false
 			}
-			this.teamData = JSON.parse(JSON.stringify(this.teamData))
-			// for (let index = 0; index < this.userData.length; index++) {
-			// 	const element = this.userData[index]
-			// 	let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
-			// 	let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
-			// 	let teamTitle = '-'
-			// 	let rankTitle = '-'
-			// 	if (teamData) {
-			// 		teamTitle = teamData.id
-			// 		element.teamTitle = teamTitle
-			// 	}
-			// 	if (rankData) {
-			// 		rankTitle = rankData.id
-			// 		element.rankTitle = rankTitle
-			// 	}
-			// 	if (teamData && rankData) {
-			// 		element.team_rank = `${teamData.title}(${rankData.rankName})`
-			// 	}
-			// 	element.salesPhoneNumber_txtField = {
-			// 		value: '',
-			// 		txtfield: {
-			// 			maxlength: '255',
-			// 			outlined: true,
-			// 			hideDetail: false,
-			// 			errorMessage: '',
-			// 			placeholder: '',
-			// 		},
-			// 	}
-			// 	element.workingStatusName = element.workingStatus ? '재직' : '퇴사'
-			// 	element.created_at_format = this.$moment(element.created_at).format('YYYY년MM월DD일')
-			// 	element.teamItems = this.teamData
-			// 	element.rankItems = this.rankData
-			// }
-			// this.table.items = JSON.parse(JSON.stringify(this.userData))
 		},
 		SearchBiz() {},
 	},
