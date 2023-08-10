@@ -729,6 +729,7 @@ export default {
 						this.saveDialogStatus.buttonType = 'oneBtn'
 						this.saveDialogStatus.cancelBtnText = '확인'
 						this.saveDialogStatus.open = true
+						this.infoView(this.businessID)
 						this.$store.state.loading = false
 					})
 				}

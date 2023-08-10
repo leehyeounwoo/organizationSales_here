@@ -773,9 +773,8 @@ export default {
 				const element = this.userData[index]
 
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
 
-				element.teamID = `${teamTitle} / ${rankTitle}`
+				element.teamID = `${teamTitle} `
 				this.list.teamID = element.teamID
 			}
 

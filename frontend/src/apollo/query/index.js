@@ -134,7 +134,6 @@ export const products = gql`
 			ho
 			contractStatus
 			choiceYn
-			assignmentID
 		}
 	}
 `
@@ -194,7 +193,6 @@ export const settlements = gql`
 			settlementStatus
 			created_at
 			updated_at
-			paymentDate
 			degree
 			attachment {
 				id
@@ -207,7 +205,22 @@ export const settlements = gql`
 				prePaymentDate
 				amount
 				turnTableDegree
+				bank
+				bankAccount
+				adminName
+				PaymentDate
+				depositFile {
+					id
+					url
+					name
+				}
 			}
+			name
+			phone
+			birth
+			location
+			subLocation
+			rejectComment
 		}
 	}
 `
