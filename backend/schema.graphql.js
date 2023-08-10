@@ -37,6 +37,9 @@ module.exports = {
       jwt: String
       user: UsersPermissionsMe!
     }
+    type UsersPasswordEditPayload {
+      result: String
+    }
     type UsersPermissionsPayload {
       user: UsersPermissionsMe!
     }
@@ -53,7 +56,7 @@ module.exports = {
     register(input: UsersPermissionsRegisterInput!): UsersPermissionsLoginPayload!
     forgotPassword(email: String!): UserPermissionsPasswordPayload
     resetPassword(password: String!, passwordConfirmation: String!, code: String!): UsersPermissionsLoginPayload
-    editPassword(password: String!, newPassword: String!, email: String!): UsersPermissionsLoginPayload
+    editPassword(password: String!, newPassword: String!, email: String!): UsersPasswordEditPayload
     emailConfirmation(confirmation: String!): UsersPermissionsLoginPayload
     userInfoEdit(input:userInfoEditData): UsersPermissionsPayload
   `,
