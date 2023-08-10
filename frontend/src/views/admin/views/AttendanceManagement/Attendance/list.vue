@@ -153,7 +153,7 @@
 								</template>
 								<v-time-picker
 									v-if="startTimeDialog"
-									:max="editGotoworkData.item.data4 === '-' ? '' : $moment(editGotoworkData.item.data4).format('HH:mm')"
+									:max="editGotoworkData.item.data4 === '-' ? '' : $moment(editGotoworkData.item.data4).format('HH:mm:ss.SSS')"
 									v-model="startTime"
 									full-width
 								>
@@ -444,7 +444,9 @@ export default {
 							console.log(this.$moment(element2.startWork)._i.slice(0, 5))
 							list[workIndex]['gotoworksAll'] = element2
 							list[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
+							this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
 							list[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
+							this.endTime = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
 							list[workIndex]['data5'] =
 								element2.status === 'endWork'
 									? '퇴근'

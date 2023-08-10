@@ -17,20 +17,38 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs2 style="height: 457.3px;">
+					<v-flex class="notice_right_table" xs2 style="height: auto;">
 						증빙자료
 					</v-flex>
 
 					<v-flex xs10 class="notice_right_table2">
-						<div v-for="(item, index) in addedItems" :key="index">
-							<v-layout v-if="addedItems.length > 0" style="border: 1px solid rgba(0, 0, 0, 1);" class="ml-5 ma-3 ">
-								<v-layout class="attachmentClass2">
-									<span class="attachmentSpanClass">{{ item.degree }}</span>
-								</v-layout>
-
-								<v-layout class="attachmentClass">
-									<span class="attachmentSpanClass">{{ item.content.txtField.value }}</span>
-								</v-layout>
+						<div v-if="addedItems.length > 0">
+							<v-layout
+								v-for="(item, index) of addedItems"
+								:key="index"
+								style="margin:12px 30px 12px 20px; justify-content: space-between;
+								padding: 12px 0;"
+							>
+								<div class="degreeClass">
+									<span
+										class="spanInfoClass"
+										style="color: #fff
+									;"
+										>{{ item.degree }}</span
+									>
+								</div>
+								<div class="contentClass">
+									<div
+										style="background-color: orange;
+											font-family: MalgunGothic;
+											font-size: 14px;
+										width: 100%; margin: 4px ; color: white;"
+										v-for="(evi, idx) of item.evidence"
+										:key="idx"
+									>
+										{{ evi }}
+									</div>
+								</div>
 							</v-layout>
 						</div>
 						<v-layout style="display: flex;">
@@ -40,9 +58,9 @@
 								style="width: 20%;"
 								class="search_box_admin ma-3 ml-5"
 							></txtField>
-							<textarea v-model="etcInfo.txtField.value" style="width: 70%;" class="search_box_modal2 mt-3"></textarea>
+							<textarea v-model="EvidenceField.evidence.txtField.value" style="width: 70%;" class="search_box_modal2 mt-3"></textarea>
 						</v-layout>
-						<v-btn class="infoBtn mt-2" color="#f0f2f8" elevation="0" @click="addNewItem"
+						<v-btn class="infoBtn mt-2 mb-4" color="#f0f2f8" elevation="0" @click="addNewItem"
 							><span
 								style="	font-family: MalgunGothic;
 								font-size: 14px;"
@@ -55,9 +73,9 @@
 					<v-flex class="notice_right_table" xs2 style="height: auto">
 						기타 안내
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2">
+					<v-flex xs10 class="notice_right_table2 mt-3">
 						<textarea
-							v-model="EvidenceField.evidence.txtField.value"
+							v-model="etcInfo.txtField.value"
 							placeholder="※ 증빙서류 누락시 정산 승인이 보류 될 수 있으니 확인 후 첨부바랍니다.
 ※ pdf, png, jpg파일만 업로드 가능합니다."
 							style="width: 90%; height: 70px;"
@@ -67,6 +85,7 @@
 				</v-layout>
 				<v-flex style="text-align: end;">
 					<v-btn
+						@click="openSaveInfoModal"
 						style="background-color: #3e7ccc; color: #fff;  
             width: 139px;
             height: 25px;
@@ -518,15 +537,31 @@ export default {
 		},
 		addNewItem() {
 			if (this.addedItems.length < 5) {
+				let splitLine = this.EvidenceField.evidence.txtField.value.split('\n')
+
+				console.log(splitLine)
 				const newItem = {
 					degree: this.EvidenceField.degree.txtField.value,
-					evidence: { txtField: { ...this.EvidenceField.evidence.txtField } },
-					content: { txtField: { ...this.etcInfo.txtField } },
+					evidence: splitLine,
 				}
-				this.addedItems.push(newItem)
-				this.EvidenceField.degree.txtField.value = ''
-				this.EvidenceField.evidence.txtField.value = ''
-				this.etcInfo.txtField.value = ''
+				if (this.EvidenceField.degree.txtField.value === '') {
+					this.sweetDialog_info.title = `추가 실패`
+					this.sweetDialog_info.content = `차수가 입력되지않았습니다.`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				} else if (this.EvidenceField.evidence.txtField.value === '') {
+					this.sweetDialog_info.title = `추가 실패`
+					this.sweetDialog_info.content = `증빙자료가 입력되지않았습니다.`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				} else {
+					this.addedItems.push(newItem)
+					this.EvidenceField.degree.txtField.value = ''
+					this.EvidenceField.evidence.txtField.value = ''
+				}
+
 				console.log(this.addedItems)
 			} else {
 				this.sweetDialog_info.title = `추가 실패`
@@ -534,6 +569,47 @@ export default {
 				this.sweetDialog_info.modalValue = ''
 				this.sweetDialog_info.buttonType = 'oneBtn'
 				this.sweetDialog_info.open = true
+			}
+		},
+
+		openSaveInfoModal() {
+			console.log(this.addedItems)
+			if (this.addedItems.length === 0) {
+				this.sweetDialog_info.title = `저장 실패`
+				this.sweetDialog_info.content = `증빙자료, 기타 안내를 입력해주세요`
+				this.sweetDialog_info.modalValue = ''
+				this.sweetDialog_info.buttonType = 'oneBtn'
+				this.sweetDialog_info.open = true
+			} else {
+				if (this.etcInfo.txtField.value === '') {
+					this.sweetDialog_info.title = `저장 실패`
+					this.sweetDialog_info.content = `기타 안내가 입력되지 않았습니다`
+					this.sweetDialog_info.modalValue = ''
+					this.sweetDialog_info.buttonType = 'oneBtn'
+					this.sweetDialog_info.open = true
+				} else {
+					let addEtcLength = this.addedItems.length
+					for (let i = 0; i <= addEtcLength; i++) {
+						let data = {
+							turn: i === addEtcLength ? 'etc' : this.addedItems[i].degree,
+							inputFiles: {
+								evidence: i === addEtcLength ? this.etcInfo.txtField.value : this.addedItems[i].evidence,
+							},
+							businessID: this.businessID,
+						}
+
+						this.$store.dispatch('createSystem', data).then(() => {
+							this.sweetDialog_info.open = false
+							this.$store.state.loading = true
+							this.saveDialogStatus.title = `저장 완료`
+							this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
+							this.saveDialogStatus.buttonType = 'oneBtn'
+							this.saveDialogStatus.cancelBtnText = '확인'
+							this.saveDialogStatus.open = true
+							this.$store.state.loading = false
+						})
+					}
+				}
 			}
 		},
 
@@ -960,9 +1036,30 @@ export default {
 .attachmentClass2 {
 	margin: 8px 13px;
 	border-radius: 3px;
-	padding: 4px 12px;
+	padding: 4px 20px;
 	background-color: #f2a629;
 	justify-content: center;
 	align-items: center;
+}
+
+.degreeClass {
+	background-color: #327ccc;
+	width: 22.47191011235955%;
+	border-radius: 3px;
+	max-height: 28px;
+	max-width: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.contentClass {
+	width: 77.80898876404494%;
+	border-radius: 3px;
+	max-width: 277px;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	flex-direction: column;
 }
 </style>
