@@ -203,19 +203,19 @@
 							입금증
 						</v-flex>
 					</v-layout>
-					<v-layout>
+					<v-layout v-for="(items, idx) of amountData" :key="idx">
 						<v-flex class="notice_right_table" xs2 style="height: 40px;">
 							1차
 						</v-flex>
 
 						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
-							<span class="spanClass2"> {{ finalSettlementData.bank }}</span>
+							<span class="spanClass2"> {{ items.bank }}</span>
 						</v-flex>
 						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
-							<span class="spanClass2">{{ finalSettlementData.accountNumber }}</span>
+							<span class="spanClass2">{{ items.accountNumber }}</span>
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-							<span class="spanClass2">{{ finalSettlementData.amount ? finalSettlementData.amount + '원' : '-' }}</span>
+							<span class="spanClass2">{{ items.amount ? items.amount + '원' : '-' }}</span>
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2"> </v-flex>
 						<v-flex xs3 class="notice_right_table2"> </v-flex>
@@ -728,6 +728,7 @@ export default {
 			attachmentNameList: [],
 			finalSettlementData: [],
 			paymentRatesum: 0,
+			amountData: [],
 		}
 	},
 
@@ -803,6 +804,7 @@ export default {
 								listData.turnStatus = element.settlement_turn_tables[i].turnStatus
 								listData.amount = element.settlement_turn_tables[i].amount
 								listData.turnTableDegree = element.settlement_turn_tables[i].turnTableDegree
+								listData.prePaymentDate = element.settlement_turn_tables[i].prePaymentDate
 								break
 							} else {
 								listData.turnStatus = '지급 완료'
@@ -1009,7 +1011,10 @@ export default {
 			this.charge.txtField.value = ''
 			this.timessel.value = ''
 			this.finalSettlementData = val
+			this.amountData = []
+			this.amountData = val.settlements.settlement_turn_tables
 			console.log('파이널', this.finalSettlementData)
+			console.log('돈', this.amountData)
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -1081,9 +1086,11 @@ export default {
 				let data = {
 					prePaymentDate: this.start_date_picker[i].date,
 					turnStatus: 'waiting',
-					amount: this.paymentAmount[`charge${i}`].txtField.value,
+					amount: Number(this.paymentAmount[`charge${i}`].txtField.value),
 					settlements: this.finalSettlementData.id,
 					turnTableDegree: i + '',
+					bank: this.finalSettlementData.bank,
+					bankAccount: this.finalSettlementData.accountNumber,
 				}
 
 				this.$store.dispatch('createSettlementTurnTable', data).then(() => {

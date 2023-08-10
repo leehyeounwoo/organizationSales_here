@@ -246,7 +246,6 @@ export default {
 					{ text: '상태', value: 'SMSuseYn', align: 'center', width: '15%' },
 					{ text: '비고', value: 'detailEtc', align: 'center', width: '15%' },
 				],
-				showselect: true,
 				headerCheck: false,
 				items: [],
 				select_items: [],

@@ -251,9 +251,11 @@ export const createSettlementTurnTable = gql`
 	mutation createSettlementTurnTable(
 		$prePaymentDate: Date
 		$turnStatus: ENUM_SETTLEMENTTURNTABLE_TURNSTATUS
-		$amount: String
+		$amount: Long
 		$settlements: ID!
 		$turnTableDegree: String
+		$bank: String
+		$bankAccount: String
 	) {
 		createSettlementTurnTable(
 			input: {
@@ -263,6 +265,8 @@ export const createSettlementTurnTable = gql`
 					turnStatus: $turnStatus
 					amount: $amount
 					turnTableDegree: $turnTableDegree
+					bank: $bank
+					bankAccount: $bankAccount
 				}
 			}
 		) {
@@ -275,6 +279,8 @@ export const createSettlementTurnTable = gql`
 					userID
 				}
 				turnTableDegree
+				bank
+				bankAccount
 			}
 		}
 	}
