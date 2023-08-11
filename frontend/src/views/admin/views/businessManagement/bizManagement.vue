@@ -249,13 +249,10 @@ export default {
 			this.$store.dispatch('products').then(res => {
 				console.log(res)
 				let data = [{ text: '선택', value: 'new' }]
-				let data2 = [{ text: '선택', value: 'new' }]
 				res.products.forEach(el => {
 					data.push({ text: el.housingType, value: el.housingType })
-					data2.push({ text: el.dong, value: el.dong })
 				})
 				this.table_detail.selectBox1.items = data
-				this.table_detail.selectBox2.items = data2
 				console.log(this.table_detail)
 			})
 		},

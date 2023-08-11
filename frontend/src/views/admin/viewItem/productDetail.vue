@@ -13,7 +13,12 @@
 			<v-layout align-center class="mx-10 mt-2 header_search">
 				<div class="d-flex align-center" style="font-weight:bold; font-size:13px">
 					<div class="pl-3" style="width:65px">주택형</div>
-					<selectBox class="d-flex align-center" :sel="setdialog.selectBox1" style="max-width:90px; font-weight:normal"></selectBox>
+					<selectBox
+						class="d-flex align-center"
+						:sel="setdialog.selectBox1"
+						style="max-width:90px; font-weight:normal"
+						@change="selectType"
+					></selectBox>
 					<txtField
 						class="search_box_type"
 						v-model="setdialog.select_text1.value"
@@ -229,6 +234,24 @@ export default {
 		}
 	},
 	methods: {
+		selectType() {
+			console.log(this.setdialog)
+			if (this.setdialog.selectBox1.value === 'new') {
+				this.setdialog.selectBox2.items = [{ text: '선택', value: 'new' }]
+			} else {
+				let data = {
+					housingType: this.setdialog.selectBox1.value,
+				}
+				this.$store.dispatch('products', data).then(res => {
+					let item = [{ text: '선택', value: 'new' }]
+					res.products.forEach(el => {
+						item.push({ text: el.dong, value: el.dong })
+					})
+					this.setdialog.selectBox2.items = item
+					console.log(this.setdialog.selectBox2.items)
+				})
+			}
+		},
 		createProduct() {
 			this.$store.state.loading = true
 			console.log(this.setdialog)
