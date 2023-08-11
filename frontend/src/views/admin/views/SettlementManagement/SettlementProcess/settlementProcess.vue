@@ -225,10 +225,18 @@
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
 							<span class="spanClass2"> {{ amountDataTrans(amountData[degree - 1]) }}</span>
 						</v-flex>
-						<v-flex v-if="amountData[degree] !== ''" xs3 class="notice_right_table2">
-							<DatepickerDialog :picker="paymentProcess_date_picker[degree]" class="d-flex align-center date_picker3"></DatepickerDialog>
+						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
+							<span
+								class="spanClass2"
+								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? true : false) : false"
+								>{{ amountData[degree - 1].PaymentDate }}</span
+							>
+							<DatepickerDialog
+								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? false : true) : true"
+								:picker="paymentProcess_date_picker[degree]"
+								class="d-flex align-center date_picker3"
+							></DatepickerDialog>
 						</v-flex>
-
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
 							<div class="pdfFileBox mt-1" @click="pdfFileUpload">
 								<label style="display: block ; font-size: 12px; color: black; cursor:pointer;">
@@ -872,6 +880,7 @@ export default {
 		},
 
 		async settlementView(settlementViewData) {
+			let completeAmount = []
 			await this.$store.dispatch('settlements', settlementViewData).then(res => {
 				this.processTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
@@ -896,7 +905,8 @@ export default {
 								break
 							} else {
 								listData.PaymentDate = element.settlement_turn_tables[i].PaymentDate
-								listData.completeAmount = element.settlement_turn_tables[i]
+								completeAmount.push(element.settlement_turn_tables[i])
+								listData.completeAmount = completeAmount
 							}
 						}
 					} else {
@@ -1120,6 +1130,19 @@ export default {
 			this.finalSettlementData = val
 			this.amountData = []
 			this.amountData = val.settlements.settlement_turn_tables
+			this.pdfLists = []
+
+			this.amountData.forEach(el => {
+				let numberList = {}
+				if (el.depositFile !== null) {
+					numberList.id = el.depositFile.id
+					numberList.url = el.depositFile.url
+					numberList.name = el.depositFile.name
+					this.pdfLists.push({ numberList: numberList })
+				} else {
+					return
+				}
+			})
 			console.log('파이널', this.finalSettlementData)
 			console.log('돈', this.amountData)
 			const usernameSpan = document.getElementById('spanUsername')

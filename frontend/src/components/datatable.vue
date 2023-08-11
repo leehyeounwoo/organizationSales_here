@@ -1588,9 +1588,7 @@
 			<!-- 정산금 지급 처리 - 상태 -->
 			<template v-slot:[`item.turnStatus`]="{ item }">
 				<div>
-					{{
-						item.turnStatus === 'waiting' ? item.turnTableDegree + '차' + '지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-'
-					}}
+					{{ item.turnStatus === 'waiting' ? item.turnTableDegree + '차 지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
 				</div>
 			</template>
 			<!-- 사업지관리 - 근무시간 -->
