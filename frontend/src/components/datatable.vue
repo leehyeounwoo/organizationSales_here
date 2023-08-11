@@ -1533,7 +1533,7 @@
 						<selectBox :sel="datatable.product_manager" style="font-size:12px"></selectBox>
 					</v-flex>
 					<v-flex xs3 class="mr-1">
-						<selectBox :sel="datatable.team" style="font-size:12px"></selectBox>
+						<selectBox :sel="datatable.team" style="font-size:12px" @change="teamChange(item)"></selectBox>
 					</v-flex>
 					<v-flex xs4>
 						<selectBox :sel="datatable.user" style="font-size:12px"></selectBox>
@@ -2491,6 +2491,7 @@ export default {
 	props: {
 		search: String,
 		teamChoiceClick: Function,
+		teamChange: Function,
 		teamRankSave: Function,
 		salesPhoneNumberSave: Function,
 		editUserData: Function,

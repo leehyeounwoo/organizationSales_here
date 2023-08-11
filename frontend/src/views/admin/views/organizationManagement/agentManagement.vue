@@ -3,13 +3,9 @@
 		<v-layout align-center class="header_search" justify-end>
 			<v-flex style="font-size:0.75rem;">
 				<span class="mr-4 ml-4" style="font-weight:bold;"> {{ teamData.length }}개팀 / {{ totalUserLength }}명 </span>
-				<span class="mr-2 pa-1 blueBox"> 근무 : 110명 </span>
-				<span class="mr-2 pa-1 greenBox">
-					휴무 : 5명
-				</span>
-				<span class="pa-1 yellowBox">
-					미확인 : 5명
-				</span>
+				<span class="mr-2 pa-1 blueBox"> 근무 : {{ totalWorkCount }}명 </span>
+				<span class="mr-2 pa-1 greenBox"> 휴무 : {{ totalVacationCount }}명 </span>
+				<span class="pa-1 yellowBox"> 미확인 : {{ totalUserLength - totalWorkCount - totalVacationCount }}명 </span>
 			</v-flex>
 			<v-spacer></v-spacer>
 			<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
@@ -27,16 +23,16 @@
 		</v-layout>
 		<v-layout>
 			<v-flex mr-1 v-for="(team, index) in teamData" :key="index" xs2 style="font-size:0.75rem;">
-				<v-layout mt-1 justify-center style="border:1px solid black;" @click="dataSetting(team, index)">
+				<v-layout mt-1 justify-center style="border:1px solid black; cursor:pointer;" @click="dataSetting(team, index)">
 					{{ team.title }}/{{ team.count }} 명
 				</v-layout>
 				<v-layout mt-1 v-if="team.userData">
-					<v-flex mr-1 class="blueBox text-center">16명</v-flex>
-					<v-flex ml-1 mr-1 class="greenBox text-center">2명</v-flex>
-					<v-flex ml-1 class="yellowBox text-center">2명</v-flex>
+					<v-flex mr-1 class="blueBox text-center">{{ team.workCount }}명</v-flex>
+					<v-flex ml-1 mr-1 class="greenBox text-center">{{ team.vacationCount }}명</v-flex>
+					<v-flex ml-1 class="yellowBox text-center">{{ team.count - team.workCount - team.vacationCount }}명</v-flex>
 				</v-layout>
 				<v-layout mt-1>
-					<v-flex xs6 v-for="(user, index) in team.userData" :key="index">
+					<v-flex xs6 v-for="(user, index) in team.userData" :key="index" @click="userInfoClick(team, user)" style="cursor:pointer;">
 						<v-layout style="border:1px solid black;  border-radius:5px;" :class="index % 2 === 0 ? 'mr-1' : 'ml-1'">
 							<v-flex xs5>
 								<div class="v-responsive__content">
@@ -89,6 +85,49 @@
 				</v-layout>
 			</v-flex>
 		</v-layout>
+		<v-dialog v-model="infoDialog" width="25%">
+			<v-card>
+				<!-- <v-card-title>ss</v-card-title> -->
+
+				<v-layout justify-center>
+					<h2>직원 정보</h2>
+				</v-layout>
+				<v-layout mt-4>
+					<v-flex xs5 class="text-center" pr-4>
+						<v-avatar tile size="150">
+							<v-img
+								:src="dialogFileUrl ? backendURL + dialogFileUrl : ''"
+								lazy-src="https://picsum.photos/350/165?random"
+								height="100%"
+								width="100%"
+								class="grey darken-4"
+							></v-img>
+							<!-- style="border-radius: 5px 0px 0px 5px;" -->
+						</v-avatar>
+					</v-flex>
+					<v-flex xs7 pr-8>
+						<v-layout v-for="(edit, index) in rightEdit" :key="index" :style="index === 0 ? 'border-top:1px solid black' : ''">
+							<v-flex py-2 class="notice_right_table" xs4>
+								{{ edit.title }}
+							</v-flex>
+							<v-flex py-2 pl-4 xs8 class="notice_right_table2" style="font-size:0.75rem;">
+								{{ edit.value }}
+							</v-flex>
+						</v-layout>
+					</v-flex>
+				</v-layout>
+				<v-layout
+					justify-center
+					py-1
+					mt-8
+					style="background-color:rgb(87, 108, 215); color:white; font-size:0.75rem; font-weight:bold; cursor:pointer;"
+					@click="infoDialog = false"
+				>
+					<v-icon small color="white" mr-1>mdi-check</v-icon>
+					확인
+				</v-layout>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -106,16 +145,10 @@ export default {
 	},
 	async created() {
 		this.$store.state.loading = true
-		// const usersViewData = {
-		// 	role: 3,
-		// }
-		// await this.usersView(usersViewData)
 		const teamsViewData = {
 			useYn: true,
 		}
-
 		await this.teamsView(teamsViewData)
-
 		await this.usersConnectionView()
 
 		const ranksViewData = {
@@ -129,6 +162,10 @@ export default {
 			}
 			await this.usersConnectionTeamView(usersConnectionTeamViewData)
 		}
+		const firstGotoworksViewData = {
+			date: this.$moment().format('YYYY-MM-DD'),
+		}
+		await this.firstGotoworksView(firstGotoworksViewData)
 		this.teamData = JSON.parse(JSON.stringify(this.teamData))
 		// await this.dataSetting()
 		this.$store.state.loading = false
@@ -208,10 +245,9 @@ export default {
 				await this.usersView(usersViewData, index)
 				const gotoworksView = {
 					date: this.$moment().format('YYYY-MM-DD'),
+					userID: this.teamData[index].userData.map(x => x.id),
 				}
 				await this.gotoworksView(gotoworksView, index)
-				const vacaationsView = {}
-				await this.vacaationsView(vacaationsView, index)
 				this.$store.state.loading = false
 			}
 		},
@@ -219,21 +255,22 @@ export default {
 			await this.$store
 				.dispatch('gotoWork', gotoworksView)
 				.then(res => {
-					console.log(res)
-					this.teamData[index].workCount = res.gotoworksConnection.aggregate.count
+					this.teamData[index].workCount = res.gotoworks.filter(x => x.vacation === null).length
+					this.teamData[index].vacationCount = res.gotoworks.filter(x => x.vacation !== null).length
+					this.teamData = JSON.parse(JSON.stringify(this.teamData))
 				})
 				.catch(err => {
 					console.log(err)
 					this.$store.state.loading = false
 				})
 		},
-		async vacaationsView(vacaationsView, index) {
+		async firstGotoworksView(gotoworksView) {
 			await this.$store
-				.dispatch('usersConnection', vacaationsView)
+				.dispatch('gotoWork', gotoworksView)
 				.then(res => {
 					console.log(res)
-					console.log(index)
-					// this.teamData[index].vacationCount=
+					this.totalWorkCount = res.gotoworks.filter(x => x.vacation === null).length
+					this.totalVacationCount = res.gotoworks.filter(x => x.vacation !== null).length
 				})
 				.catch(err => {
 					console.log(err)
@@ -241,9 +278,57 @@ export default {
 				})
 		},
 		SearchBiz() {},
+		userInfoClick(team, user) {
+			this.rightEdit[0].value = user.username
+			this.rightEdit[1].value = user.phoneNumber
+			this.rightEdit[2].value = user.salesPhoneNumber
+			// this.rightEdit[3].value = user.salesPhoneNumber
+			this.rightEdit[4].value = this.$moment(user.created_at).format('YYYY-MM-DD HH:mm')
+			this.rightEdit[5].value = team.title
+			this.rightEdit[6].value = Math.floor(this.$moment.duration(this.$moment().diff(this.$moment(user.created_at))).asDays()) + '일'
+			if (user.profile) {
+				this.dialogFileUrl = user.profile.url
+			}
+
+			this.infoDialog = true
+		},
 	},
 	data() {
 		return {
+			dialogFileUrl: '',
+			rightEdit: [
+				{
+					title: '이름',
+					value: '',
+				},
+				{
+					title: '연락처',
+					value: '',
+				},
+				{
+					title: '영업번호',
+					value: '',
+				},
+				{
+					title: '사업자 정보',
+					value: '',
+				},
+				{
+					title: `등록일`,
+					value: '',
+				},
+				{
+					title: '팀',
+					value: '',
+				},
+				{
+					title: '근무기간',
+					value: '',
+				},
+			],
+			infoDialog: false,
+			totalWorkCount: 0,
+			totalVacationCount: 0,
 			totalUserLength: 0,
 			backendURL: process.env.VUE_APP_BACKEND_URL,
 			teamData: [],

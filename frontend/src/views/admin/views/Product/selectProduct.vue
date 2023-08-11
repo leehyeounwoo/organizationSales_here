@@ -15,7 +15,7 @@
 		<v-layout justify-end>
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
 		</v-layout>
-		<datatable :datatable="productManager"></datatable>
+		<datatable :datatable="productManager" :teamChange="teamChange"></datatable>
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" />
 	</div>
@@ -27,7 +27,23 @@ import holdTimeDetail from '../../viewItem/holdTimeDetail.vue'
 
 export default {
 	async created() {
-		await this.product_table()
+		let ok = 0
+		const createInterval = setInterval(async () => {
+			if (this.$store.state.businessSelectBox.value !== '') {
+				const product_tableData = {
+					businessID: this.$store.state.businessSelectBox.value,
+				}
+				await this.product_table(product_tableData)
+				clearInterval(createInterval)
+			}
+
+			if (ok === 10) {
+				clearInterval(createInterval)
+				alert('비즈니스 정보가 없습니다.')
+				this.$router.push({ name: 'dashBoard' })
+			}
+			ok += 1
+		}, 1000)
 	},
 	components: {
 		selectBox,
@@ -82,7 +98,7 @@ export default {
 				product_manager: {
 					placeholder: '담당자 지정여부',
 					value: '',
-					items: [],
+					items: ['담당자 지정', '미지정'],
 					hideDetail: true,
 					outlined: true,
 					class: 'searchSel',
@@ -131,8 +147,12 @@ export default {
 		}
 	},
 	methods: {
-		product_table() {
-			this.$store.dispatch('products').then(res => {
+		teamChange(item) {
+			console.log(item)
+		},
+		product_table(product_tableData) {
+			this.$store.dispatch('products', product_tableData).then(res => {
+				console.log(res)
 				this.productManager.items = res.products
 			})
 		},
