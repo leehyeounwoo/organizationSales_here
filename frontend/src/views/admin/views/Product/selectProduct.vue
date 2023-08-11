@@ -153,6 +153,12 @@ export default {
 		product_table(product_tableData) {
 			this.$store.dispatch('products', product_tableData).then(res => {
 				console.log(res)
+				for (let index = 0; index < res.products.length; index++) {
+					const element = res.products[index]
+					element.managerChoiceStatus = ''
+					element.managerTeam = ''
+					element.managerUser = ''
+				}
 				this.productManager.items = res.products
 			})
 		},

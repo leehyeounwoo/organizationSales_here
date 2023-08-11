@@ -1527,16 +1527,23 @@
 				</div>
 			</template>
 			<!-- 물건배정 담당자 -->
-			<template v-slot:[`item.manager`]="{}">
+			<template v-slot:[`item.manager`]="{ item }">
 				<v-layout>
 					<v-flex xs5 class="mr-1">
-						<selectBox :sel="datatable.product_manager" style="font-size:12px"></selectBox>
+						<selectBoxValue
+							style="font-size:12px"
+							:sel="datatable.product_manager"
+							:value="item.managerChoiceStatus"
+							class="table_small_sel"
+						></selectBoxValue>
 					</v-flex>
 					<v-flex xs3 class="mr-1">
-						<selectBox :sel="datatable.team" style="font-size:12px" @change="teamChange(item)"></selectBox>
+						<selectBoxValue style="font-size:12px" :sel="datatable.team" :value="item.managerTeam" class="table_small_sel"></selectBoxValue>
+						<!-- <selectBox :sel="datatable.team" style="font-size:12px" @change="teamChange(item)"></selectBox> -->
 					</v-flex>
 					<v-flex xs4>
-						<selectBox :sel="datatable.user" style="font-size:12px"></selectBox>
+						<selectBoxValue style="font-size:12px" :sel="datatable.user" :value="item.managerUser" class="table_small_sel"></selectBoxValue>
+						<!-- <selectBox :sel="datatable.user" style="font-size:12px"></selectBox> -->
 					</v-flex>
 				</v-layout>
 			</template>
