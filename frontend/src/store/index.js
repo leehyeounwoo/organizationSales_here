@@ -22,6 +22,7 @@ import {
 	register,
 	createSystem,
 	createProduct,
+	deleteProduct,
 } from '../apollo/mutation'
 import {
 	me,
@@ -222,6 +223,27 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: deleteGotowork,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		deleteProduct({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: deleteProduct,
 						variables: input,
 						context: {
 							headers: {

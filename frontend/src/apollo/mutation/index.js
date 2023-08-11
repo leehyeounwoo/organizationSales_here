@@ -115,6 +115,15 @@ export const deleteGotowork = gql`
 		}
 	}
 `
+export const deleteProduct = gql`
+	mutation deleteProduct($id: ID!) {
+		deleteProduct(input: { where: { id: $id } }) {
+			product {
+				id
+			}
+		}
+	}
+`
 export const updateVacation = gql`
 	mutation updateVacation(
 		$id: ID!

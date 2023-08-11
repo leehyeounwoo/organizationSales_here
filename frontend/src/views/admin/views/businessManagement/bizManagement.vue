@@ -15,7 +15,7 @@
 		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" />
-		<productDetail :setdialog="table_detail" :newProduct="first_product" />
+		<productDetail :setdialog="table_detail" :newProduct="product_detail" />
 	</div>
 </template>
 
@@ -169,6 +169,8 @@ export default {
 			table_detail: {
 				dialog: false,
 				item: [],
+				contract: '',
+				noContract: '',
 				selectBox1: {
 					placeholder: '주택형',
 					value: '',
@@ -213,7 +215,7 @@ export default {
 				},
 				productTable: {
 					headers: [
-						{ text: 'No.', value: 'product_number' },
+						{ text: 'No.', value: 'product_number', width: '5%' },
 						{ text: '주택형', value: 'housingType' },
 						{ text: '동', value: 'dong' },
 						{ text: '호수', value: 'ho' },
@@ -227,6 +229,7 @@ export default {
 					page: 1,
 					pageCount: 0,
 					showselect: true,
+					selected: [],
 				},
 			},
 			search_business: '',
@@ -322,6 +325,10 @@ export default {
 					el['product_number'] = res.products.indexOf(el) + 1
 				})
 				this.table_detail.productTable.items = res.products
+				let table_top = this.table_detail.productTable.items.filter(x => x.contractStatus === '계약')
+				this.table_detail.contract = table_top.length
+				let table_top2 = this.table_detail.productTable.items.filter(x => x.contractStatus === '미계약')
+				this.table_detail.noContract = table_top2.length
 			})
 			console.log(this.table_detail.productTable)
 			this.table_detail.dialog = true

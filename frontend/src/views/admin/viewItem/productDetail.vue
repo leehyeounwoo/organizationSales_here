@@ -58,8 +58,8 @@
 				<v-flex xs8>
 					<v-layout justify-end class="table_info mr-7">
 						<div class="ml-3">전체 상품 : {{ setdialog.productTable.items.length }} 건,</div>
-						<div class="ml-3">계약 : 건,</div>
-						<div class="ml-3">미계약 : 건</div>
+						<div class="ml-3">계약 : {{ setdialog.contract }} 건,</div>
+						<div class="ml-3">미계약 : {{ setdialog.noContract }} 건</div>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -67,7 +67,7 @@
 				<v-flex xs8>
 					<datatable :datatable="setdialog.productTable" class="product_detail_table" :editProduct="editProduct"></datatable>
 					<v-layout>
-						<v-btn class="mt-2 mb-6 save_biz" style="background:#434a5d !important">선택항목 삭제</v-btn>
+						<v-btn class="mt-2 mb-6 save_biz" style="background:#434a5d !important" @click="deleteCheck">선택항목 삭제</v-btn>
 					</v-layout>
 				</v-flex>
 				<v-flex xs4 class="ml-7" style="margin-top:5px">
@@ -110,6 +110,7 @@
 			</v-layout>
 		</div>
 		<sweetAlert :dialog="sweetDialog" @click="createProduct" />
+		<sweetAlert :dialog="sweetDialog2" @click="deleteProduct" />
 		<sweetAlert :dialog="sweetInfo" />
 	</v-dialog>
 </template>
@@ -141,6 +142,15 @@ export default {
 				buttonType: 'twoBtn',
 				saveBtnText: '저장',
 				modalIcon: 'success',
+			},
+			sweetDialog2: {
+				open: false,
+				title: '상품 삭제',
+				content: `상품을 삭제하시겠습니까?`,
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '확인',
+				modalIcon: 'warning',
 			},
 			sweetInfo: {
 				open: false,
@@ -222,6 +232,27 @@ export default {
 		}
 	},
 	methods: {
+		deleteProduct() {
+			this.$store.state.loading = true
+			for (let i = 0; i < this.setdialog.productTable.selected.length; i++) {
+				let data = {
+					id: this.setdialog.productTable.selected[i].id,
+				}
+				this.$store.dispatch('deleteProduct', data).then(() => {
+					this.sweetDialog2.open = false
+					this.newProduct(this.setdialog.item)
+					this.$store.state.loading = false
+				})
+			}
+		},
+		deleteCheck() {
+			if (this.setdialog.productTable.selected.length === 0) {
+				this.sweetInfo.title = '상품 선택'
+				this.sweetInfo.content = '상품을 선택해주세요.'
+				return (this.sweetInfo.open = true)
+			}
+			this.sweetDialog2.open = true
+		},
 		editProduct(item) {
 			console.log(item)
 		},
@@ -287,7 +318,7 @@ export default {
 			this.$store.dispatch('createProduct', data).then(res => {
 				console.log(res)
 				this.sweetDialog.open = false
-				this.newProduct()
+				this.newProduct(this.setdialog.item)
 				this.$store.state.loading = false
 			})
 			console.log(data)

@@ -1617,7 +1617,7 @@
 			<!-- 사업지관리 - 등록상품 - 자세히보기 -->
 			<template v-slot:[`item.product_etc`]="{ item }">
 				<v-layout class="dt-align-set ml-0" justify-center>
-					<v-btn class="detail_etc_btn" small @click="editProduct(item)" :color="'#9A9C9B'" depressed>자세히 보기</v-btn>
+					<v-btn class="detail_etc_btn" small @click="editProduct(item)" :color="'#9A9C9B'" depressed>상품 편집</v-btn>
 				</v-layout>
 			</template>
 			<!-- 사업지관리 - 공지사항 관리 -->
