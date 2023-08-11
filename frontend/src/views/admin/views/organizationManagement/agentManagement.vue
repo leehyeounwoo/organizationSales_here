@@ -215,23 +215,24 @@ export default {
 				this.$store.state.loading = false
 			}
 		},
-		async gotoworksView(gotoworksView) {
+		async gotoworksView(gotoworksView, index) {
 			await this.$store
 				.dispatch('gotoWork', gotoworksView)
 				.then(res => {
 					console.log(res)
-					// this.teamData[index].workCount=
+					this.teamData[index].workCount = res.gotoworksConnection.aggregate.count
 				})
 				.catch(err => {
 					console.log(err)
 					this.$store.state.loading = false
 				})
 		},
-		async vacaationsView(vacaationsView) {
+		async vacaationsView(vacaationsView, index) {
 			await this.$store
 				.dispatch('usersConnection', vacaationsView)
 				.then(res => {
 					console.log(res)
+					console.log(index)
 					// this.teamData[index].vacationCount=
 				})
 				.catch(err => {

@@ -111,6 +111,9 @@ export const gotoWork = gql`
 			startWork
 			endWork
 			userID
+			vacation {
+				id
+			}
 		}
 	}
 `
