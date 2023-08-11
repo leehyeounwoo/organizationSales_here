@@ -213,6 +213,30 @@ export default {
 					outlined: true,
 					class: 'small_font searchSel',
 				},
+				selectBox4: {
+					placeholder: '상태',
+					value: '',
+					items: ['계약', '미계약'],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font searchSel',
+				},
+				selectBox5: {
+					placeholder: '주택형',
+					value: '',
+					items: [],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font searchSel',
+				},
+				selectBox6: {
+					placeholder: '동',
+					value: '',
+					items: [],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font searchSel',
+				},
 				productTable: {
 					headers: [
 						{ text: 'No.', value: 'product_number', width: '5%' },
@@ -269,10 +293,13 @@ export default {
 			this.$store.dispatch('products').then(res => {
 				console.log(res)
 				let data = [{ text: '선택', value: 'new' }]
+				let data2 = []
 				res.products.forEach(el => {
 					data.push({ text: el.housingType, value: el.housingType })
+					data2.push({ text: el.housingType, value: el.housingType })
 				})
 				this.table_detail.selectBox1.items = data
+				this.table_detail.selectBox5.items = data2
 				console.log(this.table_detail)
 			})
 		},
@@ -308,6 +335,7 @@ export default {
 			this.createDialog.dialog = true
 		},
 		product_detail(item) {
+			console.log(item)
 			this.table_detail.item = item
 			let data = {
 				businessID: this.table_detail.item.id,

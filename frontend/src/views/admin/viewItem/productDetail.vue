@@ -48,11 +48,11 @@
 				</div>
 				<v-btn elevation="0" class="ml-3 search_btn" color="#ffae28" style="width:80px !important" @click="checkProduct">신규등록</v-btn>
 				<v-spacer></v-spacer>
-				<selectBox :sel="selectBox4" style="max-width:85px; font-weight:normal"></selectBox>
-				<selectBox class="mx-2" :sel="selectBox5" style="max-width:80px; font-weight:normal"></selectBox>
-				<selectBox :sel="selectBox6" style="max-width:80px; font-weight:normal"></selectBox>
+				<selectBox :sel="setdialog.selectBox4" style="max-width:85px; font-weight:normal"></selectBox>
+				<selectBox class="mx-2" :sel="setdialog.selectBox5" style="max-width:80px; font-weight:normal" @change="selectType"></selectBox>
+				<selectBox :sel="setdialog.selectBox6" style="max-width:80px; font-weight:normal"></selectBox>
 				<txtField class="search_box_type" v-model="search_product" :txtField="search" style="width:80px !important"></txtField>
-				<v-btn elevation="0" class="ml-3 search_btn" color="#009dac"><v-icon>mdi-magnify</v-icon>조회</v-btn>
+				<v-btn elevation="0" class="ml-3 search_btn" color="#009dac" @click="searchProduct"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 			</v-layout>
 			<v-layout align-center class="mx-10 mt-2">
 				<v-flex xs8>
@@ -167,30 +167,6 @@ export default {
 				backCol: 'white',
 			},
 			search_product: '',
-			selectBox4: {
-				placeholder: '상태',
-				value: '',
-				items: ['전체', '계약', '미계약'],
-				hideDetail: true,
-				outlined: true,
-				class: 'small_font searchSel',
-			},
-			selectBox5: {
-				placeholder: '주택형',
-				value: '',
-				items: [],
-				hideDetail: true,
-				outlined: true,
-				class: 'small_font searchSel',
-			},
-			selectBox6: {
-				placeholder: '동',
-				value: '',
-				items: [],
-				hideDetail: true,
-				outlined: true,
-				class: 'small_font searchSel',
-			},
 			right_table1: [
 				{
 					title: '호수',
@@ -232,6 +208,44 @@ export default {
 		}
 	},
 	methods: {
+		searchProduct() {
+			console.log(this.setdialog.selectBox4)
+			let data = {
+				businessID: this.setdialog.item.id,
+				ho: this.search_product,
+			}
+			if (this.setdialog.selectBox4.value !== '') {
+				if (this.setdialog.selectBox4.value === '계약') {
+					data['contractStatus'] = 'contract'
+				} else if (this.setdialog.selectBox4.value === '미계약') {
+					data['contractStatus'] = 'noContract'
+				}
+			}
+			if (this.setdialog.selectBox5.value) {
+				data['housingType'] = this.setdialog.selectBox5.value
+			}
+			if (this.setdialog.selectBox6.value) {
+				data['dong'] = this.setdialog.selectBox6.value
+			}
+			console.log(data)
+			this.$store.dispatch('products', data).then(res => {
+				res.products.forEach(el => {
+					if (el.contractStatus === 'contract') {
+						el.contractStatus = '계약'
+					} else if (el.contractStatus === 'noContract') {
+						el.contractStatus = '미계약'
+					} else if (!el.contractStatus) {
+						el.contractStatus = '-'
+					}
+					el['product_number'] = res.products.indexOf(el) + 1
+				})
+				this.setdialog.productTable.items = res.products
+				let table_top = this.setdialog.productTable.items.filter(x => x.contractStatus === '계약')
+				this.setdialog.contract = table_top.length
+				let table_top2 = this.setdialog.productTable.items.filter(x => x.contractStatus === '미계약')
+				this.setdialog.noContract = table_top2.length
+			})
+		},
 		deleteProduct() {
 			this.$store.state.loading = true
 			for (let i = 0; i < this.setdialog.productTable.selected.length; i++) {
@@ -274,6 +288,10 @@ export default {
 			this.setdialog.select_text1.value = ''
 			this.setdialog.select_text2.value = ''
 			this.setdialog.select_text3.value = ''
+			this.setdialog.selectBox4.value = ''
+			this.setdialog.selectBox5.value = ''
+			this.setdialog.selectBox6.value = ''
+			this.search_product = ''
 		},
 		selectType() {
 			console.log(this.setdialog)
@@ -292,6 +310,16 @@ export default {
 					console.log(this.setdialog.selectBox2.items)
 				})
 			}
+			let data = {
+				housingType: this.setdialog.selectBox5.value,
+			}
+			this.$store.dispatch('products', data).then(res => {
+				let item = []
+				res.products.forEach(el => {
+					item.push({ text: el.dong, value: el.dong })
+				})
+				this.setdialog.selectBox6.items = item
+			})
 		},
 		createProduct() {
 			this.$store.state.loading = true

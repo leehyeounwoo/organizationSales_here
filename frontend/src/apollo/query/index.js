@@ -129,8 +129,17 @@ export const teams = gql`
 `
 
 export const products = gql`
-	query($idArr: [ID], $housingType: String, $dong: String, $ho: String, $businessID: String) {
-		products(where: { id: $idArr, housingType: $housingType, dong: $dong, ho: $ho, businessID: $businessID }) {
+	query($idArr: [ID], $housingType: String, $dong: String, $ho: String, $businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
+		products(
+			where: {
+				id: $idArr
+				housingType: $housingType
+				dong: $dong
+				ho_contains: $ho
+				businessID: $businessID
+				contractStatus: $contractStatus
+			}
+		) {
 			id
 			housingType
 			dong
