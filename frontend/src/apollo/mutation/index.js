@@ -106,6 +106,17 @@ export const updateGotowork = gql`
 		}
 	}
 `
+export const updateProduct = gql`
+	mutation updateProduct($id: ID!, $housingType: String, $dong: String, $ho: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
+		updateProduct(
+			input: { where: { id: $id }, data: { housingType: $housingType, dong: $dong, ho: $ho, contractStatus: $contractStatus } }
+		) {
+			product {
+				id
+			}
+		}
+	}
+`
 export const deleteGotowork = gql`
 	mutation deleteGotowork($id: ID!) {
 		deleteGotowork(input: { where: { id: $id } }) {

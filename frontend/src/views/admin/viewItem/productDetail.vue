@@ -74,13 +74,13 @@
 					<v-layout align-center v-for="(right, idx) in right_table1" :key="idx" class="right_table1">
 						<v-flex xs3 class="table1_left">{{ right.title }}</v-flex>
 						<v-flex xs9 v-if="right.type === 'txtfield'">
-							<txtField class="search_box_type" :txtField="right.txtfield"></txtField>
+							<txtField class="search_box_type" v-model="right.txtfield.value" :txtField="right.txtfield"></txtField>
 						</v-flex>
 						<v-flex xs9 v-else-if="right.type === 'select'">
 							<selectBox class="search_box_type" style="margin-left:10px" :sel="right.select"></selectBox>
 						</v-flex>
 						<v-flex class="d-flex align-center" xs9 v-else-if="right.type === 'radio'" style="height:50px;">
-							<v-radio-group row class="system-radio-label" style="margin-left:10px">
+							<v-radio-group v-model="right.value" row class="system-radio-label" style="margin-left:10px">
 								<v-radio color="#009dac" label="계약" :value="true"></v-radio>
 								<v-radio color="#009dac" label="미계약" :value="false"></v-radio>
 							</v-radio-group>
@@ -88,7 +88,7 @@
 					</v-layout>
 					<v-layout justify-end style="color:black">
 						<v-btn elevation="0" class="refresh_btn mt-2" color="#f0f2f8"><v-icon small>mdi-refresh</v-icon></v-btn>
-						<v-btn elevation="0" class="search_btn right1_btn mt-2" color="#f0f2f8">신규 항목 등록</v-btn>
+						<v-btn elevation="0" class="search_btn right1_btn mt-2" color="#f0f2f8" @click="editCheck">변경 내용 저장</v-btn>
 					</v-layout>
 					<v-layout class="my-3" style="border: 1px solid #d7d8e9;">
 						<v-flex xs3 class="right_table2" style="background:#f0f2f8; height:250px; border-bottom:0">변경이력</v-flex>
@@ -111,6 +111,7 @@
 		</div>
 		<sweetAlert :dialog="sweetDialog" @click="createProduct" />
 		<sweetAlert :dialog="sweetDialog2" @click="deleteProduct" />
+		<sweetAlert :dialog="sweetDialog3" @click="editSave" />
 		<sweetAlert :dialog="sweetInfo" />
 	</v-dialog>
 </template>
@@ -152,6 +153,15 @@ export default {
 				saveBtnText: '확인',
 				modalIcon: 'warning',
 			},
+			sweetDialog3: {
+				open: false,
+				title: '상품 편집',
+				content: `변경내용을 저장합니다.`,
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'info',
+			},
 			sweetInfo: {
 				open: false,
 				title: '',
@@ -167,6 +177,7 @@ export default {
 				backCol: 'white',
 			},
 			search_product: '',
+			right_id: '',
 			right_table1: [
 				{
 					title: '호수',
@@ -203,11 +214,35 @@ export default {
 				{
 					title: '상태',
 					type: 'radio',
+					value: '',
 				},
 			],
 		}
 	},
 	methods: {
+		editCheck() {
+			this.sweetDialog3.open = true
+		},
+		editSave() {
+			this.$store.state.loading = true
+			let data = {
+				id: this.right_id,
+				housingType: this.right_table1[2].select.value,
+				dong: this.right_table1[1].select.value,
+				ho: this.right_table1[0].txtfield.value,
+			}
+			if (this.right_table1[3].value) {
+				data['contractStatus'] = 'contract'
+			} else {
+				data['contractStatus'] = 'noContract'
+			}
+			this.$store.dispatch('updateProduct', data).then(res => {
+				console.log(res)
+				this.sweetDialog3.open = false
+				this.newProduct(this.setdialog.item)
+				this.$store.state.loading = false
+			})
+		},
 		searchProduct() {
 			console.log(this.setdialog.selectBox4)
 			let data = {
@@ -269,6 +304,25 @@ export default {
 		},
 		editProduct(item) {
 			console.log(item)
+			this.right_id = item.id
+			let data = {
+				businessID: item.businessID,
+			}
+			this.$store.dispatch('products', data).then(res => {
+				console.log(res.products)
+				res.products.forEach(el => {
+					this.right_table1[1].select.items.push({ text: el.dong, value: el.dong })
+					this.right_table1[2].select.items.push({ text: el.housingType, value: el.housingType })
+				})
+				this.right_table1[0].txtfield.value = item.ho
+				this.right_table1[1].select.value = item.dong
+				this.right_table1[2].select.value = item.housingType
+				if (item.contractStatus === '계약') {
+					this.right_table1[3].value = true
+				} else if (item.contractStatus === '미계약') {
+					this.right_table1[3].value = false
+				}
+			})
 		},
 		first_productTable() {
 			if (this.setdialog.dialog) {
