@@ -15,7 +15,7 @@
 		<v-layout justify-end>
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
 		</v-layout>
-		<datatable :datatable="productManager" :teamChange="teamChange"></datatable>
+		<datatable :datatable="productManager" :teamChange="teamChange" :managerChoiceStatusChange="managerChoiceStatusChange"></datatable>
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" />
 	</div>
@@ -34,6 +34,7 @@ export default {
 					businessID: this.$store.state.businessSelectBox.value,
 				}
 				await this.product_table(product_tableData)
+
 				clearInterval(createInterval)
 			}
 
@@ -97,20 +98,13 @@ export default {
 				pageCount: 0,
 				product_manager: {
 					placeholder: '담당자 지정여부',
-					value: '',
+					value: '미지정',
 					items: ['담당자 지정', '미지정'],
 					hideDetail: true,
 					outlined: true,
 					class: 'searchSel',
 				},
-				team: {
-					placeholder: '팀',
-					value: '',
-					items: [],
-					hideDetail: true,
-					outlined: true,
-					class: 'searchSel',
-				},
+
 				user: {
 					placeholder: '상담사',
 					value: '',
@@ -147,17 +141,49 @@ export default {
 		}
 	},
 	methods: {
-		teamChange(item) {
-			console.log(item)
+		managerChoiceStatusChange(val, item) {
+			if (val === '담당자 지정') {
+				const teamViewData = {
+					businessID: this.$store.state.businessSelectBox.value,
+				}
+				this.$store.dispatch('teams', teamViewData).then(res => {
+					item.team.items = res.teams
+					item.team.disabled = false
+				})
+			} else {
+				item.managerTeam = ''
+				item.team.items = []
+				item.team.disabled = true
+			}
+		},
+		teamChange(val) {
+			this.$store.state.loading = true
+			const usersData = {
+				teamID: val,
+			}
+			this.$store.dispatch('users', usersData).then(res => {
+				console.log(res)
+				this.$store.state.loading = false
+			})
 		},
 		product_table(product_tableData) {
 			this.$store.dispatch('products', product_tableData).then(res => {
-				console.log(res)
 				for (let index = 0; index < res.products.length; index++) {
 					const element = res.products[index]
-					element.managerChoiceStatus = ''
+					element.managerChoiceStatus = '미지정'
 					element.managerTeam = ''
 					element.managerUser = ''
+					element.team = {
+						placeholder: '팀',
+						value: '',
+						items: [],
+						disabled: true,
+						hideDetail: true,
+						outlined: true,
+						class: 'searchSel',
+						itemValue: 'id',
+						itemText: 'title',
+					}
 				}
 				this.productManager.items = res.products
 			})

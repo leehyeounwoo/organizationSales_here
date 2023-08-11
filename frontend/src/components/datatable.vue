@@ -1530,20 +1530,37 @@
 			<template v-slot:[`item.manager`]="{ item }">
 				<v-layout>
 					<v-flex xs5 class="mr-1">
-						<selectBoxValue
+						<selectBoxValueItems
 							style="font-size:12px"
+							:items="datatable.product_manager.items"
 							:sel="datatable.product_manager"
-							:value="item.managerChoiceStatus"
+							v-model="item.managerChoiceStatus"
 							class="table_small_sel"
-						></selectBoxValue>
+							@change="managerChoiceStatusChange($event, item)"
+						></selectBoxValueItems>
 					</v-flex>
+
 					<v-flex xs3 class="mr-1">
-						<selectBoxValue style="font-size:12px" :sel="datatable.team" :value="item.managerTeam" class="table_small_sel"></selectBoxValue>
-						<!-- <selectBox :sel="datatable.team" style="font-size:12px" @change="teamChange(item)"></selectBox> -->
+						<selectBoxValueItems
+							style="font-size:12px"
+							:items="item.team.items"
+							:sel="item.team"
+							:disable="item.team.disabled"
+							:value="item.managerTeam"
+							class="table_small_sel"
+							@change="teamChange"
+						></selectBoxValueItems>
+						<!-- <selectBox :sel="datatable.team" style="font-size:12px" :items="datatable." @change="teamChange(item)"></selectBox> -->
 					</v-flex>
 					<v-flex xs4>
-						<selectBoxValue style="font-size:12px" :sel="datatable.user" :value="item.managerUser" class="table_small_sel"></selectBoxValue>
-						<!-- <selectBox :sel="datatable.user" style="font-size:12px"></selectBox> -->
+						<selectBoxValueItems
+							style="font-size:12px"
+							:items="datatable.user.items"
+							:sel="datatable.user"
+							:value="item.managerUser"
+							class="table_small_sel"
+						></selectBoxValueItems>
+						<!-- <selectBox :sel="datatable.user" style="font-size:12px" :items="datatable."></selectBox> -->
 					</v-flex>
 				</v-layout>
 			</template>
@@ -2499,6 +2516,7 @@ export default {
 		search: String,
 		teamChoiceClick: Function,
 		teamChange: Function,
+		managerChoiceStatusChange: Function,
 		teamRankSave: Function,
 		salesPhoneNumberSave: Function,
 		editUserData: Function,
