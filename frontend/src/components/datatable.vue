@@ -1605,6 +1605,12 @@
 					<v-btn class="detail_etc_btn" small @click="productDetailClick(item)" :color="'#9A9C9B'" depressed>자세히 보기</v-btn>
 				</v-layout>
 			</template>
+			<!-- 사업지관리 - 등록상품 - 자세히보기 -->
+			<template v-slot:[`item.product_etc`]="{ item }">
+				<v-layout class="dt-align-set ml-0" justify-center>
+					<v-btn class="detail_etc_btn" small @click="editProduct(item)" :color="'#9A9C9B'" depressed>자세히 보기</v-btn>
+				</v-layout>
+			</template>
 			<!-- 사업지관리 - 공지사항 관리 -->
 			<template v-slot:[`item.notice_useYn`]="{ item }">
 				<div v-if="item.useYn === true">공개</div>
@@ -2504,6 +2510,7 @@ export default {
 		deleteClick: Function,
 		productDetailClick: Function,
 		refreshTable: Function,
+		editProduct: Function,
 	},
 }
 </script>

@@ -4,7 +4,7 @@
 			<div class="project_title px-5">
 				<span style="font-size:15px">상품 관리</span>
 				<v-spacer />
-				<v-icon @click="setdialog.dialog = false" class="title-icon" color="white">mdi-close</v-icon>
+				<v-icon @click="resetSelect" class="title-icon" color="white">mdi-close</v-icon>
 			</div>
 			<v-layout class="mt-8 mx-10" align-center>
 				<div class="slash mr-1"></div>
@@ -57,7 +57,7 @@
 			<v-layout align-center class="mx-10 mt-2">
 				<v-flex xs8>
 					<v-layout justify-end class="table_info mr-7">
-						<div class="ml-3">전체 상품 : 건,</div>
+						<div class="ml-3">전체 상품 : {{ setdialog.productTable.items.length }} 건,</div>
 						<div class="ml-3">계약 : 건,</div>
 						<div class="ml-3">미계약 : 건</div>
 					</v-layout>
@@ -65,7 +65,7 @@
 			</v-layout>
 			<v-layout class="mx-10">
 				<v-flex xs8>
-					<datatable :datatable="productTable" class="product_detail_table"></datatable>
+					<datatable :datatable="setdialog.productTable" class="product_detail_table" :editProduct="editProduct"></datatable>
 					<v-layout>
 						<v-btn class="mt-2 mb-6 save_biz" style="background:#434a5d !important">선택항목 삭제</v-btn>
 					</v-layout>
@@ -118,6 +118,9 @@
 import { txtField, selectBox, datatable, sweetAlert } from '@/components/index.js'
 
 export default {
+	async created() {
+		await this.first_productTable()
+	},
 	components: {
 		txtField,
 		selectBox,
@@ -126,6 +129,7 @@ export default {
 	},
 	props: {
 		setdialog: Object,
+		newProduct: Function,
 	},
 	data() {
 		return {
@@ -177,22 +181,6 @@ export default {
 				outlined: true,
 				class: 'small_font searchSel',
 			},
-			productTable: {
-				headers: [
-					{ text: 'No.', value: 'product_number' },
-					{ text: '주택형', value: 'housingType' },
-					{ text: '동', value: 'dong' },
-					{ text: '호수', value: 'ho' },
-					{ text: '상태', value: 'contractStatus' },
-					{ text: '비고', value: 'product_etc' },
-				],
-				class: 'datatablehover3',
-				items: [],
-				noweditting: '',
-				itemsPerPage: 10,
-				page: 1,
-				pageCount: 0,
-			},
 			right_table1: [
 				{
 					title: '호수',
@@ -234,6 +222,28 @@ export default {
 		}
 	},
 	methods: {
+		editProduct(item) {
+			console.log(item)
+		},
+		first_productTable() {
+			if (this.setdialog.dialog) {
+				let data = {
+					businessID: this.setdialog.item.id,
+				}
+				this.$store.dispatch('products', data).then(res => {
+					console.log(res)
+				})
+			}
+		},
+		resetSelect() {
+			this.setdialog.dialog = false
+			this.setdialog.selectBox1.value = ''
+			this.setdialog.selectBox2.value = ''
+			this.setdialog.selectBox3.value = ''
+			this.setdialog.select_text1.value = ''
+			this.setdialog.select_text2.value = ''
+			this.setdialog.select_text3.value = ''
+		},
 		selectType() {
 			console.log(this.setdialog)
 			if (this.setdialog.selectBox1.value === 'new') {
@@ -277,6 +287,7 @@ export default {
 			this.$store.dispatch('createProduct', data).then(res => {
 				console.log(res)
 				this.sweetDialog.open = false
+				this.newProduct()
 				this.$store.state.loading = false
 			})
 			console.log(data)

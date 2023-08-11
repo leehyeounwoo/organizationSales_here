@@ -15,7 +15,7 @@
 		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" />
-		<productDetail :setdialog="table_detail" />
+		<productDetail :setdialog="table_detail" :newProduct="first_product" />
 	</div>
 </template>
 
@@ -211,6 +211,23 @@ export default {
 					outlined: true,
 					class: 'small_font searchSel',
 				},
+				productTable: {
+					headers: [
+						{ text: 'No.', value: 'product_number' },
+						{ text: '주택형', value: 'housingType' },
+						{ text: '동', value: 'dong' },
+						{ text: '호수', value: 'ho' },
+						{ text: '상태', value: 'contractStatus' },
+						{ text: '비고', value: 'product_etc' },
+					],
+					class: 'datatablehover3',
+					items: [],
+					noweditting: '',
+					itemsPerPage: 10,
+					page: 1,
+					pageCount: 0,
+					showselect: true,
+				},
 			},
 			search_business: '',
 			search: {
@@ -289,6 +306,24 @@ export default {
 		},
 		product_detail(item) {
 			this.table_detail.item = item
+			let data = {
+				businessID: this.table_detail.item.id,
+			}
+			this.$store.dispatch('products', data).then(res => {
+				console.log(res.products)
+				res.products.forEach(el => {
+					if (el.contractStatus === 'contract') {
+						el.contractStatus = '계약'
+					} else if (el.contractStatus === 'noContract') {
+						el.contractStatus = '미계약'
+					} else if (!el.contractStatus) {
+						el.contractStatus = '-'
+					}
+					el['product_number'] = res.products.indexOf(el) + 1
+				})
+				this.table_detail.productTable.items = res.products
+			})
+			console.log(this.table_detail.productTable)
 			this.table_detail.dialog = true
 			console.log(item)
 		},
