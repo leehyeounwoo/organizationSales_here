@@ -58,8 +58,8 @@ module.exports = {
     resetPassword(password: String!, passwordConfirmation: String!, code: String!): UsersPermissionsLoginPayload
     editPassword(password: String!, newPassword: String!, email: String!): UserPermissionsPasswordPayload
     emailConfirmation(confirmation: String!): UsersPermissionsLoginPayload
-    userInfoEdit(input:userInfoEditData): UsersPermissionsPayload
-  `,
+    sendSmsSettlement(confirmation: String!): UserPermissionsPasswordPayload
+    userInfoEdit(input:userInfoEditData): UsersPermissionsPayload`,
   resolver: {
     Query: {
       me: {
@@ -314,6 +314,28 @@ module.exports = {
           };
         },
       },
+      sendSmsSettlement: {
+        description:
+          "Reset user password. Confirm with a code (resetToken from forgotPassword)",
+        resolverOf: "application::send-sms.send-sms.sendSmsSettlement",
+        resolver: async (obj, options, { context }) => {
+          context.request.body = _.toPlainObject(options);
+
+          await strapi.plugins[
+            "users-permissions"
+          ].controllers.auth.sendSmsSettlement(context);
+          let output = context.body.toJSON
+            ? context.body.toJSON()
+            : context.body;
+
+          checkBadRequest(output);
+
+          return {
+            ok: output.ok || output,
+          };
+        },
+      },
+
       emailConfirmation: {
         description: "Confirm an email users email address",
         resolverOf: "plugins::users-permissions.auth.emailConfirmation",

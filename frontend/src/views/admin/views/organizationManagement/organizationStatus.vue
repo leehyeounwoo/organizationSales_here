@@ -407,11 +407,11 @@ export default {
 			holiDay: 0,
 			table: {
 				headers: [
-					{ text: '상담사', value: 'username', align: 'center', width: '10%' },
-					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '12%' },
-					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '17%' },
-					{ text: '등록일', value: 'created_at', align: 'center', width: '12%' },
-					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false, width: '25%' },
+					{ text: '상담사', value: 'username', align: 'center', width: '7%' },
+					{ text: '연락처', value: 'phoneNumber', align: 'center', width: '11%' },
+					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '20%' },
+					{ text: '등록일', value: 'created_at', align: 'center', width: '9%' },
+					{ text: '팀배정 현황', value: 'team', align: 'center', sortable: false, width: '30%' },
 					{ text: '재직상태', value: 'workingStatus', align: 'center', width: '10%' },
 					{ text: '비고', value: 'organizationStatusEtc', align: 'center', width: '10%' },
 				],

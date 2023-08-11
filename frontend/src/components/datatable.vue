@@ -701,7 +701,12 @@
 			</template>
 			<!-- username -->
 			<template v-slot:[`item.username`]="{ item }">
-				<div>
+				<div
+					style="width:60px;
+										overflow:hidden;
+      						text-overflow:ellipsis;
+      						white-space:nowrap;"
+				>
 					{{ item.username }}
 				</div>
 			</template>
