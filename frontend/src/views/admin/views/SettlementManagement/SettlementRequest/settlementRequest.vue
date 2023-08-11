@@ -73,6 +73,19 @@
 								<span class="borderRightSubFont">상태</span>
 							</v-flex>
 						</v-layout>
+						<div v-if="editLogsVariable.length > 0">
+							<v-layout v-for="(item, index) of editLogsVariable" :key="index" justify-center align-center>
+								<v-flex xs5 class="client_table_style" style="background-color: #fff; border-right: 1px solid #C8C8C8">
+									<span class="borderRightSubFont">{{ $moment(item.created_at).format('YYYY-MM-DD HH:mm') }}</span>
+								</v-flex>
+								<v-flex xs4 class="client_table_style" style="background-color: #fff; border-right: 1px solid #C8C8C8">
+									<span class="borderRightSubFont">{{ item.editDetail }}</span>
+								</v-flex>
+								<v-flex xs3 class="client_table_style" style="background-color: #fff;">
+									<span class="borderRightSubFont">{{ displayStatus(item.editStatus) }}</span>
+								</v-flex>
+							</v-layout>
+						</div>
 					</v-flex>
 				</v-layout>
 				<v-layout>
@@ -245,6 +258,7 @@ export default {
 			list: [],
 			attachmentNameList: [],
 			finalSettlementData: [],
+			editLogsVariable: [],
 		}
 	},
 
@@ -268,6 +282,7 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
+		console.log(this.list)
 	},
 	mounted() {},
 
@@ -282,9 +297,8 @@ export default {
 				const element = this.userData[index]
 				console.log(element)
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-				let rankTitle = this.rankData.filter(x => x.id === element.rankId)[0].rankName
 
-				element.teamID = `${teamTitle} / ${rankTitle}`
+				element.teamID = `${teamTitle}`
 				this.list.teamID = element.teamID
 			}
 
@@ -295,7 +309,9 @@ export default {
 		async settlementView() {
 			await this.$store.dispatch('settlements').then(res => {
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
+				console.log(this.settlementTable.total)
 				res.settlements.forEach(element => {
+					console.log(element)
 					let listData = {}
 					listData.settlements = element
 					listData.id = element.id
@@ -306,6 +322,7 @@ export default {
 					listData.userID = element.userID
 					listData.ProductID = element.ProductID
 					this.list.push(listData)
+					console.log(this.list)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
 				this.productArrData = res.settlements.filter(x => x.ProductID).map(x => x.ProductID)
@@ -475,11 +492,21 @@ export default {
 			this.date = this.$moment(this.date_picker.date)
 		},
 		editUserData(val) {
+			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []
-			console.log(val)
 			this.finalSettlementData = val
-			console.log(this.finalSettlementData)
+			console.log('파이널', this.finalSettlementData)
+			let data = {
+				settlementID: this.finalSettlementData.ProductID,
+			}
+			console.log(data)
+			this.$store.dispatch('settlementEditLogs', data).then(res => {
+				console.log(res)
+				if (this.finalSettlementData.settlements.productID === res.settlementEditLogs.settlementID)
+					this.editLogsVariable = res.settlementEditLogs
+				console.log(this.editLogsVariable)
+			})
 			const usernameSpan = document.getElementById('usernameSpan')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -503,6 +530,12 @@ export default {
 						id: val.settlements.attachment[i].id,
 					})
 				}
+			}
+
+			if (val.settlementStatus === 'agree') {
+				this.agreeType = true
+			} else {
+				this.agreeType = false
 			}
 		},
 		openModal() {
@@ -572,17 +605,23 @@ export default {
 				}
 				this.$store
 					.dispatch('updateSettlement', input)
-					.then(() => {
-						this.sweetDialog_info.open = false
-						this.$store.state.loading = true
-						this.saveDialogStatus.title = `반려 처리 완료`
-						this.saveDialogStatus.content = `정산 요청이 반려되었습니다.`
-						this.saveDialogStatus.buttonType = 'oneBtn'
-						this.saveDialogStatus.cancelBtnText = '확인'
-						this.saveDialogStatus.open = true
-						this.$store.state.loading = false
-					})
+					.then(() => {})
 					.catch(() => {})
+				let input2 = {
+					settlementID: this.finalSettlementData.id,
+					editStatus: 'disagree',
+					editDetail: this.finalSettlementData.degree + '차 요청',
+				}
+				this.$store.dispatch('createSettlementEditLogs', input2).then(() => {
+					this.sweetDialog_info.open = false
+					this.$store.state.loading = true
+					this.saveDialogStatus.title = `반려 처리 완료`
+					this.saveDialogStatus.content = `정산 요청이 반려되었습니다.`
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					this.$store.state.loading = false
+				})
 			}
 			this.$store.state.loading = false
 		},
@@ -598,17 +637,23 @@ export default {
 				}
 				this.$store
 					.dispatch('updateSettlement', input)
-					.then(() => {
-						this.sweetDialog_info.open = false
-						this.$store.state.loading = true
-						this.saveDialogStatus.title = `승인 처리 완료`
-						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-						this.saveDialogStatus.buttonType = 'oneBtn'
-						this.saveDialogStatus.cancelBtnText = '확인'
-						this.saveDialogStatus.open = true
-						this.$store.state.loading = false
-					})
+					.then(() => {})
 					.catch(() => {})
+				let input2 = {
+					settlementID: this.finalSettlementData.id,
+					editStatus: 'agree',
+					editDetail: this.finalSettlementData.degree + '차 요청',
+				}
+				this.$store.dispatch('createSettlementEditLogs', input2).then(() => {
+					this.sweetDialog_info.open = false
+					this.$store.state.loading = true
+					this.saveDialogStatus.title = `승인 처리 완료`
+					this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					this.$store.state.loading = false
+				})
 			}
 
 			this.$store.state.loading = false
@@ -617,6 +662,15 @@ export default {
 			e.stopPropagation()
 			location = process.env.VUE_APP_BACKEND_URL + val
 			window.open(location)
+		},
+		displayStatus(editStatus) {
+			if (editStatus === 'agree') {
+				return '승인'
+			} else if (editStatus === 'waiting') {
+				return '대기'
+			} else {
+				return '반려'
+			}
 		},
 	},
 }

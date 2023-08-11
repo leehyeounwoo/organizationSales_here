@@ -207,20 +207,34 @@
 						<v-flex class="notice_right_table" xs2 style="height: auto;"> {{ degree }}차 </v-flex>
 						<v-flex style="display: flex; justify-content: center; align-items: center;" xs3 class="notice_right_table2">
 							<v-text-field
+								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? false : true) : true"
 								class="amountTextField"
 								:value="amountData[degree - 1] ? amountData[degree - 1].bank : ''"
 								@input="updateBank(degree, $event)"
 								outlined
 								dense
 							></v-text-field>
+							<span
+								class="spanClass2"
+								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? true : false) : false"
+							>
+								{{ amountData[degree - 1] ? amountData[degree - 1].bank : '-' }}
+							</span>
 						</v-flex>
 						<v-flex style="display: flex; justify-content: center; align-items: center;" xs3 class="notice_right_table2">
 							<v-text-field
+								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? false : true) : true"
 								:value="amountData[degree - 1] ? amountData[degree - 1].bankAccount : ''"
 								@input="updateBankAccount(degree, $event)"
 								outlined
 								dense
 							></v-text-field>
+							<span
+								class="spanClass2"
+								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? true : false) : false"
+							>
+								{{ amountData[degree - 1] ? amountData[degree - 1].bankAccount : '-' }}
+							</span>
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
 							<span class="spanClass2"> {{ amountDataTrans(amountData[degree - 1]) }}</span>
@@ -1039,14 +1053,15 @@ export default {
 
 			this.viewUsers(input)
 		},
-		click_date_before() {
+		async click_date_before() {
 			let input = {
 				date: this.$moment(this.date)
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
+				settlementStatus: 'agree',
 			}
 
-			this.viewUsers(input)
+			await this.settlementView(input)
 
 			this.date = this.$moment(this.date).subtract(1, 'd')
 		},

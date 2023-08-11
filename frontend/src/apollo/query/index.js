@@ -270,3 +270,16 @@ export const usersConnection = gql`
 		}
 	}
 `
+
+export const settlementEditLogs = gql`
+	query settlementEditLogs($settlementID: String) {
+		settlementEditLogs(where: { settlementID: $settlementID }) {
+			id
+			created_at
+			updated_at
+			editDetail
+			editStatus
+			settlementID
+		}
+	}
+`

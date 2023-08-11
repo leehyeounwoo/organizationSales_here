@@ -23,6 +23,7 @@ import {
 	createSystem,
 	createProduct,
 	deleteProduct,
+	createSettlementEditLogs,
 	updateProduct,
 } from '../apollo/mutation'
 import {
@@ -40,6 +41,7 @@ import {
 	businessManager,
 	systems,
 	usersConnection,
+	settlementEditLogs,
 } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
@@ -702,6 +704,38 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: usersConnection,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		createSettlementEditLogs({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: createSettlementEditLogs,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		settlementEditLogs({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: settlementEditLogs,
 						variables: input,
 					})
 					.then(({ data }) => {

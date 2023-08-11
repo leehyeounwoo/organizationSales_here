@@ -450,3 +450,18 @@ export const createSystem = gql`
 		}
 	}
 `
+
+export const createSettlementEditLogs = gql`
+	mutation createSettlementEditLogs($settlementID: String, $editStatus: ENUM_SETTLEMENTEDITLOG_EDITSTATUS, $editDetail: String) {
+		createSettlementEditLog(input: { data: { settlementID: $settlementID, editStatus: $editStatus, editDetail: $editDetail } }) {
+			settlementEditLog {
+				id
+				created_at
+				updated_at
+				editDetail
+				editStatus
+				settlementID
+			}
+		}
+	}
+`
