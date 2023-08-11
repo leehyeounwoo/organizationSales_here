@@ -308,6 +308,43 @@ export const createSettlementTurnTable = gql`
 		}
 	}
 `
+export const updateSettlementTurnTable = gql`
+	mutation updateSettlementTurnTable(
+		$id: ID!
+		$adminName: String
+		$PaymentDate: Date
+		$turnStatus: ENUM_SETTLEMENTTURNTABLE_TURNSTATUS
+		$depositFile: ID
+	) {
+		updateSettlementTurnTable(
+			input: {
+				where: { id: $id }
+				data: { PaymentDate: $PaymentDate, turnStatus: $turnStatus, adminName: $adminName, depositFile: $depositFile }
+			}
+		) {
+			settlementTurnTable {
+				PaymentDate
+				adminName
+				prePaymentDate
+				turnStatus
+				amount
+				settlement {
+					id
+					userID
+				}
+				turnTableDegree
+				bank
+				bankAccount
+				depositFile {
+					id
+					url
+					name
+				}
+			}
+		}
+	}
+`
+
 export const createMessage = gql`
 	mutation createMessage($title: String, $detail: String, $useYn: Boolean, $type: ENUM_MESSAGE_TYPE, $businessID: String) {
 		createMessage(input: { data: { title: $title, detail: $detail, useYn: $useYn, type: $type, businessID: $businessID } }) {

@@ -14,6 +14,7 @@ import {
 	createBusiness,
 	updateNotice,
 	createSettlementTurnTable,
+	updateSettlementTurnTable,
 	createNotice,
 	fileUpload,
 	createMessage,
@@ -475,6 +476,19 @@ export default new Vuex.Store({
 			return new Promise((resolve, reject) => {
 				apollo.clients['defaultClient']
 					.mutate({ mutation: createSettlementTurnTable, variables: input })
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		updateSettlementTurnTable({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({ mutation: updateSettlementTurnTable, variables: input })
 					.then(({ data }) => {
 						resolve(data)
 					})

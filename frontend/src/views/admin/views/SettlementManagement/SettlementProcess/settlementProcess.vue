@@ -223,15 +223,20 @@
 							></v-text-field>
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-							<span class="spanClass2"> {{ amountData[degree - 1] ? amountData[degree - 1].amount + '원' : '' }}</span>
+							<span class="spanClass2"> {{ amountDataTrans(amountData[degree - 1]) }}</span>
 						</v-flex>
-						<v-flex xs3 class="notice_right_table2">
+						<v-flex v-if="amountData[degree] !== ''" xs3 class="notice_right_table2">
 							<DatepickerDialog :picker="paymentProcess_date_picker[degree]" class="d-flex align-center date_picker3"></DatepickerDialog>
 						</v-flex>
+
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
 							<div class="pdfFileBox mt-1" @click="pdfFileUpload">
 								<label style="display: block ; font-size: 12px; color: black; cursor:pointer;">
-									{{ pdfLists.length > 0 && pdfLists[degree] && pdfLists[degree].numberList ? pdfLists[degree].numberList.name : '' }}
+									{{
+										pdfLists.length > 0 && pdfLists[degree - 1] && pdfLists[degree - 1].numberList
+											? pdfLists[degree - 1].numberList.name
+											: ''
+									}}
 								</label>
 							</div>
 							<div @click="pdfFileUpload" style="border: 1px solid rgba(0, 0, 0, 1); width: 20% !important; " class="pdfFileBox mt-1">
@@ -265,6 +270,7 @@
             height: 25px;
             margin: 9.8px 0 17.5px 7px;
             padding: 4px 19px 4px 15.4px;"
+						@click="openPaymentModal"
 						><v-icon>mdi-check</v-icon> 입금 내용 저장</v-btn
 					>
 				</v-flex>
@@ -272,6 +278,7 @@
 		</v-layout>
 		<sweetAlert :dialog="sweetDialog_false"></sweetAlert>
 		<sweetAlert :dialog="saveDialogStatus" @click="click_agree"></sweetAlert>
+		<sweetAlert :dialog="agreeDialogStatus" @click="click_agree2"></sweetAlert>
 	</div>
 </template>
 <script>
@@ -303,6 +310,18 @@ export default {
 				status: '',
 			},
 			saveDialogStatus: {
+				open: false,
+				title: '',
+				content: ``,
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				cancelBtnText: '취소',
+				modalIcon: 'success',
+				save_type: '',
+				item: {},
+				item_index: null,
+			},
+			agreeDialogStatus: {
 				open: false,
 				title: '',
 				content: ``,
@@ -823,6 +842,7 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
+		console.log(this.$store.state.meData)
 	},
 	mounted() {},
 
@@ -834,7 +854,7 @@ export default {
 
 		async me() {
 			await this.$store.dispatch('me').then(res => {
-				this.$store.state.meData = res.data
+				this.$store.state.meData = res.me
 			})
 		},
 		async dataSetting() {
@@ -875,7 +895,8 @@ export default {
 								listData.prePaymentDate = element.settlement_turn_tables[i].prePaymentDate
 								break
 							} else {
-								listData.turnStatus = '지급 완료'
+								listData.PaymentDate = element.settlement_turn_tables[i].PaymentDate
+								listData.completeAmount = element.settlement_turn_tables[i]
 							}
 						}
 					} else {
@@ -1052,9 +1073,10 @@ export default {
 			document.getElementById(`pdf_files`).click()
 		},
 		pdfFileUploadChange(val) {
+			console.log(val)
 			this.pdfFiles.file = val.target.files[0]
 			this.pdfFiles.name = val.target.files[0].name
-			this.pdfFiles.fileUpload = true
+			this.pdfFiles.Upload = true
 			this.pdfFiles.url = URL.createObjectURL(val.target.files[0])
 			this.pdfFiles.id = ''
 			this.pdfLists.push({ numberList: this.pdfFiles })
@@ -1128,6 +1150,68 @@ export default {
 			const contract = document.getElementById('contract')
 			if (contract) {
 				contract.textContent = `${this.$moment(val.contractDate).format('YYYY-MM-DD')}`
+			}
+		},
+
+		amountDataTrans(val) {
+			if (val) {
+				return val.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원'
+			} else {
+				return '-'
+			}
+		},
+
+		openPaymentModal() {
+			if (this.finalSettlementData.length === 0) {
+				this.sweetDialog_false.title = `저장 실패`
+				this.sweetDialog_false.content = `입금할 직원을 선택해주세요`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.open = true
+			} else if (this.pdfLists.length === 0) {
+				this.sweetDialog_false.title = `입금 저장 실패`
+				this.sweetDialog_false.content = `입금증을 첨부해주세요`
+				this.sweetDialog_false.modalValue = ''
+				this.sweetDialog_false.buttonType = 'oneBtn'
+				this.sweetDialog_false.open = true
+			} else {
+				this.agreeDialogStatus.title = `정산금 지급 일정 저장`
+				this.agreeDialogStatus.content = `정산금 지급 일정을 저장합니다`
+				this.agreeDialogStatus.open = true
+			}
+		},
+		async click_agree2() {
+			console.log(this.pdfLists[0].numberList.file)
+			let li = ''
+			for (let i = 0; i < this.amountData.length; i++) {
+				if (this.pdfLists.length === i && this.amountData[i - 1].turnStatus === 'waiting') {
+					if (this.pdfLists[i - 1].numberList.id === '') {
+						let file_input = {
+							file: this.pdfLists[i - 1].numberList.file,
+						}
+						await this.$store.dispatch('upload', file_input).then(res => {
+							li = res.data[0].id
+						})
+					}
+					console.log(li)
+					let input = {
+						id: this.amountData[i - 1].id,
+						adminName: this.$store.state.meData.username,
+						PaymentDate: this.paymentProcess_date_picker[i].date,
+						turnStatus: 'complete',
+						depositFile: li,
+					}
+					this.$store.dispatch('updateSettlementTurnTable', input).then(() => {
+						this.sweetDialog_false.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `입금 처리 완료`
+						this.saveDialogStatus.content = `입금 내용이 저장되었습니다.`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+				}
 			}
 		},
 
