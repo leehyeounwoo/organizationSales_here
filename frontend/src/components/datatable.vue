@@ -2521,11 +2521,8 @@ export default {
 			const paymentDate = this.$moment(item.paymentDate)
 			const currentDate = this.$moment()
 			const daysMinusPayment = paymentDate.diff(currentDate, 'days')
-			console.log(paymentDate)
-			console.log(currentDate)
-			console.log(daysMinusPayment)
 
-			if (daysMinusPayment <= 5 && daysMinusPayment >= 0) {
+			if ((daysMinusPayment <= 5 && daysMinusPayment >= 0) || (daysMinusPayment < 0 && item.turnStatus === 'waiting')) {
 				return {
 					color: 'red',
 				}
