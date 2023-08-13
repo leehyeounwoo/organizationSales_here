@@ -36,7 +36,7 @@
 			</v-flex>
 			<v-flex xs6 class="ml-10">
 				<v-layout style="border-top:1px solid black">
-					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
+					<v-flex class="notice_right_table" xs3 style="height: auto;">
 						계약자
 					</v-flex>
 					<v-flex xs6 class="notice_right_table2">
@@ -47,7 +47,7 @@
 							</v-flex>
 						</v-layout>
 					</v-flex>
-					<v-flex xs2 class="notice_right_table" xs3 style="height: 52.3px;">
+					<v-flex xs2 class="notice_right_table" xs3 style="height: auto;">
 						계약 내용
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
@@ -62,7 +62,7 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs3 style="height: 52.3px;">
+					<v-flex class="notice_right_table" xs3 style="height: auto;">
 						수수료
 					</v-flex>
 					<v-flex xs6 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
@@ -117,7 +117,7 @@
 						v-for="(items, idx) of start_date_picker"
 						:key="idx"
 						xs3
-						class="notice_right_table2 date_picker3"
+						class="notice_right_table2 date_picker2"
 						style="display: flex; justify-content: center;align-items: center; "
 					>
 						<DatepickerDialog :picker="items" class="d-flex align-center date_picker3"></DatepickerDialog>

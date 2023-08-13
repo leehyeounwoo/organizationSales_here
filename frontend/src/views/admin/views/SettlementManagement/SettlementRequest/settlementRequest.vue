@@ -266,7 +266,10 @@ export default {
 
 	async created() {
 		await this.me()
-		await this.settlementView()
+		const settlementData = {
+			date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+		}
+		await this.settlementView(settlementData)
 		const usersViewData = {
 			idArr: this.userArrData,
 		}
@@ -308,8 +311,8 @@ export default {
 			console.log(this.settlementTable.items)
 		},
 
-		async settlementView() {
-			await this.$store.dispatch('settlements').then(res => {
+		async settlementView(settlementData) {
+			await this.$store.dispatch('settlements', settlementData).then(res => {
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				console.log(this.settlementTable.total)
 				res.settlements.forEach(element => {

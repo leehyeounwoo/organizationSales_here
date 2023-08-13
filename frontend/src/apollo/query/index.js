@@ -193,13 +193,13 @@ export const notices = gql`
 `
 
 export const settlements = gql`
-	query settlements($id: ID, $settlementStatus: String, $userID: String) {
-		settlementsConnection(where: { id: $id, settlementStatus: $settlementStatus }) {
+	query settlements($id: ID, $settlementStatus: String, $userID: String, $date: DateTime) {
+		settlementsConnection(where: { id: $id, settlementStatus: $settlementStatus, created_at_lte: $date }) {
 			aggregate {
 				count
 			}
 		}
-		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID }) {
+		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID, created_at_lte: $date }) {
 			id
 			ProductID
 			userID
