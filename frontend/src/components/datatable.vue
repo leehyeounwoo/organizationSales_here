@@ -1615,6 +1615,12 @@
 					{{ item.turnStatus === 'waiting' ? item.turnTableDegree + '차 지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
 				</div>
 			</template>
+			<!-- 정산금 지급 처리 - 지급예정일 -->
+			<template v-slot:[`item.paymentDate`]="{ item }">
+				<div :style="getPayementDateStyle(item)">
+					{{ item.turnStatus === 'waiting' ? item.paymentDate : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
+				</div>
+			</template>
 			<!-- 사업지관리 - 근무시간 -->
 			<template v-slot:[`item.workTime`]="{ item }">
 				<div>{{ item.startTime }} ~ {{ item.endTime }}</div>
@@ -2510,6 +2516,20 @@ export default {
 				.replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, '$1-$2-$3')
 				.replace('--', '-')
 			item.phone_edit.value = value
+		},
+		getPayementDateStyle(item) {
+			const paymentDate = this.$moment(item.paymentDate)
+			const currentDate = this.$moment()
+			const daysMinusPayment = paymentDate.diff(currentDate, 'days')
+			console.log(paymentDate)
+			console.log(currentDate)
+			console.log(daysMinusPayment)
+
+			if (daysMinusPayment <= 5 && daysMinusPayment >= 0) {
+				return {
+					color: 'red',
+				}
+			}
 		},
 	},
 	props: {

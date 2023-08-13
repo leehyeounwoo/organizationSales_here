@@ -82,7 +82,9 @@
 									<span class="borderRightSubFont">{{ item.editDetail }}</span>
 								</v-flex>
 								<v-flex xs3 class="client_table_style" style="background-color: #fff;">
-									<span class="borderRightSubFont">{{ displayStatus(item.editStatus) }}</span>
+									<span class="borderRightSubFont">{{
+										item.editStatus === 'agree' ? '승인' : item.editStatus === 'waiting' ? '대기' : '반려'
+									}}</span>
 								</v-flex>
 							</v-layout>
 						</div>
@@ -662,15 +664,6 @@ export default {
 			e.stopPropagation()
 			location = process.env.VUE_APP_BACKEND_URL + val
 			window.open(location)
-		},
-		displayStatus(editStatus) {
-			if (editStatus === 'agree') {
-				return '승인'
-			} else if (editStatus === 'waiting') {
-				return '대기'
-			} else {
-				return '반려'
-			}
 		},
 	},
 }
