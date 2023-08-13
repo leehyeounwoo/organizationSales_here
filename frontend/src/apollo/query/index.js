@@ -15,13 +15,15 @@ export const me = gql`
 	}
 `
 export const users = gql`
-	query users($idArr: [ID], $teamID: String, $username: String, $role: ID, $businessID_null: Boolean) {
-		usersConnection {
+	query users($idArr: [ID], $teamID: String, $username: String, $roleName: String, $businessID_null: Boolean, $date: Date) {
+		usersConnection(where: { role: { name: $roleName } }) {
 			aggregate {
 				count
 			}
 		}
-		users(where: { id: $idArr, username: $username, teamID: $teamID, role: $role, businessID_null: $businessID_null }) {
+		users(
+			where: { date: $date, id: $idArr, username: $username, teamID: $teamID, role: { name: $roleName }, businessID_null: $businessID_null }
+		) {
 			id
 			businessID
 			created_at
@@ -39,7 +41,6 @@ export const users = gql`
 			bank
 			accountNumber
 			teamID
-			rankID
 			workingStatus
 			copyAccount {
 				id

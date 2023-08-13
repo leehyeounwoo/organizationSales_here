@@ -272,6 +272,7 @@ export default {
 		await this.settlementView(settlementData)
 		const usersViewData = {
 			idArr: this.userArrData,
+			roleName: 'Counselor',
 		}
 		await this.usersView(usersViewData)
 		const productsViewData = {
@@ -339,6 +340,7 @@ export default {
 				.dispatch('users', usersViewData)
 				.then(res => {
 					this.userData = res.users
+					console.log(this.userData)
 					res.users.forEach(element => {
 						for (let items of this.list) {
 							if (items.userID === element.id) {
