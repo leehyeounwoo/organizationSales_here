@@ -1566,23 +1566,41 @@
 			</template>
 			<!-- 물건배정 - 배정 -->
 			<template v-slot:[`item.holdTime`]="{ item }">
-				<v-layout>
-					<v-flex xs3 class="mr-1">
-						<selectBox :sel="item.select_holding" style="font-size:12px"></selectBox>
-					</v-flex>
-					<v-flex xs2>
-						<TimepickerDialog :setdialog="item.holdingTime1" @input="holdingStart($event, item)"></TimepickerDialog>
-					</v-flex>
-					<div class="px-1">~</div>
-					<v-flex xs2>
-						<TimepickerDialog :setdialog="item.holdingTime2" @input="holdingEnd($event, item)"></TimepickerDialog>
-					</v-flex>
-					<v-flex xs2 class="mx-1">
-						<selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox>
-					</v-flex>
-					<v-spacer></v-spacer>
-					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">배정</v-btn>
-				</v-layout>
+				<div>
+					<v-layout>
+						<v-flex xs4>
+							<v-layout>
+								<v-flex class="mr-1">
+									<selectBox :sel="item.select_holding" style="font-size:12px"></selectBox>
+								</v-flex>
+							</v-layout>
+						</v-flex>
+						<v-flex xs8 v-if="item.select_holding.value !== ''">
+							<v-layout v-if="item.select_holding.value === '종일 홀딩' || item.select_holding.value === '즉시 홀딩'">
+								<v-flex xs5>
+									<TimepickerDialog :setdialog="item.holdingTime1" @input="holdingStart($event, item)"></TimepickerDialog>
+								</v-flex>
+								<div class="px-1">~</div>
+								<v-flex xs5>
+									<TimepickerDialog :setdialog="item.holdingTime2" @input="holdingEnd($event, item)"></TimepickerDialog>
+								</v-flex>
+							</v-layout>
+							<v-layout v-else>
+								<v-flex xs12 class="mx-1">
+									<selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox>
+								</v-flex>
+							</v-layout>
+						</v-flex>
+						<v-btn
+							class="search_btn product_table"
+							elevation="0"
+							color="#f0f2f8"
+							style="margin:0 !important"
+							@click="createAssignmentAction(item)"
+							>배정</v-btn
+						>
+					</v-layout>
+				</div>
 			</template>
 			<!-- 물건배정 - 상태 -->
 			<template v-slot:[`item.product_status`]="{}">
@@ -2532,6 +2550,7 @@ export default {
 	props: {
 		search: String,
 		teamChoiceClick: Function,
+		createAssignmentAction: Function,
 		teamChange: Function,
 		managerChoiceStatusChange: Function,
 		teamRankSave: Function,

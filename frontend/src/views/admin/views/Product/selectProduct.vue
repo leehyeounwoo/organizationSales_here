@@ -15,7 +15,12 @@
 		<v-layout justify-end>
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
 		</v-layout>
-		<datatable :datatable="productManager" :teamChange="teamChange" :managerChoiceStatusChange="managerChoiceStatusChange"></datatable>
+		<datatable
+			:datatable="productManager"
+			:teamChange="teamChange"
+			:managerChoiceStatusChange="managerChoiceStatusChange"
+			:createAssignmentAction="createAssignmentAction"
+		></datatable>
 
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" />
@@ -109,6 +114,9 @@ export default {
 		}
 	},
 	methods: {
+		createAssignmentAction(item) {
+			console.log(item)
+		},
 		managerChoiceStatusChange(val, item) {
 			if (val === '담당자 지정') {
 				const teamViewData = {
@@ -190,7 +198,7 @@ export default {
 					element.holdingTime3 = {
 						placeholder: '선택',
 						value: '',
-						items: ['30', '60', '90'],
+						items: ['30분', '60분', '90분'],
 						hideDetail: true,
 						outlined: true,
 						class: 'searchSel',

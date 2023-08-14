@@ -10,7 +10,6 @@ export const login = gql`
 				username
 				blocked
 				email
-				workingStatus
 				role {
 					name
 				}
@@ -466,6 +465,42 @@ export const createSettlementEditLogs = gql`
 				editDetail
 				editStatus
 				settlementID
+			}
+		}
+	}
+`
+
+export const createAssignment = gql`
+	mutation createAssignment(
+		$useYn: Boolean
+		$userID: String
+		$status: ENUM_ASSIGNMENT_STATUS
+		$type: ENUM_ASSIGNMENT_TYPE
+		$start: Time
+		$end: Time
+		$productID: String
+		$orderType: ENUM_ASSIGNMENT_ORDERTYPE
+		$holdingTime: String
+		$businessID: String
+	) {
+		createAssignment(
+			input: {
+				data: {
+					useYn: $useYn
+					userID: $userID
+					status: $status
+					type: $type
+					start: $start
+					end: $end
+					productID: $productID
+					orderType: $orderType
+					holdingTime: $holdingTime
+					businessID: $businessID
+				}
+			}
+		) {
+			assignment {
+				id
 			}
 		}
 	}
