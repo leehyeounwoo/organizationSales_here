@@ -92,11 +92,11 @@ export default {
 						type: 'time',
 						worktime1: {
 							dialog: false,
-							start: '',
+							time: '',
 						},
 						worktime2: {
 							dialog: false,
-							start: '',
+							time: '',
 						},
 					},
 					// 3

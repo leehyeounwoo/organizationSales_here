@@ -90,16 +90,26 @@
 										<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 									</v-flex>
 									<v-flex xs4>
-										<v-btn elevation="0" class="ml-2 file_btn">
+										<v-btn elevation="0" class="ml-2 file_btn" @click="csvImportClick(index)">
 											<v-img max-width="14" class="mr-1" src="@/assets/images/input_btn.png" />파일 업로드
 										</v-btn>
 									</v-flex>
 									<v-flex xs12 align-self-center class="py-2">
-										<v-btn class="file_sample" depressed>
+										<v-btn class="file_sample" depressed @click="csvDownloadClick()">
 											<v-img max-width="22" src="@/assets/images/excel-img2.png" />
 										</v-btn>
-										<span class="sample_span ml-2">등록양식 다운받기</span>
+										<span class="sample_span ml-2" @click="csvDownloadClick()">등록양식 다운받기</span>
 									</v-flex>
+									<VueCsvImport
+										style="display:none;"
+										id="csvimport"
+										inputClass="inputclasstest"
+										v-model="parseCsv"
+										:map-fields="mapfields"
+										:autoMatchFields="true"
+										:autoMatchIgnoreCase="true"
+									>
+									</VueCsvImport>
 								</v-layout>
 							</v-flex>
 						</v-flex>
@@ -132,7 +142,7 @@
 					</v-layout>
 					<div style="height:250px; overflow:auto">
 						<v-layout align-center v-for="(right, idx) in right_data" :key="idx" class="right_table_item">
-							<v-flex style="max-width:50px !important; width:50px">{{ right.number }}</v-flex>
+							<v-flex style="max-width:50px !important; width:50px">{{ idx + 1 }}</v-flex>
 							<v-flex align-self-center style="max-width:126px !important">
 								<txtField class="bizInput px-2" v-model="right.txtfield1.value" :txtField="right.txtfield1"></txtField>
 							</v-flex>
@@ -170,6 +180,9 @@
 								</v-layout>
 							</v-flex>
 						</v-layout>
+						<v-layout class="mt-2" justify-center>
+							<v-icon style="cursor:pointer" @click="addManager()">mdi-plus-circle-outline</v-icon>
+						</v-layout>
 					</div>
 					<v-layout justify-end>
 						<v-btn class="mt-4 save_biz" @click="businessCheck()"><v-icon>mdi-check</v-icon>저장</v-btn>
@@ -186,6 +199,7 @@
 <script>
 import { txtField, selectBox, sweetAlert } from '@/components/index.js'
 import TimePickerDialog from './timePickerDialog.vue'
+import { VueCsvImport } from 'vue-csv-import'
 
 export default {
 	props: {
@@ -197,9 +211,12 @@ export default {
 		selectBox,
 		TimePickerDialog,
 		sweetAlert,
+		VueCsvImport,
 	},
 	data() {
 		return {
+			mapfields: ['housingType', 'dong', 'ho'],
+			parseCsv: null,
 			sweetDialog: {
 				open: false,
 				title: '사업지 생성',
@@ -228,7 +245,6 @@ export default {
 			},
 			right_data: [
 				{
-					number: 1,
 					detail: [],
 					user_confirmed: true,
 					txtfield1: {
@@ -265,7 +281,78 @@ export default {
 			],
 		}
 	},
+	watch: {
+		setdialog: {
+			deep: true,
+			handler() {
+				if (this.setdialog.dialog) {
+					this.parseCsv = null
+				}
+			},
+		},
+	},
 	methods: {
+		addManager() {
+			this.right_data.push({
+				detail: [],
+				user_confirmed: true,
+				txtfield1: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+				},
+				txtfield2: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+				},
+				txtfield3: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+					placeholder: '이메일 형식',
+				},
+				txtfield4: {
+					value: '',
+					maxlength: '255',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+					type: 'password',
+				},
+			})
+		},
+		csvDownloadClick() {
+			var a = document.createElement('a')
+			a.href = location.protocol + '//' + location.host + '/sampleCSV.csv'
+			a.download = 'sampleCSV.csv'
+			a.style.display = 'none'
+			document.body.appendChild(a)
+			a.click()
+		},
+		csvImportClick(index) {
+			document.getElementsByClassName('form-check-input')[0].click()
+			document.getElementsByClassName('inputclasstest')[0].click()
+			var interval = setInterval(() => {
+				document.getElementsByClassName('btn-primary')[0].click()
+				this.$store.state.loading = true
+				if (this.parseCsv !== null) {
+					console.log(this.parseCsv)
+					clearInterval(interval)
+					this.setdialog.items[index].value = this.parseCsv.map(x => x.housingType).toString()
+					this.setdialog.items[index].csvImport = true
+					this.$store.state.loading = false
+				} else {
+					this.$store.state.loading = false
+				}
+			}, 1000)
+		},
 		saveUser() {
 			let data = {
 				username: this.right_data.detail.username,
@@ -290,19 +377,28 @@ export default {
 				workingHoursEnd: this.setdialog.items[2].worktime2.time + ':00.000',
 				splitHoldingTime: this.setdialog.items[3].selectBox.value,
 				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
+				product: this.setdialog.items[5].value ? this.setdialog.items[5].value.split(',') : [],
 			}
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('createBusiness', data).then(res => {
 					console.log(res.createBusiness)
-					let adduser = {
-						id: this.right_data.id,
-						businessID: res.createBusiness.id,
-					}
-					this.$store.dispatch('updateUser', adduser).then(() => {
+					if (this.right_data[0].id) {
+						for (let i = 0; i < this.right_data.length; i++) {
+							let adduser = {
+								id: this.right_data[i].id,
+								businessID: res.createBusiness.id,
+							}
+							this.$store.dispatch('updateUser', adduser).then(() => {
+								this.sweetDialog.open = false
+								this.setdialog.dialog = false
+								this.getTable()
+							})
+						}
+					} else {
 						this.sweetDialog.open = false
 						this.setdialog.dialog = false
 						this.getTable()
-					})
+					}
 				})
 			}
 		},
