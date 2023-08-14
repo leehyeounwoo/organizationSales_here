@@ -507,17 +507,14 @@ export default {
 					// if (element2.status === 'afternoonVacation' || element2.status === 'morningVacation' || element2.status === 'vacation') {
 					// 	holiDayCount = holiDayCount + 1
 					// }
-
+					if (element2.vacation !== null) {
+						this.userLists[workIndex]['vacationData'] = element2.vacation
+						this.userLists[workIndex]['vacation'] = element2.vacation.vacationStatus
+					} else {
+						this.userLists[workIndex]['vacation'] = '-'
+					}
 					this.table.items = this.userLists
 					console.log('최종', this.table.items)
-					// element.vacations.reverse()
-					// let vactionIndex = element.vacations.findIndex(el => el.vacationDate === this.$moment(this.date).format('YYYY-MM-DD'))
-					// if (vactionIndex !== -1) {
-					// 	listData.vacationData = element.vacations[vactionIndex]
-					// 	listData.vacation = element.vacations[vactionIndex].vacationStatus
-					// } else {
-					// 	listData.vacation = '-'
-					// }
 				})
 			})
 		},
