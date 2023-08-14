@@ -908,6 +908,8 @@ export default {
 					listData.degree = element.degree
 					listData.userID = element.userID
 					listData.ProductID = element.ProductID
+					listData.totalPrice = element.totalPrice
+					listData.turn = element.turn
 					if (element.settlement_turn_tables.length !== 0) {
 						for (let i = 0; i < element.settlement_turn_tables.length; i++) {
 							if (element.settlement_turn_tables[i].turnStatus === 'waiting') {
@@ -1141,6 +1143,7 @@ export default {
 			}
 			this.finalSettlementData = []
 			this.charge.txtField.value = ''
+			this.charge.txtField.value = val.totalPrice ? val.totalPrice + '' : ''
 			this.timessel.value = ''
 			this.finalSettlementData = val
 			this.amountData = []

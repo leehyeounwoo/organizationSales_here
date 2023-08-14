@@ -218,6 +218,8 @@ export const settlements = gql`
 			settlementStatus
 			created_at
 			updated_at
+			totalPrice
+			turn
 			degree
 			attachment {
 				id

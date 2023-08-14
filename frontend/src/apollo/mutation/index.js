@@ -149,27 +149,21 @@ export const deleteProduct = gql`
 export const updateVacation = gql`
 	mutation updateVacation(
 		$id: ID!
-		$user: ID
 		$gotowork: ID
 		$vacationStatus: ENUM_VACATION_VACATIONSTATUS
-		$adminId: String
-		$viewStatus: Boolean
-		$vacationDate: Date
+		$adminInfo: JSON
 		$vacationType: String
-		$comment: String
+		$rejectComment: String
 	) {
 		updateVacation(
 			input: {
 				where: { id: $id }
 				data: {
 					vacationStatus: $vacationStatus
-					adminId: $adminId
-					viewStatus: $viewStatus
-					user: $user
+					adminInfo: $adminInfo
 					gotowork: $gotowork
-					vacationDate: $vacationDate
 					vacationType: $vacationType
-					comment: $comment
+					rejectComment: $rejectComment
 				}
 			}
 		) {
