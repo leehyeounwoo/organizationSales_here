@@ -142,6 +142,9 @@
     },
     "editLog": {
       "type": "json"
+    },
+    "name": {
+      "type": "string"
     }
   }
 }
