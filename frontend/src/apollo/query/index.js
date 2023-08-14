@@ -157,6 +157,7 @@ export const products = gql`
 			contractStatus
 			choiceYn
 			businessID
+			editLog
 		}
 	}
 `

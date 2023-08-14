@@ -107,12 +107,23 @@ export const updateGotowork = gql`
 	}
 `
 export const updateProduct = gql`
-	mutation updateProduct($id: ID!, $housingType: String, $dong: String, $ho: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
+	mutation updateProduct(
+		$id: ID!
+		$housingType: String
+		$dong: String
+		$ho: String
+		$contractStatus: ENUM_PRODUCT_CONTRACTSTATUS
+		$editLog: JSON
+	) {
 		updateProduct(
-			input: { where: { id: $id }, data: { housingType: $housingType, dong: $dong, ho: $ho, contractStatus: $contractStatus } }
+			input: {
+				where: { id: $id }
+				data: { housingType: $housingType, dong: $dong, ho: $ho, contractStatus: $contractStatus, editLog: $editLog }
+			}
 		) {
 			product {
 				id
+				editLog
 			}
 		}
 	}

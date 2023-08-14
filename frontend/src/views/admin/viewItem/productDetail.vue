@@ -97,9 +97,9 @@
 								<v-flex class="right_table2" xs6>변경내용</v-flex>
 								<v-flex class="right_table2" style="border-right:0" xs6>변경일시</v-flex>
 							</v-layout>
-							<v-layout style="height:50px">
-								<v-flex class="right_table2" style="font-weight:normal" xs6></v-flex>
-								<v-flex class="right_table2" style="border-right:0; font-weight:normal" xs6></v-flex>
+							<v-layout v-for="(edit, idx) in productEdit" :key="idx" style="height:50px">
+								<v-flex class="right_table2" style="font-weight:normal" xs6>{{ edit.editTitle }}</v-flex>
+								<v-flex class="right_table2" style="border-right:0; font-weight:normal" xs6>{{ edit.editTime }}</v-flex>
 							</v-layout>
 						</v-flex>
 					</v-layout>
@@ -135,6 +135,7 @@ export default {
 	},
 	data() {
 		return {
+			productEdit: [],
 			sweetDialog: {
 				open: false,
 				title: '상품 등록',
@@ -221,6 +222,26 @@ export default {
 	},
 	methods: {
 		editCheck() {
+			if (this.right_table1[0].txtfield.value === '') {
+				this.sweetInfo.title = '변경 상품'
+				this.sweetInfo.content = '변경할 상품을 선택해주세요'
+				return (this.sweetInfo.open = true)
+			}
+			if (this.right_table1[1].select.value === '') {
+				this.sweetInfo.title = '변경 내용'
+				this.sweetInfo.content = '변경할 상품을 선택해주세요'
+				return (this.sweetInfo.open = true)
+			}
+			if (this.right_table1[2].select.value === '') {
+				this.sweetInfo.title = '변경 내용'
+				this.sweetInfo.content = '변경할 상품을 선택해주세요'
+				return (this.sweetInfo.open = true)
+			}
+			if (this.right_table1[3].value === '') {
+				this.sweetInfo.title = '변경 내용'
+				this.sweetInfo.content = '변경할 상품을 선택해주세요'
+				return (this.sweetInfo.open = true)
+			}
 			this.sweetDialog3.open = true
 		},
 		editSave() {
@@ -322,6 +343,7 @@ export default {
 				} else if (item.contractStatus === '미계약') {
 					this.right_table1[3].value = false
 				}
+				this.productEdit = item.editLog
 			})
 		},
 		first_productTable() {
