@@ -15,8 +15,8 @@
 		<v-layout justify-end>
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
 		</v-layout>
-		<datatable :datatable="productManager" :teamChange="teamChange"></datatable>
-		<!-- :managerChoiceStatusChange="managerChoiceStatusChange" -->
+		<datatable :datatable="productManager" :teamChange="teamChange" :managerChoiceStatusChange="managerChoiceStatusChange"></datatable>
+
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" />
 	</div>
@@ -105,15 +105,6 @@ export default {
 					outlined: true,
 					class: 'searchSel',
 				},
-
-				select_holding: {
-					placeholder: '시간 선택',
-					value: '',
-					items: [],
-					hideDetail: true,
-					outlined: true,
-					class: 'searchSel',
-				},
 			},
 		}
 	},
@@ -125,28 +116,27 @@ export default {
 				}
 				this.$store.dispatch('teams', teamViewData).then(res => {
 					item.managerTeam = ''
-					item.managerUser = ''
+					item.managerUser = null
 					item.team.items = res.teams
 					item.team.disabled = false
 				})
 			} else {
-				item.managerTeam = ''
+				item.managerTeam = null
 				item.team.items = []
 				item.team.disabled = true
-				item.managerUser = ''
+				item.managerUser = null
 				item.user.items = []
 				item.user.disabled = true
 			}
 		},
 		teamChange(val, item) {
 			this.$store.state.loading = true
-
 			const usersData = {
 				teamID: val,
 			}
 			this.$store.dispatch('users', usersData).then(res => {
 				console.log(res.users)
-				item.managerUser = ''
+				item.managerUser = null
 				item.user.items = res.users
 				item.user.disabled = false
 				this.$store.state.loading = false
@@ -180,6 +170,14 @@ export default {
 						class: 'searchSel',
 						itemValue: 'id',
 						itemText: 'username',
+					}
+					element.select_holding = {
+						placeholder: '시간 선택',
+						value: '',
+						items: ['종일 홀딩', '시간 홀딩', '즉시 홀딩'],
+						hideDetail: true,
+						outlined: true,
+						class: 'searchSel',
 					}
 					element.holdingTime1 = {
 						dialog: false,

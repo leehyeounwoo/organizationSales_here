@@ -1548,15 +1548,15 @@
 							:disable="item.team.disabled"
 							:value="item.managerTeam"
 							class="table_small_sel"
-							@change="teamChange"
+							@change="teamChange($event, item)"
 						></selectBoxValueItems>
 						<!-- <selectBox :sel="datatable.team" style="font-size:12px" :items="datatable." @change="teamChange(item)"></selectBox> -->
 					</v-flex>
 					<v-flex xs4>
 						<selectBoxValueItems
 							style="font-size:12px"
-							:items="datatable.user.items"
-							:sel="datatable.user"
+							:items="item.user.items"
+							:sel="item.user"
 							:value="item.managerUser"
 							class="table_small_sel"
 						></selectBoxValueItems>
@@ -1565,20 +1565,20 @@
 				</v-layout>
 			</template>
 			<!-- 물건배정 - 배정 -->
-			<template v-slot:[`item.holdTime`]="{}">
+			<template v-slot:[`item.holdTime`]="{ item }">
 				<v-layout>
 					<v-flex xs3 class="mr-1">
-						<selectBox :sel="datatable.select_holding" style="font-size:12px"></selectBox>
+						<selectBox :sel="item.select_holding" style="font-size:12px"></selectBox>
 					</v-flex>
 					<v-flex xs2>
-						<TimepickerDialog :setdialog="datatable.holdingTime1" @input="holdingStart"></TimepickerDialog>
+						<TimepickerDialog :setdialog="item.holdingTime1" @input="holdingStart($event, item)"></TimepickerDialog>
 					</v-flex>
 					<div class="px-1">~</div>
 					<v-flex xs2>
-						<TimepickerDialog :setdialog="datatable.holdingTime2" @input="holdingEnd"></TimepickerDialog>
+						<TimepickerDialog :setdialog="item.holdingTime2" @input="holdingEnd($event, item)"></TimepickerDialog>
 					</v-flex>
 					<v-flex xs2 class="mx-1">
-						<selectBox :sel="datatable.holdingTime3" style="font-size:12px"></selectBox>
+						<selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox>
 					</v-flex>
 					<v-spacer></v-spacer>
 					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">배정</v-btn>
@@ -2175,13 +2175,13 @@ export default {
 				this.refreshTable()
 			})
 		},
-		holdingStart(picker) {
-			this.datatable.holdingTime1.dialog = false
-			this.datatable.holdingTime1.time = picker
+		holdingStart(picker, item) {
+			item.holdingTime1.dialog = false
+			item.holdingTime1.time = picker
 		},
-		holdingEnd(picker) {
-			this.datatable.holdingTime2.dialog = false
-			this.datatable.holdingTime2.time = picker
+		holdingEnd(picker, item) {
+			item.holdingTime2.dialog = false
+			item.holdingTime2.time = picker
 		},
 		mainPhoneMask(val) {
 			if (val.length === 11) {
