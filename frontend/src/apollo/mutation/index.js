@@ -207,23 +207,34 @@ export const updateSettlement = gql`
 		$attachID: [ID]
 		$settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS
 		$adminName: String
-		$comment: String
+		$rejectComment: String
+		$totalPrice: Long
+		$turn: String
 	) {
 		updateSettlement(
 			input: {
 				where: { id: $id }
-				data: { attachment: $attachID, settlementStatus: $settlementStatus, adminName: $adminName, comment: $comment }
+				data: {
+					attachment: $attachID
+					totalPrice: $totalPrice
+					turn: $turn
+					settlementStatus: $settlementStatus
+					adminName: $adminName
+					rejectComment: $rejectComment
+				}
 			}
 		) {
 			settlement {
 				id
-				comment
+				rejectComment
 				adminName
 				updated_at
 				settlementStatus
 				attachment {
 					id
 				}
+				totalPrice
+				turn
 			}
 		}
 	}

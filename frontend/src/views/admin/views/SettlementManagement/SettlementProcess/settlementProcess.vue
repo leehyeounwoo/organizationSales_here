@@ -1142,12 +1142,28 @@ export default {
 				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
 			}
 			this.finalSettlementData = []
+			this.amountData = []
+			this.amountData = val.settlements.settlement_turn_tables
+			for (let j = 0; j < this.amountData.length; j++) {
+				this.paymentAmount[`charge${j + 1}`].txtField.value = val.settlements.settlement_turn_tables[j].amount
+			}
+			this.finalSettlementData = val
 			this.charge.txtField.value = ''
 			this.charge.txtField.value = val.totalPrice ? val.totalPrice + '' : ''
 			this.timessel.value = ''
-			this.finalSettlementData = val
-			this.amountData = []
-			this.amountData = val.settlements.settlement_turn_tables
+			this.timessel.value =
+				val.turn === '1'
+					? (this.timessel.value = '1차')
+					: val.turn === '2'
+					? (this.timessel.value = '2차')
+					: val.turn === '3'
+					? (this.timessel.value = '3차')
+					: val.turn === '4'
+					? (this.timessel.value = '4차')
+					: val.turn === '5'
+					? (this.timessel.value = '5차')
+					: ''
+
 			this.pdfLists = []
 
 			this.amountData.forEach(el => {
@@ -1161,8 +1177,10 @@ export default {
 					return
 				}
 			})
+
 			console.log('파이널', this.finalSettlementData)
 			console.log('돈', this.amountData)
+
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -1291,19 +1309,32 @@ export default {
 			let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
 			for (let i = 1; i <= timesCheck; i++) {
 				start_date.push(this.start_date_picker[i].date)
-				finalPaymentAmount.push(this.paymentAmount[`charge${i}`].txtField.value)
-
+				let paymentAmountString = this.paymentAmount[`charge${i}`].txtField.value
+				let numericPaymentAmount = parseFloat(paymentAmountString.replace(/,/g, ''))
+				finalPaymentAmount.push(numericPaymentAmount)
+				// finalPaymentAmount.push(this.paymentAmount[`charge${i}`].txtField.value)
+				console.log(finalPaymentAmount)
 				let data = {
 					prePaymentDate: this.start_date_picker[i].date,
 					turnStatus: 'waiting',
-					amount: Number(this.paymentAmount[`charge${i}`].txtField.value),
+					amount: numericPaymentAmount,
 					settlements: this.finalSettlementData.id,
 					turnTableDegree: i + '',
 					bank: this.finalSettlementData.bank,
 					bankAccount: this.finalSettlementData.accountNumber,
 				}
+				console.log(data)
 
-				this.$store.dispatch('createSettlementTurnTable', data).then(() => {
+				this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+
+				let data2 = {
+					totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+					turn: this.timessel.value.replace(/차/g, ''),
+					id: this.finalSettlementData.id,
+				}
+				console.log(data2)
+
+				this.$store.dispatch('updateSettlement', data2).then(() => {
 					this.sweetDialog_false.open = false
 					this.$store.state.loading = true
 					this.saveDialogStatus.title = `승인 처리 완료`
