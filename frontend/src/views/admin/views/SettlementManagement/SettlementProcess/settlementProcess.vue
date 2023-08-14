@@ -32,7 +32,7 @@
 		</v-layout>
 		<v-layout class="mt-4">
 			<v-flex xs6>
-				<datatable :datatable="processTable" class="notice_table" @pagination="pagination" @click="processRequestData"> </datatable>
+				<datatable :datatable="processTable" class="notice_table" @pagination="pagination" @click="checkRequestData"> </datatable>
 			</v-flex>
 			<v-flex xs6 class="ml-10">
 				<v-layout style="border-top:1px solid black">
@@ -318,6 +318,7 @@ export default {
 
 	data() {
 		return {
+			datatableInfoFirst: true,
 			date: this.$moment(),
 			startTimeDialog: false,
 			endTimeDialog: false,
@@ -1133,23 +1134,26 @@ export default {
 				this.sweetDialog_false.open = true
 			}
 		},
-
-		processRequestData(val) {
-			console.log(val)
+		async checkRequestData(val) {
+			this.datatableInfoFirst = true
+			await this.processRequestData(val)
+			this.datatableInfoFirst = false
+		},
+		async forTest(val) {
 			for (let i = 0; i < 5; i++) {
 				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
 				this.paymentRate[`charge${i + 1}`].txtField.value = ''
 				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
 			}
-			this.finalSettlementData = []
-			this.amountData = []
-			this.amountData = val.settlements.settlement_turn_tables
-			for (let j = 0; j < this.amountData.length; j++) {
-				this.paymentAmount[`charge${j + 1}`].txtField.value = val.settlements.settlement_turn_tables[j].amount
-			}
-			this.finalSettlementData = val
+			// this.charge.txtField.value = val.settlements.totalPrice
 			this.charge.txtField.value = ''
 			this.charge.txtField.value = val.totalPrice ? val.totalPrice + '' : ''
+			for (let index = 0; index < val.settlements.settlement_turn_tables.length; index++) {
+				const element = val.settlements.settlement_turn_tables[index]
+				element.percent = (element.amount / val.settlements.totalPrice) * 100
+				this.paymentRate[`charge${index + 1}`].txtField.value = element.percent.toString()
+				this.paymentAmount[`charge${index + 1}`].txtField.value = element.amount.toString()
+			}
 			this.timessel.value = ''
 			this.timessel.value =
 				val.turn === '1'
@@ -1164,6 +1168,11 @@ export default {
 					? (this.timessel.value = '5차')
 					: ''
 
+			this.finalSettlementData = []
+			this.amountData = []
+			this.amountData = val.settlements.settlement_turn_tables
+			this.finalSettlementData = val
+
 			this.pdfLists = []
 
 			this.amountData.forEach(el => {
@@ -1177,15 +1186,10 @@ export default {
 					return
 				}
 			})
-
-			console.log('파이널', this.finalSettlementData)
-			console.log('돈', this.amountData)
-
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
 			}
-
 			const spanPhoneNumber = document.getElementById('spanPhoneNumber')
 			if (spanPhoneNumber) {
 				spanPhoneNumber.textContent = `${val.phoneNumber}`
@@ -1210,6 +1214,9 @@ export default {
 			if (contract) {
 				contract.textContent = `${this.$moment(val.contractDate).format('YYYY-MM-DD')}`
 			}
+		},
+		async processRequestData(val) {
+			await this.forTest(val)
 		},
 
 		amountDataTrans(val) {
@@ -1312,8 +1319,7 @@ export default {
 				let paymentAmountString = this.paymentAmount[`charge${i}`].txtField.value
 				let numericPaymentAmount = parseFloat(paymentAmountString.replace(/,/g, ''))
 				finalPaymentAmount.push(numericPaymentAmount)
-				// finalPaymentAmount.push(this.paymentAmount[`charge${i}`].txtField.value)
-				console.log(finalPaymentAmount)
+
 				let data = {
 					prePaymentDate: this.start_date_picker[i].date,
 					turnStatus: 'waiting',
@@ -1323,7 +1329,6 @@ export default {
 					bank: this.finalSettlementData.bank,
 					bankAccount: this.finalSettlementData.accountNumber,
 				}
-				console.log(data)
 
 				this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
 
@@ -1332,7 +1337,6 @@ export default {
 					turn: this.timessel.value.replace(/차/g, ''),
 					id: this.finalSettlementData.id,
 				}
-				console.log(data2)
 
 				this.$store.dispatch('updateSettlement', data2).then(() => {
 					this.sweetDialog_false.open = false
@@ -1422,35 +1426,50 @@ export default {
 	watch: {
 		'timessel.value'(newValue) {
 			let time = Number(newValue.replace(/차/g, ''))
+			if (!this.datatableInfoFirst) {
+				for (let i = 0; i < 5; i++) {
+					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+					this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+					this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+					this.paymentAmount[`charge${i + 1}`].txtField.value = ''
+					this.paymentRate[`charge${i + 1}`].txtField.value = ''
+					this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+				}
 
-			for (let i = 0; i < 5; i++) {
-				this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
-				this.paymentRate[`charge${i + 1}`].txtField.readonly = true
-				this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
-				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
-				this.paymentRate[`charge${i + 1}`].txtField.value = ''
-				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
-			}
+				for (let j = 0; j < time; j++) {
+					this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
+					this.paymentRate[`charge${j + 1}`].txtField.readonly = false
+					this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
+				}
+			} else {
+				for (let i = 0; i < 5; i++) {
+					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+					this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+					this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+				}
 
-			for (let j = 0; j < time; j++) {
-				this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
-				this.paymentRate[`charge${j + 1}`].txtField.readonly = false
-				this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
+				for (let j = 0; j < time; j++) {
+					this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
+					this.paymentRate[`charge${j + 1}`].txtField.readonly = false
+					this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
+				}
 			}
 		},
 
 		'paymentRate.charge1.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentAmount.charge5.txtField.value = ''
-				this.paymentAmount.charge2.txtField.value = ''
-				this.paymentAmount.charge3.txtField.value = ''
-				this.paymentAmount.charge4.txtField.value = ''
-				this.paymentRate.charge2.txtField.value = ''
-				this.paymentRate.charge3.txtField.value = ''
-				this.paymentRate.charge4.txtField.value = ''
-				this.paymentRate.charge5.txtField.value = ''
-
+				console.log(this.datatableInfoFirst)
+				if (!this.datatableInfoFirst) {
+					this.paymentAmount.charge5.txtField.value = ''
+					this.paymentAmount.charge2.txtField.value = ''
+					this.paymentAmount.charge3.txtField.value = ''
+					this.paymentAmount.charge4.txtField.value = ''
+					this.paymentRate.charge2.txtField.value = ''
+					this.paymentRate.charge3.txtField.value = ''
+					this.paymentRate.charge4.txtField.value = ''
+					this.paymentRate.charge5.txtField.value = ''
+				}
 				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
 				this.updatePaymentRateSum()
 			},
@@ -1458,12 +1477,14 @@ export default {
 		'paymentRate.charge2.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentRate.charge3.txtField.value = ''
-				this.paymentRate.charge4.txtField.value = ''
-				this.paymentRate.charge5.txtField.value = ''
-				this.paymentAmount.charge5.txtField.value = ''
-				this.paymentAmount.charge3.txtField.value = ''
-				this.paymentAmount.charge4.txtField.value = ''
+				if (!this.datatableInfoFirst) {
+					this.paymentRate.charge3.txtField.value = ''
+					this.paymentRate.charge4.txtField.value = ''
+					this.paymentRate.charge5.txtField.value = ''
+					this.paymentAmount.charge5.txtField.value = ''
+					this.paymentAmount.charge3.txtField.value = ''
+					this.paymentAmount.charge4.txtField.value = ''
+				}
 				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
 				this.updatePaymentRateSum()
 			},
@@ -1471,10 +1492,12 @@ export default {
 		'paymentRate.charge3.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentRate.charge4.txtField.value = ''
-				this.paymentRate.charge5.txtField.value = ''
-				this.paymentAmount.charge5.txtField.value = ''
-				this.paymentAmount.charge4.txtField.value = ''
+				if (!this.datatableInfoFirst) {
+					this.paymentRate.charge4.txtField.value = ''
+					this.paymentRate.charge5.txtField.value = ''
+					this.paymentAmount.charge5.txtField.value = ''
+					this.paymentAmount.charge4.txtField.value = ''
+				}
 				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
 				this.updatePaymentRateSum()
 			},
@@ -1482,8 +1505,10 @@ export default {
 		'paymentRate.charge4.txtField.value': {
 			immediate: true,
 			handler() {
-				this.paymentRate.charge5.txtField.value = ''
-				this.paymentAmount.charge5.txtField.value = ''
+				if (!this.datatableInfoFirst) {
+					this.paymentRate.charge5.txtField.value = ''
+					this.paymentAmount.charge5.txtField.value = ''
+				}
 				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
 				this.updatePaymentRateSum()
 			},
