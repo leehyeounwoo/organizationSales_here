@@ -11,19 +11,19 @@ module.exports = {
       email: String!
       blocked: Boolean
       role: UsersPermissionsMeRole
-      companyName: String
-      companyNumber: String
-      companyPaper: UploadFile
-      business: Business
-      created_at: DateTime
       bank: String
-      account: String
-      team: Team
-      rank: Rank
-      goalActive: Boolean
-      confirmed: Boolean
-      counselorStatus: String
-      workingStatus: Boolean
+      phoneNumber: String
+      salesPhoneNumber: String
+      accountNumber: String
+      businessRegistration: UploadFile
+      profile: UploadFile
+      copyAccount: UploadFile
+      employmentContract: UploadFile
+      iD_Card: UploadFile
+      businessID: String
+      company: String
+      rankID: String
+      editLog: JSON
     }
     input UsersPermissionsRegisterInput {
       role: ID
