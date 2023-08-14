@@ -121,6 +121,7 @@ export const gotoWork = gql`
 				end
 				rejectComment
 				adminInfo
+				vacationReason
 				vacationStatus
 			}
 		}

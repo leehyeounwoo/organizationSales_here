@@ -394,6 +394,7 @@ export default {
 			async handler() {
 				if (this.setdialog.dialog) {
 					console.log(this.setdialog.editData)
+					console.log(this.setdialog.edit)
 					if (this.setdialog.edit) {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
@@ -409,12 +410,12 @@ export default {
 								: this.setdialog.editData.vacationData.vacationType === 'afternoonVacation'
 								? '오후 반차'
 								: '오전 반차'
-						this.rightInfoTop[2].value = this.setdialog.editData.vacationData.vacationDate
-						this.rightInfoTop[2].value2 = this.setdialog.editData.vacationData.vacationDate
+						this.rightInfoTop[2].value = this.$moment(this.setdialog.editData.vacationData.start).format('YYYY-MM-DD')
+						this.rightInfoTop[2].value2 = this.$moment(this.setdialog.editData.vacationData.end).format('YYYY-MM-DD')
 						this.rightInfoTop[3].value = this.setdialog.editData.vacationData.vacationReason
 						if (this.setdialog.editData.vacationData.vacationStatus !== 'waiting') {
 							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationData.vacationStatus
-							this.rightInfoBottom[1].value = this.setdialog.editData.vacationData.comment
+							this.rightInfoBottom[1].value = this.setdialog.editData.vacationData.rejectComment
 							this.rightInfoBottom[1].txtfield.readonly = true
 						} else {
 							this.rightInfoBottom[0].radio = 'disagree'
