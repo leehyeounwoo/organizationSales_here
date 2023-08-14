@@ -98,7 +98,7 @@ export default {
 	},
 	async created() {
 		if (!sessionStorage.getItem('reserveLite-t')) {
-			this.$router.push({ name: 'kioskLogin' }).catch(() => {})
+			// this.$router.push({ name: 'kioskLogin' }).catch(() => {})
 		}
 		this.businessView()
 		// else {
