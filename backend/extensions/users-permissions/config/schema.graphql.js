@@ -21,6 +21,7 @@ module.exports = {
       employmentContract: UploadFile
       iD_Card: UploadFile
       businessID: String
+      teamID: String
       company: String
       rankID: String
       editLog: JSON
