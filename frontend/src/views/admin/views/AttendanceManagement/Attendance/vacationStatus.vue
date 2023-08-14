@@ -353,8 +353,8 @@ export default {
 			} else {
 				let input2 = {
 					id: this.setdialog.editData.vacationData.id,
-					comment: this.rightInfoBottom[1].value,
-					adminId: this.$store.state.meData.id,
+					rejectComment: this.rightInfoBottom[1].value,
+					adminInfo: this.$store.state.meData,
 					vacationStatus: 'disagree',
 				}
 				this.$store.dispatch('updateVacation', input2).then(() => {
