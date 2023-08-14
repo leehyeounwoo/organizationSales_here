@@ -1,7 +1,7 @@
 <template>
 	<v-dialog persistent v-model="setdialog.dialog" width="90%">
 		<div class="create_wrap">
-			<div class="project_title px-5">
+			<div class="project_title px-5" style="position:sticky; top:0">
 				<span style="font-size:15px">상품 관리</span>
 				<v-spacer />
 				<v-icon @click="resetSelect" class="title-icon" color="white">mdi-close</v-icon>
@@ -135,6 +135,7 @@ export default {
 	},
 	data() {
 		return {
+			productDetail: [],
 			productEdit: [],
 			sweetDialog: {
 				open: false,
@@ -217,6 +218,16 @@ export default {
 					type: 'radio',
 					value: '',
 				},
+				{
+					title: '변경사유',
+					type: 'txtfield',
+					txtfield: {
+						value: '',
+						maxlength: '255',
+						outlined: true,
+						backCol: 'white',
+					},
+				},
 			],
 		}
 	},
@@ -246,21 +257,34 @@ export default {
 		},
 		editSave() {
 			this.$store.state.loading = true
+
 			let data = {
 				id: this.right_id,
 				housingType: this.right_table1[2].select.value,
 				dong: this.right_table1[1].select.value,
 				ho: this.right_table1[0].txtfield.value,
 			}
+			let log = []
+			if (this.productEdit === null) {
+				data['editLog'] = [{ editTitle: this.right_table1[4].txtfield.value, editTime: this.$moment().format('YYYY-MM-DD HH:mm') }]
+			} else {
+				log = JSON.parse(JSON.stringify(this.productEdit))
+				log.push({
+					editTitle: this.right_table1[4].txtfield.value,
+					editTime: this.$moment().format('YYYY-MM-DD HH:mm'),
+				})
+			}
 			if (this.right_table1[3].value) {
 				data['contractStatus'] = 'contract'
 			} else {
 				data['contractStatus'] = 'noContract'
 			}
+			data.editLog = log
 			this.$store.dispatch('updateProduct', data).then(res => {
 				console.log(res)
 				this.sweetDialog3.open = false
 				this.newProduct(this.setdialog.item)
+				this.productEdit = res.updateProduct.product.editLog
 				this.$store.state.loading = false
 			})
 		},
@@ -324,7 +348,10 @@ export default {
 			this.sweetDialog2.open = true
 		},
 		editProduct(item) {
-			console.log(item)
+			this.productDetail = item
+			this.right_table1[4].txtfield.value = ''
+			this.productEdit = item.editLog
+			console.log(this.productDetail)
 			this.right_id = item.id
 			let data = {
 				businessID: item.businessID,
@@ -343,7 +370,6 @@ export default {
 				} else if (item.contractStatus === '미계약') {
 					this.right_table1[3].value = false
 				}
-				this.productEdit = item.editLog
 			})
 		},
 		first_productTable() {
