@@ -561,7 +561,7 @@ export default {
 		update() {
 			let input = {
 				date: this.$moment(this.date).format('YYYY-MM-DD'),
-				role: '3',
+				roleName: 'Counselor',
 			}
 
 			this.viewUsers(input)
@@ -589,7 +589,7 @@ export default {
 				date: this.$moment(this.date_picker.date)
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
-				role: 'Counselor',
+				roleName: 'Counselor',
 			}
 
 			await this.viewUsers(input)
@@ -602,7 +602,7 @@ export default {
 			}
 			let input2 = {
 				date: this.$moment().format('YYYY-MM-DD'),
-				role: 'Counselor',
+				roleName: 'Counselor',
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
@@ -680,12 +680,16 @@ export default {
 			console.log(data)
 			this.$store
 				.dispatch('createGotowork', data)
-				.then(() => {
+				.then(async () => {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
-						role: 'Counselor',
+						roleName: 'Counselor',
 					}
-					this.gotoworksView(input)
+					// let input2 = {
+					// 	roleName: 'Counselor',
+					// }
+					// await this.viewUsers(input2)
+					await this.gotoworksView(input)
 				})
 				.catch(err => {
 					console.log({ err })
@@ -695,12 +699,16 @@ export default {
 			console.log(data)
 			this.$store
 				.dispatch('updateGotowork', data)
-				.then(() => {
+				.then(async () => {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
-						role: '3',
+						roleName: 'Counselor',
 					}
-					this.gotoworksView(input)
+					// let input2 = {
+					// 	roleName: 'Counselor',
+					// }
+					// await this.viewUsers(input2)
+					await this.gotoworksView(input)
 				})
 				.catch(err => {
 					console.log({ err })
@@ -709,12 +717,16 @@ export default {
 		deleteGotoworkAction(data) {
 			this.$store
 				.dispatch('deleteGotowork', data)
-				.then(() => {
+				.then(async () => {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
-						role: '3',
+						roleName: 'Counselor',
 					}
-					this.gotoworksView(input)
+					let input2 = {
+						roleName: 'Counselor',
+					}
+					await this.viewUsers(input2)
+					await this.gotoworksView(input)
 				})
 				.catch(err => {
 					console.log({ err })

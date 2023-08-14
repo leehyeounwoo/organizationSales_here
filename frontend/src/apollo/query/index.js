@@ -100,7 +100,7 @@ export const gotoWork = gql`
 		$date_gte: String
 		$date_lte: String
 	) {
-		gotoworksConnection(where: { date: $date, userID: $userID, status_in: $status_check, date_gte: $date_gte, date_lte: $date_lte }) {
+		gotoworksConnection(where: { userID: $userID, status_in: $status_check, date_gte: $date_gte, date_lte: $date_lte }) {
 			aggregate {
 				count
 			}
@@ -114,6 +114,14 @@ export const gotoWork = gql`
 			userID
 			vacation {
 				id
+				vacationType
+				created_at
+				userID
+				start
+				end
+				rejectComment
+				adminInfo
+				vacationStatus
 			}
 		}
 	}
