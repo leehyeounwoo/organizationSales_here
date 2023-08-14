@@ -15,7 +15,8 @@
 		<v-layout justify-end>
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
 		</v-layout>
-		<datatable :datatable="productManager" :teamChange="teamChange" :managerChoiceStatusChange="managerChoiceStatusChange"></datatable>
+		<datatable :datatable="productManager" :teamChange="teamChange"></datatable>
+		<!-- :managerChoiceStatusChange="managerChoiceStatusChange" -->
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" />
 	</div>
@@ -105,34 +106,10 @@ export default {
 					class: 'searchSel',
 				},
 
-				user: {
-					placeholder: '상담사',
-					value: '',
-					items: [],
-					hideDetail: true,
-					outlined: true,
-					class: 'searchSel',
-				},
 				select_holding: {
 					placeholder: '시간 선택',
 					value: '',
 					items: [],
-					hideDetail: true,
-					outlined: true,
-					class: 'searchSel',
-				},
-				holdingTime1: {
-					dialog: false,
-					time: '',
-				},
-				holdingTime2: {
-					dialog: false,
-					time: '',
-				},
-				holdingTime3: {
-					placeholder: '선택',
-					value: '',
-					items: ['30분', '60분', '90분'],
 					hideDetail: true,
 					outlined: true,
 					class: 'searchSel',
@@ -147,6 +124,8 @@ export default {
 					businessID: this.$store.state.businessSelectBox.value,
 				}
 				this.$store.dispatch('teams', teamViewData).then(res => {
+					item.managerTeam = ''
+					item.managerUser = ''
 					item.team.items = res.teams
 					item.team.disabled = false
 				})
@@ -154,15 +133,22 @@ export default {
 				item.managerTeam = ''
 				item.team.items = []
 				item.team.disabled = true
+				item.managerUser = ''
+				item.user.items = []
+				item.user.disabled = true
 			}
 		},
-		teamChange(val) {
+		teamChange(val, item) {
 			this.$store.state.loading = true
+
 			const usersData = {
 				teamID: val,
 			}
 			this.$store.dispatch('users', usersData).then(res => {
-				console.log(res)
+				console.log(res.users)
+				item.managerUser = ''
+				item.user.items = res.users
+				item.user.disabled = false
 				this.$store.state.loading = false
 			})
 		},
@@ -183,6 +169,33 @@ export default {
 						class: 'searchSel',
 						itemValue: 'id',
 						itemText: 'title',
+					}
+					element.user = {
+						placeholder: '상담사',
+						value: '',
+						items: [],
+						disabled: true,
+						hideDetail: true,
+						outlined: true,
+						class: 'searchSel',
+						itemValue: 'id',
+						itemText: 'username',
+					}
+					element.holdingTime1 = {
+						dialog: false,
+						time: '',
+					}
+					element.holdingTime2 = {
+						dialog: false,
+						time: '',
+					}
+					element.holdingTime3 = {
+						placeholder: '선택',
+						value: '',
+						items: ['30', '60', '90'],
+						hideDetail: true,
+						outlined: true,
+						class: 'searchSel',
 					}
 				}
 				this.productManager.items = res.products
