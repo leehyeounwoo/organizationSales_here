@@ -59,7 +59,7 @@ export default new Vuex.Store({
 			itemText: 'name',
 			itemValue: 'id',
 		},
-		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0 },
+		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0, name: '' },
 		dashBoardList: [],
 		loading: false,
 		primary: '#3A258F',
@@ -118,6 +118,7 @@ export default new Vuex.Store({
 					.then(({ data }) => {
 						resolve(data)
 						commit('meData', data.me)
+						console.log(data.me)
 					})
 					.catch(err => {
 						reject(err)

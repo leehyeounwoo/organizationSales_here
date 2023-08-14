@@ -326,6 +326,11 @@ export default {
 		},
 		me() {
 			this.$store.dispatch('me').then(res => {
+				if (res.teamID) {
+					this.$store.dispatch('teams', { idArr: [res.teamID], useYn: true }).then(res => {
+						console.log(res)
+					})
+				}
 				this.meData = res
 				this.businesses()
 			})

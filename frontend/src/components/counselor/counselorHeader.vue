@@ -5,10 +5,16 @@
 				<v-img src="/image/counselor_logo_0.png"></v-img>
 			</div>
 			<v-spacer></v-spacer>
-			<div>
-				<v-avatar>
+			<div class="mr-1">
+				<v-avatar size="32px">
 					<img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
 				</v-avatar>
+			</div>
+			<div class="mr-2">
+				<div class="white--text">
+					{{ $store.state.meData.name }}
+				</div>
+				<div></div>
 			</div>
 			<div v-if="logout" icon dark @click="logoutClick()" style="cursor:pointer" class="ml-auto">
 				<v-img src="@/assets/images/ico/ico_logout.png" width="20"></v-img>
