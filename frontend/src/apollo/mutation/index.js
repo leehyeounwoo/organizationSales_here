@@ -404,11 +404,28 @@ export const updateSettlementTurnTable = gql`
 		$PaymentDate: Date
 		$turnStatus: ENUM_SETTLEMENTTURNTABLE_TURNSTATUS
 		$depositFile: ID
+		$amount: Long
+		$prePaymentDate: Date
+		$bank: String
+		$bankAccount: String
+		$settlements: ID
+		$turnTableDegree: String
 	) {
 		updateSettlementTurnTable(
 			input: {
 				where: { id: $id }
-				data: { PaymentDate: $PaymentDate, turnStatus: $turnStatus, adminName: $adminName, depositFile: $depositFile }
+				data: {
+					PaymentDate: $PaymentDate
+					turnStatus: $turnStatus
+					adminName: $adminName
+					depositFile: $depositFile
+					amount: $amount
+					prePaymentDate: $prePaymentDate
+					bank: $bank
+					bankAccount: $bankAccount
+					settlement: $settlements
+					turnTableDegree: $turnTableDegree
+				}
 			}
 		) {
 			settlementTurnTable {

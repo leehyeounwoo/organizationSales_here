@@ -839,6 +839,7 @@ export default {
 			finalSettlementData: [],
 			paymentRatesum: 0,
 			amountData: [],
+			editAmountData: [],
 		}
 	},
 
@@ -1140,6 +1141,14 @@ export default {
 			this.datatableInfoFirst = false
 		},
 		async forTest(val) {
+			console.log(val)
+			this.editAmountData = []
+			if (val.settlements.settlement_turn_tables.length > 0) {
+				this.editAmountData = val
+			} else {
+				this.editAmountData = []
+			}
+			console.log(this.editAmountData)
 			for (let i = 0; i < 5; i++) {
 				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
 				this.paymentRate[`charge${i + 1}`].txtField.value = ''
@@ -1153,6 +1162,7 @@ export default {
 				element.percent = (element.amount / val.settlements.totalPrice) * 100
 				this.paymentRate[`charge${index + 1}`].txtField.value = element.percent.toString()
 				this.paymentAmount[`charge${index + 1}`].txtField.value = element.amount.toString()
+				this.start_date_picker[index + 1].date = element.prePaymentDate
 			}
 			this.timessel.value = ''
 			this.timessel.value =
@@ -1320,34 +1330,69 @@ export default {
 				let numericPaymentAmount = parseFloat(paymentAmountString.replace(/,/g, ''))
 				finalPaymentAmount.push(numericPaymentAmount)
 
-				let data = {
-					prePaymentDate: this.start_date_picker[i].date,
-					turnStatus: 'waiting',
-					amount: numericPaymentAmount,
-					settlements: this.finalSettlementData.id,
-					turnTableDegree: i + '',
-					bank: this.finalSettlementData.bank,
-					bankAccount: this.finalSettlementData.accountNumber,
+				if (this.editAmountData.length === 0) {
+					let data = {
+						prePaymentDate: this.start_date_picker[i].date,
+						turnStatus: 'waiting',
+						amount: numericPaymentAmount,
+						settlements: this.finalSettlementData.id,
+						turnTableDegree: i + '',
+						bank: this.finalSettlementData.bank,
+						bankAccount: this.finalSettlementData.accountNumber,
+					}
+
+					this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+
+					let data2 = {
+						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+						turn: this.timessel.value.replace(/차/g, ''),
+						id: this.finalSettlementData.id,
+					}
+
+					this.$store.dispatch('updateSettlement', data2).then(() => {
+						this.sweetDialog_false.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `승인 처리 완료`
+						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
+				} else {
+					let data = {
+						prePaymentDate: this.start_date_picker[i].date,
+						turnStatus: 'waiting',
+						amount: numericPaymentAmount,
+						settlements: this.finalSettlementData.id,
+						turnTableDegree: i + '',
+						bank: this.finalSettlementData.bank,
+						bankAccount: this.finalSettlementData.accountNumber,
+						id: this.editAmountData.settlements.settlement_turn_tables[i - 1].id,
+					}
+
+					this.$store
+						.dispatch('updateSettlementTurnTable', data)
+						.then(() => {})
+						.catch(() => {})
+
+					let data2 = {
+						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+						turn: this.timessel.value.replace(/차/g, ''),
+						id: this.finalSettlementData.id,
+					}
+
+					this.$store.dispatch('updateSettlement', data2).then(() => {
+						this.sweetDialog_false.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `승인 처리 완료`
+						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
 				}
-
-				this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
-
-				let data2 = {
-					totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-					turn: this.timessel.value.replace(/차/g, ''),
-					id: this.finalSettlementData.id,
-				}
-
-				this.$store.dispatch('updateSettlement', data2).then(() => {
-					this.sweetDialog_false.open = false
-					this.$store.state.loading = true
-					this.saveDialogStatus.title = `승인 처리 완료`
-					this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-					this.saveDialogStatus.buttonType = 'oneBtn'
-					this.saveDialogStatus.cancelBtnText = '확인'
-					this.saveDialogStatus.open = true
-					this.$store.state.loading = false
-				})
 			}
 		},
 
