@@ -1609,16 +1609,50 @@
 				</div>
 			</template>
 			<!-- 물건배정 - 상태 -->
-			<template v-slot:[`item.product_status`]="{}">
-				<v-layout>
-					<div class="d-flex align-center justify-center status_box mr-1">1팀</div>
-					<div class="d-flex align-center justify-center status_box mr-1">강백호</div>
-					<div class="d-flex align-center justify-center status_box mr-1">종일</div>
-					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">09:00 ~ 12:00</div>
-					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div>
+			<template v-slot:[`item.product_status`]="{ item }">
+				<v-layout v-if="item.assingnmentData">
+					<div class="d-flex align-center justify-center status_box mr-1">{{ item.assingnmentTeamData.title }}</div>
+					<div
+						class="d-flex align-center justify-center status_box mr-1"
+						:alt="item.assingnmentUserData.username"
+						style="white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;"
+					>
+						{{ item.assingnmentUserData.username }}
+					</div>
+					<div class="d-flex align-center justify-center status_box mr-1">
+						{{ item.assingnmentData.type === 'allday' ? '종일' : item.assingnmentData.type === 'time' ? '시간' : '즉시' }}
+					</div>
+					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">
+						{{ item.assingnmentData.start.split(':')[0] + ':' + item.assingnmentData.start.split(':')[1] }} ~
+						{{ item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1] }}
+					</div>
+					<!-- <div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div> -->
+					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">
+						잔여시간 :
+						<!-- {{
+							$moment().diff(
+								$moment(
+									$moment().format(`YYYY-MM-DD`) + item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1],
+								),
+								'hours',
+							)
+						}} -->
+						{{
+							$moment(
+								$moment().format(`YYYY-MM-DD`) +
+									' ' +
+									item.assingnmentData.end.split(':')[0] +
+									':' +
+									item.assingnmentData.end.split(':')[1],
+							).diff($moment(), 'minute') + '분'
+						}}
+					</div>
 					<v-spacer></v-spacer>
 					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">해제</v-btn>
 				</v-layout>
+				<!-- <v-layout v-else> {{ item.assingnmentData }}</v-layout> -->
 			</template>
 			<!-- 물건배정 - 상태 -->
 			<template v-slot:[`item.business_manager`]="{ item }">

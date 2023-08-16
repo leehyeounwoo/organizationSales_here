@@ -300,7 +300,7 @@ export const settlementEditLogs = gql`
 `
 export const assignments = gql`
 	query assignments($productArr: JSON, $created_at_lte: DateTime, $created_at_gte: DateTime) {
-		assignments(where: { productID: [$productArr], created_at_lte: $created_at_lte, created_at_gte: $created_at_gte }) {
+		assignments(where: { productID: $productArr, created_at_lte: $created_at_lte, created_at_gte: $created_at_gte, useYn: true }) {
 			id
 			useYn
 			userID

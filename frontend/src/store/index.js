@@ -28,7 +28,6 @@ import {
 	createAssignment,
 	updateBusiness,
 	sendSmsSettlement,
-	assignments,
 } from '../apollo/mutation'
 import {
 	me,
@@ -46,6 +45,7 @@ import {
 	systems,
 	usersConnection,
 	settlementEditLogs,
+	assignments,
 } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'

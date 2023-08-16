@@ -37,15 +37,7 @@ export default {
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
-				const businessViewData = {
-					idArr: this.$store.state.businessSelectBox.value,
-				}
-				await this.businessView(businessViewData)
-				const product_tableData = {
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-				await this.product_table(product_tableData)
-
+				await this.productSelectData()
 				clearInterval(createInterval)
 			}
 
@@ -64,6 +56,9 @@ export default {
 	},
 	data() {
 		return {
+			productIdArr: [],
+			userIdArr: [],
+			teamIdArr: [],
 			businessData: {},
 			holdingDetail: {
 				dialog: false,
@@ -112,6 +107,34 @@ export default {
 		}
 	},
 	methods: {
+		async productSelectData() {
+			const businessViewData = {
+				idArr: this.$store.state.businessSelectBox.value,
+			}
+			await this.businessView(businessViewData)
+			const product_tableData = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.product_table(product_tableData)
+			const assignmentsViewData = {
+				productArr: this.productIdArr,
+				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+				created_at_lte: this.$moment(
+					this.$moment()
+						.add(1, 'd')
+						.format('YYYY-MM-DD'),
+				),
+			}
+			await this.assignmentsView(assignmentsViewData)
+			const usersViewData = {
+				idArr: this.userIdArr,
+			}
+			await this.usersView(usersViewData)
+			const teamViewData = {
+				idArr: this.teamIdArr,
+			}
+			await this.teamView(teamViewData)
+		},
 		holdingTypeChoice(val, item) {
 			let splitStartData = this.businessData.workingHoursStart.split(':')[0] + ':' + this.businessData.workingHoursStart.split(':')[1]
 			let splitEndData = this.businessData.workingHoursEnd.split(':')[0] + ':' + this.businessData.workingHoursEnd.split(':')[1]
@@ -163,6 +186,7 @@ export default {
 				.dispatch('createAssignment', data)
 				.then(async res => {
 					console.log(res)
+					this.productSelectData()
 				})
 				.catch(err => {
 					console.log(err)
@@ -200,14 +224,57 @@ export default {
 				this.$store.state.loading = false
 			})
 		},
-		async assignmentsView() {
-			await this.$store.dispatch('assignments', {}).then(res => {
-				console.log(res)
-			})
+		async assignmentsView(assignmentsViewData) {
+			await this.$store
+				.dispatch('assignments', assignmentsViewData)
+				.then(res => {
+					this.userIdArr = res.assignments.map(x => x.userID)
+
+					for (let index = 0; index < res.assignments.length; index++) {
+						const element = res.assignments[index]
+						this.productManager.items.filter(x => x.id === element.productID)[0].assingnmentData = element
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		async usersView(usersViewData) {
+			await this.$store
+				.dispatch('users', usersViewData)
+				.then(res => {
+					this.teamIdArr = res.users.map(x => x.teamID)
+					for (let index = 0; index < this.productManager.items.length; index++) {
+						const element = this.productManager.items[index]
+						if (element.assingnmentData) {
+							element.assingnmentUserData = res.users.filter(x => x.id === element.assingnmentData.userID)[0]
+						}
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		async teamView(teamViewData) {
+			await this.$store
+				.dispatch('teams', teamViewData)
+				.then(res => {
+					for (let index = 0; index < this.productManager.items.length; index++) {
+						const element = this.productManager.items[index]
+						if (element.assingnmentData) {
+							element.assingnmentTeamData = res.teams.filter(x => x.id === element.assingnmentUserData.teamID)[0]
+						}
+					}
+					this.productManager.items = JSON.parse(JSON.stringify(this.productManager.items))
+					// this.productManager.items.team.value= this.productManager.items.assingnmentTeamData.id
+				})
+				.catch(err => {
+					console.log(err)
+				})
 		},
 		async product_table(product_tableData) {
 			await this.$store.dispatch('products', product_tableData).then(res => {
-				console.log(res.products.map(x => x.id))
+				this.productIdArr = res.products.map(x => x.id)
 				for (let index = 0; index < res.products.length; index++) {
 					const element = res.products[index]
 					element.product_manager = {
