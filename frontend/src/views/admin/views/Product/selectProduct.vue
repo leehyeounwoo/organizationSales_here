@@ -200,11 +200,16 @@ export default {
 				this.$store.state.loading = false
 			})
 		},
+		assignmentsView() {
+			this.$store.dispatch('assignments', product_tableData).then(res => {
+				console.log(res)
+			})
+		},
 		product_table(product_tableData) {
 			this.$store.dispatch('products', product_tableData).then(res => {
+				console.log(res.products.map(x => x.id))
 				for (let index = 0; index < res.products.length; index++) {
 					const element = res.products[index]
-
 					element.product_manager = {
 						placeholder: '담당자 지정여부',
 						value: '미지정',

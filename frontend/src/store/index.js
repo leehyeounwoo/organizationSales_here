@@ -28,6 +28,7 @@ import {
 	createAssignment,
 	updateBusiness,
 	sendSmsSettlement,
+	assignments,
 } from '../apollo/mutation'
 import {
 	me,
@@ -789,6 +790,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: sendSmsSettlement,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		assignments({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: assignments,
 						variables: input,
 					})
 					.then(({ data }) => {
