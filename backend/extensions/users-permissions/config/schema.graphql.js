@@ -74,7 +74,8 @@ module.exports = {
     }
   `,
   query: `emailDuplicate(where: JSON): emailDuplicate`,
-  mutation: ``,
+  mutation: `
+  `,
   resolver: {
     Query: {
       emailDuplicate: {
