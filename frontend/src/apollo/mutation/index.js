@@ -587,3 +587,11 @@ export const createAssignment = gql`
 		}
 	}
 `
+
+export const sendSmsSettlement = gql`
+	mutation sendSmsSettlement($phoneNumber: String!, $content: String!) {
+		sendSmsSettlement(phoneNumber: $phoneNumber, content: $content) {
+			ok
+		}
+	}
+`

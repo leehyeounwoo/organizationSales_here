@@ -159,7 +159,7 @@
 					</v-flex>
 				</v-layout>
 				<v-flex style="text-align: end; display: flex; justify-content:end ;">
-					<v-checkbox class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
+					<v-checkbox v-model="processCheckBox" class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
 					<span
 						style="font-size: 12px;
             font-weight: normal;
@@ -271,7 +271,7 @@
 					</v-layout>
 				</v-flex>
 				<v-flex style="text-align: end; display: flex; justify-content:end ;">
-					<v-checkbox class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
+					<v-checkbox v-model="paymentCheckBox" class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
 					<span
 						style="font-size: 12px;
             font-weight: normal;
@@ -324,6 +324,8 @@ export default {
 			endTimeDialog: false,
 			startTime: '',
 			endTime: '',
+			processCheckBox: false,
+			paymentCheckBox: false,
 			pdfFiles: {},
 			pdfLists: [],
 			editGotoworkDialog: false,
@@ -1322,6 +1324,7 @@ export default {
 
 			let start_date = []
 			let finalPaymentAmount = []
+			let messages = []
 
 			let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
 			for (let i = 1; i <= timesCheck; i++) {
@@ -1342,6 +1345,12 @@ export default {
 					}
 
 					this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+					if (this.processCheckBox) {
+						let message = `${i}차 정산일은 ${
+							this.start_date_picker[i].date
+						}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+						messages.push(message)
+					}
 
 					let data2 = {
 						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
@@ -1376,6 +1385,13 @@ export default {
 						.then(() => {})
 						.catch(() => {})
 
+					if (this.processCheckBox) {
+						let message = `${i}차 정산일은 ${
+							this.start_date_picker[i].date
+						}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+						messages.push(message)
+					}
+
 					let data2 = {
 						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
 						turn: this.timessel.value.replace(/차/g, ''),
@@ -1393,6 +1409,17 @@ export default {
 						this.$store.state.loading = false
 					})
 				}
+			}
+			if (this.processCheckBox) {
+				let finalMessage = `[테스트] ${this.finalSettlementData.username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
+				let input = {
+					phoneNumber: this.finalSettlementData.users.phoneNumber.replace(/-/g, ''),
+					content: finalMessage,
+				}
+
+				this.$store.dispatch('sendSmsSettlement', input).then(res => {
+					console.log(res)
+				})
 			}
 		},
 
