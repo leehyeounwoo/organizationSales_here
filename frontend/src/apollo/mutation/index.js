@@ -368,6 +368,7 @@ export const createSettlementTurnTable = gql`
 		$turnTableDegree: String
 		$bank: String
 		$bankAccount: String
+		$useYn: Boolean
 	) {
 		createSettlementTurnTable(
 			input: {
@@ -379,6 +380,7 @@ export const createSettlementTurnTable = gql`
 					turnTableDegree: $turnTableDegree
 					bank: $bank
 					bankAccount: $bankAccount
+					useYn: $useYn
 				}
 			}
 		) {
@@ -410,6 +412,7 @@ export const updateSettlementTurnTable = gql`
 		$bankAccount: String
 		$settlements: ID
 		$turnTableDegree: String
+		$useYn: Boolean
 	) {
 		updateSettlementTurnTable(
 			input: {
@@ -425,6 +428,7 @@ export const updateSettlementTurnTable = gql`
 					bankAccount: $bankAccount
 					settlement: $settlements
 					turnTableDegree: $turnTableDegree
+					useYn: $useYn
 				}
 			}
 		) {

@@ -227,7 +227,7 @@ export const settlements = gql`
 				name
 				url
 			}
-			settlement_turn_tables {
+			settlement_turn_tables(where: { useYn: true }) {
 				id
 				turnStatus
 				prePaymentDate
@@ -242,6 +242,7 @@ export const settlements = gql`
 					url
 					name
 				}
+				useYn
 			}
 			name
 			phone

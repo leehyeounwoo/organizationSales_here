@@ -542,6 +542,7 @@ export default new Vuex.Store({
 					})
 			})
 		},
+
 		// eslint-disable-next-line no-empty-pattern
 		createNotice({}, input) {
 			return new Promise((resolve, reject) => {
