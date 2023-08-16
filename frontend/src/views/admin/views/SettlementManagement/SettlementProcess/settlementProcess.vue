@@ -1136,6 +1136,25 @@ export default {
 				this.sweetDialog_false.modalIcon = 'info'
 				this.sweetDialog_false.open = true
 			}
+
+			for (let i = 0; i < this.finalSettlementData.settlements.settlement_turn_tables.length; i++) {
+				if (
+					this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
+					this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree === valChange
+				) {
+					this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+					this.sweetDialog_false.title = `지정 실패`
+					this.sweetDialog_false.content = `이미 지급이 완료된 회차는 변경하실 수 없습니다`
+					this.sweetDialog_false.modalValue = ''
+					this.sweetDialog_false.buttonType = 'oneBtn'
+					this.sweetDialog_false.modalIcon = 'info'
+					this.sweetDialog_false.open = true
+				} else {
+					this.paymentRate[`charge${i + 1}`].txtField.readonly = false
+					this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
+				}
+			}
 		},
 		async checkRequestData(val) {
 			this.datatableInfoFirst = true
@@ -1302,7 +1321,7 @@ export default {
 			if (this.paymentCheckBox) {
 				let finalMessage = `[테스트] ${this.finalSettlementData.username}님 \n
 				${this.finalSettlementData.product} 관련 \n
-				${messages.join()}차 정산금 입금이 완료되었습니다 `
+				${messages.join()}차  정산금 입금이 완료되었습니다 `
 				let input = {
 					phoneNumber: this.finalSettlementData.users.phoneNumber.replace(/-/g, ''),
 					content: finalMessage,
@@ -1555,6 +1574,21 @@ export default {
 	watch: {
 		'timessel.value'(newValue) {
 			let time = Number(newValue.replace(/차/g, ''))
+			console.log(time)
+			for (let i = 0; i < this.finalSettlementData.settlements.settlement_turn_tables.length; i++) {
+				if (
+					this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
+					Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time
+				) {
+					this.sweetDialog_false.title = `지정 실패`
+					this.sweetDialog_false.content = `이미 지급이 완료된 회차는 변경하실 수 없습니다`
+					this.sweetDialog_false.modalValue = ''
+					this.sweetDialog_false.buttonType = 'oneBtn'
+					this.sweetDialog_false.modalIcon = 'info'
+					this.sweetDialog_false.open = true
+					return
+				}
+			}
 			if (!this.datatableInfoFirst) {
 				for (let i = 0; i < 5; i++) {
 					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
