@@ -1546,7 +1546,7 @@
 							:items="item.team.items"
 							:sel="item.team"
 							:disable="item.team.disabled"
-							:value="item.managerTeam"
+							v-model="item.managerTeam"
 							class="table_small_sel"
 							@change="teamChange($event, item)"
 						></selectBoxValueItems>
@@ -1557,7 +1557,7 @@
 							style="font-size:12px"
 							:items="item.user.items"
 							:sel="item.user"
-							:value="item.managerUser"
+							v-model="item.managerUser"
 							class="table_small_sel"
 						></selectBoxValueItems>
 						<!-- <selectBox :sel="datatable.user" style="font-size:12px" :items="datatable."></selectBox> -->
