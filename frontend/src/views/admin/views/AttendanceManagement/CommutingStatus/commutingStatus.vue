@@ -29,7 +29,7 @@
 				</v-layout>
 			</v-flex>
 			<v-flex xs12 class="mb-2">
-				<v-layout align-center>
+				<v-layout class="mt-2" align-center>
 					<div class="slash mr-1"></div>
 					<span class="title_font">
 						출퇴근 리스트
@@ -538,8 +538,8 @@ export default {
 }
 
 .table_style_1 > .v-data-table__wrapper {
-	max-width: calc(100% - 200px);
-	width: calc(100% - 200px);
+	// max-width: calc(100% - 200px);
+	// width: calc(100% - 200px);
 	overflow: auto;
 	table {
 		border-right: 1px solid #d1d1d1;

@@ -1,8 +1,8 @@
 <template>
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
-			<v-layout align-center justify-start>
-				<v-flex>
+			<v-layout align-center>
+				<v-flex xs4>
 					<div class="d-flex align-center date_picker2 ml-3 mr-2" style="width:200px;">
 						<DatepickerDialog :picker="date_picker" language="ko" @change="click_date_picker"></DatepickerDialog>
 					</div>
@@ -436,6 +436,7 @@ export default {
 						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
 						listData.team = element.teamID ? element.teamID + '팀' : '-'
 						listData.history = element.history ? element.history : []
+						listData.data5 === '미확인' ? (listData.vacation = '-') : ''
 
 						list.push(listData)
 						this.table.total = res.usersConnection.aggregate.count
