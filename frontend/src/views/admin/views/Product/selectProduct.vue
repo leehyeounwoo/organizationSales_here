@@ -102,20 +102,32 @@ export default {
 				itemsPerPage: 10,
 				page: 1,
 				pageCount: 0,
-				product_manager: {
-					placeholder: '담당자 지정여부',
-					value: '미지정',
-					items: ['담당자 지정', '미지정'],
-					hideDetail: true,
-					outlined: true,
-					class: 'searchSel',
-				},
 			},
 		}
 	},
 	methods: {
 		createAssignmentAction(item) {
-			console.log(item)
+			// console.log(item.housingType)
+			// console.log(item.dong)
+			// console.log(item.ho)
+			// console.log(item.team.value)
+			// console.log(item.user.value)
+			// console.log(item.holdingTime1.value)
+			// console.log(item.holdingTime2.value)
+			// console.log(item.holdingTime3.value)
+			const data = {
+				useYn: true,
+				userID: item.user.value,
+				status: 'assignment',
+				type: item.select_holding.value,
+				start: item.holdingTime1.value,
+				end: item.holdingTime2.value,
+				productID: item.id,
+				orderType: 'admin',
+				// holdingTime: $holdingTime,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			console.log(data)
 		},
 		managerChoiceStatusChange(val, item) {
 			if (val === '담당자 지정') {
@@ -123,16 +135,15 @@ export default {
 					businessID: this.$store.state.businessSelectBox.value,
 				}
 				this.$store.dispatch('teams', teamViewData).then(res => {
-					item.managerTeam = ''
-					item.managerUser = null
+					item.team.value = ''
 					item.team.items = res.teams
 					item.team.disabled = false
 				})
 			} else {
-				item.managerTeam = null
+				item.team.value = ''
 				item.team.items = []
 				item.team.disabled = true
-				item.managerUser = null
+				item.user.value = ''
 				item.user.items = []
 				item.user.disabled = true
 			}
@@ -144,7 +155,7 @@ export default {
 			}
 			this.$store.dispatch('users', usersData).then(res => {
 				console.log(res.users)
-				item.managerUser = null
+				item.user.value = ''
 				item.user.items = res.users
 				item.user.disabled = false
 				this.$store.state.loading = false
@@ -154,9 +165,15 @@ export default {
 			this.$store.dispatch('products', product_tableData).then(res => {
 				for (let index = 0; index < res.products.length; index++) {
 					const element = res.products[index]
-					element.managerChoiceStatus = '미지정'
-					element.managerTeam = ''
-					element.managerUser = ''
+
+					element.product_manager = {
+						placeholder: '담당자 지정여부',
+						value: '미지정',
+						items: ['담당자 지정', '미지정'],
+						hideDetail: true,
+						outlined: true,
+						class: 'searchSel',
+					}
 					element.team = {
 						placeholder: '팀',
 						value: '',

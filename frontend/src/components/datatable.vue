@@ -1530,37 +1530,43 @@
 			<template v-slot:[`item.manager`]="{ item }">
 				<v-layout>
 					<v-flex xs5 class="mr-1">
-						<selectBoxValueItems
+						<!-- <selectBoxValueItems
 							style="font-size:12px"
 							:items="datatable.product_manager.items"
 							:sel="datatable.product_manager"
 							v-model="item.managerChoiceStatus"
 							class="table_small_sel"
 							@change="managerChoiceStatusChange($event, item)"
-						></selectBoxValueItems>
+						></selectBoxValueItems> -->
+						<selectBox
+							:sel="item.product_manager"
+							:disable="item.product_manager.disabled"
+							style="font-size:12px"
+							@change="managerChoiceStatusChange($event, item)"
+						></selectBox>
 					</v-flex>
 
 					<v-flex xs3 class="mr-1">
-						<selectBoxValueItems
+						<!-- <selectBoxValueItems
 							style="font-size:12px"
 							:items="item.team.items"
 							:sel="item.team"
 							:disable="item.team.disabled"
-							v-model="item.managerTeam"
 							class="table_small_sel"
 							@change="teamChange($event, item)"
-						></selectBoxValueItems>
-						<!-- <selectBox :sel="datatable.team" style="font-size:12px" :items="datatable." @change="teamChange(item)"></selectBox> -->
+						></selectBoxValueItems> -->
+
+						<selectBox :sel="item.team" style="font-size:12px" :disable="item.team.disabled" @change="teamChange($event, item)"></selectBox>
 					</v-flex>
 					<v-flex xs4>
-						<selectBoxValueItems
+						<!-- <selectBoxValueItems
 							style="font-size:12px"
 							:items="item.user.items"
 							:sel="item.user"
 							v-model="item.managerUser"
 							class="table_small_sel"
-						></selectBoxValueItems>
-						<!-- <selectBox :sel="datatable.user" style="font-size:12px" :items="datatable."></selectBox> -->
+						></selectBoxValueItems> -->
+						<selectBox :sel="item.user" :disable="item.user.disabled" style="font-size:12px"></selectBox>
 					</v-flex>
 				</v-layout>
 			</template>
@@ -1576,7 +1582,7 @@
 							</v-layout>
 						</v-flex>
 						<v-flex xs8 v-if="item.select_holding.value !== ''">
-							<v-layout v-if="item.select_holding.value === '종일 홀딩' || item.select_holding.value === '즉시 홀딩'">
+							<v-layout v-if="item.select_holding.value === '종일 홀딩' || item.select_holding.value === '시간 홀딩'">
 								<v-flex xs5>
 									<TimepickerDialog :setdialog="item.holdingTime1" @input="holdingStart($event, item)"></TimepickerDialog>
 								</v-flex>

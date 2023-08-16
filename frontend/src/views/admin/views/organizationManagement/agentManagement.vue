@@ -31,8 +31,8 @@
 					<v-flex ml-1 mr-1 class="greenBox text-center">{{ team.vacationCount }}명</v-flex>
 					<v-flex ml-1 class="yellowBox text-center">{{ team.count - team.workCount - team.vacationCount }}명</v-flex>
 				</v-layout>
-				<v-layout mt-1>
-					<v-flex xs6 v-for="(user, index) in team.userData" :key="index" @click="userInfoClick(team, user)" style="cursor:pointer;">
+				<v-layout mt-1 wrap>
+					<v-flex xs6 v-for="(user, index) in team.userData" :key="index" @click="userInfoClick(team, user)" style="cursor:pointer;" mb-1>
 						<v-layout style="border:1px solid black;  border-radius:5px;" :class="index % 2 === 0 ? 'mr-1' : 'ml-1'">
 							<v-flex xs5>
 								<div class="v-responsive__content">
@@ -85,7 +85,7 @@
 				</v-layout>
 			</v-flex>
 		</v-layout>
-		<v-dialog v-model="infoDialog" width="25%">
+		<v-dialog v-if="infoDialog" v-model="infoDialog" width="25%">
 			<v-card>
 				<!-- <v-card-title>ss</v-card-title> -->
 
@@ -96,7 +96,7 @@
 					<v-flex xs5 class="text-center" pr-4>
 						<v-avatar tile size="150">
 							<v-img
-								:src="dialogFileUrl ? backendURL + dialogFileUrl : ''"
+								:src="dialogFileUrl !== '' ? backendURL + dialogFileUrl : ''"
 								lazy-src="https://picsum.photos/350/165?random"
 								height="100%"
 								width="100%"
@@ -286,8 +286,11 @@ export default {
 			this.rightEdit[4].value = this.$moment(user.created_at).format('YYYY-MM-DD HH:mm')
 			this.rightEdit[5].value = team.title
 			this.rightEdit[6].value = Math.floor(this.$moment.duration(this.$moment().diff(this.$moment(user.created_at))).asDays()) + '일'
+			console.log(user.profile)
 			if (user.profile) {
 				this.dialogFileUrl = user.profile.url
+			} else {
+				this.dialogFileUrl = ''
 			}
 
 			this.infoDialog = true
