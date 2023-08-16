@@ -200,13 +200,13 @@ export default {
 				this.$store.state.loading = false
 			})
 		},
-		assignmentsView() {
-			this.$store.dispatch('assignments', product_tableData).then(res => {
+		async assignmentsView() {
+			await this.$store.dispatch('assignments', {}).then(res => {
 				console.log(res)
 			})
 		},
-		product_table(product_tableData) {
-			this.$store.dispatch('products', product_tableData).then(res => {
+		async product_table(product_tableData) {
+			await this.$store.dispatch('products', product_tableData).then(res => {
 				console.log(res.products.map(x => x.id))
 				for (let index = 0; index < res.products.length; index++) {
 					const element = res.products[index]
