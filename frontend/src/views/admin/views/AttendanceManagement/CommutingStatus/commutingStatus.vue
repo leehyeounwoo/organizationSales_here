@@ -1,8 +1,8 @@
 <template>
-	<div style="width: 100%; max-width: 100%; ">
+	<div style="width: 100%; max-width: 100%; display:grid">
 		<v-layout wrap>
 			<v-flex>
-				<v-layout align-center class="header_search mt-1" style="width: calc(100% - 200px);">
+				<v-layout align-center class="header_search mt-1">
 					<v-layout align-center justify-end>
 						<div class="d-flex align-center date_picker2" style="width:115px">
 							<DatepickerDialog :picker="start_date_picker"></DatepickerDialog>
