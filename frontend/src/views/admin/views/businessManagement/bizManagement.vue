@@ -14,7 +14,7 @@
 			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
 		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
-		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" />
+		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
 		<productDetail :setdialog="table_detail" :newProduct="product_detail" />
 	</div>
 </template>
@@ -54,6 +54,8 @@ export default {
 			createDialog: {
 				dialog: false,
 				type: 'create',
+				id: '',
+				manager: '',
 				items: [
 					// 0
 					{
@@ -166,6 +168,42 @@ export default {
 					},
 				],
 			},
+			right_data: [
+				{
+					detail: [],
+					user_confirmed: true,
+					txtfield1: {
+						value: '',
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+					},
+					txtfield2: {
+						value: '',
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+					},
+					txtfield3: {
+						value: '',
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						placeholder: '이메일 형식',
+					},
+					txtfield4: {
+						value: '',
+						maxlength: '255',
+						outlined: true,
+						hideDetail: true,
+						errorMessage: '',
+						type: 'password',
+					},
+				},
+			],
 			table_detail: {
 				dialog: false,
 				item: [],
@@ -365,10 +403,17 @@ export default {
 		biz_detail(item) {
 			console.log(item)
 			this.createDialog.type = 'edit'
+			this.createDialog.id = item.id
+			this.createDialog.manager = item.manager.id
 			this.createDialog.items[0].value = item.name
 			this.createDialog.items[1].value = item.phoneNumber
+			this.createDialog.items[2].worktime1.time = item.startTime
+			this.createDialog.items[2].worktime2.time = item.endTime
 			this.createDialog.items[4].value = item.code
-			console.log(this.createDialog)
+			this.right_data[0].txtfield1.value = item.manager.username
+			this.right_data[0].txtfield2.value = item.manager.phoneNumber
+			this.right_data[0].txtfield3.value = item.manager.email
+			console.log(this.right_data)
 			this.createDialog.dialog = true
 		},
 		search_biz() {

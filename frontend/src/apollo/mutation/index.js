@@ -186,11 +186,32 @@ export const register = gql`
 	}
 `
 export const updateUser = gql`
-	mutation updateUser($id: ID!, $salesPhoneNumber: String, $rankID: String, $teamID: String, $businessID: String) {
+	mutation updateUser(
+		$id: ID!
+		$username: String
+		$phoneNumber: String
+		$email: String
+		$password: String
+		$confirmed: Boolean
+		$salesPhoneNumber: String
+		$rankID: String
+		$teamID: String
+		$businessID: String
+	) {
 		updateUser(
 			input: {
 				where: { id: $id }
-				data: { salesPhoneNumber: $salesPhoneNumber, rankID: $rankID, teamID: $teamID, businessID: $businessID }
+				data: {
+					username: $username
+					phoneNumber: $phoneNumber
+					email: $email
+					password: $password
+					confirmed: $confirmed
+					salesPhoneNumber: $salesPhoneNumber
+					rankID: $rankID
+					teamID: $teamID
+					businessID: $businessID
+				}
 			}
 		) {
 			user {
@@ -269,6 +290,39 @@ export const createBusiness = gql`
 	) {
 		createBusiness(
 			input: {
+				data: {
+					name: $name
+					phoneNumber: $phoneNumber
+					workingHoursStart: $workingHoursStart
+					workingHoursEnd: $workingHoursEnd
+					splitHoldingTime: $splitHoldingTime
+					maximumHoldingTime: $maximumHoldingTime
+					workCheckURL: $workCheckURL
+					product: $product
+				}
+			}
+		) {
+			business {
+				id
+			}
+		}
+	}
+`
+export const updateBusiness = gql`
+	mutation updateBusiness(
+		$id: ID!
+		$name: String
+		$phoneNumber: String
+		$workingHoursStart: Time
+		$workingHoursEnd: Time
+		$splitHoldingTime: String
+		$maximumHoldingTime: String
+		$workCheckURL: String
+		$product: JSON
+	) {
+		updateBusiness(
+			input: {
+				where: { id: $id }
 				data: {
 					name: $name
 					phoneNumber: $phoneNumber

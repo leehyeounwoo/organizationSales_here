@@ -26,6 +26,7 @@ import {
 	createSettlementEditLogs,
 	updateProduct,
 	createAssignment,
+	updateBusiness,
 } from '../apollo/mutation'
 import {
 	me,
@@ -488,6 +489,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: updateNotice,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		updateBusiness({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: updateBusiness,
 						variables: input,
 					})
 					.then(({ data }) => {

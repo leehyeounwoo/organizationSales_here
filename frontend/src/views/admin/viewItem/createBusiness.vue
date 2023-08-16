@@ -172,7 +172,7 @@
 										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">생성</v-btn>
 									</v-flex>
 									<v-flex v-else>
-										<v-btn elevation="0" class="etc_btn" style="width:60px">적용</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">적용</v-btn>
 									</v-flex>
 									<v-flex>
 										<v-btn elevation="0" class="etc_btn" style="">계정정보 발송</v-btn>
@@ -205,6 +205,7 @@ export default {
 	props: {
 		setdialog: Object,
 		getTable: Function,
+		right_data: Array,
 	},
 	components: {
 		txtField,
@@ -219,8 +220,8 @@ export default {
 			parseCsv: null,
 			sweetDialog: {
 				open: false,
-				title: '사업지 생성',
-				content: `사업지를 생성합니다.`,
+				title: '',
+				content: '',
 				cancelBtnText: '취소',
 				buttonType: 'twoBtn',
 				saveBtnText: '저장',
@@ -228,8 +229,8 @@ export default {
 			},
 			sweetDialog1: {
 				open: false,
-				title: '관리자 생성',
-				content: `관리자를 생성합니다.`,
+				title: '',
+				content: '',
 				cancelBtnText: '취소',
 				buttonType: 'twoBtn',
 				saveBtnText: '저장',
@@ -243,42 +244,7 @@ export default {
 				cancelBtnText: '확인',
 				buttonType: 'oneBtn',
 			},
-			right_data: [
-				{
-					detail: [],
-					user_confirmed: true,
-					txtfield1: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
-			],
+			newUser: [],
 		}
 	},
 	watch: {
@@ -359,12 +325,24 @@ export default {
 				phoneNumber: this.right_data.detail.phoneNumber,
 				email: this.right_data.detail.email,
 				password: this.right_data.detail.password,
-				// confirmed: this.right_data.detail.confirmed,
+				confirmed: this.right_data.detail.confirmed,
 			}
 			console.log(data)
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('register', data).then(res => {
-					this.right_data['id'] = res.register.user.id
+					console.log(res.register)
+					let id = { id: res.register.user.id }
+					this.newUser.push(id)
+					console.log(this.newUser)
+					this.sweetDialog1.open = false
+				})
+			} else if (this.setdialog.type === 'edit') {
+				data.id = this.setdialog.manager
+				console.log(data)
+				this.$store.dispatch('updateUser', data).then(res => {
+					console.log(res)
+					let id = { id: res.updateUser.user.id }
+					this.newUser.push(id)
 					this.sweetDialog1.open = false
 				})
 			}
@@ -382,11 +360,11 @@ export default {
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('createBusiness', data).then(res => {
 					console.log(res.createBusiness)
-					if (this.right_data[0].id) {
-						for (let i = 0; i < this.right_data.length; i++) {
+					if (this.newUser) {
+						for (let i = 0; i < this.newUser.length; i++) {
 							let adduser = {
-								id: this.right_data[i].id,
-								businessID: res.createBusiness.id,
+								id: this.newUser[i].id,
+								businessID: res.createBusiness.business.id,
 							}
 							this.$store.dispatch('updateUser', adduser).then(() => {
 								this.sweetDialog.open = false
@@ -396,9 +374,16 @@ export default {
 						}
 					} else {
 						this.sweetDialog.open = false
-						this.setdialog.dialog = false
+						this.modalClose()
 						this.getTable()
 					}
+				})
+			} else if (this.setdialog.type === 'edit') {
+				data.id = this.setdialog.id
+				this.$store.dispatch('updateBusiness', data).then(() => {
+					this.sweetDialog.open = false
+					this.modalClose()
+					this.getTable()
 				})
 			}
 		},
@@ -422,7 +407,15 @@ export default {
 				confirmed: item.user_confirmed,
 			}
 			this.right_data.detail = data
-			this.sweetDialog1.open = true
+			if (this.setdialog.type === 'create') {
+				this.sweetDialog1.title = '관리자 생성'
+				this.sweetDialog1.content = '관리자를 생성합니다.'
+				this.sweetDialog1.open = true
+			} else if (this.setdialog.type === 'edit') {
+				this.sweetDialog1.title = '관리자 적용'
+				this.sweetDialog1.content = '관리자 내용을 적용합니다.'
+				this.sweetDialog1.open = true
+			}
 		},
 		businessCheck() {
 			if (this.setdialog.items[0].value === '') {
@@ -449,7 +442,15 @@ export default {
 					}
 				}
 			}
-			this.sweetDialog.open = true
+			if (this.setdialog.type === 'create') {
+				this.sweetDialog.title = '사업지 생성'
+				this.sweetDialog.content = '사업지를 생성합니다.'
+				this.sweetDialog.open = true
+			} else if (this.setdialog.type === 'edit') {
+				this.sweetDialog.title = '사업지 수정'
+				this.sweetDialog.content = '사업지 정보를 수정합니다.'
+				this.sweetDialog.open = true
+			}
 		},
 		modalClose() {
 			this.setdialog.items[0].value = ''
@@ -459,6 +460,8 @@ export default {
 			this.setdialog.items[3].selectBox.value = '30분'
 			this.setdialog.items[3].selectBox2.value = '120분'
 			this.setdialog.items[4].value = ''
+			this.setdialog.items[5].value = ''
+			this.parseCsv = null
 			for (let i = 0; i < this.right_data.length; i++) {
 				this.right_data[i].txtfield1.value = ''
 				this.right_data[i].txtfield2.value = ''
