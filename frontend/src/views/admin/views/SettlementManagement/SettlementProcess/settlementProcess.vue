@@ -1253,19 +1253,20 @@ export default {
 				this.sweetDialog_false.buttonType = 'oneBtn'
 				this.sweetDialog_false.open = true
 			} else {
-				this.agreeDialogStatus.title = `정산금 지급 일정 저장`
-				this.agreeDialogStatus.content = `정산금 지급 일정을 저장합니다`
+				this.agreeDialogStatus.title = `정산금 입금 내역 저장`
+				this.agreeDialogStatus.content = `정산금 입금 내역을 저장합니다`
 				this.agreeDialogStatus.open = true
 			}
 		},
 		async click_agree2() {
 			console.log(this.pdfLists[0].numberList.file)
 			let li = ''
-			for (let i = 0; i < this.amountData.length; i++) {
-				if (this.pdfLists.length === i && this.amountData[i - 1].turnStatus === 'waiting') {
-					if (this.pdfLists[i - 1].numberList.id === '') {
+			let messages = []
+			for (let i = 0; i < this.pdfLists.length; i++) {
+				if (this.amountData[i].turnStatus === 'waiting') {
+					if (this.pdfLists[i].numberList.id === '') {
 						let file_input = {
-							file: this.pdfLists[i - 1].numberList.file,
+							file: this.pdfLists[i].numberList.file,
 						}
 						await this.$store.dispatch('upload', file_input).then(res => {
 							li = res.data[0].id
@@ -1273,23 +1274,43 @@ export default {
 					}
 					console.log(li)
 					let input = {
-						id: this.amountData[i - 1].id,
+						id: this.amountData[i].id,
 						adminName: this.$store.state.meData.username,
-						PaymentDate: this.paymentProcess_date_picker[i].date,
+						PaymentDate: this.paymentProcess_date_picker[i + 1].date,
 						turnStatus: 'complete',
 						depositFile: li,
 					}
+					console.log(input)
 					this.$store.dispatch('updateSettlementTurnTable', input).then(() => {
 						this.sweetDialog_false.open = false
 						this.$store.state.loading = true
-						this.saveDialogStatus.title = `입금 처리 완료`
-						this.saveDialogStatus.content = `입금 내용이 저장되었습니다.`
-						this.saveDialogStatus.buttonType = 'oneBtn'
-						this.saveDialogStatus.cancelBtnText = '확인'
-						this.saveDialogStatus.open = true
+						this.agreeDialogStatus.title = `입금 처리 완료`
+						this.agreeDialogStatus.content = `입금 내용이 저장되었습니다.`
+						this.agreeDialogStatus.buttonType = 'oneBtn'
+						this.agreeDialogStatus.cancelBtnText = '확인'
+						this.agreeDialogStatus.open = true
 						this.$store.state.loading = false
 					})
+
+					if (this.paymentCheckBox) {
+						let message = `${i + 1}`
+						messages.push(message)
+					}
 				}
+			}
+
+			if (this.paymentCheckBox) {
+				let finalMessage = `[테스트] ${this.finalSettlementData.username}님 \n
+				${this.finalSettlementData.product} 관련 \n
+				${messages.join()}차 정산금 입금이 완료되었습니다 `
+				let input = {
+					phoneNumber: this.finalSettlementData.users.phoneNumber.replace(/-/g, ''),
+					content: finalMessage,
+				}
+				this.$store
+					.dispatch('sendSmsSettlement', input)
+					.then(() => {})
+					.catch(() => {})
 			}
 		},
 
