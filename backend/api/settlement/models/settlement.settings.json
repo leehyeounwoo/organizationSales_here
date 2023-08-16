@@ -49,8 +49,8 @@
       "type": "string"
     },
     "settlement_turn_tables": {
-      "collection": "settlement-turn-table",
-      "via": "settlement"
+      "via": "settlement",
+      "collection": "settlement-turn-table"
     },
     "turn": {
       "type": "string"

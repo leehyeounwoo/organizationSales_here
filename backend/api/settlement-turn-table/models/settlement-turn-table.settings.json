@@ -12,8 +12,8 @@
   },
   "attributes": {
     "settlement": {
-      "via": "settlement_turn_tables",
-      "model": "settlement"
+      "model": "settlement",
+      "via": "settlement_turn_tables"
     },
     "PaymentDate": {
       "type": "date"
@@ -53,6 +53,9 @@
     },
     "bankAccount": {
       "type": "string"
+    },
+    "useYn": {
+      "type": "boolean"
     }
   }
 }

@@ -1577,7 +1577,7 @@
 						<v-flex xs4>
 							<v-layout>
 								<v-flex class="mr-1">
-									<selectBox :sel="item.select_holding" style="font-size:12px"></selectBox>
+									<selectBox :sel="item.select_holding" style="font-size:12px" @change="holdingTypeChoice($event, item)"></selectBox>
 								</v-flex>
 							</v-layout>
 						</v-flex>
@@ -2556,6 +2556,7 @@ export default {
 	props: {
 		search: String,
 		teamChoiceClick: Function,
+		holdingTypeChoice: Function,
 		createAssignmentAction: Function,
 		teamChange: Function,
 		managerChoiceStatusChange: Function,

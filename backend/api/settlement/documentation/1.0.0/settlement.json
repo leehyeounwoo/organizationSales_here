@@ -658,6 +658,9 @@
                 "bankAccount": {
                   "type": "string"
                 },
+                "useYn": {
+                  "type": "boolean"
+                },
                 "published_at": {
                   "type": "datetime"
                 },

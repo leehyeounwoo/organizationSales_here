@@ -7,6 +7,7 @@
 				outlined
 				dense
 				readonly
+				:disabled="setdialog.disabled"
 				hide-details="true"
 				append-icon="mdi-calendar"
 				class="worktime_picker small_font bizInput"

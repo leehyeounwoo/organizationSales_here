@@ -19,6 +19,7 @@
 			:datatable="productManager"
 			:teamChange="teamChange"
 			:managerChoiceStatusChange="managerChoiceStatusChange"
+			:holdingTypeChoice="holdingTypeChoice"
 			:createAssignmentAction="createAssignmentAction"
 		></datatable>
 
@@ -36,6 +37,10 @@ export default {
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
+				const businessViewData = {
+					idArr: this.$store.state.businessSelectBox.value,
+				}
+				await this.businessView(businessViewData)
 				const product_tableData = {
 					businessID: this.$store.state.businessSelectBox.value,
 				}
@@ -59,6 +64,7 @@ export default {
 	},
 	data() {
 		return {
+			businessData: {},
 			holdingDetail: {
 				dialog: false,
 				todayTime: '',
@@ -106,28 +112,61 @@ export default {
 		}
 	},
 	methods: {
+		holdingTypeChoice(val, item) {
+			let splitStartData = this.businessData.workingHoursStart.split(':')[0] + ':' + this.businessData.workingHoursStart.split(':')[1]
+			let splitEndData = this.businessData.workingHoursEnd.split(':')[0] + ':' + this.businessData.workingHoursEnd.split(':')[1]
+			if (val === '종일 홀딩') {
+				item.holdingTime1.time = splitStartData
+				item.holdingTime1.disabled = true
+				item.holdingTime2.time = splitEndData
+				item.holdingTime2.disabled = true
+			} else if (val === '시간 홀딩') {
+				item.holdingTime1.time = ''
+				item.holdingTime1.disabled = false
+				item.holdingTime2.time = ''
+				item.holdingTime2.disabled = false
+			}
+			// else{
+			// }
+		},
+		async businessView(businessViewData) {
+			await this.$store.dispatch('businesses', businessViewData).then(async res => {
+				console.log(res.businesses[0])
+				this.businessData = res.businesses[0]
+			})
+		},
 		createAssignmentAction(item) {
-			// console.log(item.housingType)
-			// console.log(item.dong)
-			// console.log(item.ho)
-			// console.log(item.team.value)
-			// console.log(item.user.value)
-			// console.log(item.holdingTime1.value)
-			// console.log(item.holdingTime2.value)
-			// console.log(item.holdingTime3.value)
 			const data = {
 				useYn: true,
 				userID: item.user.value,
 				status: 'assignment',
-				type: item.select_holding.value,
-				start: item.holdingTime1.value,
-				end: item.holdingTime2.value,
+				start: item.holdingTime1.time + ':00.000',
+				end: item.holdingTime2.time + ':00.000',
 				productID: item.id,
 				orderType: 'admin',
-				// holdingTime: $holdingTime,
 				businessID: this.$store.state.businessSelectBox.value,
 			}
+			if (item.select_holding.value === '종일 홀딩') {
+				data.type = 'allday'
+				data.start = item.holdingTime1.time + ':00.000'
+				data.end = item.holdingTime2.time + ':00.000'
+			} else if (item.select_holding.value === '즉시 홀딩') {
+				data.type = 'now'
+				data.start = item.holdingTime1.time + ':00.000'
+				data.end = item.holdingTime2.time + ':00.000'
+			} else if (item.select_holding.value === '시간 홀딩') {
+				data.type = 'time'
+				data.holdingTime = item.holdingTime2.time
+			}
 			console.log(data)
+			this.$store
+				.dispatch('createAssignment', data)
+				.then(async res => {
+					console.log(res)
+				})
+				.catch(err => {
+					console.log(err)
+				})
 		},
 		managerChoiceStatusChange(val, item) {
 			if (val === '담당자 지정') {
@@ -207,10 +246,12 @@ export default {
 					element.holdingTime1 = {
 						dialog: false,
 						time: '',
+						disabled: false,
 					}
 					element.holdingTime2 = {
 						dialog: false,
 						time: '',
+						disabled: false,
 					}
 					element.holdingTime3 = {
 						placeholder: '선택',
