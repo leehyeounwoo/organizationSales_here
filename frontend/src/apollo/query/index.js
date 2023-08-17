@@ -128,6 +128,30 @@ export const gotoWork = gql`
 		}
 	}
 `
+export const vacations = gql`
+	query vacations($idArr: [ID], $useYn: Boolean) {
+		vacations(where: { userID: $idArr, useYn: $useYn }) {
+			id
+			created_at
+			rejectComment
+			gotoworks {
+				id
+				startWork
+				endWork
+				date
+				status
+				userID
+			}
+			vacationType
+			vacationStatus
+			userID
+			adminInfo
+			vacationReason
+			start
+			end
+		}
+	}
+`
 
 export const teams = gql`
 	query teams($idArr: [ID], $useYn: Boolean) {

@@ -134,7 +134,7 @@
 						v-for="(items, idx) of paymentRate"
 						:key="idx"
 						xs3
-						class="notice_right_table2"
+						class="notice_right_table2 "
 						style="display: flex; justify-content: center;align-items: center;"
 						@click="alertRate(idx)"
 					>
@@ -1416,36 +1416,38 @@ export default {
 				} else {
 					if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData.turn) {
 						for (let j = 0; j < this.finalSettlementData.settlements.settlement_turn_tables.length; j++) {
-							let updateData = {
-								id: this.finalSettlementData.settlements.settlement_turn_tables[j].id,
-								useYn: false,
+							if (this.finalSettlementData.settlements.settlement_turn_tables[j].turnStatus === 'waiting') {
+								let updateData = {
+									id: this.finalSettlementData.settlements.settlement_turn_tables[j].id,
+									useYn: false,
+								}
+
+								this.$store
+									.dispatch('updateSettlementTurnTable', updateData)
+									.then(() => {})
+									.catch(() => {})
 							}
 
-							this.$store
-								.dispatch('updateSettlementTurnTable', updateData)
-								.then(() => {})
-								.catch(() => {})
-						}
+							let data = {
+								prePaymentDate: this.start_date_picker[i].date,
+								turnStatus: 'waiting',
+								amount: numericPaymentAmount,
+								settlements: this.finalSettlementData.id,
+								turnTableDegree: i + '',
+								bank: this.finalSettlementData.bank,
+								bankAccount: this.finalSettlementData.accountNumber,
+								useYn: true,
+							}
 
-						let data = {
-							prePaymentDate: this.start_date_picker[i].date,
-							turnStatus: 'waiting',
-							amount: numericPaymentAmount,
-							settlements: this.finalSettlementData.id,
-							turnTableDegree: i + '',
-							bank: this.finalSettlementData.bank,
-							bankAccount: this.finalSettlementData.accountNumber,
-							useYn: true,
-						}
+							if (this.processCheckBox) {
+								let message = `${i}차 정산일은 ${
+									this.start_date_picker[i].date
+								}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+								messages.push(message)
+							}
 
-						if (this.processCheckBox) {
-							let message = `${i}차 정산일은 ${
-								this.start_date_picker[i].date
-							}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-							messages.push(message)
+							this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
 						}
-
-						this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
 					} else {
 						let data = {
 							prePaymentDate: this.start_date_picker[i].date,

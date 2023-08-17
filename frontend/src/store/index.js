@@ -46,6 +46,7 @@ import {
 	usersConnection,
 	settlementEditLogs,
 	assignments,
+	vacations,
 } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
@@ -273,6 +274,22 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: gotoWork,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		vacations({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: vacations,
 						variables: input,
 					})
 					.then(({ data }) => {

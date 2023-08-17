@@ -348,6 +348,7 @@ export default {
 				date: this.$moment().format('YYYY-MM-DD'),
 			},
 			userLists: [],
+			userIDArr: [],
 		}
 	},
 
@@ -415,10 +416,9 @@ export default {
 					let workCount = 0
 					let endWorkCount = 0
 					let holiDayCount = 0
-					let userIDArr = []
 
 					for (let i = 0; i < res.users.length; i++) {
-						userIDArr.push(res.users[i].id)
+						this.userIDArr.push(res.users[i].id)
 					}
 
 					res.users.forEach(element => {
@@ -445,7 +445,7 @@ export default {
 					this.userLists = list
 					console.log('유리', this.userLists)
 
-					console.log(userIDArr)
+					console.log(this.userIDArr)
 
 					this.allCounselor = list.length
 					this.work = workCount
