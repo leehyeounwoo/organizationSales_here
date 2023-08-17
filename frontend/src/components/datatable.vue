@@ -1639,15 +1639,7 @@
 								'hours',
 							)
 						}} -->
-						{{
-							$moment(
-								$moment().format(`YYYY-MM-DD`) +
-									' ' +
-									item.assingnmentData.end.split(':')[0] +
-									':' +
-									item.assingnmentData.end.split(':')[1],
-							).diff($moment(), 'minute') + '분'
-						}}
+						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.assingnmentData.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
 					</div>
 					<v-spacer></v-spacer>
 					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">해제</v-btn>
