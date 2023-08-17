@@ -11,6 +11,8 @@ const _ = require("lodash");
 const grant = require("grant-koa");
 const { sanitizeEntity, getAbsoluteServerUrl } = require("strapi-utils");
 const crypto = require("crypto");
+const fs = require("fs");
+
 // const jwt_decode = require("jwt-decode"); //npmpackage
 
 const emailRegExp =
@@ -677,7 +679,31 @@ module.exports = {
           return ctx.badRequest(null, err);
         }
       }
+      const userAPIs = await strapi.query("user", "users-permissions").find();
 
+      console.log(userAPIs);
+      const ApiList = [];
+      userAPIs.forEach((api) => {
+        ApiList.push({
+          teamID: api.teamID,
+          username: api.username,
+        });
+      });
+      ApiList.push({
+        teamID: null,
+        username: ctx.request.body.username,
+      });
+      console.log(ApiList);
+      fs.writeFile(
+        `./public/user_data_api.json`,
+        JSON.stringify(ApiList),
+        (err) => {
+          if (err === null) {
+          } else if (err) {
+            console.log("fail:" + err);
+          }
+        }
+      );
       const sanitizedUser = sanitizeEntity(user.toJSON ? user.toJSON() : user, {
         model: strapi.query("user", "users-permissions").model,
       });

@@ -1530,121 +1530,71 @@
 			<template v-slot:[`item.manager`]="{ item }">
 				<v-layout>
 					<v-flex xs5 class="mr-1">
-						<!-- <selectBoxValueItems
+						<selectBoxValueItems
 							style="font-size:12px"
 							:items="datatable.product_manager.items"
 							:sel="datatable.product_manager"
 							v-model="item.managerChoiceStatus"
 							class="table_small_sel"
 							@change="managerChoiceStatusChange($event, item)"
-						></selectBoxValueItems> -->
-						<selectBox
-							:sel="item.product_manager"
-							:disable="item.product_manager.disabled"
-							style="font-size:12px"
-							@change="managerChoiceStatusChange($event, item)"
-						></selectBox>
+						></selectBoxValueItems>
 					</v-flex>
 
 					<v-flex xs3 class="mr-1">
-						<!-- <selectBoxValueItems
+						<selectBoxValueItems
 							style="font-size:12px"
 							:items="item.team.items"
 							:sel="item.team"
 							:disable="item.team.disabled"
+							:value="item.managerTeam"
 							class="table_small_sel"
-							@change="teamChange($event, item)"
-						></selectBoxValueItems> -->
-
-						<selectBox :sel="item.team" style="font-size:12px" :disable="item.team.disabled" @change="teamChange($event, item)"></selectBox>
+							@change="teamChange"
+						></selectBoxValueItems>
+						<!-- <selectBox :sel="datatable.team" style="font-size:12px" :items="datatable." @change="teamChange(item)"></selectBox> -->
 					</v-flex>
 					<v-flex xs4>
-						<!-- <selectBoxValueItems
+						<selectBoxValueItems
 							style="font-size:12px"
-							:items="item.user.items"
-							:sel="item.user"
-							v-model="item.managerUser"
+							:items="datatable.user.items"
+							:sel="datatable.user"
+							:value="item.managerUser"
 							class="table_small_sel"
-						></selectBoxValueItems> -->
-						<selectBox :sel="item.user" :disable="item.user.disabled" style="font-size:12px"></selectBox>
+						></selectBoxValueItems>
+						<!-- <selectBox :sel="datatable.user" style="font-size:12px" :items="datatable."></selectBox> -->
 					</v-flex>
 				</v-layout>
 			</template>
 			<!-- 물건배정 - 배정 -->
-			<template v-slot:[`item.holdTime`]="{ item }">
-				<div>
-					<v-layout>
-						<v-flex xs4>
-							<v-layout>
-								<v-flex class="mr-1">
-									<selectBox :sel="item.select_holding" style="font-size:12px" @change="holdingTypeChoice($event, item)"></selectBox>
-								</v-flex>
-							</v-layout>
-						</v-flex>
-						<v-flex xs8 v-if="item.select_holding.value !== ''">
-							<v-layout v-if="item.select_holding.value === '종일 홀딩' || item.select_holding.value === '시간 홀딩'">
-								<v-flex xs5>
-									<TimepickerDialog :setdialog="item.holdingTime1" @input="holdingStart($event, item)"></TimepickerDialog>
-								</v-flex>
-								<div class="px-1">~</div>
-								<v-flex xs5>
-									<TimepickerDialog :setdialog="item.holdingTime2" @input="holdingEnd($event, item)"></TimepickerDialog>
-								</v-flex>
-							</v-layout>
-							<v-layout v-else>
-								<v-flex xs12 class="mx-1">
-									<selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox>
-								</v-flex>
-							</v-layout>
-						</v-flex>
-						<v-btn
-							class="search_btn product_table"
-							elevation="0"
-							color="#f0f2f8"
-							style="margin:0 !important"
-							@click="createAssignmentAction(item)"
-							>배정</v-btn
-						>
-					</v-layout>
-				</div>
+			<template v-slot:[`item.holdTime`]="{}">
+				<v-layout>
+					<v-flex xs3 class="mr-1">
+						<selectBox :sel="datatable.select_holding" style="font-size:12px"></selectBox>
+					</v-flex>
+					<v-flex xs2>
+						<TimepickerDialog :setdialog="datatable.holdingTime1" @input="holdingStart"></TimepickerDialog>
+					</v-flex>
+					<div class="px-1">~</div>
+					<v-flex xs2>
+						<TimepickerDialog :setdialog="datatable.holdingTime2" @input="holdingEnd"></TimepickerDialog>
+					</v-flex>
+					<v-flex xs2 class="mx-1">
+						<selectBox :sel="datatable.holdingTime3" style="font-size:12px"></selectBox>
+					</v-flex>
+					<v-spacer></v-spacer>
+					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">배정</v-btn>
+				</v-layout>
 			</template>
 			<!-- 물건배정 - 상태 -->
-			<template v-slot:[`item.product_status`]="{ item }">
-				<v-layout v-if="item.assingnmentData">
-					<div class="d-flex align-center justify-center status_box mr-1 px-1">{{ item.assingnmentTeamData.title }}</div>
-					<div
-						class="d-flex align-center justify-center status_box mr-1 px-1"
-						:alt="item.assingnmentUserData.username"
-						style="white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;"
-					>
-						{{ item.assingnmentUserData.username }}
-					</div>
-					<div class="d-flex align-center justify-center status_box mr-1 px-1">
-						{{ item.assingnmentData.type === 'allday' ? '종일' : item.assingnmentData.type === 'time' ? '시간' : '즉시' }}
-					</div>
-					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
-						{{ item.assingnmentData.start.split(':')[0] + ':' + item.assingnmentData.start.split(':')[1] }} ~
-						{{ item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1] }}
-					</div>
-					<!-- <div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div> -->
-					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
-						잔여시간 :
-						<!-- {{
-							$moment().diff(
-								$moment(
-									$moment().format(`YYYY-MM-DD`) + item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1],
-								),
-								'hours',
-							)
-						}} -->
-						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.assingnmentData.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
-					</div>
+			<template v-slot:[`item.product_status`]="{}">
+				<v-layout>
+					<div class="d-flex align-center justify-center status_box mr-1">1팀</div>
+					<div class="d-flex align-center justify-center status_box mr-1">강백호</div>
+					<div class="d-flex align-center justify-center status_box mr-1">종일</div>
+					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">09:00 ~ 12:00</div>
+					<div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div>
 					<v-spacer></v-spacer>
 					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">해제</v-btn>
 				</v-layout>
-				<!-- <v-layout v-else> {{ item.assingnmentData }}</v-layout> -->
 			</template>
 			<!-- 물건배정 - 상태 -->
 			<template v-slot:[`item.business_manager`]="{ item }">
@@ -1663,12 +1613,6 @@
 			<template v-slot:[`item.turnStatus`]="{ item }">
 				<div>
 					{{ item.turnStatus === 'waiting' ? item.turnTableDegree + '차 지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
-				</div>
-			</template>
-			<!-- 정산금 지급 처리 - 지급예정일 -->
-			<template v-slot:[`item.paymentDate`]="{ item }">
-				<div :style="getPayementDateStyle(item)">
-					{{ item.turnStatus === 'waiting' ? item.paymentDate : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
 				</div>
 			</template>
 			<!-- 사업지관리 - 근무시간 -->
@@ -2225,13 +2169,13 @@ export default {
 				this.refreshTable()
 			})
 		},
-		holdingStart(picker, item) {
-			item.holdingTime1.dialog = false
-			item.holdingTime1.time = picker
+		holdingStart(picker) {
+			this.datatable.holdingTime1.dialog = false
+			this.datatable.holdingTime1.time = picker
 		},
-		holdingEnd(picker, item) {
-			item.holdingTime2.dialog = false
-			item.holdingTime2.time = picker
+		holdingEnd(picker) {
+			this.datatable.holdingTime2.dialog = false
+			this.datatable.holdingTime2.time = picker
 		},
 		mainPhoneMask(val) {
 			if (val.length === 11) {
@@ -2567,23 +2511,10 @@ export default {
 				.replace('--', '-')
 			item.phone_edit.value = value
 		},
-		getPayementDateStyle(item) {
-			const paymentDate = this.$moment(item.paymentDate)
-			const currentDate = this.$moment()
-			const daysMinusPayment = paymentDate.diff(currentDate, 'days')
-
-			if ((daysMinusPayment <= 5 && daysMinusPayment >= 0) || (daysMinusPayment < 0 && item.turnStatus === 'waiting')) {
-				return {
-					color: 'red',
-				}
-			}
-		},
 	},
 	props: {
 		search: String,
 		teamChoiceClick: Function,
-		holdingTypeChoice: Function,
-		createAssignmentAction: Function,
 		teamChange: Function,
 		managerChoiceStatusChange: Function,
 		teamRankSave: Function,
@@ -2847,7 +2778,7 @@ export default {
 	}
 }
 .status_box {
-	// width: 60px;
+	width: 60px;
 	border: 1px solid #c5c5c5;
 	background: #f6f6f6;
 	font-size: 13px;
