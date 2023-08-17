@@ -75,13 +75,13 @@
 												<v-flex xs6 style="background-color:#f99f9f; border-right:1px solid #a5a4a4;"
 													>{{
 														d.gotoworks.filter(x => x.date === hd.text)[0].startWork
-															? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].startWork).format('HH:mm')
+															? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].startWork)._i.slice(0, 5)
 															: '-'
 													}}
 												</v-flex>
 												<v-flex xs6 style="background-color:#D4D3FC;">{{
 													d.gotoworks.filter(x => x.date === hd.text)[0].endWork
-														? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].endWork).format('HH:mm')
+														? $moment(d.gotoworks.filter(x => x.date === hd.text)[0].endWork)._i.slice(0, 5)
 														: '-'
 												}}</v-flex>
 											</v-layout>
@@ -154,12 +154,20 @@ export default {
 	},
 	async created() {
 		await this.me()
-		this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
+		await this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
 		let data = {
 			data_gte: this.start_date_picker.date,
 			date_lte: this.end_date_picker.date,
+			roleName: 'Counselor',
 		}
 		await this.viewUsers(data)
+		let data2 = {
+			data_gte: this.start_date_picker.date,
+			date_lte: this.end_date_picker.date,
+			userID: this.userIDArr,
+			roleName: 'Counselor',
+		}
+		await this.gotoworksView(data2)
 	},
 	data() {
 		return {
@@ -188,7 +196,7 @@ export default {
 			},
 			search_project: '',
 			searchsel: {
-				value: '최근 30일',
+				value: '최근 7일',
 				errorMessage: '',
 				hideDetail: true,
 				items: ['오늘', '어제', '이번 주', '지난 주', '최근 7일', '최근 14일', '최근 30일', '이번 달', '지난 달'],
@@ -207,7 +215,7 @@ export default {
 			},
 			start_date_picker: {
 				date: this.$moment()
-					.subtract(30, 'days')
+					.subtract(7, 'days')
 					.format('YYYY-MM-DD'),
 			},
 			end_date_picker: {
@@ -233,6 +241,8 @@ export default {
 			},
 			selected: [],
 			excelData: [],
+			userLists: [],
+			userIDArr: [],
 		}
 	},
 	methods: {
@@ -277,51 +287,75 @@ export default {
 				return '출근'
 			}
 		},
-		click_search() {
+		async click_search() {
 			this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
 			let data = {
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
+				roleName: 'Counselor',
 			}
 			if (this.searchsel1.value === '상담사 이름') {
 				data.name = this.search_project
 			} else {
 				data.phone = this.search_project
 			}
-
-			this.viewUsers(data)
+			let data2 = {
+				date_gte: this.start_date_picker.date,
+				date_lte: this.end_date_picker.date,
+				userID: this.userIDArr,
+			}
+			await this.viewUsers(data)
+			await this.gotoworksView(data2)
 		},
 
 		timeCheck(start, end) {
-			if (!isNaN(start) && !isNaN(end)) {
-				const moment = require('moment')
+			const moment = require('moment')
+
+			let startData = start._i !== start._i ? '-' : start._i.slice(0, 5)
+			let endData = end._i !== end._i ? '-' : end._i.slice(0, 5)
+
+			if (startData !== '-' && endData !== '-') {
 				let timeData = ''
-				let hour = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() / 60)
-				let minute = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() % 60)
+				const startTime = moment(startData, 'HH:mm')
+				const endTime = moment(endData, 'HH:mm')
+
+				const diffDuration = moment.duration(endTime.diff(startTime))
+
+				const hour = parseInt(diffDuration.asMinutes() / 60)
+
+				const minute = parseInt(diffDuration.asMinutes() % 60)
+
 				if (minute === 0) {
 					timeData = hour + '시간'
 				} else {
-					timeData = hour + '시간' + minute + '분'
+					timeData = hour + '시간 ' + minute + '분'
 				}
+
 				return timeData
 			} else {
 				return '-'
 			}
 		},
 		allTimeCheck(gotoworks) {
+			const moment = require('moment')
+
 			if (gotoworks && gotoworks.length > 0) {
-				const moment = require('moment')
 				let totalMinutes = 0
 
 				for (const gw of gotoworks) {
 					if (gw.status !== 'vacation') {
-						let minutes = moment.duration(this.$moment(gw.endWork).diff(this.$moment(gw.startWork))).asMinutes()
-						totalMinutes += minutes
+						const startWorkMoment = moment(gw.startWork, 'HH:mm')
+						const endWorkMoment = moment(gw.endWork, 'HH:mm')
+						const minutes = moment.duration(endWorkMoment.diff(startWorkMoment)).asMinutes()
+
+						if (!isNaN(minutes)) {
+							totalMinutes += minutes
+						}
 					}
 				}
 
 				const hours = Math.floor(totalMinutes / 60)
-				const formattedTime = `${hours}Hours`
+				const formattedTime = `${hours} Hours`
 
 				return formattedTime
 			} else {
@@ -396,7 +430,7 @@ export default {
 					.format('YYYY-MM-DD')
 			}
 		},
-		viewUsers(data) {
+		async viewUsers(data) {
 			this.$store.state.loading = true
 			if (this.search_project) {
 				data.username = this.search_project
@@ -404,39 +438,79 @@ export default {
 				data
 			}
 
-			this.$store
+			await this.$store
 				.dispatch('users', data)
 				.then(res => {
+					let list = []
 					console.log(res)
+					this.userIDArr = []
+					for (let i = 0; i < res.users.length; i++) {
+						this.userIDArr.push(res.users[i].id)
+					}
+					console.log(this.userIDArr)
 					for (let index = 0; index < res.users.length; index++) {
 						const element = res.users[index]
-						element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
+						// element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
 
-						let num1 = element.gotoworks.filter(x => x.status === 'vacation').length
-						let num2 = element.gotoworks.filter(x => x.status === 'morningVacation' || x.status === 'afternoonVacation').length
-						element.vacationLength = num1 + num2 * 0.5
+						// let num1 = element.gotoworks.filter(x => x.status === 'vacation').length
+						// let num2 = element.gotoworks.filter(x => x.status === 'morningVacation' || x.status === 'afternoonVacation').length
+						// element.vacationLength = num1 + num2 * 0.5
+						element.gotoworks = []
 						element.rangeDate = this.start_date_picker.date + '~' + this.end_date_picker.date
 						// if (element.gotoworks.length !== 0) {
-						for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
-							const e = this.table.headers.slice(2, this.table.headers.length)[i]
-							if (element.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
-								element['data' + i] = this.workStatus(
-									element.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
-								)
-							} else {
-								element['data' + i] = '-'
-							}
-						}
+						// for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
+						// 	const e = this.table.headers.slice(2, this.table.headers.length)[i]
+						// 	if (element.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
+						// 		element['data' + i] = this.workStatus(
+						// 			element.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
+						// 		)
+						// 	} else {
+						// 		element['data' + i] = '-'
+						// 	}
 						// }
+						// element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
+
+						list.push(element)
 					}
 					this.table.items = res.users
-					console.log(this.table.items)
 					this.$store.state.loading = false
+					this.userLists = list
 				})
 				.catch(err => {
 					console.log({ err })
 					this.$store.state.loading = false
 				})
+		},
+		async gotoworksView(data2) {
+			await this.$store.dispatch('gotoWork', data2).then(res => {
+				res.gotoworks.forEach(el => {
+					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
+					this.userLists[workIndex]['gotoworks'].push(el)
+
+					let num1 = res.gotoworks.filter(x => x.status === 'vacation').length
+					let num2 = res.gotoworks.filter(x => x.status === 'morningVacation' || x.status === 'afternoonVacation').length
+					let num3 = res.gotoworks.filter(x => x.status === 'endWork').length
+					this.userLists[workIndex]['amount'] = num3
+					this.userLists[workIndex]['vacationLength'] = num1 + num2 * 0.5
+
+					if (res.gotoworks.length !== 0) {
+						for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
+							const e = this.table.headers.slice(2, this.table.headers.length)[i]
+							if (res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
+								this.userLists[workIndex]['data' + i] = this.workStatus(
+									res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
+								)
+							} else {
+								this.userLists[workIndex]['data' + i] = '-'
+							}
+						}
+					}
+				})
+
+				console.log('유리', this.userLists)
+				this.table.items = this.userLists
+				console.log('디테', this.table.items)
+			})
 		},
 		headerCheckAction(startDate, endDate) {
 			let count = this.$moment.duration(this.$moment(endDate).diff(this.$moment(startDate))).asDays() + 1

@@ -375,8 +375,8 @@ export default {
 			roleName: 'Counselor',
 			userID: this.userIDArr,
 		}
-		await this.vacationView(input3)
 		await this.gotoworksView(input2)
+		await this.vacationView(input3)
 		this.$store.state.loading = false
 	},
 	mounted() {},
@@ -452,9 +452,6 @@ export default {
 						this.table.page = input.page
 					})
 					this.userLists = list
-					console.log('유리', this.userLists)
-
-					console.log(this.userIDArr)
 
 					this.allCounselor = list.length
 					this.work = workCount
@@ -506,15 +503,6 @@ export default {
 					if (element2.startWork && element2.endWork) {
 						this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
 					}
-					// if (element2.status === 'startWork') {
-					// 	workCount = workCount + 1
-					// }
-					// if (element2.status === 'endWork') {
-					// 	endWorkCount = endWorkCount + 1
-					// }
-					// if (element2.status === 'afternoonVacation' || element2.status === 'morningVacation' || element2.status === 'vacation') {
-					// 	holiDayCount = holiDayCount + 1
-					// }
 
 					this.table.items = this.userLists
 				})
