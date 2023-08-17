@@ -368,6 +368,14 @@ export default {
 			date: this.$moment().format('YYYY-MM-DD'),
 			roleName: 'Counselor',
 		}
+		let input3 = {
+			start: 0,
+			limit: 10,
+			date: this.$moment().format('YYYY-MM-DD'),
+			roleName: 'Counselor',
+			userID: this.userIDArr,
+		}
+		await this.vacationView(input3)
 		await this.gotoworksView(input2)
 		this.$store.state.loading = false
 	},
@@ -508,17 +516,27 @@ export default {
 					// if (element2.status === 'afternoonVacation' || element2.status === 'morningVacation' || element2.status === 'vacation') {
 					// 	holiDayCount = holiDayCount + 1
 					// }
-					if (element2.vacation !== null) {
-						this.userLists[workIndex]['vacationData'] = element2.vacation
-						this.userLists[workIndex]['vacation'] = element2.vacation.vacationStatus
-					} else {
-						this.userLists[workIndex]['vacation'] = '-'
-					}
+
 					this.table.items = this.userLists
 					console.log('최종', this.table.items)
 				})
 			})
 		},
+
+		async vacationView(item) {
+			console.log(item)
+			await this.$store.dispatch('vacations', item).then(res => {
+				res.vacations.forEach(el => {
+					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
+
+					this.userLists[workIndex]['vacationStart'] = el.start
+					this.userLists[workIndex]['vacationEnd'] = el.end
+					this.userLists[workIndex]['vacationReason'] = el.vacationReason
+					this.userLists[workIndex]['vacation'] = el.vacationStatus
+				})
+			})
+		},
+
 		async pagination(item) {
 			if (item.page > this.table.page) {
 				// 다음 페이지
