@@ -424,6 +424,7 @@ export default {
 					let workCount = 0
 					let endWorkCount = 0
 					let holiDayCount = 0
+					this.userIDArr = []
 
 					for (let i = 0; i < res.users.length; i++) {
 						this.userIDArr.push(res.users[i].id)
@@ -476,8 +477,6 @@ export default {
 
 		async gotoworksView(input2) {
 			await this.$store.dispatch('gotoWork', input2).then(res2 => {
-				console.log(res2)
-				console.log(this.userLists)
 				res2.gotoworks.forEach(element2 => {
 					let workIndex = this.userLists.findIndex(item => item.id === element2.userID)
 					this.userLists[workIndex]['gotoworksAll'] = element2
@@ -518,7 +517,6 @@ export default {
 					// }
 
 					this.table.items = this.userLists
-					console.log('최종', this.table.items)
 				})
 			})
 		},
@@ -526,13 +524,18 @@ export default {
 		async vacationView(item) {
 			console.log(item)
 			await this.$store.dispatch('vacations', item).then(res => {
+				console.log('res', res)
+				console.log(this.userIDArr)
 				res.vacations.forEach(el => {
+					console.log(el, '이엘')
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
 					this.userLists[workIndex]['vacationStart'] = el.start
 					this.userLists[workIndex]['vacationEnd'] = el.end
 					this.userLists[workIndex]['vacationReason'] = el.vacationReason
 					this.userLists[workIndex]['vacation'] = el.vacationStatus
+					this.table.items = this.userLists
+					console.log('최종', this.table.items)
 				})
 			})
 		},
@@ -593,8 +596,18 @@ export default {
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 			}
+			let input3 = {
+				start: 0,
+				limit: 10,
+				date: this.$moment(this.date_picker.date)
+					.subtract(1, 'd')
+					.format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		async click_date_next() {
@@ -607,9 +620,18 @@ export default {
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 			}
-
+			let input3 = {
+				start: 0,
+				limit: 10,
+				date: this.$moment(this.date_picker.date)
+					.add(1, 'd')
+					.format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		async click_date_now() {
@@ -620,8 +642,16 @@ export default {
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 			}
+			let input3 = {
+				start: 0,
+				limit: 10,
+				date: this.$moment().format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
@@ -631,6 +661,14 @@ export default {
 			let input2 = {
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 			}
+			let input3 = {
+				start: 0,
+				limit: 10,
+				date: this.$moment().format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
+			await this.vacationView(input3)
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			this.date = this.$moment(this.date_picker.date)
