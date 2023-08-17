@@ -253,10 +253,14 @@
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
 							<div class="pdfFileBox mt-1" @click="pdfFileUpload">
-								<label style="display: block ; font-size: 12px; color: black; cursor:pointer;">
+								<label
+									style="display: flex; justify-content: center; align-items: center; overflow: hidden; font-size: 12px; color: black; cursor:pointer;"
+								>
 									{{
 										pdfLists.length > 0 && pdfLists[degree - 1] && pdfLists[degree - 1].numberList
-											? pdfLists[degree - 1].numberList.name
+											? pdfLists[degree - 1].numberList.name.length > 8
+												? pdfLists[degree - 1].numberList.name.substring(0, 8) + '...'
+												: pdfLists[degree - 1].numberList.name
 											: ''
 									}}
 								</label>
@@ -1589,14 +1593,20 @@ export default {
 					return
 				}
 			}
+
 			if (!this.datatableInfoFirst) {
 				for (let i = 0; i < 5; i++) {
-					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
-					this.paymentRate[`charge${i + 1}`].txtField.readonly = true
-					this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
-					this.paymentAmount[`charge${i + 1}`].txtField.value = ''
-					this.paymentRate[`charge${i + 1}`].txtField.value = ''
-					this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+					if (
+						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus !== 'complete' &&
+						Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time
+					) {
+						this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+						this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+						this.paymentAmount[`charge${i + 1}`].txtField.value = ''
+						this.paymentRate[`charge${i + 1}`].txtField.value = ''
+						this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+					}
 				}
 
 				for (let j = 0; j < time; j++) {
@@ -1606,9 +1616,14 @@ export default {
 				}
 			} else {
 				for (let i = 0; i < 5; i++) {
-					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
-					this.paymentRate[`charge${i + 1}`].txtField.readonly = true
-					this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+					if (
+						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus !== 'complete' &&
+						Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time
+					) {
+						this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+						this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+					}
 				}
 
 				for (let j = 0; j < time; j++) {
