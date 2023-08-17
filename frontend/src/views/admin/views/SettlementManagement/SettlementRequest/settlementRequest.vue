@@ -303,7 +303,6 @@ export default {
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.settlementTable.origin_items))
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
-				console.log()
 				item = item.filter(el => el.teamID === this.searchsel1.value.value)
 			}
 			if (this.searchsel.value.value && this.searchsel.value.value !== 'all') {

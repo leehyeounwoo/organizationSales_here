@@ -388,13 +388,14 @@ export default {
 					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '7%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
-					{ text: '팀', sortable: false, value: 'teamID', align: 'center', width: '7%' },
+					{ text: '팀', sortable: false, value: 'teamText', align: 'center', width: '7%' },
 					{ text: '승인일', sortable: false, value: 'settlementUpdated_at', align: 'center', width: '7%' },
 					{ text: '상태', sortable: false, value: 'turnStatus', align: 'center', width: '8%' },
 					{ text: '지급예정일', sortable: false, value: 'paymentDate', align: 'center', width: '8%' },
 					{ text: '비고', sortable: false, value: 'detailEtc2', align: 'center', width: '3%' },
 				],
 				items: [],
+				origin_items: [],
 				select_items: [],
 				json_fields: {
 					직원명: 'data1',
@@ -418,7 +419,11 @@ export default {
 				value: '',
 				errorMessage: '',
 				hideDetail: true,
-				items: [],
+				items: [
+					{ title: '전체', value: 'all' },
+					{ title: '지급대기', value: 'waiting' },
+					{ title: '지급완료', value: 'complete' },
+				],
 				outlined: true,
 				placeholder: '상태',
 				returnObject: true,
@@ -851,6 +856,7 @@ export default {
 
 	async created() {
 		await this.me()
+		await this.searchSelect()
 		const settlementViewData = {
 			settlementStatus: 'agree',
 		}
@@ -877,6 +883,32 @@ export default {
 	mounted() {},
 
 	methods: {
+		SearchBiz() {
+			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
+			console.log(this.searchsel1.value.value)
+			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
+				item = item.filter(el => el.teamID === this.searchsel1.value.value)
+			}
+			if (this.searchsel.value.value && this.searchsel.value.value !== 'all') {
+				item = item.filter(el => el.turnStatus === this.searchsel.value.value)
+			}
+			if (this.search_project) {
+				item = item.filter(el => el.username.indexOf(this.search_project) !== -1)
+			}
+			this.processTable.items = item
+		},
+		async searchSelect() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.$store.dispatch('teams', data).then(res => {
+				let item = [{ title: '전체', value: 'all' }]
+				res.teams.forEach(el => {
+					item.push({ title: el.title, value: el.id })
+				})
+				this.searchsel1.items = item
+			})
+		},
 		currecy_locale_string(e, idx) {
 			e.target.value = e.target.value.toLocaleString()
 			this.paymentAmount[`charge${idx + 1}`].txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -898,6 +930,7 @@ export default {
 			}
 
 			this.processTable.items = this.list
+			this.processTable.origin_items = JSON.parse(JSON.stringify(this.list))
 			console.log(this.processTable.items)
 		},
 
@@ -955,6 +988,12 @@ export default {
 								items.phoneNumber = element.phoneNumber
 								items.settlementPhoneNumber = element.salesPhoneNumber
 								items.teamID = element.teamID
+								let teamText = this.searchsel1.items.filter(el => el.value === String(items.teamID))
+								if (items.teamID && teamText.length > 0) {
+									items.teamText = teamText[0].title
+								} else {
+									items.teamText = ''
+								}
 								items.bank = element.bank
 								items.accountNumber = element.accountNumber
 							}
