@@ -325,34 +325,41 @@ export default {
 			console.log(this.setdialog.editData)
 			this.$store.state.loading = true
 			if (this.rightInfoBottom[0].radio === 'agree') {
-				let input = {
-					vacationType: this.setdialog.editData.vacationData.vacationType,
-					vacationDate: this.setdialog.editData.vacationData.vacationDate,
-					user: this.setdialog.editData.id,
-					vacation: this.setdialog.editData.vacationData.id,
-					date: this.$moment().format('YYYY-MM-DD'),
-					status: 'vacation',
+				const startDate = this.$moment(this.setdialog.editData.vacationStart)
+				const endDate = this.$moment(this.setdialog.editData.vacationEnd)
+				const currentDate = startDate.clone()
+				const gotoworkID = []
+
+				while (currentDate <= endDate) {
+					let input = {
+						date: currentDate.format('YYYY-MM-DD'),
+						userID: this.setdialog.editData.id,
+						status: 'vacation',
+						vacation: this.setdialog.editData.vacationID,
+					}
+
+					await this.$store.dispatch('createGotowork', input).then(res => {
+						console.log(res)
+						gotoworkID.push(res.createGotowork.gotowork.id)
+					})
+					currentDate.add(1, 'day')
 				}
 
-				await this.$store.dispatch('createGotowork', input).then(res => {
-					console.log(res)
-					let input2 = {
-						id: this.setdialog.editData.vacationData.id,
-						vacationStatus: 'agree',
-						gotowork: res.createGotowork.gotowork.id,
-						adminId: this.$store.state.meData.id,
-					}
-					console.log(input2)
-					this.$store.dispatch('updateVacation', input2).then(() => {
-						this.sweetDialog.open = false
-						this.setdialog.dialog = false
-						this.$emit('update')
-						this.$store.state.loading = false
-					})
+				let input2 = {
+					id: this.setdialog.editData.vacationID,
+					vacationStatus: 'agree',
+					gotoworks: gotoworkID,
+					adminInfo: this.$store.state.meData,
+				}
+				this.$store.dispatch('updateVacation', input2).then(() => {
+					this.sweetDialog.open = false
+					this.setdialog.dialog = false
+					this.$emit('update')
+					this.$store.state.loading = false
 				})
 			} else {
 				let input2 = {
-					id: this.setdialog.editData.vacationData.id,
+					id: this.setdialog.editData.vacationID,
 					rejectComment: this.rightInfoBottom[1].value,
 					adminInfo: this.$store.state.meData,
 					vacationStatus: 'disagree',
@@ -400,22 +407,22 @@ export default {
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
 						this.leftInfoTop[3].value = this.setdialog.editData.title ? this.setdialog.editData.title : '-'
-						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:MM')
+						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:MM')
 						this.leftInfoTop[5].value = this.setdialog.editData.team
 
-						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationData.created_at).format('YYYY-MM-DD HH:mm:ss')
+						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:mm:ss')
 						this.rightInfoTop[1].value =
-							this.setdialog.editData.vacationData.vacationType === 'vacation'
+							this.setdialog.editData.vacationType === 'vacation'
 								? '휴가'
-								: this.setdialog.editData.vacationData.vacationType === 'afternoonVacation'
+								: this.setdialog.editData.vacationType === 'afternoonVacation'
 								? '오후 반차'
 								: '오전 반차'
-						this.rightInfoTop[2].value = this.$moment(this.setdialog.editData.vacationData.start).format('YYYY-MM-DD')
-						this.rightInfoTop[2].value2 = this.$moment(this.setdialog.editData.vacationData.end).format('YYYY-MM-DD')
-						this.rightInfoTop[3].value = this.setdialog.editData.vacationData.vacationReason
-						if (this.setdialog.editData.vacationData.vacationStatus !== 'waiting') {
-							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationData.vacationStatus
-							this.rightInfoBottom[1].value = this.setdialog.editData.vacationData.rejectComment
+						this.rightInfoTop[2].value = this.$moment(this.setdialog.editData.vacationStart).format('YYYY-MM-DD')
+						this.rightInfoTop[2].value2 = this.$moment(this.setdialog.editData.vacationEnd).format('YYYY-MM-DD')
+						this.rightInfoTop[3].value = this.setdialog.editData.vacationReason
+						if (this.setdialog.editData.vacation !== 'waiting') {
+							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationStatus
+							this.rightInfoBottom[1].value = this.setdialog.editData.rejectComment
 							this.rightInfoBottom[1].txtfield.readonly = true
 						} else {
 							this.rightInfoBottom[0].radio = 'disagree'

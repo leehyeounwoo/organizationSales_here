@@ -66,8 +66,10 @@ export const multifileUpload = gql`
 	}
 `
 export const createGotowork = gql`
-	mutation createGotowork($date: Date, $userID: String, $startWork: Time, $endWork: Time, $status: ENUM_GOTOWORKS_STATUS) {
-		createGotowork(input: { data: { date: $date, userID: $userID, startWork: $startWork, endWork: $endWork, status: $status } }) {
+	mutation createGotowork($date: Date, $userID: String, $startWork: Time, $endWork: Time, $status: ENUM_GOTOWORKS_STATUS, $vacation: ID) {
+		createGotowork(
+			input: { data: { date: $date, userID: $userID, startWork: $startWork, endWork: $endWork, status: $status, vacation: $vacation } }
+		) {
 			gotowork {
 				id
 				status
@@ -75,6 +77,9 @@ export const createGotowork = gql`
 				endWork
 				date
 				userID
+				vacation {
+					id
+				}
 			}
 		}
 	}
@@ -148,7 +153,7 @@ export const deleteProduct = gql`
 export const updateVacation = gql`
 	mutation updateVacation(
 		$id: ID!
-		$gotowork: ID
+		$gotoworks: [ID]
 		$vacationStatus: ENUM_VACATION_VACATIONSTATUS
 		$adminInfo: JSON
 		$vacationType: String
@@ -160,7 +165,7 @@ export const updateVacation = gql`
 				data: {
 					vacationStatus: $vacationStatus
 					adminInfo: $adminInfo
-					gotowork: $gotowork
+					gotoworks: $gotoworks
 					vacationType: $vacationType
 					rejectComment: $rejectComment
 				}
@@ -168,7 +173,7 @@ export const updateVacation = gql`
 		) {
 			vacation {
 				id
-				gotowork {
+				gotoworks {
 					id
 				}
 			}

@@ -534,6 +534,10 @@ export default {
 					this.userLists[workIndex]['vacationEnd'] = el.end
 					this.userLists[workIndex]['vacationReason'] = el.vacationReason
 					this.userLists[workIndex]['vacation'] = el.vacationStatus
+					this.userLists[workIndex]['vacationType'] = el.vacationType
+					this.userLists[workIndex]['vacationCreated_at'] = el.created_at
+					this.userLists[workIndex]['vacationID'] = el.id
+
 					this.table.items = this.userLists
 					console.log('최종', this.table.items)
 				})
