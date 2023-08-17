@@ -154,11 +154,12 @@ export const vacations = gql`
 `
 
 export const teams = gql`
-	query teams($idArr: [ID], $useYn: Boolean) {
-		teams(where: { id: $idArr, useYn: $useYn }) {
+	query teams($idArr: [ID], $useYn: Boolean, $businessID: String) {
+		teams(where: { id: $idArr, useYn: $useYn, businessID: $businessID }) {
 			id
 			useYn
 			title
+			businessID
 		}
 	}
 `
