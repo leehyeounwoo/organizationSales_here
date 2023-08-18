@@ -61,7 +61,7 @@
 					<v-flex class="notice_right_table" xs3>
 						정산요청이력
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2" style="height:163px">
+					<v-flex xs10 class="notice_right_table2" style="height:163px; overflow-y: auto;">
 						<v-layout justify-center align-center>
 							<v-flex xs5 class="client_table_style" style="border-right: 1px solid #C8C8C8">
 								<span class="borderRightSubFont">날짜</span>
@@ -295,7 +295,6 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
-		console.log(this.list)
 	},
 	mounted() {},
 
@@ -333,7 +332,7 @@ export default {
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-				console.log(element)
+
 				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
 
 				element.teamID = `${teamTitle}`
@@ -342,15 +341,12 @@ export default {
 
 			this.settlementTable.items = this.list
 			this.settlementTable.origin_items = JSON.parse(JSON.stringify(this.list))
-			console.log(this.settlementTable.items)
 		},
 
 		async settlementView(settlementData) {
 			await this.$store.dispatch('settlements', settlementData).then(res => {
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
-				console.log(this.settlementTable.total)
 				res.settlements.forEach(element => {
-					console.log(element)
 					let listData = {}
 					listData.settlements = element
 					listData.id = element.id
@@ -361,7 +357,6 @@ export default {
 					listData.userID = element.userID
 					listData.ProductID = element.ProductID
 					this.list.push(listData)
-					console.log(this.list)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
 				this.productArrData = res.settlements.filter(x => x.ProductID).map(x => x.ProductID)
@@ -373,7 +368,6 @@ export default {
 				.dispatch('users', usersViewData)
 				.then(res => {
 					this.userData = res.users
-					console.log(this.userData)
 					res.users.forEach(element => {
 						for (let items of this.list) {
 							if (items.userID === element.id) {
@@ -392,7 +386,6 @@ export default {
 						}
 					})
 					this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
-					console.log(this.teamArrData)
 					this.rankArrData = res.users.filter(x => x.rankId).map(x => x.rankId)
 				})
 				.catch(err => {
@@ -405,7 +398,6 @@ export default {
 				.dispatch('teams', teamsViewData)
 				.then(res => {
 					this.teamData = res.teams
-					console.log(res.teams)
 				})
 				.catch(err => {
 					console.log(err)
@@ -425,14 +417,12 @@ export default {
 		},
 
 		async productsView(productsViewData) {
-			await this.$store.dispatch('products', productsViewData).then(
-				res =>
-					res.products.forEach(element => {
-						let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
-						listData.products = element
-						listData.product = element.housingType + element.dong + '동' + element.ho + '호'
-					}),
-				console.log(this.list),
+			await this.$store.dispatch('products', productsViewData).then(res =>
+				res.products.forEach(element => {
+					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
+					listData.products = element
+					listData.product = element.housingType + element.dong + '동' + element.ho + '호'
+				}),
 			)
 		},
 
@@ -634,7 +624,7 @@ export default {
 			this.attachmentNameList = this.attachmentNameList.filter(item => item.id !== val)
 		},
 
-		async click_confirm() {
+		click_confirm() {
 			this.$store.state.loading = true
 			let li = []
 			for (let item of this.attachmentNameList) {
@@ -647,7 +637,7 @@ export default {
 					settlementStatus: 'disagree',
 					updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
 					adminName: this.$store.state.meData.username,
-					comment: this.sweetDialog_info.rejectionReason[0].value,
+					rejectComment: this.sweetDialog_info.rejectionReason[0].value,
 					attachID: li,
 				}
 				this.$store
@@ -659,7 +649,7 @@ export default {
 					editStatus: 'disagree',
 					editDetail: this.finalSettlementData.degree + '차 요청',
 				}
-				this.$store.dispatch('createSettlementEditLogs', input2).then(() => {
+				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
 					this.sweetDialog_info.open = false
 					this.$store.state.loading = true
 					this.saveDialogStatus.title = `반려 처리 완료`
@@ -667,6 +657,30 @@ export default {
 					this.saveDialogStatus.buttonType = 'oneBtn'
 					this.saveDialogStatus.cancelBtnText = '확인'
 					this.saveDialogStatus.open = true
+					this.settlementTable.items = []
+					this.list = []
+					const settlementData = {
+						date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+					}
+					await this.settlementView(settlementData)
+					const usersViewData = {
+						idArr: this.userArrData,
+						roleName: 'Counselor',
+					}
+					await this.usersView(usersViewData)
+					const productsViewData = {
+						idArr: this.productArrData,
+					}
+					await this.productsView(productsViewData)
+					const teamsViewData = {
+						idArr: this.teamArrData,
+					}
+					await this.teamsView(teamsViewData)
+					const ranksViewData = {
+						idArr: this.rankArrData,
+					}
+					await this.ranksView(ranksViewData)
+					await this.dataSetting()
 					this.$store.state.loading = false
 				})
 			}
@@ -691,7 +705,7 @@ export default {
 					editStatus: 'agree',
 					editDetail: this.finalSettlementData.degree + '차 요청',
 				}
-				this.$store.dispatch('createSettlementEditLogs', input2).then(() => {
+				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
 					this.sweetDialog_info.open = false
 					this.$store.state.loading = true
 					this.saveDialogStatus.title = `승인 처리 완료`
@@ -699,6 +713,31 @@ export default {
 					this.saveDialogStatus.buttonType = 'oneBtn'
 					this.saveDialogStatus.cancelBtnText = '확인'
 					this.saveDialogStatus.open = true
+					this.settlementTable.items = []
+					this.list = []
+					const settlementData = {
+						date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+					}
+					await this.settlementView(settlementData)
+					const usersViewData = {
+						idArr: this.userArrData,
+						roleName: 'Counselor',
+					}
+					await this.usersView(usersViewData)
+					const productsViewData = {
+						idArr: this.productArrData,
+					}
+					await this.productsView(productsViewData)
+					const teamsViewData = {
+						idArr: this.teamArrData,
+					}
+					await this.teamsView(teamsViewData)
+					const ranksViewData = {
+						idArr: this.rankArrData,
+					}
+					await this.ranksView(ranksViewData)
+					await this.dataSetting()
+					this.$store.state.loading = false
 					this.$store.state.loading = false
 				})
 			}

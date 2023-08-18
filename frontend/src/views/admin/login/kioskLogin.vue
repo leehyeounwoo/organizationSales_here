@@ -7,23 +7,34 @@
 			</v-flex> -->
 			<!-- CDP -->
 
-			<v-layout class="login_background" flex-wrap justify-center align-center>
+			<v-layout class="" flex-wrap justify-center align-center>
 				<v-flex xs6 v-if="nowWidth > 1090">
 					<div>
 						<v-img height="100vh" src="@/assets/images/login_bg2.png">
-							<div class="text-left" style="margin: 105px 0 200px 125px;">
-								<span class="loginMainTitle">
-									Members <br />
-									Here
-								</span>
-								<span class="loginSubTitle">
-									<br />
-									Sales force management system
-								</span>
-							</div>
-							<div class="text-left" style="margin-left: 125px; margin-bottom: 123.4px;">
-								<v-img style="max-width: 400px;" src="/image/counselor_login_1.png"></v-img>
-							</div>
+							<!-- <div class="layout mb-12 ml-12 " style="height:50vh;"> -->
+							<v-layout style="height:50vh;" align-center>
+								<v-flex ml-12>
+									<v-layout>
+										<span class="loginMainTitle ml-12">
+											Members <br />
+											Here
+										</span>
+									</v-layout>
+									<v-layout>
+										<span class="loginSubTitle ml-12">
+											<!-- <br /> -->
+											Sales force management system
+										</span>
+									</v-layout>
+								</v-flex>
+							</v-layout>
+							<!-- </div> -->
+							<!-- <div class="text-left ml-12 mb-12" style=""> -->
+							<!-- margin-left: 125px; margin-bottom: 123.4px; -->
+							<v-layout align-center style="height: 50vh;" class="mb-12 ml-12">
+								<v-img class="ml-12" style="max-width: 20vw;" src="/image/counselor_login_1.png"></v-img>
+							</v-layout>
+							<!-- </div> -->
 						</v-img>
 					</div>
 				</v-flex>
@@ -216,7 +227,7 @@ export default {
 }
 
 .loginSubTitle {
-	width: 215px;
+	width: 100%;
 	height: 21px;
 	font-family: Inter;
 	font-size: 16px;
