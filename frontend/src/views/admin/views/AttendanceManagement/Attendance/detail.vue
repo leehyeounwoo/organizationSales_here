@@ -386,8 +386,8 @@ export default {
 								res.gotoworks[idx].startWork && res.gotoworks[idx].endWork
 									? this.timeCheck(res.gotoworks[idx].startWork, res.gotoworks[idx].endWork)
 									: '-'
-							obj.startWork = res.gotoworks[idx].startWork ? this.$moment(res.gotoworks[idx].startWork).format('YYYY-MM-DD HH:mm:ss') : '-'
-							obj.endWork = res.gotoworks[idx].endWork ? this.$moment(res.gotoworks[idx].endWork).format('YYYY-MM-DD HH:mm:ss') : '-'
+							obj.startWork = res.gotoworks[idx].startWork ? this.$moment(res.gotoworks[idx].startWork)._i.slice(0, 8) : '-'
+							obj.endWork = res.gotoworks[idx].endWork ? this.$moment(res.gotoworks[idx].endWork)._i.slice(0, 8) : '-'
 						} else {
 							obj.len = '-'
 							obj.startWork = '-'
@@ -455,10 +455,19 @@ export default {
 			}
 		},
 		timeCheck(start, end) {
+			let startData = start !== start ? '-' : start.slice(0, 5)
+			let endData = end !== end ? '-' : end.slice(0, 5)
+
 			const moment = require('moment')
 			let timeData = ''
-			let hour = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() / 60)
-			let minute = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() % 60)
+			const startTime = moment(startData, 'HH:mm')
+			const endTime = moment(endData, 'HH:mm')
+
+			const diffDuration = moment.duration(endTime.diff(startTime))
+
+			const hour = parseInt(diffDuration.asMinutes() / 60)
+
+			const minute = parseInt(diffDuration.asMinutes() % 60)
 			if (minute === 0) {
 				timeData = hour + '시간'
 			} else {
