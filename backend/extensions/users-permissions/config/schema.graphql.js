@@ -34,6 +34,7 @@ module.exports = {
       bank: String
       phoneNumber: String
       salesPhoneNumber: String
+      businessNumber: String
       accountNumber: String
       businessRegistration: ID
       profile: ID
