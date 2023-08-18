@@ -39,7 +39,7 @@
 					<v-flex class="notice_right_table" xs3 style="height: auto;">
 						계약자
 					</v-flex>
-					<v-flex xs6 class="notice_right_table2">
+					<v-flex xs6 class="notice_right_table2" style="border-right:0">
 						<v-layout>
 							<v-flex style="display: flex; justify-content: space-around; align-items: center;">
 								<span id="spanUsername" class="spanClass2 mt-4"></span>
@@ -65,7 +65,7 @@
 					<v-flex class="notice_right_table" xs3 style="height: auto;">
 						수수료
 					</v-flex>
-					<v-flex xs6 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center;">
+					<v-flex xs6 class="notice_right_table2" style="display: flex; justify-content: start;align-items: center; border-right:0">
 						<div style="display: flex;">
 							<!-- v-mask="'###,###,###,###'"
 							@blur="() => charge.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')" -->
@@ -86,20 +86,20 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;"> </v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
+					<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0"> </v-flex>
+					<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 						계
 					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
+					<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 						1차
 					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
+					<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 						2차
 					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
+					<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 						3차
 					</v-flex>
-					<v-flex class="notice_right_table" xs3 style="height: 40px;">
+					<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 						4차
 					</v-flex>
 					<v-flex class="notice_right_table" xs3 style="height: 40px;">
@@ -158,8 +158,8 @@
 						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
 					</v-flex>
 				</v-layout>
-				<v-flex style="text-align: end; display: flex; justify-content:end ;">
-					<v-checkbox v-model="processCheckBox" class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
+				<v-flex class="d-flex justify-end">
+					<v-checkbox v-model="processCheckBox" hide-details class="mt-2" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
 					<span
 						style="font-size: 12px;
             font-weight: normal;
@@ -186,17 +186,17 @@
 				</v-flex>
 				<v-flex>
 					<v-layout style="border-top:1px solid black">
-						<v-flex class="notice_right_table" xs2 style="height: 40px; "> </v-flex>
-						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+						<v-flex class="notice_right_table" xs2 style="height: 40px; border-right:0"> </v-flex>
+						<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 							입금 은행
 						</v-flex>
-						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+						<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 							계좌 번호
 						</v-flex>
-						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+						<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 							금액
 						</v-flex>
-						<v-flex class="notice_right_table" xs3 style="height: 40px;">
+						<v-flex class="notice_right_table" xs3 style="height: 40px; border-right:0">
 							지급일
 						</v-flex>
 						<v-flex class="notice_right_table" xs3 style="height: 40px;">
@@ -274,8 +274,8 @@
 						</v-flex>
 					</v-layout>
 				</v-flex>
-				<v-flex style="text-align: end; display: flex; justify-content:end ;">
-					<v-checkbox v-model="paymentCheckBox" class="mt-1" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
+				<v-flex class="d-flex justify-end">
+					<v-checkbox v-model="paymentCheckBox" class="mt-2" style="caret-color: #3e7ccc;" color="#3e7ccc"></v-checkbox>
 					<span
 						style="font-size: 12px;
             font-weight: normal;
