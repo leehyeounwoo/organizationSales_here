@@ -23,7 +23,15 @@ export const emailDuplicate = gql`
 	}
 `
 export const users = gql`
-	query users($idArr: [ID], $teamID: String, $username: String, $roleName: String, $businessID_null: Boolean, $date: Date) {
+	query users(
+		$idArr: [ID]
+		$teamID: String
+		$username: String
+		$roleName: String
+		$businessID_null: Boolean
+		$date: Date
+		$workingStatus: Boolean
+	) {
 		usersConnection(where: { role: { name: $roleName } }) {
 			aggregate {
 				count
@@ -37,6 +45,7 @@ export const users = gql`
 				teamID: $teamID
 				role: { name: $roleName }
 				businessID_null: $businessID_null
+				workingStatus: $workingStatus
 			}
 		) {
 			id

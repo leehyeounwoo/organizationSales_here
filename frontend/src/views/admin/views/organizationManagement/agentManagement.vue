@@ -167,10 +167,31 @@ export default {
 		}
 		await this.firstGotoworksView(firstGotoworksViewData)
 		this.teamData = JSON.parse(JSON.stringify(this.teamData))
+		this.teamData_origin = JSON.parse(JSON.stringify(this.teamData))
 		// await this.dataSetting()
+		await this.searchSelect()
 		this.$store.state.loading = false
 	},
 	methods: {
+		SearchBiz() {
+			let item = JSON.parse(JSON.stringify(this.teamData_origin))
+			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
+				item = item.filter(el => el.id === this.searchsel1.value.value)
+			}
+			this.teamData = item
+		},
+		async searchSelect() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.$store.dispatch('teams', data).then(res => {
+				let item = [{ title: '전체', value: 'all' }]
+				res.teams.forEach(el => {
+					item.push({ title: el.title, value: el.id })
+				})
+				this.searchsel1.items = item
+			})
+		},
 		async usersView(usersViewData, index) {
 			console.log(usersViewData)
 			await this.$store
@@ -179,6 +200,7 @@ export default {
 					console.log(res)
 					this.teamData[index].userData = res.users
 					this.teamData = JSON.parse(JSON.stringify(this.teamData))
+					console.log(this.teamData)
 				})
 				.catch(err => {
 					console.log(err)
@@ -242,6 +264,12 @@ export default {
 					role: 3,
 					teamID: team.id,
 				}
+				if (this.searchsel2.value.value !== 'all') {
+					usersViewData['workingStatus'] = this.searchsel2.value.value
+				}
+				if (this.search_project) {
+					usersViewData['username'] = this.search_project
+				}
 				await this.usersView(usersViewData, index)
 				const gotoworksView = {
 					date: this.$moment().format('YYYY-MM-DD'),
@@ -277,7 +305,6 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
-		SearchBiz() {},
 		userInfoClick(team, user) {
 			this.rightEdit[0].value = user.username
 			this.rightEdit[1].value = user.phoneNumber
@@ -335,6 +362,7 @@ export default {
 			totalUserLength: 0,
 			backendURL: process.env.VUE_APP_BACKEND_URL,
 			teamData: [],
+			teamData_origin: [],
 			rankData: [],
 			userData: [],
 			searchsel1: {
@@ -351,7 +379,11 @@ export default {
 				value: '',
 				errorMessage: '',
 				hideDetail: true,
-				items: [],
+				items: [
+					{ title: '전체', value: 'all' },
+					{ title: '재직', value: true },
+					{ title: '퇴직', value: false },
+				],
 				outlined: true,
 				placeholder: '재직상태',
 				returnObject: true,

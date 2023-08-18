@@ -418,6 +418,7 @@ export default {
 				showselect: true,
 				headerCheck: false,
 				items: [],
+				origin_items: [],
 				selected: [],
 				json_fields: {
 					상담사: 'username',
@@ -481,7 +482,8 @@ export default {
 	},
 
 	async created() {
-		this.getListAction()
+		await this.getListAction()
+		await this.searchSelect()
 		// if (!navigator.geolocation) {
 		// 	return alert('위치 정보가 지원되지 않습니다.')
 		// }
@@ -495,6 +497,31 @@ export default {
 	mounted() {},
 
 	methods: {
+		SearchBiz() {
+			let item = JSON.parse(JSON.stringify(this.table.origin_items))
+			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
+				item = item.filter(el => el.teamID === this.searchsel1.value.value)
+			}
+			if (this.searchsel2.value && this.searchsel2.value !== '전체') {
+				item = item.filter(el => el.workingStatusName === this.searchsel2.value)
+			}
+			if (this.search_project) {
+				item = item.filter(el => el.username.indexOf(this.search_project) !== -1)
+			}
+			this.table.items = item
+		},
+		async searchSelect() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.$store.dispatch('teams', data).then(res => {
+				let item = [{ title: '전체', value: 'all' }]
+				res.teams.forEach(el => {
+					item.push({ title: el.title, value: el.id })
+				})
+				this.searchsel1.items = item
+			})
+		},
 		clickExport() {
 			if (this.table.selected.length === 0) {
 				return alert('상담사를 선택해주세요.')
@@ -609,6 +636,7 @@ export default {
 				element.rankItems = this.rankData
 			}
 			this.table.items = JSON.parse(JSON.stringify(this.userData))
+			this.table.origin_items = JSON.parse(JSON.stringify(this.userData))
 		},
 		async settlementsViewAction(data) {
 			this.$store.state.loading = true
@@ -666,7 +694,7 @@ export default {
 				.then(res => {
 					console.log(res.teams)
 					this.teamData = res.teams
-					this.searchsel1.items = res.teams
+					// this.searchsel1.items = res.teams
 				})
 				.catch(err => {
 					console.log(err)
