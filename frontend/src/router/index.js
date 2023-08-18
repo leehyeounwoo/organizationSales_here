@@ -49,7 +49,7 @@ const routes = [
 			},
 
 			{
-				path: '/counselor/register',
+				path: '/counselor/register/:code',
 				name: 'counselorRegister',
 				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/register.vue'),
 			},

@@ -439,21 +439,6 @@ export default {
 			})
 			return ducpliate
 		},
-		async phoneDuplicateAction() {
-			const data = {
-				phone: this.siginup.phone,
-			}
-			let ducpliate
-
-			await this.$store.dispatch('phoneDuplicate', data).then(res => {
-				if (res.phoneDuplicate.duplicate) {
-					ducpliate = false
-				} else {
-					ducpliate = true
-				}
-			})
-			return ducpliate
-		},
 
 		checkAuthNumber() {
 			const data = {
@@ -509,8 +494,6 @@ export default {
 			if (!this.siginup.name) return this.open_disable_dialog({ title: '등록안내', content: '이름을 입력해주세요.' })
 			else if (!this.siginup.phone) return this.open_disable_dialog({ title: '등록안내', content: '휴대전화를 입력해주세요.' })
 			else if (!this.files[0].file) return this.open_disable_dialog({ title: '등록안내', content: '프로필사진을 업로드 해주세요.' })
-			else if (!(await this.phoneDuplicateAction()))
-				return this.open_disable_dialog({ title: '등록안내', content: '중복된 휴대전화번호입니다.' })
 			else if (!this.siginup.bank) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 은행명을 입력해주세요.' })
 			else if (!this.siginup.account) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 계좌번호를 입력해주세요.' })
 			else if (!this.files[1].file) return this.open_disable_dialog({ title: '등록안내', content: '통장사본을 업로드 해주세요.' })
@@ -545,19 +528,15 @@ export default {
 					filesId.push(res.data[0].id)
 					if (filesData.length - 1 === i) {
 						const data = {
-							// businessID: business.id,
-							// username: this.siginup.email,
-							// email: this.siginup.email.toLowerCase(),
-							// password: this.siginup.password,
-							// phone: this.siginup.phone,
-							// name: this.siginup.name,
-							// companyName: this.siginup.companyName,
-							// companyNumber: this.siginup.companyNumber,
-							// authNumber: Number(this.siginup.authNumber),
-							// bank: this.siginup.bank,
-							// account: this.siginup.account,
-							// confirmed: true,
-							// counselorStatus: '재직',
+							username: this.siginup.email.toLowerCase(),
+							email: this.siginup.email.toLowerCase(),
+							password: this.siginup.password,
+							bank: this.siginup.bank,
+							phoneNumber: this.siginup.phone,
+							accountNumber: this.siginup.account,
+							businessID: this.$route.params.code,
+							company: this.siginup.companyName,
+							businessNumber: this.siginup.companyNumber,
 							profile: filesId[0],
 							copyAccount: filesId[1],
 							employmentContract: filesId[2],
@@ -571,7 +550,6 @@ export default {
 									{ title: '등록완료', content: '정상적으로 등록 되었습니다. 입력하신 정보로 로그인 하시기 바랍니다.' },
 									'success',
 								)
-								alert('회원가입이 완료되었습니다.')
 								this.$router.push({ name: 'counselorLogin' })
 								this.registerMode = false
 								this.authButton = true

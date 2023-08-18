@@ -1,6 +1,6 @@
 <template>
-	<div style="width:100%" class="counselor_header">
-		<v-layout align-center style="height:100%">
+	<div style="width:100%; margin: 0 auto;" class="counselor_header">
+		<v-layout align-center style="height:100%;">
 			<div @click="logo_click()">
 				<v-img src="/image/counselor_logo_0.png"></v-img>
 			</div>
@@ -14,10 +14,18 @@
 				<div class="white--text">
 					{{ $store.state.meData.name }}
 				</div>
-				<div></div>
+				<div class="white--text">
+					팀 리스트 완성시 적용
+				</div>
 			</div>
+			<div class="py-4">
+				<v-divider dark vertical style="height: 40px;"></v-divider>
+			</div>
+			<v-btn icon dark class="mx-1">
+				<v-icon>mdi-cog</v-icon>
+			</v-btn>
 			<div v-if="logout" icon dark @click="logoutClick()" style="cursor:pointer" class="ml-auto">
-				<v-img src="@/assets/images/ico/ico_logout.png" width="20"></v-img>
+				<v-img src="@/assets/images/ico/ico_logout.png" width="20" style="transform: scaleX(-1);"></v-img>
 			</div>
 		</v-layout>
 	</div>

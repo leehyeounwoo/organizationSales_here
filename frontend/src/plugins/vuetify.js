@@ -12,7 +12,7 @@ export default new Vuetify({
 				point1: '#E1A5C0',
 				point2: '#7254C9',
 				point3: '#00B80C',
-				point4: '#0CB3D6',
+				point4: '#009DAC',
 				point5: '#D47FA6',
 			},
 		},

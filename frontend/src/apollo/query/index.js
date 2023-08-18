@@ -15,6 +15,13 @@ export const me = gql`
 		}
 	}
 `
+export const emailDuplicate = gql`
+	query($email: String) {
+		emailDuplicate(where: { email: $email }) {
+			duplicate
+		}
+	}
+`
 export const users = gql`
 	query users($idArr: [ID], $teamID: String, $username: String, $roleName: String, $businessID_null: Boolean, $date: Date) {
 		usersConnection(where: { role: { name: $roleName } }) {

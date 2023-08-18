@@ -25,6 +25,7 @@ module.exports = {
       company: String
       rankID: String
       editLog: JSON
+      workingStatus: Boolean
     }
     input UsersPermissionsRegisterInput {
       role: ID
