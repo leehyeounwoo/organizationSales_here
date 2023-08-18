@@ -344,13 +344,13 @@ export default {
 			this.$store.state.loading = true
 
 			let input2 = {
-				user: this.setdialog.editData.all.id,
+				userID: this.setdialog.editData.all.id,
 				status: 'vacation',
 			}
 			await this.$store.dispatch('gotoWork', input2).then(async res2 => {
 				this.leftInfoTop[7].value = res2.gotoworks.length + '일'
 				let input = {
-					user: this.setdialog.editData.all.id,
+					userID: this.setdialog.editData.all.id,
 				}
 				await this.$store.dispatch('gotoWork', input).then(res => {
 					console.log(res)
@@ -397,11 +397,12 @@ export default {
 						li.push(obj)
 					} else {
 						let input2 = {
-							user: this.setdialog.editData.all.id,
+							userID: this.setdialog.editData.all.id,
 							date_gte: this.start_date_picker.date,
 							date_lte: this.end_date_picker.date,
 							status_check: ['vacation'],
 						}
+
 						this.$store.dispatch('gotoWork', input2).then(res => {
 							this.leftInfoTop[9].value = res.gotoworksConnection.aggregate.count + '일'
 						})
@@ -455,8 +456,8 @@ export default {
 			}
 		},
 		timeCheck(start, end) {
-			let startData = start !== start ? '-' : start.slice(0, 5)
-			let endData = end !== end ? '-' : end.slice(0, 5)
+			let startData = start !== start ? '-' : start.slice(0, 8)
+			let endData = end !== end ? '-' : end.slice(0, 8)
 
 			const moment = require('moment')
 			let timeData = ''
@@ -468,10 +469,20 @@ export default {
 			const hour = parseInt(diffDuration.asMinutes() / 60)
 
 			const minute = parseInt(diffDuration.asMinutes() % 60)
-			if (minute === 0) {
-				timeData = hour + '시간'
+
+			const second = parseInt(diffDuration.asSeconds() % 60)
+			if (second === 0) {
+				if (minute === 0) {
+					timeData = hour + 'h'
+				} else {
+					timeData = hour + 'h ' + minute + 'm'
+				}
 			} else {
-				timeData = hour + '시간' + minute + '분'
+				if (minute === 0) {
+					timeData = hour + 'h ' + second + 's'
+				} else {
+					timeData = hour + 'h ' + minute + 'm ' + second + 's'
+				}
 			}
 			return timeData
 		},
