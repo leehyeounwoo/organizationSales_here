@@ -9,7 +9,7 @@
 					</span>
 				</v-layout>
 				<v-layout style="border-top:1px solid black">
-					<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
+					<v-flex class="notice_right_table" xs2 style="height: 52.3px; border-right:0">
 						비고
 					</v-flex>
 					<v-flex class="notice_right_table" xs10 style="height: 52.3px;">
@@ -73,7 +73,7 @@
 					<v-flex class="notice_right_table" xs2 style="height: auto">
 						기타 안내
 					</v-flex>
-					<v-flex xs10 class="notice_right_table2 mt-3">
+					<v-flex xs10 class="notice_right_table2 pt-3">
 						<textarea
 							v-model="etcInfo.txtField.value"
 							placeholder="※ 증빙서류 누락시 정산 승인이 보류 될 수 있으니 확인 후 첨부바랍니다.
