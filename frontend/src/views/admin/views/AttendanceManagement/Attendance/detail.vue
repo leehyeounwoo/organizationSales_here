@@ -75,7 +75,7 @@
 						<div style="height:490px;">
 							<datatable
 								:datatable="attendanceTable"
-								class="table_header"
+								class="table_header datatablehover3"
 								excelUseYn="true"
 								excelType="attendanceManagement_detail"
 							></datatable>
@@ -362,7 +362,7 @@ export default {
 		async getAllworkTime() {
 			this.$store.state.loading = true
 			let input = {
-				user: this.setdialog.editData.all.id,
+				userID: this.setdialog.editData.all.id,
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
 				status_check: ['startWork', 'endWork'],
@@ -541,6 +541,7 @@ export default {
 			async handler() {
 				if (this.setdialog.dialog) {
 					if (this.setdialog.edit) {
+						console.log(this.setdialog.editData)
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber

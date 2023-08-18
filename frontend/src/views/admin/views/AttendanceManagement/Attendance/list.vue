@@ -439,6 +439,7 @@ export default {
 						listData.data3 = '-'
 						listData.data4 = '-'
 						listData.data5 = '미확인'
+						listData.gotoworksAll = []
 						listData.salesPhoneNumber = element.salesPhoneNumber
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 							: '-'

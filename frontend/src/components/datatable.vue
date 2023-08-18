@@ -2745,6 +2745,14 @@ export default {
 	}
 }
 
+.datatablehover3 > .v-data-table > .v-data-footer {
+	justify-content: start !important;
+	padding-right: 0px;
+	.v-data-footer__select {
+		margin-left: 0px;
+	}
+}
+
 .datatablehover2 > .v-data-table > .v-data-footer {
 	justify-content: center;
 	padding-right: 0px;

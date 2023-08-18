@@ -296,7 +296,7 @@ export default {
 			}
 			if (this.searchsel1.value === '상담사 이름') {
 				data.name = this.search_project
-			} else {
+			} else if (this.searchsel1.value === '휴대전화') {
 				data.phone = this.search_project
 			}
 			let data2 = {
