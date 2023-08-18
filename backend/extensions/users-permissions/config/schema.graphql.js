@@ -46,6 +46,7 @@ module.exports = {
       company: String
       rankID: String
       editLog: JSON
+      name: String
     }
     input userInfoEditData {
       businessRegistration: ID
