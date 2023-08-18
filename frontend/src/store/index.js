@@ -65,7 +65,7 @@ export default new Vuex.Store({
 			itemText: 'name',
 			itemValue: 'id',
 		},
-		meData: { role: { name: '' }, group: { groupcode: '' }, visit: 0, day: 0, event: 0, name: '' },
+		meData: { role: { name: '' }, name: '' },
 		dashBoardList: [],
 		loading: false,
 		primary: '#3A258F',

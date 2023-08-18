@@ -5,12 +5,12 @@
 				<v-img src="/image/counselor_logo_0.png"></v-img>
 			</div>
 			<v-spacer></v-spacer>
-			<div class="mr-1">
+			<div class="mr-1" v-if="auth">
 				<v-avatar size="32px">
 					<img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
 				</v-avatar>
 			</div>
-			<div class="mr-2">
+			<div class="mr-2" v-if="auth">
 				<div class="white--text">
 					{{ $store.state.meData.name }}
 				</div>
@@ -18,13 +18,13 @@
 					팀 리스트 완성시 적용
 				</div>
 			</div>
-			<div class="py-4">
+			<div class="py-4" v-if="auth">
 				<v-divider dark vertical style="height: 40px;"></v-divider>
 			</div>
-			<v-btn icon dark class="mx-1">
+			<v-btn icon dark class="mx-1" @click="setting" v-if="auth">
 				<v-icon>mdi-cog</v-icon>
 			</v-btn>
-			<div v-if="logout" icon dark @click="logoutClick()" style="cursor:pointer" class="ml-auto">
+			<div v-if="auth" icon dark @click="logoutClick()" style="cursor:pointer" class="ml-auto">
 				<v-img src="@/assets/images/ico/ico_logout.png" width="20" style="transform: scaleX(-1);"></v-img>
 			</div>
 		</v-layout>
@@ -33,13 +33,22 @@
 
 <script>
 export default {
-	props: {
-		logout: Boolean,
-	},
 	data() {
-		return {}
+		return {
+			auth: sessionStorage.getItem('reserveLite-t') ? true : false,
+		}
 	},
+	watch: {
+		$route() {
+			if (sessionStorage.getItem('reserveLite-t')) this.auth = true
+			else this.auth = false
+		},
+	},
+
 	methods: {
+		setting() {
+			this.$router.push({ name: 'counselorMypage' })
+		},
 		logoutClick() {
 			sessionStorage.removeItem('reserveLite-t')
 			this.$router.push('/')

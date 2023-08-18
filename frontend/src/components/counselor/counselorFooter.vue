@@ -11,9 +11,6 @@
 
 <script>
 export default {
-	props: {
-		logout: Boolean,
-	},
 	data() {
 		return {
 			footers: [

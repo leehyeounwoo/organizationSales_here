@@ -183,6 +183,7 @@ export const updateVacation = gql`
 `
 export const register = gql`
 	mutation(
+		$name: String!
 		$username: String!
 		$email: String!
 		$password: String!
@@ -203,6 +204,7 @@ export const register = gql`
 	) {
 		register(
 			input: {
+				name: $name
 				username: $username
 				email: $email
 				password: $password
@@ -228,30 +230,45 @@ export const register = gql`
 `
 export const updateUser = gql`
 	mutation updateUser(
-		$id: ID!
-		$username: String
+		$username: String!
+		$email: String!
+		$password: String!
+		$bank: String
 		$phoneNumber: String
-		$email: String
-		$password: String
-		$confirmed: Boolean
 		$salesPhoneNumber: String
-		$rankID: String
-		$teamID: String
+		$accountNumber: String
+		$businessRegistration: ID
+		$businessNumber: String
+		$profile: ID
+		$copyAccount: ID
+		$employmentContract: ID
+		$iD_Card: ID
 		$businessID: String
+		$company: String
+		$rankID: String
+		$editLog: JSON
 	) {
 		updateUser(
 			input: {
 				where: { id: $id }
 				data: {
 					username: $username
-					phoneNumber: $phoneNumber
 					email: $email
 					password: $password
-					confirmed: $confirmed
+					bank: $bank
+					businessNumber: $businessNumber
+					phoneNumber: $phoneNumber
 					salesPhoneNumber: $salesPhoneNumber
-					rankID: $rankID
-					teamID: $teamID
+					accountNumber: $accountNumber
+					businessRegistration: $businessRegistration
+					profile: $profile
+					copyAccount: $copyAccount
+					employmentContract: $employmentContract
+					iD_Card: $iD_Card
 					businessID: $businessID
+					company: $company
+					rankID: $rankID
+					editLog: $editLog
 				}
 			}
 		) {

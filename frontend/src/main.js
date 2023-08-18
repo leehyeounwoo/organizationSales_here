@@ -19,6 +19,26 @@ router.beforeEach(async (to, from, next) => {
 	} else {
 		next()
 	}
+	if (to.matched.some(record => record.meta.counselor)) {
+		store
+			.dispatch('me')
+			.then(res => {
+				console.log(res)
+				if (res.me.role.name !== 'Counselor') {
+					router.push({ name: 'counselorLogin' })
+					sessionStorage.removeItem('reserveLite-t')
+				} else {
+					next()
+				}
+			})
+			.catch(err => {
+				console.log(err)
+				sessionStorage.removeItem('reserveLite-t')
+				router.push({ name: 'counselorLogin' })
+			})
+	} else {
+		next()
+	}
 	// if (to.matched.some(record => record.meta.admin)) {
 	// 	store
 	// 		.dispatch('me')

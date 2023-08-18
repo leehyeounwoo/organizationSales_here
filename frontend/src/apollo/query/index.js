@@ -6,12 +6,42 @@ export const me = gql`
 	query {
 		me {
 			id
+			name
 			username
 			email
-			teamID
+			blocked
 			role {
 				name
 			}
+			bank
+			phoneNumber
+			salesPhoneNumber
+			accountNumber
+			businessRegistration {
+				name
+				url
+			}
+			profile {
+				name
+				url
+			}
+			copyAccount {
+				name
+				url
+			}
+			employmentContract {
+				name
+				url
+			}
+			iD_Card {
+				name
+				url
+			}
+			businessID
+			teamID
+			company
+			rankID
+			editLog
 		}
 	}
 `

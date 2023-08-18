@@ -18,24 +18,10 @@
 								<br />
 								이미 등록하신 분은 <strong>[로그인]</strong> 버튼을 클릭하세요.
 							</div>
-							<v-btn
-								elevation="0"
-								height="40"
-								class="loginButton_small mt-7"
-								block
-								color="#F6F2E9"
-								@click="$router.push({ name: 'counselorRegister' })"
-							>
+							<v-btn elevation="0" height="40" class="loginButton_small mt-7" block color="#F6F2E9" @click="goto1">
 								<span class="pb-1" style="font-size:14px; font-weight:normal;"> 신규등록 </span>
 							</v-btn>
-							<v-btn
-								elevation="0"
-								height="40"
-								class="loginButton_small"
-								block
-								color="primary2"
-								@click="$router.push({ name: 'counselorLogin' })"
-							>
+							<v-btn elevation="0" height="40" class="loginButton_small" block color="primary2" @click="goto2">
 								<span style="color:white;	font-weight: bold;"> 로그인 </span>
 							</v-btn>
 						</div>
@@ -45,3 +31,15 @@
 		</v-layout>
 	</v-container>
 </template>
+<script>
+export default {
+	methods: {
+		goto1() {
+			this.$router.push({ name: 'counselorRegister' })
+		},
+		goto2() {
+			this.$router.push({ name: 'counselorLogin' })
+		},
+	},
+}
+</script>

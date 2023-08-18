@@ -12,7 +12,7 @@
 				<div>
 					팀 추가시 추가 필요 / 1팀 (예시)
 				</div>
-				<v-btn block color="point4" dark flat elevation="0" class="mt-2" @click="openQr">
+				<v-btn block color="point4" dark elevation="0" class="mt-2" @click="openQr">
 					<v-icon class="mr-1">
 						mdi-qrcode-scan
 					</v-icon>
