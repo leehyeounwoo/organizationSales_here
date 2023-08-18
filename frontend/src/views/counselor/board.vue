@@ -1,10 +1,10 @@
 <template>
-	<div style="position:fixed; width: 100%;">
+	<div>
 		<div v-if="$store.state.headerMobileStatus" style="position:fixed; width:100%; ">
 			<counselorHeader :logout="session" />
 		</div>
 		<div
-			style="margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#f3f3f3;"
+			style="margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#F3F3F3; margin-left: auto; margin-right: auto;"
 			:style="'height:' + calc_height() + 'px;'"
 		>
 			<router-view></router-view>

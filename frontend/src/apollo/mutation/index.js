@@ -13,6 +13,7 @@ export const login = gql`
 				role {
 					name
 				}
+				workingStatus
 			}
 		}
 	}
@@ -181,12 +182,47 @@ export const updateVacation = gql`
 	}
 `
 export const register = gql`
-	mutation register($email: String!, $password: String!, $username: String!, $phoneNumber: String) {
-		register(input: { email: $email, password: $password, username: $username, phoneNumber: $phoneNumber }) {
-			jwt
-			user {
-				id
+	mutation(
+		$username: String!
+		$email: String!
+		$password: String!
+		$bank: String
+		$phoneNumber: String
+		$salesPhoneNumber: String
+		$accountNumber: String
+		$businessRegistration: ID
+		$businessNumber: String
+		$profile: ID
+		$copyAccount: ID
+		$employmentContract: ID
+		$iD_Card: ID
+		$businessID: String
+		$company: String
+		$rankID: String
+		$editLog: JSON
+	) {
+		register(
+			input: {
+				username: $username
+				email: $email
+				password: $password
+				bank: $bank
+				businessNumber: $businessNumber
+				phoneNumber: $phoneNumber
+				salesPhoneNumber: $salesPhoneNumber
+				accountNumber: $accountNumber
+				businessRegistration: $businessRegistration
+				profile: $profile
+				copyAccount: $copyAccount
+				employmentContract: $employmentContract
+				iD_Card: $iD_Card
+				businessID: $businessID
+				company: $company
+				rankID: $rankID
+				editLog: $editLog
 			}
+		) {
+			jwt
 		}
 	}
 `

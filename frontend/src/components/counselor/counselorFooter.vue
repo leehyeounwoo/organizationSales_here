@@ -18,14 +18,14 @@ export default {
 		return {
 			footers: [
 				{
-					title: '상담관리',
-					ico: 'footer_상담관리',
-					route: 'counselorBizReservation',
+					title: '공지사항',
+					ico: 'footer_공지사항',
+					route: 'counselorNotice',
 				},
 				{
-					title: '고객관리',
-					ico: 'footer_고객관리',
-					route: 'counselorClients',
+					title: '근태관리',
+					ico: 'footer_출퇴근관리',
+					route: '/counselor/commuteManagement/manage',
 				},
 				{
 					title: 'Home',
@@ -33,14 +33,14 @@ export default {
 					route: 'counselorBizDashboard',
 				},
 				{
-					title: '출/퇴근관리',
-					ico: 'footer_출퇴근관리',
-					route: '/counselor/commuteManagement/manage',
+					title: '계약관리',
+					ico: 'footer_고객관리',
+					route: 'counselorClients',
 				},
 				{
-					title: '공지사항',
-					ico: 'footer_공지사항',
-					route: 'counselorNotice',
+					title: '정산관리',
+					ico: 'footer_상담관리',
+					route: 'counselorBizReservation',
 				},
 			],
 		}

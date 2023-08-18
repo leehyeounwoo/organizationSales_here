@@ -1,340 +1,213 @@
 <template>
-	<v-container class="login-counselor">
-		<!-- 로그인 화면 로고 -->
-		<v-layout style="max-width:400px; margin: 0 auto;" wrap justify-center>
-			<div class="login-header">
-				<v-layout>
-					<!-- <v-btn icon dark @click="$router.push({ name: 'counselorMain' })">
-						<v-icon>mdi-menu</v-icon>
-					</v-btn> -->
-					<v-btn icon dark @click="logout" class="ml-auto">
-						<v-icon>mdi-logout</v-icon>
-					</v-btn>
-				</v-layout>
+	<!-- 로그인 화면 로고 -->
+	<v-layout style="max-width:450px; margin: 0 auto;" wrap justify-center>
+		<div class="work-header">
+			<v-card class="ma-4 pa-4 header-card">
 				<v-layout align-center>
-					<div class="ml-2 title">
-						{{ meData.name }}
+					<div class="title">
+						{{ $store.state.meData.name }}
 					</div>
-					<v-badge class="ml-2" overlap dark color="point1" :content="alertCount">
-						<v-btn icon dark>
-							<v-icon>mdi-bell-outline</v-icon>
-						</v-btn>
-					</v-badge>
+					<div class="ml-2"><span class="point">상담사</span>님, 오늘도 즐거운 하루 되세요.</div>
 				</v-layout>
-				<div class="ml-2 subTitle">
-					Members Here
+				<div>
+					팀 추가시 추가 필요 / 1팀 (예시)
 				</div>
-			</div>
-			<div class="login-header" style="background-color:#8A56AC; margin-top:-67px; z-index:0; padding-top:80px; height:210px">
-				<div class="timeText">
-					{{ $moment().format('YYYY. MM. DD HH:mm:ss') }}
+				<v-btn block color="point4" dark flat elevation="0" class="mt-2" @click="openQr">
+					<v-icon class="mr-1">
+						mdi-qrcode-scan
+					</v-icon>
+					출퇴근 QR 코드 열기
+				</v-btn>
+			</v-card>
+		</div>
+		<QRcode :dialogQr="dialogQr" />
+		<v-card class="dashboard-card my-4" elevation="3">
+			<v-layout align-center>
+				<div class="main-text">
+					홀딩 물건 현황
 				</div>
-				<v-layout>
-					<div class="ml-2 title">
-						사업지 선택
-					</div>
-				</v-layout>
-				<div class="mt-2 mx-8">
-					<v-select @change="selectBiz" :items="bizItems.map(x => x.title)" v-model="bizSelectData" solo flat></v-select>
+				<v-spacer></v-spacer>
+				<div>
+					<v-btn rounded small color="primary2" dark>전체보기</v-btn>
 				</div>
-			</div>
-			<div class="ma-4" style="width:100%;">
-				<v-card class="biz-card" flat>
-					<div class="bizTitle mb-8">
-						사업지 정보
+			</v-layout>
+			<v-layout align-center wrap>
+				<v-flex v-for="(list, i) in holdingList" :key="i" class="holding-text" xs4>
+					{{ list }}
+				</v-flex>
+			</v-layout>
+		</v-card>
+		<v-card class="dashboard-card mt-1 mb-4" elevation="3">
+			<v-layout align-center>
+				<div class="main-text">
+					물건 홀딩 요청
+				</div>
+				<v-spacer></v-spacer>
+				<v-flex xs4 class="pl-2">
+					<v-select :items="times" v-model="time" solo outlined class="nomal-select" hideDetails color="primary2"></v-select>
+				</v-flex>
+			</v-layout>
+			<v-layout align-center wrap class="mt-4">
+				<v-flex xs4 class="pr-2">
+					<v-select
+						placeholder="주택형"
+						:items="products1"
+						v-model="product1"
+						solo
+						outlined
+						class="nomal-select"
+						hideDetails
+						color="primary2"
+					></v-select>
+				</v-flex>
+				<v-flex xs4>
+					<v-select
+						placeholder="동"
+						:items="products2"
+						v-model="product2"
+						solo
+						outlined
+						class="nomal-select"
+						hideDetails
+						color="primary2"
+					></v-select>
+				</v-flex>
+				<v-flex xs4 class="pl-2">
+					<v-select
+						placeholder="호수"
+						:items="products3"
+						v-model="product3"
+						solo
+						outlined
+						class="nomal-select"
+						hideDetails
+						color="primary2"
+					></v-select>
+				</v-flex>
+				<v-btn block color="primary2" @click="holding" class="mt-4" rounded>
+					{{ holdingText }}
+				</v-btn>
+				<div class="explain-text point4--text mt-2">
+					상담 물건 홀딩은 최대 60분까지 가능합니다.
+				</div>
+			</v-layout>
+		</v-card>
+		<v-layout wrap justify-center>
+			<v-flex xs6 :class="i % 2 !== 0 ? 'pl-2 pb-4' : 'pr-2 pb-4'" v-for="(icon, i) in iconList" :key="i">
+				<v-card class="dashboard-icons pa-4" elevation="0">
+					<div class="icon">
+						<v-img class="mx-auto" :src="`${require(`@/assets/images/ico/${icon.icon}.png`)}`" width="35" height="35"></v-img>
 					</div>
-					<v-layout v-for="(card, i) in bizData" :key="i" class="cardLayouot">
-						<div class="cardTitle" style="width:70px;">
-							{{ card.title }}
-						</div>
-						<v-layout v-if="i === 5" class="ml-2 cardValue" wrap style="width:180px;">
-							<v-flex xs12>
-								<v-layout>
-									<div class="product-layout">
-										타입
-									</div>
-									<div class="product-layout">
-										세대수
-									</div>
-									<div class="product-layout">
-										잔여세대
-									</div>
-								</v-layout>
-							</v-flex>
-							<v-flex
-								xs12
-								v-for="(product, i) in card.value.map(x => x.PD_Type).filter((v, i) => card.value.map(x => x.PD_Type).indexOf(v) === i)"
-								:key="i"
-							>
-								<v-layout>
-									<div class="product-layout">
-										{{ product }}
-									</div>
-									<div class="product-layout">{{ card.value.filter(x => x.PD_Type === product).length }}세대</div>
-									<div class="product-layout">
-										{{
-											card.value.filter(x => x.PD_Type === product).length -
-												clientsList.filter(x => x.customDatas.PD_Type === product && x.contractStatus === '계약완료').length
-										}}세대
-									</div>
-								</v-layout>
-							</v-flex>
-						</v-layout>
-						<div class="cardValue ml-2" v-else>
-							{{ card.value }}
-						</div>
-					</v-layout>
-					<div v-if="bizSelectData">
-						<v-btn
-							dark
-							@click="askAccess()"
-							color="primary"
-							v-if="
-								bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-									.map(x => x.users_permissions_user.id)
-									.indexOf(meData.id) === -1
-							"
-							block
-							class="mt-10"
-							rounded
-						>
-							등록승인요청
-						</v-btn>
-					</div>
-					<div v-if="bizSelectData">
-						<div v-if="bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors.length > 0">
-							<div
-								v-if="
-									bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors[
-										bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-											.map(x => x.users_permissions_user.id)
-											.indexOf(meData.id)
-									]
-								"
-							>
-								<v-btn
-									color="primary"
-									disabled
-									v-if="
-										bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors[
-											bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-												.map(x => x.users_permissions_user.id)
-												.indexOf(meData.id)
-										].status === 'waiting'
-									"
-									block
-									class="mt-10"
-									rounded
-								>
-									등록승인 대기중
-								</v-btn>
-							</div>
-						</div>
-					</div>
-					<div v-if="bizSelectData">
-						<div v-if="bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors.length > 0">
-							<div
-								v-if="
-									bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors[
-										bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-											.map(x => x.users_permissions_user.id)
-											.indexOf(meData.id)
-									]
-								"
-							>
-								<v-btn
-									dark
-									@click="
-										$router.push({
-											name: 'counselorBizDashboard',
-											params: { id: bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].id },
-										})
-									"
-									color="primary"
-									v-if="
-										bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors[
-											bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-												.map(x => x.users_permissions_user.id)
-												.indexOf(meData.id)
-										].status === 'allowed'
-									"
-									block
-									class="mt-10"
-									rounded
-								>
-									사업지로 이동
-								</v-btn>
-							</div>
-						</div>
-					</div>
-					<div v-if="bizSelectData">
-						<div v-if="bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors.length > 0">
-							<div
-								v-if="
-									bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors[
-										bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-											.map(x => x.users_permissions_user.id)
-											.indexOf(meData.id)
-									]
-								"
-							>
-								<v-btn
-									color="primary"
-									v-if="
-										bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors[
-											bizItems[bizItems.map(x => x.title).indexOf(bizSelectData)].counselors
-												.map(x => x.users_permissions_user.id)
-												.indexOf(meData.id)
-										].status === 'disallowed'
-									"
-									block
-									class="mt-10"
-									rounded
-									disabled
-								>
-									등록승인 요청거절
-								</v-btn>
-							</div>
-						</div>
+					<div class="text primary2--text">
+						{{ icon.title }}
 					</div>
 				</v-card>
-			</div>
-			<div class="mt-8">
-				<v-btn text @click="dialogData.open = true">
-					Privacy Policy & Terms of Service.
-				</v-btn>
-				<termsDialog :dialog="dialogData" />
-			</div>
+			</v-flex>
 		</v-layout>
-	</v-container>
+	</v-layout>
 </template>
 
 <script>
-import termsDialog from './termsDialog.vue'
+import QRcode from './QR/QRcode.vue'
 export default {
 	components: {
-		termsDialog,
+		QRcode,
 	},
 	data() {
 		return {
-			meData: { name: '' },
-			dialogData: { open: false },
-			status: true,
-			bizData: [
-				{ title: '사업지명', value: '' },
-				{ title: '건설사명', value: '' },
-				{ title: '대표번호', value: '' },
-				{ title: '사업지', value: '' },
-				{ title: '견본주택', value: '' },
-				{ title: '상품정보', value: [] },
-				{ title: '홈페이지', value: '' },
-				{ title: 'SNS', value: '' },
-				{ title: '상태', value: '' },
+			iconList: [
+				{
+					icon: 'footer_공지사항',
+					title: '공지사항',
+				},
+				{
+					icon: 'footer_출퇴근관리',
+					title: '근태관리',
+				},
+				{
+					icon: 'footer_고객관리',
+					title: '계약관리',
+				},
+				{
+					icon: 'footer_상담관리',
+					title: '정산관리',
+				},
 			],
-			bizItems: [],
-			alertCount: '0',
-			pwshow: false,
-			// 아이디 에러메세지
-			iderrorMessages: '',
-			// 패스워드 에러메세지
-			pwerrorMessages: '',
-			// id,password 데이터
-			userid: '',
-			password: '',
-			bizSelectData: '',
-			clientsList: [],
+			holdingText: '',
+			products1: [],
+			products2: [],
+			products3: [],
+			product1: '',
+			product2: '',
+			product3: '',
+			holdingList: ['hi', 'hi2', 'h3', 'hi'],
+			dialogQr: { open: false, code: '!', business: { title: '' }, meData: { created_at: this.$moment(), name: '' } },
+			times: [],
+			time: '30분',
 		}
 	},
 	created() {
-		this.me()
+		for (let index = 1; index < 7; index++) {
+			const el = index * 10
+			this.times.push(String(el) + '분')
+		}
 	},
 	methods: {
-		activeText(text) {
-			if (text === 'active') {
-				return '분양중'
-			} else if (text === 'stop') {
-				return '분양정지'
-			} else if (text === 'close') {
-				return '분양종료'
-			}
+		holding() {
+			alert('홀딩')
 		},
-		clients() {
-			const index = this.bizItems.map(x => x.title).indexOf(this.bizSelectData)
-			const data = {
-				business: this.bizItems[index].id,
-			}
-			this.$store
-				.dispatch('clients', data)
-				.then(res => {
-					this.clientsList = res.clients
-				})
-				.catch(err => {
-					console.log({ err })
-				})
-		},
-		selectBiz(val) {
-			const index = this.bizItems.map(x => x.title).indexOf(val)
-			this.bizData[0].value = this.bizItems[index].title
-			this.bizData[1].value = this.bizItems[index].groupName
-			this.bizData[2].value = this.bizItems[index].mainPhone
-			this.bizData[3].value = this.bizItems[index].bizAddress
-			this.bizData[4].value = this.bizItems[index].houseAddress
-			this.bizData[5].value = this.bizItems[index].product
-			this.bizData[6].value = this.bizItems[index].homepage
-			this.bizData[7].value = `
-			${this.bizItems[index].sns.facebook}
-			${this.bizItems[index].sns.youtube}
-			${this.bizItems[index].sns.instagram}`
-			this.bizData[8].value = this.activeText(this.bizItems[index].status)
-			this.clients()
-		},
-		businesses() {
-			this.$store.dispatch('businesses').then(res => {
-				this.bizItems = res.businesses
-				this.bizSelectData = this.bizItems.map(x => x.title)[0]
-				this.selectBiz(this.bizSelectData)
-				this.clients()
-			})
-		},
-		askAccess() {
-			const index = this.bizItems.map(x => x.title).indexOf(this.bizSelectData)
-			const datas = {
-				business: this.bizItems[index].id,
-				users_permissions_user: this.$store.state.meData.id,
-			}
-			this.$store.dispatch('counselors', datas).then(res => {
-				if (res.counselors.length === 0) {
-					var result = confirm(`${this.bizItems[index].title} - 사업지를 등록승인요청 하시겠습니까?`)
-					if (result) {
-						const data = {
-							business: this.bizItems[index].id,
-							users_permissions_user: this.$store.state.meData.id,
-						}
-						this.$store.dispatch('createCounselor', data).then(() => {
-							this.businesses()
-							alert('신청 되었습니다.')
-						})
-					} else {
-						alert('이미 등록승인을 요청하였습니다.')
-					}
-				}
-			})
-		},
-		logout() {
-			sessionStorage.removeItem('here-t')
-			this.$router.push({ name: 'counselorMain' })
-		},
-		me() {
-			this.$store.dispatch('me').then(res => {
-				if (res.teamID) {
-					this.$store.dispatch('teams', { idArr: [res.teamID], useYn: true }).then(res => {
-						console.log(res)
-					})
-				}
-				this.meData = res
-				this.businesses()
-			})
+		openQr() {
+			this.dialogQr.open = true
+
+			this.dialogQr.code = this.$store.state.meData.id
+			this.dialogQr.meData = this.$store.state.meData
 		},
 	},
 }
 </script>
+<style lang="scss">
+.dashboard-icons {
+	cursor: pointer;
+	border-radius: 10px !important;
+	text-align: center;
+	width: 100%;
+	.text {
+		margin-top: 8px;
+		font-weight: bold;
+		font-size: 20px;
+	}
+}
+.explain-text {
+	font-size: 12px;
+}
+.nomal-select {
+	.v-input__control {
+		min-height: 30px !important;
+		height: 30px !important;
+	}
+	.v-input__slot {
+		min-height: 30px !important;
+		height: 30px !important;
+	}
+}
+.holding-text {
+	font-size: 14px;
+	color: #878787;
+}
+.dashboard-card {
+	margin: 0 auto;
+	.main-text {
+		font-size: 14px;
+		font-weight: bold;
+	}
+	width: 100%;
+	background-color: white !important;
+}
+.work-header {
+	width: 100%;
+	background-color: #633efd;
+	.header-card {
+		width: auto;
+	}
+}
+</style>

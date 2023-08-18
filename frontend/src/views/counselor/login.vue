@@ -147,10 +147,11 @@ export default {
 				this.$store
 					.dispatch('login', data)
 					.then(res => {
+						console.log(res)
 						if (!res.workingStatus) {
 							return this.open_disable_dialog({
 								title: '퇴사 OR 재직 미승인',
-								content: '퇴사처리 OR 재직 미승인 되었습니다. 관리자에게 문의하세요.',
+								content: '퇴사처리 OR 재직 미승인 되었습니다.\n 관리자에게 문의하세요.',
 							})
 						}
 						if (res && res.role.name === 'Counselor') {
