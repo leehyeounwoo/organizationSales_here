@@ -184,12 +184,7 @@
 										v-on="on"
 									></v-text-field>
 								</template>
-								<v-time-picker
-									v-if="endTimeDialog"
-									:min="$moment(editGotoworkData.item.data3).format('HH:mm')"
-									v-model="endTime"
-									full-width
-								>
+								<v-time-picker v-if="endTimeDialog" v-model="endTime" full-width>
 									<v-spacer></v-spacer>
 									<v-btn text color="primary" @click="endTimeDialog = false">
 										Cancel
@@ -516,7 +511,6 @@ export default {
 				console.log('res', res)
 				console.log(this.userIDArr)
 				res.vacations.forEach(el => {
-					console.log(el, '이엘')
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
 					this.userLists[workIndex]['vacationStart'] = el.start
@@ -793,15 +787,19 @@ export default {
 		},
 		async SearchBiz() {
 			let input = {
+				start: 0,
+				limit: 10,
 				roleName: 'Counselor',
 			}
 			let input2 = {
+				start: 0,
+				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 			}
 			let input3 = {
 				start: 0,
 				limit: 10,
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
@@ -810,7 +808,6 @@ export default {
 			await this.vacationView(input3)
 		},
 		gotoWorkDialogOpen(item) {
-			console.log('클릭')
 			this.editGotoworkData = {
 				title: '출근 시간변경',
 				counselor: item.data1,
@@ -820,6 +817,7 @@ export default {
 			this.editGotoworkDialog = true
 		},
 		leaveWorkDialogOpen(item) {
+			console.log(item)
 			this.editGotoworkData = {
 				title: '퇴근 시간변경',
 				counselor: item.data1,
@@ -871,21 +869,21 @@ export default {
 			this.editGotoworkDialog = false
 		},
 		activeSave() {
-			let today = this.$moment(this.date).format('YYYY-MM-DD')
-			console.log(this.editGotoworkData)
 			if (this.editGotoworkData.status === 'goto') {
+				const formattedStartTime = this.$moment(this.startTime, 'HH:mm').format('HH:mm:ss.SSS')
 				const data = {
-					id: this.editGotoworkData.item.all.gotoworks[0].id,
-					user: this.editGotoworkData.item.id,
-					startWork: this.$moment(today + ' ' + this.startTime),
+					id: this.editGotoworkData.item.gotoworksAll.id,
+					userID: this.editGotoworkData.item.id,
+					startWork: formattedStartTime,
 				}
-				console.log(data)
+
 				this.updateGotoworkAction(data)
 			} else if (this.editGotoworkData.status === 'leave') {
+				const formattedEndTime = this.$moment(this.endTime, 'HH:mm').format('HH:mm:ss.SSS')
 				const data = {
-					id: this.editGotoworkData.item.all.gotoworks[0].id,
-					user: this.editGotoworkData.item.id,
-					endWork: this.$moment(today + ' ' + this.endTime),
+					id: this.editGotoworkData.item.gotoworksAll.id,
+					userID: this.editGotoworkData.item.id,
+					endWork: formattedEndTime,
 				}
 				this.updateGotoworkAction(data)
 			}

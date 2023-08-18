@@ -964,6 +964,7 @@ export default {
 								listData.PaymentDate = element.settlement_turn_tables[i].PaymentDate
 								completeAmount.push(element.settlement_turn_tables[i])
 								listData.completeAmount = completeAmount
+								listData.turnStatus = 'complete'
 							}
 						}
 					} else {
@@ -1336,6 +1337,8 @@ export default {
 					}
 					console.log(li)
 					let input = {
+						bank: this.amountData[i].bank,
+						bankAccount: this.amountData[i].bankAccount,
 						id: this.amountData[i].id,
 						adminName: this.$store.state.meData.username,
 						PaymentDate: this.paymentProcess_date_picker[i + 1].date,
@@ -1620,22 +1623,30 @@ export default {
 		'timessel.value'(newValue) {
 			let time = Number(newValue.replace(/차/g, ''))
 			console.log(time)
-			for (let i = 0; i < this.finalSettlementData.settlements.settlement_turn_tables.length; i++) {
-				if (
-					this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
-					Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time
-				) {
-					this.sweetDialog_false.title = `지정 실패`
-					this.sweetDialog_false.content = `이미 지급이 완료된 회차는 변경하실 수 없습니다`
-					this.sweetDialog_false.modalValue = ''
-					this.sweetDialog_false.buttonType = 'oneBtn'
-					this.sweetDialog_false.modalIcon = 'info'
-					this.sweetDialog_false.open = true
-					return
-				}
-			}
 
-			if (!this.datatableInfoFirst) {
+			if (this.finalSettlementData.settlements.settlement_turn_tables.length === 0) {
+				for (let j = 0; j < 5; j++) {
+					this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
+					this.paymentRate[`charge${j + 1}`].txtField.readonly = false
+					this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
+				}
+			} else {
+				for (let i = 0; i <= this.finalSettlementData.settlements.settlement_turn_tables.length; i++) {
+					if (
+						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
+						Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time &&
+						!this.datatableInfoFirst
+					) {
+						this.sweetDialog_false.title = `지정 실패`
+						this.sweetDialog_false.content = `이미 지급이 완료된 회차는 변경하실 수 없습니다`
+						this.sweetDialog_false.modalValue = ''
+						this.sweetDialog_false.buttonType = 'oneBtn'
+						this.sweetDialog_false.modalIcon = 'info'
+						this.sweetDialog_false.open = true
+						return
+					}
+				}
+
 				for (let i = 0; i < 5; i++) {
 					if (
 						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus !== 'complete' &&
@@ -1647,30 +1658,11 @@ export default {
 						this.paymentAmount[`charge${i + 1}`].txtField.value = ''
 						this.paymentRate[`charge${i + 1}`].txtField.value = ''
 						this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+					} else {
+						this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
+						this.paymentRate[`charge${i + 1}`].txtField.readonly = false
+						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = false
 					}
-				}
-
-				for (let j = 0; j < time; j++) {
-					this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
-					this.paymentRate[`charge${j + 1}`].txtField.readonly = false
-					this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
-				}
-			} else {
-				for (let i = 0; i < 5; i++) {
-					if (
-						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus !== 'complete' &&
-						Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time
-					) {
-						this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
-						this.paymentRate[`charge${i + 1}`].txtField.readonly = true
-						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
-					}
-				}
-
-				for (let j = 0; j < time; j++) {
-					this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
-					this.paymentRate[`charge${j + 1}`].txtField.readonly = false
-					this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
 				}
 			}
 		},
