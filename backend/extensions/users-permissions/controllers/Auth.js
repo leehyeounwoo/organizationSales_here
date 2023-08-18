@@ -620,6 +620,11 @@ module.exports = {
         .createHash("sha256")
         .update(params.email)
         .digest("hex");
+      const businessData = await strapi.services["business"].find({
+        code: ctx.request.body.businessID,
+      });
+      params.businessID = businessData[0].id;
+
       const user = await strapi
         .query("user", "users-permissions")
         .create(params);
@@ -681,7 +686,6 @@ module.exports = {
       }
       const userAPIs = await strapi.query("user", "users-permissions").find();
 
-      console.log(userAPIs);
       const ApiList = [];
       userAPIs.forEach((api) => {
         ApiList.push({
