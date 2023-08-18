@@ -35,8 +35,8 @@
 				<datatable :datatable="settlementTable" class="notice_table" @pagination="pagination" @click="editUserData" />
 			</v-flex>
 			<v-flex xs4 class="ml-10">
-				<v-layout style="border-top:1px solid black">
-					<v-flex class="notice_right_table" xs3 style="height: 50px;">
+				<v-layout style="border-top:1px solid black; height: 50px">
+					<v-flex class="notice_right_table" xs3>
 						계약자
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">
@@ -49,7 +49,7 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex class="notice_right_table" xs3 style="height: 50px;">
+					<v-flex class="notice_right_table" xs3>
 						계약물건
 					</v-flex>
 					<v-flex xs10 class="notice_right_table2">

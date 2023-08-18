@@ -108,8 +108,8 @@
 					</datatable>
 
 					<v-flex xs7 class="ml-4">
-						<v-layout style="border-top:1px solid black">
-							<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
+						<v-layout style="border-top:1px solid black; height: 52.3px;">
+							<v-flex class="notice_right_table" xs2 style="">
 								제목
 							</v-flex>
 							<v-flex xs10 class="notice_right_table2">
@@ -120,8 +120,8 @@
 								></txtField>
 							</v-flex>
 						</v-layout>
-						<v-layout>
-							<v-flex class="notice_right_table" xs2 style="height: 52.3px;">
+						<v-layout style="height: 52.3px;">
+							<v-flex class="notice_right_table" xs2>
 								유형
 							</v-flex>
 							<v-flex xs10 class="notice_right_table2">
