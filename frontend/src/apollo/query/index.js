@@ -23,7 +23,14 @@ export const users = gql`
 			}
 		}
 		users(
-			where: { date: $date, id: $idArr, username: $username, teamID: $teamID, role: { name: $roleName }, businessID_null: $businessID_null }
+			where: {
+				date: $date
+				id: $idArr
+				username_contains: $username
+				teamID: $teamID
+				role: { name: $roleName }
+				businessID_null: $businessID_null
+			}
 		) {
 			id
 			businessID

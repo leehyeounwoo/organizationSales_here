@@ -791,9 +791,22 @@ export default {
 			return timeData
 		},
 		async SearchBiz() {
-			let data = { date: this.$moment(this.date).format('YYYY-MM-DD') }
-
-			await this.viewUsers(data)
+			let input = {
+				roleName: 'Counselor',
+			}
+			let input2 = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+			}
+			let input3 = {
+				start: 0,
+				limit: 10,
+				date: this.$moment().format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
+			await this.viewUsers(input)
+			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 		},
 		gotoWorkDialogOpen(item) {
 			console.log('클릭')
