@@ -10,15 +10,27 @@
 			<v-layout class="login_background" flex-wrap justify-center align-center>
 				<v-flex xs6 v-if="nowWidth > 1090">
 					<div>
-						<v-img class="login_img" height="100vh" src="@/assets/images/login_bg2.png">
-							<div class="login_img_text">Reserve Here</div>
+						<v-img height="100vh" src="@/assets/images/login_bg2.png">
+							<div class="text-left" style="margin: 105px 0 200px 125px;">
+								<span class="loginMainTitle">
+									Members <br />
+									Here
+								</span>
+								<span class="loginSubTitle">
+									<br />
+									Sales force management system
+								</span>
+							</div>
+							<div class="text-left" style="margin-left: 125px; margin-bottom: 123.4px;">
+								<v-img style="max-width: 400px;" src="/image/counselor_login_1.png"></v-img>
+							</div>
 						</v-img>
 					</div>
 				</v-flex>
 				<v-flex md6 xs12>
-					<div style="width:320px; padding:0px 10px">
-						<div class="login_text">LOG IN</div>
-						<div class="text-center" style="margin: 0 auto; width:320px;">
+					<div style="width:320px; padding:0px;" class="mr-5">
+						<div class="login_text text-left mb-3">LOG IN</div>
+						<div class="text-center test002" style="margin: 0 auto; width:320px;">
 							<!-- 아이디 -->
 							<v-text-field
 								:error-messages="iderrorMessages"
@@ -36,6 +48,7 @@
 							></v-text-field>
 							<!-- 비밀번호 -->
 							<v-text-field
+								class="test001"
 								:error-messages="pwerrorMessages"
 								:autofocus="false"
 								placeholder="비밀번호"
@@ -50,9 +63,9 @@
 								:class="pwerrorMessages === '' ? 'mb-4' : ''"
 							></v-text-field>
 							<!-- 로그인 버튼 -->
-							<v-checkbox v-model="rememberId" color="MainColor1" :label="`아이디 저장`" class="mt-0 pt-0" hideDetails></v-checkbox>
-							<v-btn class="loginButton" block elevation="0" @click="login()">
-								<span style="color:white;	font-weight: bold;">
+							<v-checkbox v-model="rememberId" color="#009dac" :label="`아이디 저장`" class="mt-0 pt-0" hideDetails></v-checkbox>
+							<v-btn class="AdminLoginButton mt-5" height="50px" color="#3e7ccc" block elevation="0" @click="login()">
+								<span class="loginSpan" style="color:white;	font-weight: bold;">
 									로그인
 								</span>
 							</v-btn>
@@ -189,4 +202,69 @@ export default {
 </script>
 
 <style lang="scss"></style>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.loginMainTitle {
+	width: 208px;
+	height: 132px;
+	font-family: Inter;
+	font-size: 50px;
+	font-weight: 800;
+	line-height: 1.3;
+	letter-spacing: normal;
+	text-align: left;
+	color: #fff;
+}
+
+.loginSubTitle {
+	width: 215px;
+	height: 21px;
+	font-family: Inter;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 0.94;
+	letter-spacing: normal;
+	text-align: left;
+	color: #fff;
+}
+
+.login_text {
+	font-family: MalgunGothic;
+	font-size: 25px;
+	font-weight: bold;
+	text-align: left;
+	color: #3e7ccc;
+}
+
+.AdminLoginButton {
+	width: 402px;
+	height: 70px;
+	border-radius: 2px;
+	color: #3e7ccc;
+}
+
+.test002 {
+	width: 402px !important;
+}
+.test001 {
+	width: 402px !important;
+	.v-input__control {
+		.v-input__slot {
+			width: 402px;
+		}
+	}
+}
+
+.loginSpan {
+	width: 60px;
+	height: 27px;
+	font-family: MalgunGothic;
+	font-size: 20px;
+	font-weight: bold;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.2;
+	letter-spacing: normal;
+	text-align: center;
+	color: #fff;
+}
+</style>
