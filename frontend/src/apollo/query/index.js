@@ -379,7 +379,7 @@ export const settlementEditLogs = gql`
 export const assignments = gql`
 	query assignments($productArr: JSON, $created_at_lte: DateTime, $created_at_gte: DateTime, $status: ENUM_ASSIGNMENT_STATUS) {
 		assignments(
-			where: { productID: $productArr, created_at_lte: $created_at_lte, created_at_gte: $created_at_gte, useYn: true, status: $status }
+			where: { productID: $productArr, updated_at_lte: $created_at_lte, updated_at_gte: $created_at_gte, useYn: true, status: $status }
 		) {
 			id
 			useYn
@@ -391,6 +391,7 @@ export const assignments = gql`
 			orderType
 			productID
 			status
+			holdingTime
 		}
 	}
 `
