@@ -120,7 +120,7 @@ export default {
 					element.product = res.products[idx]
 					element.product_counselor = element.team.title + ' ' + element.user.username
 					element.holding_product = element.product.housingType + ' ' + element.product.dong + '동 ' + element.product.ho + '호'
-					element.holdingTime = element.holdingTime
+					// element.holdingTime = element.holdingTime
 					element.holdingTimeSel = {
 						placeholder: '홀딩 요청 시간',
 						value: Number(element.holdingTime),

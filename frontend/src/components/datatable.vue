@@ -62,7 +62,7 @@
 			</template>
 			<template v-slot:[`item.holdingTime`]="{ item }">
 				<v-layout align-center v-if="item.holdingTimeSel">
-					<v-flex xs6 >
+					<v-flex xs6>
 						<selectBox :sel="item.holdingTimeSel" :disable="item.holdingTimeSel.disabled" style="font-size:12px"></selectBox>
 						<!-- @change="managerChoiceStatusChange($event, item)" -->
 					</v-flex>

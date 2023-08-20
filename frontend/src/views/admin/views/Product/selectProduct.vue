@@ -188,7 +188,7 @@ export default {
 
 			this.$store
 				.dispatch('createAssignment', data)
-				.then(async res => {
+				.then(async () => {
 					this.productSelectData()
 				})
 				.catch(err => {
