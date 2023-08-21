@@ -422,8 +422,8 @@ export default {
 						this.rightInfoTop[2].value2 = this.$moment(this.setdialog.editData.vacationEnd).format('YYYY-MM-DD')
 						this.rightInfoTop[3].value = this.setdialog.editData.vacationReason
 						if (this.setdialog.editData.vacation !== 'waiting') {
-							this.rightInfoBottom[0].radio = this.setdialog.editData.vacationStatus
-							this.rightInfoBottom[1].value = this.setdialog.editData.rejectComment
+							this.rightInfoBottom[0].radio = this.setdialog.editData.vacation === 'agree' ? 'agree' : 'disagree'
+							this.rightInfoBottom[1].value = this.setdialog.editData.vacationRejectComment
 							this.rightInfoBottom[1].txtfield.readonly = true
 						} else {
 							this.rightInfoBottom[0].radio = 'disagree'

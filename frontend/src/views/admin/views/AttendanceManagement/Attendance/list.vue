@@ -520,6 +520,7 @@ export default {
 					this.userLists[workIndex]['vacationType'] = el.vacationType
 					this.userLists[workIndex]['vacationCreated_at'] = el.created_at
 					this.userLists[workIndex]['vacationID'] = el.id
+					this.userLists[workIndex]['vacationRejectComment'] = el.rejectComment
 
 					this.table.items = this.userLists
 					console.log('최종', this.table.items)

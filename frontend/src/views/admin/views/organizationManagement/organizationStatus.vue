@@ -590,10 +590,12 @@ export default {
 			this.$store.state.loading = true
 			const usersViewData = {
 				role: 3,
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.usersView(usersViewData)
 			const teamsViewData = {
 				useYn: true,
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 
 			await this.teamsView(teamsViewData)
@@ -745,6 +747,7 @@ export default {
 				})
 		},
 		async teamsDialogView(teamsViewData) {
+			this.left_data = []
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(res => {
@@ -788,6 +791,7 @@ export default {
 				})
 		},
 		async ranksDialogView(teamsViewData) {
+			this.right_data = []
 			await this.$store
 				.dispatch('ranks', teamsViewData)
 				.then(res => {
@@ -842,7 +846,9 @@ export default {
 		},
 		activeSave() {},
 		async teamChoiceClick() {
-			const teamsViewData = {}
+			const teamsViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
 			await this.teamsDialogView(teamsViewData)
 			const ranksViewData = {}
 			await this.ranksDialogView(ranksViewData)
