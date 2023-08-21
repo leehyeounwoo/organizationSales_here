@@ -29,6 +29,8 @@ import {
 	updateBusiness,
 	sendSmsSettlement,
 	updateAssignment,
+	createTeam,
+	createRank,
 } from '../apollo/mutation'
 import {
 	me,
@@ -857,6 +859,38 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: assignments,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		createTeam({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: createTeam,
+						variables: input,
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		createRank({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: createRank,
 						variables: input,
 					})
 					.then(({ data }) => {

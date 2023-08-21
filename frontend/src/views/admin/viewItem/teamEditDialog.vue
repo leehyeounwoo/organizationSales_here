@@ -42,7 +42,7 @@
 							<btn :btn="addBtn" :btn_txt="'추가'" @click="addTeam(addTxtfield.value)"></btn>
 						</v-flex>
 						<v-flex xs3 pr-1>
-							<btn :btn="saveBtn" :btn_txt="'적용'"></btn>
+							<btn :btn="saveBtn" :btn_txt="'적용'" @click="applyTeam()"></btn>
 						</v-flex>
 					</v-layout>
 				</v-flex>
@@ -81,7 +81,7 @@
 							<btn :btn="addBtn" :btn_txt="'추가'" @click="rankAdd(addTxtfield1.value)"></btn>
 						</v-flex>
 						<v-flex pr-1>
-							<btn :btn="saveBtn" :btn_txt="'적용'"></btn>
+							<btn :btn="saveBtn" :btn_txt="'적용'" @click="applyRank()"></btn>
 						</v-flex>
 					</v-layout>
 				</v-flex>
@@ -105,6 +105,8 @@ export default {
 		right_data: Array,
 		addTeam: Function,
 		rankAdd: Function,
+		applyTeam: Function,
+		applyRank: Function,
 	},
 	components: {
 		txtField,

@@ -103,7 +103,15 @@
 			name="상담사 관리 리스트"
 		>
 		</download-excel>
-		<teamEdit :setdialog="teamEditDialog" :left_data="left_data" :right_data="right_data" :addTeam="addTeam" :rankAdd="rankAdd"></teamEdit>
+		<teamEdit
+			:setdialog="teamEditDialog"
+			:left_data="left_data"
+			:right_data="right_data"
+			:addTeam="addTeam"
+			:rankAdd="rankAdd"
+			:applyTeam="applyTeam"
+			:applyRank="applyRank"
+		></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 	</div>
 </template>
@@ -478,6 +486,8 @@ export default {
 			teamData: [],
 			// rankArrData: [],
 			rankData: [],
+			basicTeamData: [],
+			basicRankData: [],
 		}
 	},
 
@@ -540,6 +550,82 @@ export default {
 				},
 			})
 		},
+		async applyTeam() {
+			let teamData1 = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+
+			await this.$store
+				.dispatch('teams', teamData1)
+				.then(res => {
+					this.basicTeamData = res.teams
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+
+			let name = this.left_data.filter(item => {
+				return !this.basicTeamData.some(team => team.title === item.value)
+			})
+			if (name.length > 0) {
+				for (let i = 0; i < name.length; i++) {
+					let teamData = {
+						businessID: this.$store.state.businessSelectBox.value,
+						title: name[i].value,
+						useYn: name[i].selectBox.value === '사용' ? true : false,
+					}
+					await this.$store.dispatch('createTeam', teamData).then(() => {})
+				}
+				await this.$store
+					.dispatch('teams', teamData1)
+					.then(() => {})
+					.catch(err => {
+						console.log(err)
+						this.$store.state.loading = false
+					})
+			} else {
+				alert('팀추가좀')
+			}
+		},
+		async applyRank() {
+			let teamData1 = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+
+			await this.$store
+				.dispatch('ranks', teamData1)
+				.then(res => {
+					this.basicRankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+
+			let name = this.right_data.filter(item => {
+				return !this.basicRankData.some(team => team.rankName === item.value)
+			})
+			if (name.length > 0) {
+				for (let i = 0; i < name.length; i++) {
+					let teamData = {
+						businessID: this.$store.state.businessSelectBox.value,
+						rankName: name[i].value,
+						useYn: name[i].selectBox.value === '사용' ? true : false,
+					}
+					await this.$store.dispatch('createRank', teamData).then(() => {})
+				}
+				await this.$store
+					.dispatch('ranks', teamData1)
+					.then(() => {})
+					.catch(err => {
+						console.log(err)
+						this.$store.state.loading = false
+					})
+			} else {
+				alert('팀추가좀')
+			}
+		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.table.origin_items))
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
@@ -601,6 +687,7 @@ export default {
 			await this.teamsView(teamsViewData)
 			const ranksViewData = {
 				useYn: true,
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 
 			await this.ranksView(ranksViewData)
@@ -850,7 +937,9 @@ export default {
 				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.teamsDialogView(teamsViewData)
-			const ranksViewData = {}
+			const ranksViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
 			await this.ranksDialogView(ranksViewData)
 			this.teamEditDialog.dialog = true
 		},
