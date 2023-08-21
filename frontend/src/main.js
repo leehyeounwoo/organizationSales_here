@@ -8,7 +8,7 @@ import VueMoment from 'vue-moment'
 import VueMeta from 'vue-meta'
 import io from 'socket.io-client'
 import VueTheMask from 'vue-the-mask'
-import VueMask from 'v-mask'
+import VueMask from 'vue-the-mask'
 import moment from 'moment'
 moment.locale('ko')
 Vue.use(VueMoment, { moment })
