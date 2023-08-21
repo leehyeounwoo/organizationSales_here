@@ -9,9 +9,9 @@
 					</div>
 					<div class="ml-2"><span class="point">상담사</span>님, 오늘도 즐거운 하루 되세요.</div>
 				</v-layout>
-				<div>
-					팀 추가시 추가 필요 / 1팀 (예시)
-				</div>
+				<v-btn elevation="0" block color="primary2" dark @click="$router.push({ name: 'QRenter' })"
+					><v-icon class="mr-1">mdi-qrcode-scan</v-icon> QR스캐너</v-btn
+				>
 				<v-btn block color="point4" dark elevation="0" class="mt-2" @click="openQr">
 					<v-icon class="mr-1">
 						mdi-qrcode-scan
@@ -400,7 +400,7 @@ export default {
 		openQr() {
 			this.dialogQr.open = true
 
-			this.dialogQr.code = this.$store.state.meData.id
+			this.dialogQr.code = this.$store.state.meData.id + '/' + this.$moment().format('YYYY-MM-DD HH:mm:ss')
 			this.dialogQr.meData = this.$store.state.meData
 		},
 	},

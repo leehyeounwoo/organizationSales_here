@@ -3,11 +3,16 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import 'moment/locale/ko'
 import VueMoment from 'vue-moment'
 import VueMeta from 'vue-meta'
 import io from 'socket.io-client'
 import VueTheMask from 'vue-the-mask'
 import VueMask from 'v-mask'
+import moment from 'moment'
+moment.locale('ko')
+Vue.use(VueMoment, { moment })
+
 Vue.use(VueMask)
 // vue 가드설정
 router.beforeEach(async (to, from, next) => {
@@ -58,7 +63,8 @@ router.beforeEach(async (to, from, next) => {
 	// 	next()
 	// }
 })
-
+import VueQrcodeReader from 'vue-qrcode-reader'
+Vue.use(VueQrcodeReader)
 Vue.use(VueTheMask)
 const socket = io(process.env.VUE_APP_BACKEND_SOCKET, {
 	reconnection: true,
@@ -68,7 +74,6 @@ Vue.prototype.$socket = socket
 
 Vue.config.productionTip = false
 
-Vue.use(VueMoment)
 Vue.use(VueMeta)
 // env 파일 로드
 console.log(process.env)
