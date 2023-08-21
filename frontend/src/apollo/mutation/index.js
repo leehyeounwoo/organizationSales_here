@@ -196,7 +196,7 @@ export const register = gql`
 		$profile: ID
 		$copyAccount: ID
 		$employmentContract: ID
-		$iD_Card: ID
+		$ID_Card: ID
 		$businessID: String
 		$company: String
 		$rankID: String
@@ -217,7 +217,7 @@ export const register = gql`
 				profile: $profile
 				copyAccount: $copyAccount
 				employmentContract: $employmentContract
-				iD_Card: $iD_Card
+				ID_Card: $ID_Card
 				businessID: $businessID
 				company: $company
 				rankID: $rankID
@@ -232,7 +232,7 @@ export const updateUser = gql`
 	mutation updateUser(
 		$username: String!
 		$email: String!
-		$password: String!
+		$password: String
 		$bank: String
 		$phoneNumber: String
 		$salesPhoneNumber: String
@@ -242,11 +242,12 @@ export const updateUser = gql`
 		$profile: ID
 		$copyAccount: ID
 		$employmentContract: ID
-		$iD_Card: ID
+		$ID_Card: ID
 		$businessID: String
 		$company: String
 		$rankID: String
 		$editLog: JSON
+		$id: ID!
 	) {
 		updateUser(
 			input: {
@@ -264,7 +265,7 @@ export const updateUser = gql`
 					profile: $profile
 					copyAccount: $copyAccount
 					employmentContract: $employmentContract
-					iD_Card: $iD_Card
+					ID_Card: $ID_Card
 					businessID: $businessID
 					company: $company
 					rankID: $rankID
@@ -552,7 +553,7 @@ export const userInfoEdit = gql`
 		$profile: ID
 		$copyAccount: ID
 		$employmentContract: ID
-		$iD_Card: ID
+		$ID_Card: ID
 		$teamID: String
 		$rankID: String
 		$phoneNumber: String
@@ -568,7 +569,7 @@ export const userInfoEdit = gql`
 				profile: $profile
 				copyAccount: $copyAccount
 				employmentContract: $employmentContract
-				iD_Card: $iD_Card
+				ID_Card: $ID_Card
 				teamID: $teamID
 				rankID: $rankID
 				phoneNumber: $phoneNumber

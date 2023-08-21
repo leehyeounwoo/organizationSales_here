@@ -19,7 +19,7 @@ module.exports = {
       profile: UploadFile
       copyAccount: UploadFile
       employmentContract: UploadFile
-      iD_Card: UploadFile
+      ID_Card: UploadFile
       businessID: String
       teamID: String
       company: String

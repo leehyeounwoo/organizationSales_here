@@ -10,6 +10,7 @@ export const me = gql`
 			username
 			email
 			blocked
+			businessNumber
 			role {
 				name
 			}

@@ -339,7 +339,7 @@
 				@change="fileUpload($event, index)"
 				accept=".pdf, image/jpg, image/png, image/jpeg"
 			/>
-			<sweetAlert :dialog="sweetInfo" />
+			<sweetAlert :dialog="sweetInfo" @close_active="$router.push({ name: 'counselorLogin' })" />
 			<!-- <div class="mt-8">
 					<v-btn text>
 						Privacy Policy & Terms of Service.
@@ -547,11 +547,9 @@ export default {
 							.dispatch('register', data)
 							.then(() => {
 								this.open_disable_dialog(
-									{ title: '등록완료', content: '정상적으로 등록 되었습니다. 입력하신 정보로 로그인 하시기 바랍니다.' },
+									{ title: '등록완료', content: '정상적으로 등록 되었습니다. \n입력하신 정보로 로그인 하시기 바랍니다.' },
 									'success',
 								)
-								this.$router.push({ name: 'counselorLogin' })
-								this.registerMode = false
 								this.authButton = true
 								this.sendActive = false
 								Object.assign(this.$data, this.$options.data())
