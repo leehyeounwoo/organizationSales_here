@@ -9,7 +9,8 @@
 					</div>
 					<div class="ml-2"><span class="point">상담사</span>님, 오늘도 즐거운 하루 되세요.</div>
 				</v-layout>
-				<v-btn elevation="0" block color="primary2" dark @click="$router.push({ name: 'QRenter' })"
+
+				<v-btn v-if="rank.rankName === '팀장'" elevation="0" block color="primary2" dark @click="$router.push({ name: 'QRenter' })"
 					><v-icon class="mr-1">mdi-qrcode-scan</v-icon> QR스캐너</v-btn
 				>
 				<v-btn block color="point4" dark elevation="0" class="mt-2" @click="openQr">
@@ -223,6 +224,7 @@ export default {
 			assignmentDatas: [],
 			waitingHoldingList: {},
 			rejectHoldingList: {},
+			rank: {},
 		}
 	},
 	created() {
@@ -233,6 +235,13 @@ export default {
 		this.products()
 	},
 	methods: {
+		ranks() {
+			this.$store
+				.dispatch('ranks', { idArr: [this.$store.state.meData.rankID], useYn: true, businessID: this.$store.state.meData.businessID })
+				.then(res => {
+					this.rank = res.ranks[0]
+				})
+		},
 		product1Change(val) {
 			this.products2 = this.productDatas.filter(x => x.housingType === val).map(x => x.dong)
 			this.product2 = ''
@@ -295,6 +304,7 @@ export default {
 					this.productDatas = res.products
 					this.products1 = res.products.map(x => x.housingType)
 					this.assignments()
+					this.ranks()
 				})
 			})
 		},

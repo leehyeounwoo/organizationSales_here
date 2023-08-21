@@ -72,7 +72,7 @@ export default new Vuex.Store({
 			itemText: 'name',
 			itemValue: 'id',
 		},
-		meData: { role: { name: '' }, name: '', team: { title: '' } },
+		meData: { role: { name: '' }, name: '', team: { title: '' }, rank: { rankName: '' } },
 		dashBoardList: [],
 		loading: false,
 		primary: '#3A258F',
