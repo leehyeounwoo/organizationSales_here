@@ -363,6 +363,7 @@ export const createBusiness = gql`
 		) {
 			business {
 				id
+				product
 			}
 		}
 	}

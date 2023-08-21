@@ -102,6 +102,7 @@
 									</v-flex>
 									<VueCsvImport
 										style="display:none;"
+										v-if="parseCsvStatus"
 										id="csvimport"
 										inputClass="inputclasstest"
 										v-model="parseCsv"
@@ -216,6 +217,7 @@ export default {
 	},
 	data() {
 		return {
+			parseCsvStatus: false,
 			mapfields: ['housingType', 'dong', 'ho'],
 			parseCsv: null,
 			sweetDialog: {
@@ -251,7 +253,7 @@ export default {
 		setdialog: {
 			deep: true,
 			handler() {
-				if (this.setdialog.dialog) {
+				if (!this.setdialog.dialog) {
 					this.parseCsv = null
 				}
 			},
@@ -310,19 +312,38 @@ export default {
 			a.click()
 		},
 		csvImportClick(index) {
-			document.getElementsByClassName('form-check-input')[0].click()
-			document.getElementsByClassName('inputclasstest')[0].click()
-			var interval = setInterval(() => {
-				document.getElementsByClassName('btn-primary')[0].click()
-				this.$store.state.loading = true
-				if (this.parseCsv !== null) {
-					console.log(this.parseCsv)
-					clearInterval(interval)
-					this.setdialog.items[index].value = this.parseCsv.map(x => x.housingType).toString()
-					this.setdialog.items[index].csvImport = true
-					this.$store.state.loading = false
-				} else {
-					this.$store.state.loading = false
+			setTimeout(() => {
+				var theFile = document.getElementsByClassName('inputclasstest')[0]
+
+				theFile.value = []
+
+				document.body.onfocus = () => {
+					if (!theFile.value.length) {
+						this.$store.state.loading = false
+					}
+
+					document.body.onfocus = null
+				}
+			}, 1000)
+
+			this.parseCsvStatus = true
+			this.parseCsv = null
+			this.$store.state.loading = true
+			const statusInterval = setInterval(() => {
+				if (this.parseCsvStatus) {
+					clearInterval(statusInterval)
+					document.getElementsByClassName('form-check-input')[0].click()
+					document.getElementsByClassName('inputclasstest')[0].click()
+					var interval = setInterval(() => {
+						document.getElementsByClassName('btn-primary')[0].click()
+						if (this.parseCsv !== null) {
+							clearInterval(interval)
+							this.setdialog.items[index].value = this.parseCsv.map(x => x.housingType).toString()
+							this.setdialog.items[index].csvImport = true
+							this.parseCsvStatus = false
+							this.$store.state.loading = false
+						}
+					}, 1000)
 				}
 			}, 1000)
 		},
@@ -362,11 +383,25 @@ export default {
 				workingHoursEnd: this.setdialog.items[2].worktime2.time + ':00.000',
 				splitHoldingTime: this.setdialog.items[3].selectBox.value,
 				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
-				product: this.setdialog.items[5].value ? this.setdialog.items[5].value.split(',') : [],
+				product: this.setdialog.items[5].value ? this.parseCsv : [],
 			}
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('createBusiness', data).then(res => {
 					console.log(res.createBusiness)
+					console.log(data.product)
+					if (data.product) {
+						for (let i = 0; i < data.product.length; i++) {
+							let item = {
+								businessID: res.createBusiness.business.id,
+								housingType: data.product[i].housingType,
+								dong: data.product[i].dong,
+								ho: data.product[i].ho,
+							}
+							this.$store.dispatch('createProduct', item).then(res => {
+								console.log(res)
+							})
+						}
+					}
 					if (this.newUser) {
 						for (let i = 0; i < this.newUser.length; i++) {
 							let adduser = {
