@@ -314,6 +314,7 @@ export default {
 				],
 				class: 'datatablehover3',
 				items: [],
+				items_origin: [],
 				noweditting: '',
 				itemsPerPage: 10,
 				page: 1,
@@ -363,7 +364,7 @@ export default {
 					})
 				})
 				this.table.items = res.businesses
-				console.log(this.table.items)
+				this.table.items_origin = JSON.parse(JSON.stringify(res.businesses))
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 				this.$store.state.loading = false
 			})
@@ -417,14 +418,11 @@ export default {
 			this.createDialog.dialog = true
 		},
 		search_biz() {
-			this.$store.state.loading = true
-			let variable = {
-				name: this.search_business,
-			}
-			this.$store.dispatch('businesses', variable).then(res => {
-				this.table.items = res.businesses
-				this.$store.state.loading = false
-			})
+			let item = this.table.items_origin
+			item = item.filter(el => el.name.indexOf(this.search_business) !== -1)
+			this.table.items = item
+			console.log(this.table.items)
+			this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 		},
 	},
 }
