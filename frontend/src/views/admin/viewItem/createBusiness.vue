@@ -64,7 +64,7 @@
 							<v-flex class="pt-3" xs7>
 								<v-layout>
 									<v-flex xs4>
-										<selectBox :sel="left.selectBox" style="font-size:13px"></selectBox>
+										<selectBox :sel="left.selectBox" style="font-size:13px" @change="select2(left)"></selectBox>
 									</v-flex>
 									<div class="pt-1 mx-2" style="font-size:12px">단위 / 최대</div>
 									<v-flex xs4>
@@ -258,6 +258,13 @@ export default {
 		},
 	},
 	methods: {
+		select2(select) {
+			if (select.selectBox.value === '30분') {
+				select.selectBox2.items = ['60분', '90분', '120분']
+			} else {
+				select.selectBox2.items = ['60분', '120분']
+			}
+		},
 		addManager() {
 			this.right_data.push({
 				detail: [],

@@ -108,15 +108,15 @@ export default {
 						type: 'selectBox',
 						value: '',
 						selectBox: {
-							value: '30분',
+							value: '',
 							items: ['30분', '60분'],
 							hideDetail: true,
 							outlined: true,
 							class: 'small_font bizInput',
 						},
 						selectBox2: {
-							value: '120분',
-							items: ['60분', '90분', '120분'],
+							value: '',
+							items: [],
 							hideDetail: true,
 							outlined: true,
 							class: 'small_font bizInput',
@@ -410,6 +410,13 @@ export default {
 			this.createDialog.items[1].value = item.phoneNumber
 			this.createDialog.items[2].worktime1.time = item.startTime
 			this.createDialog.items[2].worktime2.time = item.endTime
+			this.createDialog.items[3].selectBox.value = item.splitHoldingTime
+			if (item.splitHoldingTime === '30분') {
+				this.createDialog.items[3].selectBox2.items = ['30분', '60분', '120분']
+			} else {
+				this.createDialog.items[3].selectBox2.items = ['60분', '120분']
+			}
+			this.createDialog.items[3].selectBox2.value = item.maximumHoldingTime
 			this.createDialog.items[4].value = item.code
 			this.right_data[0].txtfield1.value = item.manager ? item.manager.username : ''
 			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
