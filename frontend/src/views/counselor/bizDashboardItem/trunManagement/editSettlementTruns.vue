@@ -36,7 +36,7 @@
 						<datatable :datatable="datatable" class="front-datatable mb-2" />
 					</div>
 				</div>
-				<div class="mt-4 px-4 py-4 input_field_white">
+				<div class="mt-4 px-4 py-4 input_field_white" v-if="moneyDatatable.items.length > 0">
 					<p class="input_main_title">
 						지급현황
 					</p>
@@ -78,7 +78,15 @@
 					</v-layout>
 					<div>
 						<v-chip-group class="white--text">
-							<v-chip v-for="(file, i) in files" :key="i" color="point6" close dark @click:close="deleteFiles(i)">
+							<v-chip
+								v-for="(file, i) in files"
+								:key="i"
+								color="point6"
+								close
+								dark
+								@click:close="deleteFiles(i)"
+								@click="e => viewAttachment(e, file.url)"
+							>
 								{{ file.name }}
 							</v-chip>
 						</v-chip-group>
@@ -144,10 +152,10 @@ export default {
 					{
 						text: '비율',
 						align: 'center',
-						value: 'product_settlements',
+						value: 'amountValue',
 					},
-					{ text: '지급금액', value: 'totalPrice', align: 'center' },
-					{ text: '비고', value: 'totalPrice', align: 'center' },
+					{ text: '지급금액', value: 'amount', align: 'center' },
+					{ text: '비고', value: 'depositFile', align: 'center' },
 				],
 				class: 'mt-0',
 				items: [],
@@ -242,6 +250,11 @@ export default {
 		})
 	},
 	methods: {
+		viewAttachment(e, val) {
+			e.stopPropagation()
+			location = process.env.VUE_APP_BACKEND_URL + val
+			window.open(location)
+		},
 		deleteFiles(i) {
 			this.files.splice(i, 1)
 		},
@@ -255,13 +268,59 @@ export default {
 				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
 					this.productDatas = res.products
 					console.log(this.settlement)
+					if (this.settlement.settlementStatus === 'disagree')
+						this.open_disable_dialog(
+							{
+								title: '반려사유',
+								content: `${this.settlement.rejectComment}`,
+							},
+							'warning',
+						)
+					if (this.settlement.totalPrice) {
+						// this.moneyDatatable.items.push({
+						// 	trun: el.turnTableDegree,
+						// 	contractDate: el.prePaymentDate,
+						// 	product_settlements: el.
+						// })
+					}
+					if (this.settlement.settlement_turn_tables.length > 0) {
+						this.settlement.settlement_turn_tables.forEach((el, index) => {
+							this.moneyDatatable.items.push({
+								trun: el.turnTableDegree,
+								contractDate: el.prePaymentDate,
+								amountValue: String(Math.floor((el.amount / this.settlement.totalPrice) * 100)) + '%',
+								amount: el.amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
+								depositFile: el.depositFile,
+							})
+							let totalamountValue = 0
+							let totalamout = 0
+							totalamout += el.amount
+							totalamountValue += Math.floor((el.amount / this.settlement.totalPrice) * 100)
+							if (index === this.settlement.settlement_turn_tables.length - 1)
+								this.moneyDatatable.items.push({
+									trun: '지급금액',
+									contractDate: '',
+									amountValue: String(totalamountValue) + '%',
+									amount: totalamout.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
+									depositFile: '',
+								})
+							this.moneyDatatable.items.push({
+								trun: '잔여금액',
+								contractDate: '',
+								amountValue: String(100 - totalamountValue) + '%',
+								amount: (this.settlement.totalPrice - totalamout).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
+								depositFile: '',
+							})
+						})
+					}
 					this.datatable.items.push({
 						name: this.settlement.name,
 						contractDate: this.$moment(this.settlement.contractDate).format('YYYY.MM.DD'),
-						totalPrice: this.settlement.totalPrice ? this.settlement.totalPrice : '미산정',
+						totalPrice: this.settlement.totalPrice
+							? this.settlement.totalPrice.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+							: '미산정',
 						product: res.products.filter(x => x.id === this.settlement.ProductID)[0],
 					})
-					console.log(this.datatable.items)
 				})
 			})
 		},

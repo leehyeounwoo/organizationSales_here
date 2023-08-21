@@ -55,6 +55,40 @@
 					{{ item.product_counselor }}
 				</div>
 			</template>
+			<template v-slot:[`item.trun`]="{ item }">
+				<div :class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''">
+					{{ item.trun }}
+				</div>
+			</template>
+			<template v-slot:[`item.contractDate`]="{ item }">
+				<div :class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''">
+					{{ item.contractDate }}
+				</div>
+			</template>
+			<template v-slot:[`item.amountValue`]="{ item }">
+				<div :class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''">
+					{{ item.amountValue }}
+				</div>
+			</template>
+			<template v-slot:[`item.amount`]="{ item }">
+				<div :class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''">
+					{{ item.amount }}
+				</div>
+			</template>
+			<template v-slot:[`item.depositFile`]="{ item }">
+				<div
+					:class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''"
+					v-if="item.trun === '지급금액' || item.trun === '잔여금액'"
+				></div>
+				<v-btn
+					v-else
+					:class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''"
+					icon
+					color="primary2"
+					@click="e => viewAttachment(e, item.depositFile.url)"
+					><v-icon>mdi-file</v-icon></v-btn
+				>
+			</template>
 			<template v-slot:[`item.holding_product`]="{ item }">
 				<div>
 					{{ item.holding_product }}
@@ -2297,6 +2331,11 @@ export default {
 		},
 	},
 	methods: {
+		viewAttachment(e, val) {
+			e.stopPropagation()
+			location = process.env.VUE_APP_BACKEND_URL + val
+			window.open(location)
+		},
 		secondChange(data) {
 			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
 		},
@@ -2713,6 +2752,14 @@ export default {
 </script>
 
 <style lang="scss">
+td:has(.send-color) {
+	color: white !important;
+	background-color: #3e7ccc !important;
+}
+td:has(.leave-color) {
+	color: black !important;
+	background-color: #d4d4d4 !important;
+}
 .text-start {
 	text-align: center !important;
 }

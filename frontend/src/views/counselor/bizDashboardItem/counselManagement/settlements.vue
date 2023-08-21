@@ -192,7 +192,7 @@ export default {
 	},
 	created() {
 		this.products()
-		this.settlements('fisrt')
+		this.settlements('first')
 	},
 	methods: {
 		editSettlement(val) {

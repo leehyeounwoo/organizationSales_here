@@ -126,6 +126,7 @@
 								placeholder="주택형"
 								:items="products1"
 								v-model="product1"
+								:readonly="settlement.settlementStatus === 'agree'"
 								solo
 								dense
 								outlined
@@ -143,6 +144,7 @@
 								v-model="product2"
 								solo
 								:disabled="!product1"
+								:readonly="settlement.settlementStatus === 'agree'"
 								dense
 								outlined
 								class="nomal-select"
@@ -158,6 +160,7 @@
 								placeholder="호수"
 								:items="products3"
 								v-model="product3"
+								:readonly="settlement.settlementStatus === 'agree'"
 								solo
 								:disabled="!product2"
 								dense
@@ -287,6 +290,14 @@ export default {
 						'error',
 					)
 				this.settlement = res.settlements[0]
+				if (this.settlement.settlementStatus === 'disagree')
+					this.open_disable_dialog(
+						{
+							title: '반려사유',
+							content: `${this.settlement.rejectComment}`,
+						},
+						'warning',
+					)
 				this.siginup.name = res.settlements[0].name
 				this.siginup.phone = res.settlements[0].phone
 				this.siginup.birth = res.settlements[0].birth

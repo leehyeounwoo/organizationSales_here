@@ -83,8 +83,8 @@
 						>
 						<v-flex py-1 my-1 style="text-align: center; background-color:white; border-radius:5px; color:black;" xs7>
 							<v-layout justify-center align-center>
-								<v-flex style="text-align: center;" xs3>{{ date.startWork ? $moment(date.startWork).format('HH:mm') : '-' }}</v-flex>
-								<v-flex style="text-align: center;" xs3>{{ date.endWork ? $moment(date.endWork).format('HH:mm') : '-' }}</v-flex>
+								<v-flex style="text-align: center;" xs3>{{ date.startWork ? showTiem(date.startWork) : '-' }}</v-flex>
+								<v-flex style="text-align: center;" xs3>{{ date.endWork ? showTiem(date.endWork) : '-' }}</v-flex>
 								<v-flex style="text-align: center;" xs6>{{
 									date.startWork && date.endWork ? timeCheck(date.startWork, date.endWork) : '-'
 								}}</v-flex>
@@ -144,8 +144,8 @@
 						</v-flex>
 						<v-flex py-1 my-1 style="text-align: center; background-color:white; border-radius:5px; color:black;" xs7>
 							<v-layout justify-center align-center>
-								<v-flex style="text-align: center;" xs3>{{ date.startWork ? $moment(date.startWork).format('HH:mm') : '-' }}</v-flex>
-								<v-flex style="text-align: center;" xs3>{{ date.endWork ? $moment(date.endWork).format('HH:mm') : '-' }}</v-flex>
+								<v-flex style="text-align: center;" xs3>{{ date.startWork ? showTiem(date.startWork) : '-' }}</v-flex>
+								<v-flex style="text-align: center;" xs3>{{ date.endWork ? showTiem(date.endWork) : '-' }}</v-flex>
 								<v-flex style="text-align: center;" xs6>{{
 									date.startWork && date.endWork ? timeCheck(date.startWork, date.endWork) : '-'
 								}}</v-flex>
@@ -218,6 +218,9 @@ export default {
 		},
 	},
 	methods: {
+		showTiem(data) {
+			return data.split(':')[0] + ':' + data.split(':')[1]
+		},
 		holyDayAction() {
 			const filterData = this.workDate.filter(x => x.checkBoxValue === true)
 			if (filterData.length > 0) {
@@ -304,15 +307,17 @@ export default {
 				return true
 			}
 		},
+		secondChange(data) {
+			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
+		},
 		timeCheck(start, end) {
-			const moment = require('moment')
 			let timeData = ''
-			let hour = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() / 60)
-			let minute = parseInt(moment.duration(this.$moment(end).diff(this.$moment(start))).asMinutes() % 60)
-			if (minute === 0) {
-				timeData = hour + '시간'
+			let minute = (this.secondChange(end) - this.secondChange(start)) / 60
+			let hour = (this.secondChange(end) - this.secondChange(start)) / 60 / 60
+			if (hour > 1) {
+				timeData = Math.floor(hour) + '시간 ' + (minute - Math.floor(hour) * 60) + '분'
 			} else {
-				timeData = hour + '시간' + minute + '분'
+				timeData = minute + '분'
 			}
 			return timeData
 		},
@@ -337,10 +342,9 @@ export default {
 			}
 			this.workDate = result
 			const data = {
-				business: this.$store.state.meData.businessID,
 				date_gte: this.startPicker.date,
 				date_lte: this.endPicker.date,
-				id: this.$store.state.meData.id,
+				userID: this.$store.state.meData.id,
 			}
 			this.usersView(data)
 		},
@@ -362,10 +366,10 @@ export default {
 		},
 		usersView(data) {
 			this.$store
-				.dispatch('users', data)
+				.dispatch('gotoWork', data)
 				.then(res => {
-					console.log(res)
-					res.users[0].gotoworks.forEach(element => {
+					console.log(res.gotoworks)
+					res.gotoworks.forEach(element => {
 						let idx = this.workDate.findIndex(x => x.date === element.date)
 						let arr = this.workDate.filter(x => x.date === element.date)
 						if (arr.length > 0) {
@@ -374,41 +378,6 @@ export default {
 							arr[0].status = element.status
 						}
 						this.workDate[idx] = arr[0]
-					})
-					this.workDate.forEach(element => {
-						element.dialogType = 'morningVacation'
-					})
-					let disagreeArr = []
-					res.users[0].vacations.forEach((element, index) => {
-						let idx = this.workDate.findIndex(x => x.date === element.vacationDate && x.status === 'waiting' && x.status === 'disagree')
-						let arr = this.workDate.filter(x => x.date === element.vacationDate)
-						if (arr.length > 0) {
-							arr[0].startWork = element.startWork
-							arr[0].endWork = element.endWork
-							arr[0].status = element.type
-							arr[0].result = element.status
-
-							if (element.status === 'agree' || element.status === 'admin') {
-								arr[0].agree = false
-							} else {
-								arr[0].agree = true
-							}
-						}
-
-						if (!element.viewStatus) {
-							element.dialogType = element.type
-							element.date = element.vacationDate
-							disagreeArr.push(element)
-
-							this.disagreeDialog.open = true
-						}
-						if (index === res.users[0].vacations.length - 1) {
-							this.disagreeArrData = disagreeArr
-						}
-						this.workDate[idx] = arr[0]
-					})
-					this.workDate.forEach(element => {
-						element.dialogType = 'morningVacation'
 					})
 				})
 				.catch(err => {
