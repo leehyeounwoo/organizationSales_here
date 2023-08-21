@@ -525,40 +525,43 @@
           "rejectComment": {
             "type": "string"
           },
-          "gotowork": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "startWork": {
-                "type": "time"
-              },
-              "endWork": {
-                "type": "time"
-              },
-              "date": {
-                "type": "string"
-              },
-              "status": {
-                "type": "string"
-              },
-              "vacation": {
-                "type": "string"
-              },
-              "userID": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "datetime"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
+          "gotoworks": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "startWork": {
+                  "type": "time"
+                },
+                "endWork": {
+                  "type": "time"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "userID": {
+                  "type": "string"
+                },
+                "vacation": {
+                  "type": "string"
+                },
+                "published_at": {
+                  "type": "datetime"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
               }
             }
           },
@@ -598,8 +601,11 @@
           "rejectComment": {
             "type": "string"
           },
-          "gotowork": {
-            "type": "string"
+          "gotoworks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "vacationType": {
             "type": "string"

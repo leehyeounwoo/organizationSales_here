@@ -12,7 +12,8 @@
   },
   "attributes": {
     "useYn": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "userID": {
       "type": "string"

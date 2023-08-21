@@ -14,8 +14,8 @@
     "rejectComment": {
       "type": "text"
     },
-    "gotowork": {
-      "model": "gotoworks",
+    "gotoworks": {
+      "collection": "gotoworks",
       "via": "vacation"
     },
     "vacationType": {

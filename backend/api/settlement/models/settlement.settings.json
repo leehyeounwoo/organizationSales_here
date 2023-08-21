@@ -23,7 +23,8 @@
         "agree",
         "waiting",
         "disagree"
-      ]
+      ],
+      "default": "waiting"
     },
     "degree": {
       "type": "string"
@@ -49,8 +50,8 @@
       "type": "string"
     },
     "settlement_turn_tables": {
-      "via": "settlement",
-      "collection": "settlement-turn-table"
+      "collection": "settlement-turn-table",
+      "via": "settlement"
     },
     "turn": {
       "type": "string"

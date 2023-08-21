@@ -12,8 +12,8 @@
   },
   "attributes": {
     "settlement": {
-      "model": "settlement",
-      "via": "settlement_turn_tables"
+      "via": "settlement_turn_tables",
+      "model": "settlement"
     },
     "PaymentDate": {
       "type": "date"

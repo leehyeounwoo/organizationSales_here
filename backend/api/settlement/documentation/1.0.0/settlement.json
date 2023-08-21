@@ -530,6 +530,7 @@
           },
           "settlementStatus": {
             "type": "string",
+            "default": "waiting",
             "enum": [
               "agree",
               "waiting",
@@ -709,6 +710,7 @@
           },
           "settlementStatus": {
             "type": "string",
+            "default": "waiting",
             "enum": [
               "agree",
               "waiting",
