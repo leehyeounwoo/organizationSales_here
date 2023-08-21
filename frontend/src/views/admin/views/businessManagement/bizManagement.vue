@@ -254,7 +254,7 @@ export default {
 				selectBox4: {
 					placeholder: '상태',
 					value: '',
-					items: ['계약', '미계약'],
+					items: ['전체', '계약', '미계약'],
 					hideDetail: true,
 					outlined: true,
 					class: 'small_font searchSel',
