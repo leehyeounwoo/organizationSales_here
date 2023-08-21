@@ -904,7 +904,6 @@ export default {
 			this.newDialog.editData = item
 		},
 		vacation_filter(val) {
-			console.log(val)
 			if (val) {
 				if (val === 'agree') {
 					return '승인'
