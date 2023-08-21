@@ -39,7 +39,7 @@
 							<txtField class="bizInput px-2" v-model="addTxtfield.value" :txtField="addTxtfield"></txtField>
 						</v-flex>
 						<v-flex xs3 pr-1>
-							<btn :btn="addBtn" :btn_txt="'추가'"></btn>
+							<btn :btn="addBtn" :btn_txt="'추가'" @click="addTeam(addTxtfield.value)"></btn>
 						</v-flex>
 						<v-flex xs3 pr-1>
 							<btn :btn="saveBtn" :btn_txt="'적용'"></btn>
@@ -53,7 +53,7 @@
 					</v-layout>
 					<v-layout align-center class="right_table_header">
 						<v-flex xs4 style="">No.</v-flex>
-						<v-flex xs4 style="">팀명</v-flex>
+						<v-flex xs4 style="">직급명</v-flex>
 						<v-flex xs4 style="">사용여부</v-flex>
 					</v-layout>
 					<v-layout px-1 align-center v-for="(right, idx) in right_data" :key="idx" class="manageTable">
@@ -75,10 +75,10 @@
 						py-2
 					>
 						<v-flex>
-							<txtField class="bizInput px-2" v-model="addTxtfield.value" :txtField="addTxtfield"></txtField>
+							<txtField class="bizInput px-2" v-model="addTxtfield1.value" :txtField="addTxtfield1"></txtField>
 						</v-flex>
 						<v-flex pr-1>
-							<btn :btn="addBtn" :btn_txt="'추가'"></btn>
+							<btn :btn="addBtn" :btn_txt="'추가'" @click="rankAdd(addTxtfield1.value)"></btn>
 						</v-flex>
 						<v-flex pr-1>
 							<btn :btn="saveBtn" :btn_txt="'적용'"></btn>
@@ -103,6 +103,8 @@ export default {
 		setdialog: Object,
 		left_data: Array,
 		right_data: Array,
+		addTeam: Function,
+		rankAdd: Function,
 	},
 	components: {
 		txtField,
@@ -153,6 +155,13 @@ export default {
 				class: 'small_font bizInput',
 			},
 			addTxtfield: {
+				value: '',
+				maxlength: '255',
+				outlined: true,
+				hideDetail: true,
+				errorMessage: '',
+			},
+			addTxtfield1: {
 				value: '',
 				maxlength: '255',
 				outlined: true,

@@ -377,6 +377,9 @@ export default {
 						this.modalClose()
 						this.getTable()
 					}
+					this.sweetDialog.open = false
+					this.setdialog.dialog = false
+					this.getTable()
 				})
 			} else if (this.setdialog.type === 'edit') {
 				data.id = this.setdialog.id

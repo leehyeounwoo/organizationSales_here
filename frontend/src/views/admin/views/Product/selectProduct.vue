@@ -31,9 +31,13 @@
 <script>
 import { selectBox, datatable } from '@/components/index.js'
 import holdTimeDetail from '../../viewItem/holdTimeDetail.vue'
-
+// import Axios from 'axios'
 export default {
 	async created() {
+		// const response = await fetch('http://58.127.186.144:5005/team_data_api.json')
+		// const jsonData = await response.json()
+		// console.log(jsonData)
+
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
@@ -124,6 +128,7 @@ export default {
 						.add(1, 'd')
 						.format('YYYY-MM-DD'),
 				),
+				status: 'assignment',
 			}
 			await this.assignmentsView(assignmentsViewData)
 			const usersViewData = {
@@ -154,7 +159,6 @@ export default {
 		},
 		async businessView(businessViewData) {
 			await this.$store.dispatch('businesses', businessViewData).then(async res => {
-				console.log(res.businesses[0])
 				this.businessData = res.businesses[0]
 			})
 		},
@@ -181,11 +185,10 @@ export default {
 				data.type = 'time'
 				data.holdingTime = item.holdingTime2.time
 			}
-			console.log(data)
+
 			this.$store
 				.dispatch('createAssignment', data)
-				.then(async res => {
-					console.log(res)
+				.then(async () => {
 					this.productSelectData()
 				})
 				.catch(err => {
@@ -217,7 +220,6 @@ export default {
 				teamID: val,
 			}
 			this.$store.dispatch('users', usersData).then(res => {
-				console.log(res.users)
 				item.user.value = ''
 				item.user.items = res.users
 				item.user.disabled = false
@@ -228,6 +230,7 @@ export default {
 			await this.$store
 				.dispatch('assignments', assignmentsViewData)
 				.then(res => {
+					console.log(res)
 					this.userIdArr = res.assignments.map(x => x.userID)
 
 					for (let index = 0; index < res.assignments.length; index++) {

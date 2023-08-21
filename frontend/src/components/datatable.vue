@@ -50,6 +50,60 @@
 					현장등록
 				</div>
 			</template>
+			<template v-slot:[`item.product_counselor`]="{ item }">
+				<div>
+					{{ item.product_counselor }}
+				</div>
+			</template>
+			<template v-slot:[`item.holding_product`]="{ item }">
+				<div>
+					{{ item.holding_product }}
+				</div>
+			</template>
+			<template v-slot:[`item.holdingTime`]="{ item }">
+				<v-layout align-center v-if="item.holdingTimeSel">
+					<v-flex xs6>
+						<selectBox :sel="item.holdingTimeSel" :disable="item.holdingTimeSel.disabled" style="font-size:12px"></selectBox>
+						<!-- @change="managerChoiceStatusChange($event, item)" -->
+					</v-flex>
+					<v-flex xs6 class="text-center">
+						{{ item.holdingTimeSel.value + ' 분' }}
+					</v-flex>
+				</v-layout>
+			</template>
+			<template v-slot:[`item.requestProcessing`]="{ item }">
+				<v-layout class="requestProcessing">
+					<v-flex>
+						<v-radio-group v-model="item.status" hide-details row class="campaign_radio">
+							<v-radio class="mb-0" label="배정승인" value="assignment" color="#FB9C00" :ripple="false"></v-radio>
+							<v-radio class="mb-0" label="반려" value="reject" color="#FB9C00" :ripple="false"></v-radio>
+						</v-radio-group>
+					</v-flex>
+					<v-flex>
+						<v-btn
+							class="search_btn product_table"
+							elevation="0"
+							color="#f0f2f8"
+							style="margin:0 !important"
+							@click="editAssignmentAction(item)"
+							>적용</v-btn
+						>
+					</v-flex>
+				</v-layout>
+			</template>
+			<template v-slot:[`item.confirmStatus`]="{ item }">
+				<v-layout>
+					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
+						{{ item.start.substr(0, 5) }}~
+						{{ item.end.substr(0, 5) }}
+					</div>
+					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
+						잔여시간 :
+
+						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
+					</div>
+				</v-layout>
+			</template>
 			<template v-slot:[`item.kakakoAction`]="{ item }">
 				<div>
 					<v-btn dark :color="$store.state.PointColor2" @click="editacskey(item)">
@@ -2584,6 +2638,7 @@ export default {
 		teamChoiceClick: Function,
 		holdingTypeChoice: Function,
 		createAssignmentAction: Function,
+		editAssignmentAction: Function,
 		teamChange: Function,
 		managerChoiceStatusChange: Function,
 		teamRankSave: Function,
@@ -2860,5 +2915,24 @@ export default {
 	background: #f6f6f6;
 	font-size: 13px;
 	height: 26px;
+}
+// .requestProcessing > div {
+// 	margin-top: 0px !important;
+// 	padding-top: 0px !important;
+// }
+.requestProcessing {
+	.v-icon.v-icon {
+		font-size: 18px !important;
+	}
+	.v-application--is-ltr .v-input--selection-controls__input {
+		margin-right: 0px !important;
+	}
+	.v-label {
+		font-size: 12px !important;
+	}
+	.v-input--selection-controls {
+		margin-top: 0px !important;
+		padding-top: 0px !important;
+	}
 }
 </style>

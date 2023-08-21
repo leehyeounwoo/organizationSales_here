@@ -103,7 +103,7 @@
 			name="상담사 관리 리스트"
 		>
 		</download-excel>
-		<teamEdit :setdialog="teamEditDialog" :left_data="left_data" :right_data="right_data"></teamEdit>
+		<teamEdit :setdialog="teamEditDialog" :left_data="left_data" :right_data="right_data" :addTeam="addTeam" :rankAdd="rankAdd"></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 	</div>
 </template>
@@ -497,6 +497,49 @@ export default {
 	mounted() {},
 
 	methods: {
+		rankAdd(val) {
+			if (val === '') {
+				return alert('팀명을 입력해주세요.')
+			}
+			this.right_data.push({
+				value: val,
+				txtfield1: {
+					maxlength: '255',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+				},
+				selectBox: {
+					value: '사용',
+					items: ['사용', '미사용'],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font bizInput',
+				},
+			})
+		},
+		addTeam(val) {
+			console.log(val)
+			if (val === '') {
+				return alert('팀명을 입력해주세요.')
+			}
+			this.left_data.push({
+				value: val,
+				txtfield1: {
+					maxlength: '255',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+				},
+				selectBox: {
+					value: '사용',
+					items: ['사용', '미사용'],
+					hideDetail: true,
+					outlined: true,
+					class: 'small_font bizInput',
+				},
+			})
+		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.table.origin_items))
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
@@ -531,7 +574,7 @@ export default {
 		preview(val) {
 			console.log(val)
 			if (val.url) {
-				window.open('http://localhost:5000' + val.url)
+				window.open(process.env.VUE_APP_BACKEND_URL + val.url)
 			}
 		},
 		detailSave() {},

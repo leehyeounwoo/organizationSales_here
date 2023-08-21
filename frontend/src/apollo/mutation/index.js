@@ -657,3 +657,12 @@ export const sendSmsSettlement = gql`
 		}
 	}
 `
+export const updateAssignment = gql`
+	mutation updateAssignment($id: ID!, $status: ENUM_ASSIGNMENT_STATUS, $start: Time, $end: Time) {
+		updateAssignment(input: { where: { id: $id }, data: { status: $status, start: $start, end: $end } }) {
+			assignment {
+				id
+			}
+		}
+	}
+`

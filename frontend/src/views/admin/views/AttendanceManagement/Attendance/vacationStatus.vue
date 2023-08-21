@@ -331,17 +331,18 @@ export default {
 				const gotoworkID = []
 
 				while (currentDate <= endDate) {
-					let input = {
-						date: currentDate.format('YYYY-MM-DD'),
-						userID: this.setdialog.editData.id,
-						status: 'vacation',
-						vacation: this.setdialog.editData.vacationID,
-					}
+					if (currentDate.day() !== 0 && currentDate.day() !== 6) {
+						let input = {
+							date: currentDate.format('YYYY-MM-DD'),
+							userID: this.setdialog.editData.id,
+							status: 'vacation',
+							vacation: this.setdialog.editData.vacationID,
+						}
 
-					await this.$store.dispatch('createGotowork', input).then(res => {
-						console.log(res)
-						gotoworkID.push(res.createGotowork.gotowork.id)
-					})
+						await this.$store.dispatch('createGotowork', input).then(res => {
+							gotoworkID.push(res.createGotowork.gotowork.id)
+						})
+					}
 					currentDate.add(1, 'day')
 				}
 
