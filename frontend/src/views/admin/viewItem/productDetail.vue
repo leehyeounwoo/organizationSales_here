@@ -87,7 +87,7 @@
 						</v-flex>
 					</v-layout>
 					<v-layout justify-end style="color:black">
-						<v-btn elevation="0" class="refresh_btn mt-2" color="#f0f2f8"><v-icon small>mdi-refresh</v-icon></v-btn>
+						<v-btn elevation="0" class="refresh_btn mt-2" color="#f0f2f8" @click="editReset"><v-icon small>mdi-refresh</v-icon></v-btn>
 						<v-btn elevation="0" class="search_btn right1_btn mt-2" color="#f0f2f8" @click="editCheck">변경 내용 저장</v-btn>
 					</v-layout>
 					<v-layout class="my-3" style="border: 1px solid #d7d8e9;">
@@ -104,7 +104,7 @@
 						</v-flex>
 					</v-layout>
 					<v-layout justify-end>
-						<v-btn class="mt-2 mb-6 save_biz"><v-icon>mdi-check</v-icon>저장</v-btn>
+						<v-btn class="mt-2 mb-6 save_biz" @click="resetSelect"><v-icon>mdi-check</v-icon>확인</v-btn>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -181,6 +181,7 @@ export default {
 			search_product: '',
 			right_id: '',
 			right_table1: [
+				// 0
 				{
 					title: '호수',
 					type: 'txtfield',
@@ -191,6 +192,7 @@ export default {
 						backCol: 'white',
 					},
 				},
+				// 1
 				{
 					title: '동',
 					type: 'select',
@@ -202,6 +204,7 @@ export default {
 						class: 'small_font searchSel',
 					},
 				},
+				// 2
 				{
 					title: '주택형',
 					type: 'select',
@@ -213,11 +216,13 @@ export default {
 						class: 'small_font searchSel',
 					},
 				},
+				// 3
 				{
 					title: '상태',
 					type: 'radio',
 					value: '',
 				},
+				// 4
 				{
 					title: '변경사유',
 					type: 'txtfield',
@@ -232,6 +237,12 @@ export default {
 		}
 	},
 	methods: {
+		editReset() {
+			this.right_table1[0].txtfield.value = ''
+			this.right_table1[1].select.value = ''
+			this.right_table1[2].select.value = ''
+			this.right_table1[4].txtfield.value = ''
+		},
 		editCheck() {
 			if (this.right_table1[0].txtfield.value === '') {
 				this.sweetInfo.title = '변경 상품'
@@ -273,13 +284,13 @@ export default {
 					editTitle: this.right_table1[4].txtfield.value,
 					editTime: this.$moment().format('YYYY-MM-DD HH:mm'),
 				})
+				data.editLog = log
 			}
 			if (this.right_table1[3].value) {
 				data['contractStatus'] = 'contract'
 			} else {
 				data['contractStatus'] = 'noContract'
 			}
-			data.editLog = log
 			this.$store.dispatch('updateProduct', data).then(res => {
 				console.log(res)
 				this.sweetDialog3.open = false
@@ -394,6 +405,9 @@ export default {
 			this.setdialog.selectBox5.value = ''
 			this.setdialog.selectBox6.value = ''
 			this.search_product = ''
+			this.right_table1[0].txtfield.value = ''
+			this.right_table1[1].select.value = ''
+			this.right_table1[2].select.value = ''
 		},
 		selectType() {
 			console.log(this.setdialog)

@@ -31,8 +31,9 @@ export default {
 				// this.businessView(businessViewData)
 				await this.$store.dispatch('businesses', { idArr: [this.$store.state.businessSelectBox.value] }).then(res => {
 					let splitTime = res.businesses[0].maximumHoldingTime / res.businesses[0].splitHoldingTime
+
 					for (let index = 0; index < splitTime; index++) {
-						this.timeArr.push(res.businesses[0].splitHoldingTime * index)
+						this.timeArr.push(res.businesses[0].splitHoldingTime * (index + 1))
 					}
 				})
 				console.log(this.timeArr)

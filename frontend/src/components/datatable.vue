@@ -105,13 +105,13 @@
 			<template v-slot:[`item.confirmStatus`]="{ item }">
 				<v-layout>
 					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
-						{{ item.start.substr(0, 5) }}~
-						{{ item.end.substr(0, 5) }}
+						{{ item.start ? item.start.substr(0, 5) : '-' }}~
+						{{ item.end ? item.end.substr(0, 5) : '-' }}
 					</div>
 					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
 						잔여시간 :
 
-						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
+						{{ item.end ? $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.end.substr(0, 5)).diff($moment(), 'minute') + '분' : '-' }}
 					</div>
 				</v-layout>
 			</template>
@@ -1707,7 +1707,14 @@
 						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.assingnmentData.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
 					</div>
 					<v-spacer></v-spacer>
-					<v-btn class="search_btn product_table" elevation="0" color="#f0f2f8" style="margin:0 !important">해제</v-btn>
+					<v-btn
+						class="search_btn product_table"
+						elevation="0"
+						color="#f0f2f8"
+						style="margin:0 !important"
+						@click="updateAssignmentAction(item)"
+						>해제</v-btn
+					>
 				</v-layout>
 				<!-- <v-layout v-else> {{ item.assingnmentData }}</v-layout> -->
 			</template>
@@ -2669,6 +2676,7 @@ export default {
 		search: String,
 		teamChoiceClick: Function,
 		holdingTypeChoice: Function,
+		updateAssignmentAction: Function,
 		createAssignmentAction: Function,
 		editAssignmentAction: Function,
 		teamChange: Function,

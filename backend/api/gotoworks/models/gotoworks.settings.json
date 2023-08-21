@@ -32,12 +32,12 @@
         "etc"
       ]
     },
-    "vacation": {
-      "via": "gotowork",
-      "model": "vacation"
-    },
     "userID": {
       "type": "string"
+    },
+    "vacation": {
+      "via": "gotoworks",
+      "model": "vacation"
     }
   }
 }

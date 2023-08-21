@@ -21,6 +21,7 @@
 			:managerChoiceStatusChange="managerChoiceStatusChange"
 			:holdingTypeChoice="holdingTypeChoice"
 			:createAssignmentAction="createAssignmentAction"
+			:updateAssignmentAction="updateAssignmentAction"
 		></datatable>
 
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
@@ -163,6 +164,35 @@ export default {
 			})
 		},
 		createAssignmentAction(item) {
+			console.log(item)
+			console.log(item.product_manager.value)
+			if (item.product_manager.value === '미지정') {
+				return alert('담당자를 선택해주세요.')
+			}
+			if (item.team.value === '') {
+				return alert('담당자를 선택해주세요.')
+			}
+			if (item.user.value === '') {
+				return alert('담당자를 선택해주세요.')
+			}
+			if (item.select_holding.value === '') {
+				return alert('홀딩타입을 선택해주세요.')
+			}
+			if (item.select_holding.value === '') {
+				return alert('홀딩타입을 선택해주세요.')
+			}
+			if (item.select_holding.value === '즉시 홀딩') {
+				if (item.holdingTime3.value === '') {
+					return alert('홀딩시간을 선택해주세요.')
+				}
+			} else {
+				if (item.holdingTime1.time === '') {
+					return alert('홀딩시간을 선택해주세요.')
+				}
+				if (item.holdingTime2.time === '') {
+					return alert('홀딩시간을 선택해주세요.')
+				}
+			}
 			const data = {
 				useYn: true,
 				userID: item.user.value,
@@ -183,7 +213,7 @@ export default {
 				data.end = item.holdingTime2.time + ':00.000'
 			} else if (item.select_holding.value === '시간 홀딩') {
 				data.type = 'time'
-				data.holdingTime = item.holdingTime2.time
+				data.holdingTime = item.holdingTime3.value
 			}
 
 			this.$store
@@ -194,6 +224,18 @@ export default {
 				.catch(err => {
 					console.log(err)
 				})
+		},
+		updateAssignmentAction(item) {
+			if (confirm('배정을 해제하시겠습니까?')) {
+				const data = {
+					id: item.assingnmentData.id,
+					useYn: false,
+				}
+
+				this.$store.dispatch('updateAssignment', data).then(async res => {
+					console.log(res)
+				})
+			}
 		},
 		managerChoiceStatusChange(val, item) {
 			if (val === '담당자 지정') {

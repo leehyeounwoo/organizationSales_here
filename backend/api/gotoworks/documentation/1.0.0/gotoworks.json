@@ -543,6 +543,9 @@
               "etc"
             ]
           },
+          "userID": {
+            "type": "string"
+          },
           "vacation": {
             "required": [
               "id"
@@ -554,8 +557,11 @@
               "rejectComment": {
                 "type": "string"
               },
-              "gotowork": {
-                "type": "string"
+              "gotoworks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "vacationType": {
                 "type": "string"
@@ -589,9 +595,6 @@
               }
             }
           },
-          "userID": {
-            "type": "string"
-          },
           "published_at": {
             "type": "datetime"
           }
@@ -620,10 +623,10 @@
               "etc"
             ]
           },
-          "vacation": {
+          "userID": {
             "type": "string"
           },
-          "userID": {
+          "vacation": {
             "type": "string"
           },
           "published_at": {

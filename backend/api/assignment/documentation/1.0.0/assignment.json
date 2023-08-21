@@ -523,7 +523,8 @@
             "type": "string"
           },
           "useYn": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": true
           },
           "userID": {
             "type": "string"
@@ -577,7 +578,8 @@
       "NewAssignment": {
         "properties": {
           "useYn": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": true
           },
           "userID": {
             "type": "string"
