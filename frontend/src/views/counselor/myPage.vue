@@ -328,7 +328,7 @@
 				@change="fileUpload($event, index)"
 				accept=".pdf, image/jpg, image/png, image/jpeg"
 			/>
-			<sweetAlert :dialog="sweetInfo" @close_active="$router.push({ name: 'counselorLogin' })" />
+			<sweetAlert :dialog="sweetInfo" @close_active="sweetInfo.title === '등록완료' ? $router.push({ name: 'settlements' }) : ''" />
 			<!-- <div class="mt-8">
 					<v-btn text>
 						Privacy Policy & Terms of Service.

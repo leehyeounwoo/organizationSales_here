@@ -692,3 +692,71 @@ export const createRank = gql`
 		}
 	}
 `
+export const createSettlement = gql`
+	mutation createSettlement(
+		$ProductID: String
+		$contractDate: DateTime
+		$userID: String
+		$attachment: [ID]
+		$name: String
+		$phone: String
+		$birth: String
+		$location: String
+		$subLocation: String
+	) {
+		createSettlement(
+			input: {
+				data: {
+					ProductID: $ProductID
+					contractDate: $contractDate
+					userID: $userID
+					attachment: $attachment
+					name: $name
+					phone: $phone
+					birth: $birth
+					location: $location
+					subLocation: $subLocation
+				}
+			}
+		) {
+			settlement {
+				id
+			}
+		}
+	}
+`
+export const updateSettlement_front = gql`
+	mutation updateSettlement(
+		$ProductID: String
+		$contractDate: DateTime
+		$userID: String
+		$attachment: [ID]
+		$name: String
+		$phone: String
+		$birth: String
+		$location: String
+		$subLocation: String
+		$id: ID!
+	) {
+		updateSettlement(
+			input: {
+				where: { id: $id }
+				data: {
+					ProductID: $ProductID
+					contractDate: $contractDate
+					userID: $userID
+					attachment: $attachment
+					name: $name
+					phone: $phone
+					birth: $birth
+					location: $location
+					subLocation: $subLocation
+				}
+			}
+		) {
+			settlement {
+				id
+			}
+		}
+	}
+`

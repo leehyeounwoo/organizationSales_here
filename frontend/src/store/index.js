@@ -31,6 +31,8 @@ import {
 	updateAssignment,
 	createTeam,
 	createRank,
+	createSettlement,
+	updateSettlement_front,
 } from '../apollo/mutation'
 import {
 	me,
@@ -51,11 +53,13 @@ import {
 	assignments,
 	vacations,
 	emailDuplicate,
+	settlementsList,
 } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
 	state: {
+		backServer: process.env.VUE_APP_BACKEND_URL,
 		headerMobileStatus: false,
 		footerMobileStatus: false,
 		leftNavDrawer: true,
@@ -68,7 +72,7 @@ export default new Vuex.Store({
 			itemText: 'name',
 			itemValue: 'id',
 		},
-		meData: { role: { name: '' }, name: '' },
+		meData: { role: { name: '' }, name: '', team: { title: '' } },
 		dashBoardList: [],
 		loading: false,
 		primary: '#3A258F',
@@ -93,9 +97,16 @@ export default new Vuex.Store({
 						},
 					})
 					.then(({ data }) => {
-						resolve(data)
-						commit('meData', data.me)
-						console.log(data.me)
+						if (data.me.teamID) {
+							Axios.get(process.env.VUE_APP_BACKEND_URL + '/team_data_api.json').then(res => {
+								data.me.team = res.data.filter(x => Number(x.id) === Number(data.me.teamID))[0]
+								resolve(data)
+								commit('meData', data.me)
+							})
+						} else {
+							resolve(data)
+							commit('meData', data.me)
+						}
 					})
 					.catch(err => {
 						reject(err)
@@ -291,6 +302,27 @@ export default new Vuex.Store({
 			})
 		},
 		// eslint-disable-next-line no-empty-pattern
+		settlementsList({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: settlementsList,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
 		vacations({}, input) {
 			return new Promise((resolve, reject) => {
 				apollo.clients['defaultClient']
@@ -438,6 +470,18 @@ export default new Vuex.Store({
 			})
 		},
 		// eslint-disable-next-line no-empty-pattern
+		teamsList({}) {
+			return new Promise((resolve, reject) => {
+				Axios.get(process.env.VUE_APP_BACKEND_URL + '/team_data_api.json')
+					.then(data => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
 		teams({}, input) {
 			return new Promise((resolve, reject) => {
 				apollo.clients['defaultClient']
@@ -570,6 +614,28 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: updateBusiness,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+
+		// eslint-disable-next-line no-empty-pattern
+		updateSettlement_front({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: updateSettlement_front,
 						variables: input,
 						context: {
 							headers: {
@@ -987,6 +1053,11 @@ export default new Vuex.Store({
 					.query({
 						query: assignments,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -1003,6 +1074,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createTeam,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -1019,6 +1095,32 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createRank,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		createSettlement({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: createSettlement,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)

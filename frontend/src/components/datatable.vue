@@ -71,6 +71,17 @@
 					</v-flex>
 				</v-layout>
 			</template>
+			<template v-slot:[`item.timePeriod`]="{ item }">
+				<div v-if="item.type === 'allday'" class="success--text">
+					All Day
+				</div>
+				<div v-else-if="secondChange(item.end) - secondChange($moment().format('HH:mm')) > 0" class="primary2--text">
+					{{ (secondChange(item.end) - secondChange($moment().format('HH:mm'))) / 60 }}분
+				</div>
+				<div v-else class="error--text">
+					종료
+				</div>
+			</template>
 			<template v-slot:[`item.requestProcessing`]="{ item }">
 				<v-layout class="requestProcessing">
 					<v-flex>
@@ -1704,10 +1715,28 @@
 			<template v-slot:[`item.business_manager`]="{ item }">
 				<div>{{ item.manager }}</div>
 			</template>
-
+			<!-- 프론트 계약물건 표시 -->
+			<template v-slot:[`item.product_settlements`]="{ item }">
+				<div>{{ item.product.housingType }} {{ item.product.dong }}동 {{ item.product.ho }}호</div>
+			</template>
 			<!-- 정산관리 - 상태 -->
 			<template v-slot:[`item.settlementStatus`]="{ item }">
-				<div>{{ item.settlementStatus === 'waiting' ? '대기' : item.settlementStatus === 'agree' ? '승인' : '반려' }}</div>
+				<div>
+					{{
+						item.settlementStatus === 'waiting'
+							? '대기'
+							: item.settlementStatus === 'agree'
+							? '승인'
+							: item.settlementStatus === null
+							? ''
+							: '반려'
+					}}
+				</div>
+			</template>
+			<template v-slot:[`item.paper_info`]="{ item }">
+				<div style="white-space: pre-line;" class="text-left">
+					{{ item.paper_info }}
+				</div>
 			</template>
 			<!-- 정산관리 - 차수 -->
 			<template v-slot:[`item.degree`]="{ item }">
@@ -2261,6 +2290,9 @@ export default {
 		},
 	},
 	methods: {
+		secondChange(data) {
+			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
+		},
 		deleteNotice(item, biz) {
 			this.$store.state.loading = true
 			for (let i = 0; i < item.businesses.length; i++) {

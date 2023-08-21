@@ -1179,7 +1179,7 @@ export default {
 			await this.$store
 				.dispatch('updateClient', input2)
 				.then(() => {
-					if (this.$route.name === 'counselorBizReservation') {
+					if (this.$route.name === 'settlements') {
 						this.save_end()
 					} else {
 						this.select_product = ''

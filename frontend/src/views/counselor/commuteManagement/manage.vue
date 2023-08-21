@@ -231,10 +231,7 @@ export default {
 		},
 		to_bizDashboard() {
 			// 뒤로가기 버튼
-			this.$router.push({
-				name: 'counselorBizDashboard',
-				params: { id: this.$store.state.meData.businessID },
-			})
+			this.$router.go(-1)
 		},
 		systemsView(variable) {
 			this.$store

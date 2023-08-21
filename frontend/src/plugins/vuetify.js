@@ -14,6 +14,7 @@ export default new Vuetify({
 				point3: '#00B80C',
 				point4: '#009DAC',
 				point5: '#D47FA6',
+				point6: '#F2A629',
 			},
 		},
 	},

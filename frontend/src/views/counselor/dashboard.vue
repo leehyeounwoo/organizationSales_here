@@ -28,7 +28,7 @@
 				</div>
 				<v-spacer></v-spacer>
 				<div>
-					<v-btn rounded small color="primary2" dark>전체보기</v-btn>
+					<v-btn rounded small color="primary2" dark @click="holdingListOpen">전체보기</v-btn>
 				</div>
 			</v-layout>
 			<v-layout align-center wrap>
@@ -54,9 +54,12 @@
 						:items="products1"
 						v-model="product1"
 						solo
+						dense
 						outlined
 						class="nomal-select"
 						hideDetails
+						@change="product1Change"
+						flat
 						color="primary2"
 					></v-select>
 				</v-flex>
@@ -66,9 +69,13 @@
 						:items="products2"
 						v-model="product2"
 						solo
+						:disabled="!product1"
+						dense
 						outlined
 						class="nomal-select"
 						hideDetails
+						@change="product2Change"
+						flat
 						color="primary2"
 					></v-select>
 				</v-flex>
@@ -78,6 +85,7 @@
 						:items="products3"
 						v-model="product3"
 						solo
+						flat
 						outlined
 						class="nomal-select"
 						hideDetails
@@ -87,9 +95,11 @@
 				<v-btn block color="primary2" @click="holding" class="mt-4" rounded dark>
 					{{ holdingText }}
 				</v-btn>
-				<div class="explain-text point4--text mt-2">
-					상담 물건 홀딩은 최대 60분까지 가능합니다.
-				</div>
+				<strong>
+					<div class="explain-text point4--text mt-2">
+						상담 물건 홀딩은 최대 60분까지 가능합니다.
+					</div>
+				</strong>
 			</v-layout>
 		</v-card>
 		<v-layout wrap justify-center>
@@ -105,21 +115,51 @@
 			</v-flex>
 		</v-layout>
 		<holdingDialog :setdialog="holdingDialog" @click="createAssignment" />
+		<holdingListDialog :setdialog="holdingListDialog" />
 		<sweetAlert :dialog="sweetInfo" />
+		<sweetAlert :dialog="sweetInfo2" @click="cancelHolding" />
 	</v-layout>
 </template>
 
 <script>
 import QRcode from './QR/QRcode.vue'
-import { holdingDialog, sweetAlert } from '@/components/index'
+import { holdingDialog, sweetAlert, holdingListDialog } from '@/components/index'
 export default {
 	components: {
 		QRcode,
 		holdingDialog,
 		sweetAlert,
+		holdingListDialog,
 	},
 	data() {
 		return {
+			holdingListDialog: {
+				open: false,
+				datatable: {
+					headers: [
+						{ text: '주택형', value: 'product.housingType', sortable: false },
+						{ text: '동', value: 'product.dong', sortable: false },
+						{ text: '호', value: 'product.ho', sortable: false },
+						{ text: '잔여시간', value: 'timePeriod', sortable: false },
+					],
+					class: 'mt-0',
+					items: [],
+					noweditting: '',
+					hidedefaultfooter: true,
+					itemsPerPage: 99,
+					page: 1,
+					pageCount: 0,
+				},
+			},
+			sweetInfo2: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'warning',
+				cancelBtnText: '취소',
+				saveBtnText: '확인',
+				buttonType: 'twoBtn',
+			},
 			sweetInfo: {
 				open: false,
 				title: '',
@@ -160,12 +200,12 @@ export default {
 				{
 					icon: 'footer_고객관리',
 					title: '계약관리',
-					route: 'counselorNotice',
+					route: 'settlements',
 				},
 				{
 					icon: 'footer_상담관리',
 					title: '정산관리',
-					route: 'counselorNotice',
+					route: 'settlementTruns',
 				},
 			],
 			holdingText: '',
@@ -193,6 +233,53 @@ export default {
 		this.products()
 	},
 	methods: {
+		product1Change(val) {
+			this.products2 = this.productDatas.filter(x => x.housingType === val).map(x => x.dong)
+			this.product2 = ''
+			this.product3 = ''
+		},
+		product2Change(val) {
+			this.products3 = this.productDatas.filter(x => x.dong === val).map(x => x.ho)
+			this.product3 = ''
+		},
+		secondChange(data) {
+			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
+		},
+		holdingListOpen() {
+			this.holdingListDialog.open = true
+			this.$store
+				.dispatch('assignments', {
+					created_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+					created_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					businessID: this.$store.state.meData.businessID,
+					userID: this.$store.state.meData.id,
+					status: 'assignment',
+					sort: 'created_at:desc',
+				})
+				.then(res => {
+					for (let index = 0; index < res.assignments.length; index++) {
+						const el = res.assignments[index]
+						if (this.productDatas.filter(x => x.id === el.productID).length > 0)
+							el.product = this.productDatas.filter(x => x.id === el.productID)[0]
+					}
+					this.holdingListDialog.datatable.items = res.assignments
+				})
+		},
+		cancelHolding() {
+			this.$store.dispatch('updateAssignment', { id: this.waitingHoldingList.id, status: 'counselorNoAssignment' }).then(() => {
+				this.sweetInfo2.open = false
+				this.products()
+			})
+		},
+		open_twobtn_dialog(data, info) {
+			// 불가 팝업 열기
+
+			this.sweetInfo2.title = data.title
+			this.sweetInfo2.content = data.content
+			if (!info) this.sweetInfo2.modalIcon = `warning`
+			else this.sweetInfo2.modalIcon = info
+			this.sweetInfo2.open = true
+		},
 		open_disable_dialog(data, info) {
 			// 불가 팝업 열기
 
@@ -203,12 +290,12 @@ export default {
 			this.sweetInfo.open = true
 		},
 		products() {
-			this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
-				this.productDatas = res.products
-				this.products1 = res.products.map(x => x.housingType)
-				this.products2 = res.products.map(x => x.dong)
-				this.products3 = res.products.map(x => x.ho)
-				this.assignments()
+			this.$store.dispatch('me').then(() => {
+				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
+					this.productDatas = res.products
+					this.products1 = res.products.map(x => x.housingType)
+					this.assignments()
+				})
 			})
 		},
 		assignments() {
@@ -218,6 +305,7 @@ export default {
 					created_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
 					businessID: this.$store.state.meData.businessID,
 					userID: this.$store.state.meData.id,
+					sort: 'created_at:desc',
 				})
 				.then(res => {
 					this.holdingList = res.assignments.filter(x => x.status === 'assignment')
@@ -227,12 +315,30 @@ export default {
 							el.product = this.productDatas.filter(x => x.id === el.productID)[0]
 					}
 					this.assignmentDatas = res.assignments
-					if (res.assignments.filter(x => x.status === null).length === 0) this.holdingText = '홀딩 요청'
+					if (
+						res.assignments.filter(x => x.status === 'assignment').length > 0 &&
+						this.secondChange(res.assignments.filter(x => x.status === 'assignment')[0].end) -
+							this.secondChange(this.$moment().format('HH:mm')) >
+							0
+					) {
+						const holdingData = res.assignments.filter(x => x.status === 'assignment')[0]
+						const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
+						if (holdingData.type === 'allday') this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] All Day`
+						else
+							this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] 남은시간:${(this.secondChange(
+								res.assignments.filter(x => x.status === 'assignment')[0].end,
+							) -
+								this.secondChange(this.$moment().format('HH:mm'))) /
+								60}분`
+					} else if (res.assignments.filter(x => x.status === null).length === 0) this.holdingText = '홀딩 요청'
 					else if (res.assignments.filter(x => x.status === 'reject').length > 0) this.holdingText = '미승인'
-					else this.holdingText = `홀딩 취소`
+					else if (res.assignments.filter(x => x.status === null).length > 0) {
+						const holdingData = res.assignments.filter(x => x.status === null)[0]
+						const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
+						this.holdingText = `홀딩 취소 [${product.housingType} ${product.dong} ${product.ho}]`
+					}
 					this.waitingHoldingList = res.assignments.filter(x => x.status === null)[0]
 					this.rejectHoldingList = res.assignments.filter(x => x.status === 'reject')[0]
-					console.log(res.assignments)
 				})
 		},
 		createAssignment() {
@@ -253,24 +359,43 @@ export default {
 				}
 				this.$store.dispatch('createAssignment', data).then(() => {
 					this.holdingDialog.open = false
-					this.assignments()
+					this.products()
 				})
 			} else {
 				alert('오류가 발생하였습니다. 다시 신청해주세요.')
 			}
 		},
 		holding() {
-			if (!this.product1) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '주택형을 선택해주세요.' })
-			else if (!this.product2) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '동을 선택해주세요.' })
-			else if (!this.product3) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '호수를 선택해주세요.' })
-			this.holdingDialog.open = true
-			this.holdingDialog.datatable.items = []
-			this.holdingDialog.datatable.items.push({
-				protect1: this.product1,
-				protect2: this.product2,
-				protect3: this.product3,
-				time: this.time,
-			})
+			if (this.holdingText.indexOf('홀딩중') > -1)
+				this.open_twobtn_dialog(
+					{
+						title: '물건 홀딩 취소',
+
+						content: `홀딩중인 물건을 취소하시겠습니까?`,
+					},
+					'error',
+				)
+			else if (this.holdingText.indexOf('홀딩 취소') === -1) {
+				if (!this.product1) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '주택형을 선택해주세요.' })
+				else if (!this.product2) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '동을 선택해주세요.' })
+				else if (!this.product3) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '호수를 선택해주세요.' })
+				this.holdingDialog.open = true
+				this.holdingDialog.datatable.items = []
+				this.holdingDialog.datatable.items.push({
+					protect1: this.product1,
+					protect2: this.product2,
+					protect3: this.product3,
+					time: this.time,
+				})
+			} else
+				this.open_twobtn_dialog(
+					{
+						title: '물건 홀딩 취소',
+
+						content: `${this.holdingText.replace('홀딩 취소 ', '')} 물건을 취소하시겠습니까?`,
+					},
+					'error',
+				)
 		},
 		openQr() {
 			this.dialogQr.open = true

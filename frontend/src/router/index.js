@@ -67,21 +67,45 @@ const routes = [
 				component: () => import(/* webpackChunkName: "counselorMyPage" */ '../views/counselor/myPage.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
-			// 상담사  - 대시보드
 			{
 				path: '/counselor/bizDashboard/:id',
 				name: 'counselorBizDashboard',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboard.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
-			// 상담사  - 상담관리
 			{
-				path: '/counselor/reservation/:id',
-				name: 'counselorBizReservation',
+				path: '/counselor/settlements',
+				name: 'settlements',
 				component: () =>
-					import(
-						/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/counselorBizReservation.vue'
-					),
+					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/settlements.vue'),
+				meta: { requiresAuth: true, counselor: true },
+			},
+			{
+				path: '/counselor/settlementTruns',
+				name: 'settlementTruns',
+				component: () =>
+					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/trunManagement/settlementTruns.vue'),
+				meta: { requiresAuth: true, counselor: true },
+			},
+			{
+				path: '/counselor/editSettlementTruns/:id',
+				name: 'editSettlementTruns',
+				component: () =>
+					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/trunManagement/editSettlementTruns.vue'),
+				meta: { requiresAuth: true, counselor: true },
+			},
+			{
+				path: '/counselor/createSettlement',
+				name: 'createSettlement',
+				component: () =>
+					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
+				meta: { requiresAuth: true, counselor: true },
+			},
+			{
+				path: '/counselor/editSettlement/:id',
+				name: 'editSettlement',
+				component: () =>
+					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{

@@ -278,8 +278,27 @@ export const notices = gql`
 `
 
 export const settlements = gql`
-	query settlements($id: ID, $settlementStatus: String, $userID: String, $date: DateTime) {
-		settlementsConnection(where: { id: $id, settlementStatus: $settlementStatus, created_at_lte: $date }) {
+	query settlements(
+		$id: ID
+		$settlementStatus: String
+		$userID: String
+		$date: DateTime
+		$contractDate_lte: DateTime
+		$contractDate_gte: DateTime
+		$name: String
+		$phone: String
+	) {
+		settlementsConnection(
+			where: {
+				id: $id
+				settlementStatus: $settlementStatus
+				created_at_lte: $date
+				contractDate_lte: $contractDate_lte
+				contractDate_gte: $contractDate_gte
+				name_contains: $name
+				phone_contains: $phone
+			}
+		) {
 			aggregate {
 				count
 			}
@@ -381,6 +400,7 @@ export const assignments = gql`
 		$status: ENUM_ASSIGNMENT_STATUS
 		$businessID: String
 		$userID: String
+		$sort: String
 	) {
 		assignments(
 			where: {
@@ -394,6 +414,7 @@ export const assignments = gql`
 				businessID: $businessID
 				userID: $userID
 			}
+			sort: $sort
 		) {
 			id
 			useYn
@@ -406,6 +427,72 @@ export const assignments = gql`
 			productID
 			status
 			holdingTime
+		}
+	}
+`
+export const settlementsList = gql`
+	query settlementsList(
+		$id: ID
+		$settlementStatus: String
+		$userID: String
+		$date: DateTime
+		$contractDate_lte: DateTime
+		$contractDate_gte: DateTime
+		$name: String
+		$phone: String
+		$ProductID: String
+	) {
+		settlements(
+			where: {
+				id: $id
+				ProductID: $ProductID
+				settlementStatus: $settlementStatus
+				created_at_lte: $date
+				contractDate_lte: $contractDate_lte
+				contractDate_gte: $contractDate_gte
+				name_contains: $name
+				phone_contains: $phone
+				userID: $userID
+			}
+		) {
+			id
+			ProductID
+			userID
+			contractDate
+			settlementStatus
+			created_at
+			updated_at
+			totalPrice
+			turn
+			degree
+			attachment {
+				id
+				name
+				url
+			}
+			settlement_turn_tables(where: { useYn: true }) {
+				id
+				turnStatus
+				prePaymentDate
+				amount
+				turnTableDegree
+				bank
+				bankAccount
+				adminName
+				PaymentDate
+				depositFile {
+					id
+					url
+					name
+				}
+				useYn
+			}
+			name
+			phone
+			birth
+			location
+			subLocation
+			rejectComment
 		}
 	}
 `

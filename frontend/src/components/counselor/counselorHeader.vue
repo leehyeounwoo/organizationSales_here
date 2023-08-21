@@ -1,21 +1,21 @@
 <template>
 	<div style="width:100%; margin: 0 auto;" class="counselor_header">
 		<v-layout align-center style="height:100%;">
-			<div @click="logo_click()">
+			<div>
 				<v-img src="/image/counselor_logo_0.png"></v-img>
 			</div>
 			<v-spacer></v-spacer>
-			<div class="mr-1" v-if="auth">
-				<v-avatar size="32px">
-					<img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+			<div class="mr-4" v-if="auth">
+				<v-avatar size="32px" v-if="$store.state.meData.profile">
+					<img :src="$store.state.backServer + $store.state.meData.profile.url" alt="John" />
 				</v-avatar>
 			</div>
-			<div class="mr-2" v-if="auth">
+			<div class="mr-4" v-if="auth">
 				<div class="white--text">
 					{{ $store.state.meData.name }}
 				</div>
 				<div class="white--text">
-					팀 리스트 완성시 적용
+					{{ $store.state.meData.team.title }}
 				</div>
 			</div>
 			<div class="py-4" v-if="auth">
@@ -44,7 +44,6 @@ export default {
 			else this.auth = false
 		},
 	},
-
 	methods: {
 		setting() {
 			this.$router.push({ name: 'counselorMypage' })

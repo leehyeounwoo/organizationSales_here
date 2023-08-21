@@ -274,12 +274,12 @@ export default {
 
 				{
 					title: '상담예약하기',
-					route: 'counselorBizReservation',
+					route: 'settlements',
 					ico: '상담예약',
 				},
 				{
 					title: '상담예약관리',
-					route: 'counselorBizReservation',
+					route: 'settlements',
 					ico: '상담관리',
 				},
 				{
@@ -508,7 +508,7 @@ export default {
 		},
 		go_to_manage(type) {
 			if (type === '예약고객') {
-				this.$router.push({ name: 'counselorBizReservation', query: { tab: '1', status: 'waiting' } })
+				this.$router.push({ name: 'settlements', query: { tab: '1', status: 'waiting' } })
 			} else if (type === '등록고객') {
 				this.$router.push({ name: 'counselorClients', query: { tab: '1' } })
 			} else if (type === '계약고객') {

@@ -22,22 +22,22 @@ export default {
 				{
 					title: '근태관리',
 					ico: 'footer_출퇴근관리',
-					route: '/counselor/commuteManagement/manage',
+					route: 'counselorManage',
 				},
 				{
 					title: 'Home',
 					ico: 'footer_Ȩ',
-					route: 'counselorBizDashboard',
+					route: 'counselorDashboard',
 				},
 				{
 					title: '계약관리',
 					ico: 'footer_고객관리',
-					route: 'counselorClients',
+					route: 'settlements',
 				},
 				{
 					title: '정산관리',
 					ico: 'footer_상담관리',
-					route: 'counselorBizReservation',
+					route: 'settlementTruns',
 				},
 			],
 		}

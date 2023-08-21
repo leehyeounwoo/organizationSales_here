@@ -7,7 +7,8 @@ import VueMoment from 'vue-moment'
 import VueMeta from 'vue-meta'
 import io from 'socket.io-client'
 import VueTheMask from 'vue-the-mask'
-
+import VueMask from 'v-mask'
+Vue.use(VueMask)
 // vue 가드설정
 router.beforeEach(async (to, from, next) => {
 	if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -23,7 +24,6 @@ router.beforeEach(async (to, from, next) => {
 		store
 			.dispatch('me')
 			.then(res => {
-				console.log(res)
 				if (res.me.role.name !== 'Counselor') {
 					router.push({ name: 'counselorLogin' })
 					sessionStorage.removeItem('reserveLite-t')
