@@ -94,7 +94,7 @@
 		</v-card>
 		<v-layout wrap justify-center>
 			<v-flex xs6 :class="i % 2 !== 0 ? 'pl-2 pb-4' : 'pr-2 pb-4'" v-for="(icon, i) in iconList" :key="i">
-				<v-card class="dashboard-icons pa-4" elevation="0">
+				<v-card class="dashboard-icons pa-4" elevation="0" @click="$router.push({ name: icon.route })">
 					<div class="icon">
 						<v-img class="mx-auto" :src="`${require(`@/assets/images/ico/${icon.icon}.png`)}`" width="35" height="35"></v-img>
 					</div>
@@ -119,18 +119,22 @@ export default {
 				{
 					icon: 'footer_공지사항',
 					title: '공지사항',
+					route: 'counselorNotice',
 				},
 				{
 					icon: 'footer_출퇴근관리',
 					title: '근태관리',
+					route: 'counselorNotice',
 				},
 				{
 					icon: 'footer_고객관리',
 					title: '계약관리',
+					route: 'counselorNotice',
 				},
 				{
 					icon: 'footer_상담관리',
 					title: '정산관리',
+					route: 'counselorNotice',
 				},
 			],
 			holdingText: '',

@@ -99,7 +99,7 @@ const routes = [
 			},
 			// 공지사항  - 공지사항
 			{
-				path: '/counselor/notice/:id',
+				path: '/counselor/notice',
 				name: 'counselorNotice',
 				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/notice.vue'),
 				meta: { requiresAuth: true, counselor: true },

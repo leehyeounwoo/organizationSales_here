@@ -392,7 +392,7 @@ export default {
 		this.siginup.account = this.$store.state.meData.accountNumber
 		this.files[1].name = this.$store.state.meData.copyAccount?.name
 		this.files[2].name = this.$store.state.meData.employmentContract?.name
-		this.files[3].name = this.$store.state.meData.iD_Card?.name
+		this.files[3].name = this.$store.state.meData.ID_Card?.name
 		this.files[4].name = this.$store.state.meData.businessRegistration?.name
 		this.siginup.companyName = this.$store.state.meData.company
 		this.siginup.companyNumber = this.$store.state.meData.businessNumber

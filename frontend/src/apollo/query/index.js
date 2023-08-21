@@ -34,7 +34,7 @@ export const me = gql`
 				name
 				url
 			}
-			iD_Card {
+			ID_Card {
 				name
 				url
 			}

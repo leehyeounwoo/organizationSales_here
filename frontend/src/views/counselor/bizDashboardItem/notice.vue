@@ -1,6 +1,6 @@
 <template>
 	<div class="counselor_container">
-		<div class="counsel_create_wrap sticky_wrap small_sticky_header">
+		<div class="counsel_create_wrap sticky_wrap small_sticky_header pt-0">
 			<div class="top_sticky_header">
 				<v-layout justify-center class="tab_name_bar">
 					<div class="header_left_btn">
@@ -149,10 +149,7 @@ export default {
 	methods: {
 		to_bizDashboard() {
 			// 뒤로가기 버튼
-			this.$router.push({
-				name: 'counselorBizDashboard',
-				params: { id: this.$route.params.id },
-			})
+			this.$router.go(-1)
 		},
 		notices() {
 			const data = {
