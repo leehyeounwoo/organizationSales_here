@@ -404,15 +404,15 @@ export default {
 			console.log(item)
 			this.createDialog.type = 'edit'
 			this.createDialog.id = item.id
-			this.createDialog.manager = item.manager.id
+			this.createDialog.manager = item.manager ? item.manager.id : ''
 			this.createDialog.items[0].value = item.name
 			this.createDialog.items[1].value = item.phoneNumber
 			this.createDialog.items[2].worktime1.time = item.startTime
 			this.createDialog.items[2].worktime2.time = item.endTime
 			this.createDialog.items[4].value = item.code
-			this.right_data[0].txtfield1.value = item.manager.username
-			this.right_data[0].txtfield2.value = item.manager.phoneNumber
-			this.right_data[0].txtfield3.value = item.manager.email
+			this.right_data[0].txtfield1.value = item.manager ? item.manager.username : ''
+			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
+			this.right_data[0].txtfield3.value = item.manager ? item.manager.email : ''
 			console.log(this.right_data)
 			this.createDialog.dialog = true
 		},
