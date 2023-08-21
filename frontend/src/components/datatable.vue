@@ -35,7 +35,7 @@
 						? Math.ceil(datatable.items.length / datatable.itemsPerPage)
 						: Math.ceil(datatable.items.length / 10)
 				} of ${datatable.page ? datatable.page : 1} `,
-				['items-per-page-options']: datatable.itemsPerPage !== -1 ? [5, 10, 15, 20, 30] : [5, 10, 15, 20, 30, -1],
+				['items-per-page-options']: datatable.itemsPerPage !== -1 ? [5, 10, 15, 20, 30, 99] : [5, 10, 15, 20, 30, 99, -1],
 			}"
 			@pagination="pagination"
 			:no-data-text="datatable.noDataText"

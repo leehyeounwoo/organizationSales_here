@@ -72,6 +72,7 @@ export default new Vuex.Store({
 		dashBoardList: [],
 		loading: false,
 		primary: '#3A258F',
+		primary2: '#633efd',
 	},
 	mutations: {
 		meData(state, payload) {
@@ -79,39 +80,6 @@ export default new Vuex.Store({
 		},
 	},
 	actions: {
-		// sendMessage({ dispatch }, input) {
-		// 	return new Promise((resolve, reject) => {
-		// 		dispatch('getToken').then(res => {
-		// 			var formData = new FormData()
-		// 			formData.append('token', res.data.token)
-		// 			for (var key in input) {
-		// 				formData.append(key, input[key])
-		// 			}
-		// 			let config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-		// 			axios
-		// 				.post('https://kakaoapi.aligo.in/akv10/alimtalk/send/', formData, config)
-		// 				.then(data => {
-		// 					resolve(data)
-		// 				})
-		// 				.catch(err => {
-		// 					reject(err)
-		// 				})
-		// 		})
-		// 	})
-		// },
-		// eslint-disable-next-line no-empty-pattern
-		// createSendMessage({}, input) {
-		// 	return new Promise((resolve, reject) => {
-		// 		apollo.clients['defaultClient']
-		// 			.mutate({ mutation: createSendMessage, variables: input })
-		// 			.then(res => {
-		// 				resolve(res)
-		// 			})
-		// 			.catch(err => {
-		// 				reject(err)
-		// 			})
-		// 	})
-		// },
 		// eslint-disable-next-line no-empty-pattern
 		me({ commit }) {
 			return new Promise((resolve, reject) => {
@@ -205,7 +173,15 @@ export default new Vuex.Store({
 		createGotowork({}, input) {
 			return new Promise((resolve, reject) => {
 				apollo.clients['defaultClient']
-					.mutate({ mutation: createGotowork, variables: input })
+					.mutate({
+						mutation: createGotowork,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
 					.then(({ data }) => {
 						resolve(data)
 					})
@@ -221,6 +197,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateGotowork,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -279,6 +260,11 @@ export default new Vuex.Store({
 					.query({
 						query: gotoWork,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -311,6 +297,11 @@ export default new Vuex.Store({
 					.query({
 						query: vacations,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -327,6 +318,11 @@ export default new Vuex.Store({
 					.query({
 						query: products,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -343,6 +339,11 @@ export default new Vuex.Store({
 					.query({
 						query: businesses,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -359,6 +360,11 @@ export default new Vuex.Store({
 					.query({
 						query: notices,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -375,6 +381,11 @@ export default new Vuex.Store({
 					.query({
 						query: businesses_title,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -497,6 +508,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateSettlement,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -513,6 +529,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createBusiness,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -529,6 +550,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateNotice,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -545,6 +571,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateBusiness,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -558,7 +589,15 @@ export default new Vuex.Store({
 		createSettlementTurnTable({}, input) {
 			return new Promise((resolve, reject) => {
 				apollo.clients['defaultClient']
-					.mutate({ mutation: createSettlementTurnTable, variables: input })
+					.mutate({
+						mutation: createSettlementTurnTable,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
 					.then(({ data }) => {
 						resolve(data)
 					})
@@ -571,7 +610,15 @@ export default new Vuex.Store({
 		updateSettlementTurnTable({}, input) {
 			return new Promise((resolve, reject) => {
 				apollo.clients['defaultClient']
-					.mutate({ mutation: updateSettlementTurnTable, variables: input })
+					.mutate({
+						mutation: updateSettlementTurnTable,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
 					.then(({ data }) => {
 						resolve(data)
 					})
@@ -588,6 +635,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createNotice,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -620,6 +672,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createMessage,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -636,6 +693,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateMessage,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -652,6 +714,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateProduct,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -668,6 +735,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createAssignment,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -684,6 +756,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: register,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -700,6 +777,11 @@ export default new Vuex.Store({
 					.query({
 						query: messages,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -716,6 +798,11 @@ export default new Vuex.Store({
 					.query({
 						query: businessManager,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -732,6 +819,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createSystem,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -748,6 +840,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createProduct,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -764,6 +861,11 @@ export default new Vuex.Store({
 					.query({
 						query: systems,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -780,6 +882,11 @@ export default new Vuex.Store({
 					.query({
 						query: usersConnection,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -796,6 +903,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: createSettlementEditLogs,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -812,6 +924,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: updateAssignment,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -828,6 +945,11 @@ export default new Vuex.Store({
 					.query({
 						query: settlementEditLogs,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)
@@ -844,6 +966,11 @@ export default new Vuex.Store({
 					.query({
 						query: sendSmsSettlement,
 						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
 					})
 					.then(({ data }) => {
 						resolve(data)

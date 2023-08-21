@@ -523,7 +523,7 @@ export default {
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 			}
 			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.business.id
+				input.business = this.$store.state.meData.businessID
 			}
 			this.viewUsers(input)
 			this.date = this.$moment(this.date_picker.date)

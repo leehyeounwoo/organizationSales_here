@@ -76,7 +76,7 @@ export default {
 }
 .qr-modal {
 	background-color: white;
-	border-radius: 0 0px 41px 0px !important;
+	border-radius: 0 0 41px 41px !important;
 	padding: 0px;
 }
 .qr-header {

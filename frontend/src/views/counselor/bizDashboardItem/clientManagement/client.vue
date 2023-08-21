@@ -590,7 +590,7 @@ export default {
 			ok = ok + 1
 			if (this.$store.state.meData) {
 				const data = {
-					business: this.$store.state.meData.business.id,
+					business: this.$store.state.meData.businessID,
 				}
 				this.inputBoxesView(data)
 				clearInterval(interval)
@@ -770,7 +770,7 @@ export default {
 		},
 		first_productList() {
 			let input = {
-				business: this.$store.state.meData.business.id,
+				business: this.$store.state.meData.businessID,
 			}
 			this.$store
 				.dispatch('productList', input)
@@ -808,7 +808,7 @@ export default {
 			}
 			let input = {
 				status: 'uncontracted',
-				business: this.$store.state.meData.business.id,
+				business: this.$store.state.meData.businessID,
 				data1: this.product_list.data1.value ? this.product_list.data1.value : '',
 				data2: this.product_list.data2.value ? this.product_list.data2.value : '',
 				data3: this.product_list.data3.value ? this.product_list.data3.value : '',
@@ -1044,7 +1044,7 @@ export default {
 					add_info: this.add_info_data,
 				},
 				agreeDate: new Date(),
-				business: this.$store.state.meData.business.id,
+				business: this.$store.state.meData.businessID,
 				users_permissions_user: this.$store.state.meData.id,
 			}
 			let ok = true
@@ -1124,7 +1124,7 @@ export default {
 				.then(res => {
 					this.$router.push({
 						name: 'counselorBizDashboard',
-						params: { id: this.$store.state.meData.business.id },
+						params: { id: this.$store.state.meData.businessID },
 					})
 					this.$store.state.loading = false
 				})

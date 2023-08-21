@@ -26,6 +26,7 @@ export { default as txtFieldStyle } from './txtFieldStyle'
 export { default as alertModal } from './dialog/alertModal'
 export { default as saveDialog } from './dialog/saveDialog'
 export { default as noticeDialog } from './dialog/noticeDialog'
+export { default as holdingDialog } from './dialog/holdingDialog'
 
 // admin
 export { default as datatable } from './datatable'

@@ -1087,7 +1087,7 @@ export default {
 				// customData 에 add_info의 길이가 0 인 경우
 				if (data.client.customDatas.add_info && data.client.customDatas.add_info.length === 0) {
 					let inputbox_variable = {
-						business: this.$store.state.meData.business.id,
+						business: this.$store.state.meData.businessID,
 					}
 					// 설문데이터 호출
 					await this.$store.dispatch('inputBoxes', inputbox_variable).then(res => {

@@ -372,9 +372,28 @@ export const settlementEditLogs = gql`
 	}
 `
 export const assignments = gql`
-	query assignments($productArr: JSON, $created_at_lte: DateTime, $created_at_gte: DateTime, $status: ENUM_ASSIGNMENT_STATUS) {
+	query assignments(
+		$productArr: JSON
+		$created_lte: DateTime
+		$created_gte: DateTime
+		$created_at_lte: DateTime
+		$created_at_gte: DateTime
+		$status: ENUM_ASSIGNMENT_STATUS
+		$businessID: String
+		$userID: String
+	) {
 		assignments(
-			where: { productID: $productArr, updated_at_lte: $created_at_lte, updated_at_gte: $created_at_gte, useYn: true, status: $status }
+			where: {
+				productID: $productArr
+				created_at_lte: $created_lte
+				created_at_gte: $created_gte
+				updated_at_lte: $created_at_lte
+				updated_at_gte: $created_at_gte
+				useYn: true
+				status: $status
+				businessID: $businessID
+				userID: $userID
+			}
 		) {
 			id
 			useYn

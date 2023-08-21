@@ -54,7 +54,7 @@ export default {
 			this.$router.push('/')
 		},
 		logo_click() {
-			if (this.$store.state.meData.business && this.$store.state.meData.business.id) {
+			if (this.$store.state.meData.businessID) {
 				if (
 					this.$route.name !== 'counselorLogin' &&
 					this.$route.name !== 'counselorRegister' &&
@@ -62,7 +62,7 @@ export default {
 				) {
 					this.$router.push({
 						name: 'counselorBizDashboard',
-						params: { id: this.$store.state.meData.business.id },
+						params: { id: this.$store.state.meData.businessID },
 					})
 				}
 			}

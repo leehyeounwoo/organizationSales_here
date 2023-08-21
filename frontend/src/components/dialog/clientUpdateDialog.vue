@@ -544,7 +544,7 @@ export default {
 						ok = ok + 1
 						if (this.$store.state.meData) {
 							const data = {
-								business: this.$store.state.meData.business.id,
+								business: this.$store.state.meData.businessID,
 							}
 							this.inputBoxesView(data)
 							clearInterval(interval)
@@ -571,7 +571,7 @@ export default {
 			this.$router.push({ name: 'counselorLogin' })
 		},
 		logo_click() {
-			if (this.$store.state.meData.business && this.$store.state.meData.business.id) {
+			if (this.$store.state.meData.businessID) {
 				if (
 					this.$route.name !== 'counselorLogin' &&
 					this.$route.name !== 'counselorRegister' &&
@@ -579,7 +579,7 @@ export default {
 				) {
 					this.$router.push({
 						name: 'counselorBizDashboard',
-						params: { id: this.$store.state.meData.business.id },
+						params: { id: this.$store.state.meData.businessID },
 					})
 				}
 			}
@@ -802,7 +802,7 @@ export default {
 			this.$store.state.loading = true
 
 			let input = {
-				business: this.$store.state.meData.business.id,
+				business: this.$store.state.meData.businessID,
 			}
 			await this.$store
 				.dispatch('productList', input)
@@ -845,7 +845,7 @@ export default {
 				this.product_select = []
 			}
 			let input = {
-				business: this.$store.state.meData.business.id,
+				business: this.$store.state.meData.businessID,
 				status: 'uncontracted',
 				data1: this.product_list.data1.value ? this.product_list.data1.value : '',
 				data2: this.product_list.data2.value ? this.product_list.data2.value : '',
@@ -1185,7 +1185,7 @@ export default {
 						this.select_product = ''
 						this.$router.push({
 							name: 'counselorBizDashboard',
-							params: { id: this.$store.state.meData.business.id },
+							params: { id: this.$store.state.meData.businessID },
 						})
 					}
 					this.$store.state.loading = false

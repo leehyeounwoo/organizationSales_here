@@ -94,7 +94,7 @@ const routes = [
 			{
 				path: '/counselor/commuteManagement/manage',
 				component: () => import(/* webpackChunkName: "campaign" */ '../views/counselor/commuteManagement/manage.vue'),
-				name: '/counselor/commuteManagement/manage',
+				name: 'counselorManage',
 				meta: { requiresAuth: true, counselor: true },
 			},
 			// 공지사항  - 공지사항

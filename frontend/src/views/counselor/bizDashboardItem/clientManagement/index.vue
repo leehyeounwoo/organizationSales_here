@@ -78,7 +78,7 @@ export default {
 		to_bizDashboard() {
 			this.$router.push({
 				name: 'counselorBizDashboard',
-				params: { id: this.$store.state.meData.business.id },
+				params: { id: this.$store.state.meData.businessID },
 			})
 		},
 	},

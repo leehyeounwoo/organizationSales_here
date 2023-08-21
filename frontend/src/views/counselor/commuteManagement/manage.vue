@@ -1,6 +1,6 @@
 <template>
-	<div class="counselor_container ">
-		<div :class="reservationStatus ? 'counsel_create_wrap' : 'counselor_content_wrap'" class="sticky_wrap small_sticky_header">
+	<div class="counselor_container " style="overflow: hidden;">
+		<div :class="reservationStatus ? 'counsel_create_wrap' : 'counselor_content_wrap'" class="sticky_wrap small_sticky_header pt-0">
 			<div class="top_sticky_header">
 				<v-layout justify-center class="tab_name_bar">
 					<div class="header_left_btn">
@@ -11,7 +11,7 @@
 						</v-btn>
 					</div>
 					<span>
-						출/퇴근관리
+						근태관리
 					</span>
 				</v-layout>
 			</div>
@@ -48,8 +48,8 @@
 						>
 					</div>
 				</v-layout>
-				<v-layout v-if="!reservationStatus" style="font-size:0.75rem; justify-content: right; color:#633efd;" mb-2>
-					※ 연차는 당일 {{ $moment().format('YYYY-MM-DD') }} 기준 {{ vacation_input }}일 이후 부터 신청할 수 있어요
+				<v-layout v-if="!reservationStatus" style="font-size:0.75rem; justify-content: left; color:#633efd;" mb-2>
+					※ 휴무일은 3일전에 신청해주세요.
 				</v-layout>
 
 				<v-layout v-else style="font-size:0.75rem; justify-content: right; color:#633efd;" mb-2>
@@ -154,7 +154,7 @@
 					</v-layout>
 				</div>
 			</div>
-			<div style="width:100%">
+			<div style="width:100%; position: fixed; bottom: 60px;">
 				<v-btn v-if="reservationStatus" class="bottom_fix" color="primary2" block tile dark depressed @click="holyDayAction()">
 					신청하기
 				</v-btn>
@@ -233,13 +233,14 @@ export default {
 			// 뒤로가기 버튼
 			this.$router.push({
 				name: 'counselorBizDashboard',
-				params: { id: this.$store.state.meData.business.id },
+				params: { id: this.$store.state.meData.businessID },
 			})
 		},
 		systemsView(variable) {
 			this.$store
 				.dispatch('systems', variable)
 				.then(res => {
+					console.log(res)
 					this.vacation_input = res.systems[0].vacationReservation
 				})
 				.catch(err => {
@@ -339,7 +340,7 @@ export default {
 			}
 			this.workDate = result
 			const data = {
-				business: this.$store.state.meData.business.id,
+				business: this.$store.state.meData.businessID,
 				date_gte: this.startPicker.date,
 				date_lte: this.endPicker.date,
 				id: this.$store.state.meData.id,
@@ -422,9 +423,9 @@ export default {
 		const meDataCheck = setInterval(() => {
 			let ok = 0
 			ok += 1
-			if (this.$store.state.meData.business) {
+			if (this.$store.state.meData.businessID) {
 				this.headerCheckAction(this.startPicker.date, this.endPicker.date)
-				const data1 = { business: this.$store.state.meData.business.id }
+				const data1 = { business: this.$store.state.meData.businessID }
 				this.systemsView(data1)
 				clearInterval(meDataCheck)
 			} else if (ok === 5) {

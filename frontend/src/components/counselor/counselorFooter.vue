@@ -50,7 +50,7 @@ export default {
 			if (item.title === '상담관리') {
 				this.$router.push({
 					name: item.route,
-					params: { id: this.$store.state.meData.business.id },
+					params: { id: this.$store.state.meData.businessID },
 					query: { tab: '1' },
 				})
 			} else if (item.title === '고객관리') {
@@ -58,12 +58,12 @@ export default {
 			} else if (item.title === 'Home') {
 				this.$router.push({
 					name: 'counselorBizDashboard',
-					params: { id: this.$store.state.meData.business.id },
+					params: { id: this.$store.state.meData.businessID },
 				})
 			} else if (item.title === '공지사항') {
 				this.$router.push({
 					name: 'counselorNotice',
-					params: { id: this.$store.state.meData.business.id },
+					params: { id: this.$store.state.meData.businessID },
 				})
 			} else {
 				this.$router.push({ name: item.route })

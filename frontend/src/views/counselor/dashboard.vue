@@ -33,7 +33,7 @@
 			</v-layout>
 			<v-layout align-center wrap>
 				<v-flex v-for="(list, i) in holdingList" :key="i" class="holding-text" xs4>
-					{{ list }}
+					<div v-if="list.product">{{ list.product.housingType }} {{ list.product.dong }} {{ list.product.ho }}</div>
 				</v-flex>
 			</v-layout>
 		</v-card>
@@ -84,7 +84,7 @@
 						color="primary2"
 					></v-select>
 				</v-flex>
-				<v-btn block color="primary2" @click="holding" class="mt-4" rounded>
+				<v-btn block color="primary2" @click="holding" class="mt-4" rounded dark>
 					{{ holdingText }}
 				</v-btn>
 				<div class="explain-text point4--text mt-2">
@@ -104,17 +104,48 @@
 				</v-card>
 			</v-flex>
 		</v-layout>
+		<holdingDialog :setdialog="holdingDialog" @click="createAssignment" />
+		<sweetAlert :dialog="sweetInfo" />
 	</v-layout>
 </template>
 
 <script>
 import QRcode from './QR/QRcode.vue'
+import { holdingDialog, sweetAlert } from '@/components/index'
 export default {
 	components: {
 		QRcode,
+		holdingDialog,
+		sweetAlert,
 	},
 	data() {
 		return {
+			sweetInfo: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'info',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+			},
+			holdingDialog: {
+				open: false,
+				datatable: {
+					headers: [
+						{ text: '주택형', value: 'protect1', sortable: false },
+						{ text: '동', value: 'protect2', sortable: false },
+						{ text: '호', value: 'protect3', sortable: false },
+						{ text: '홀딩시간', value: 'time', sortable: false },
+					],
+					class: 'mt-0',
+					items: [],
+					noweditting: '',
+					hidedefaultfooter: true,
+					itemsPerPage: 99,
+					page: 1,
+					pageCount: 0,
+				},
+			},
 			iconList: [
 				{
 					icon: 'footer_공지사항',
@@ -124,7 +155,7 @@ export default {
 				{
 					icon: 'footer_출퇴근관리',
 					title: '근태관리',
-					route: 'counselorNotice',
+					route: 'counselorManage',
 				},
 				{
 					icon: 'footer_고객관리',
@@ -144,10 +175,14 @@ export default {
 			product1: '',
 			product2: '',
 			product3: '',
-			holdingList: ['hi', 'hi2', 'h3', 'hi'],
+			holdingList: [],
 			dialogQr: { open: false, code: '!', business: { title: '' }, meData: { created_at: this.$moment(), name: '' } },
 			times: [],
 			time: '30분',
+			productDatas: [],
+			assignmentDatas: [],
+			waitingHoldingList: {},
+			rejectHoldingList: {},
 		}
 	},
 	created() {
@@ -155,10 +190,87 @@ export default {
 			const el = index * 10
 			this.times.push(String(el) + '분')
 		}
+		this.products()
 	},
 	methods: {
+		open_disable_dialog(data, info) {
+			// 불가 팝업 열기
+
+			this.sweetInfo.title = data.title
+			this.sweetInfo.content = data.content
+			if (!info) this.sweetInfo.modalIcon = `info`
+			else this.sweetInfo.modalIcon = info
+			this.sweetInfo.open = true
+		},
+		products() {
+			this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
+				this.productDatas = res.products
+				this.products1 = res.products.map(x => x.housingType)
+				this.products2 = res.products.map(x => x.dong)
+				this.products3 = res.products.map(x => x.ho)
+				this.assignments()
+			})
+		},
+		assignments() {
+			this.$store
+				.dispatch('assignments', {
+					created_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+					created_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					businessID: this.$store.state.meData.businessID,
+					userID: this.$store.state.meData.id,
+				})
+				.then(res => {
+					this.holdingList = res.assignments.filter(x => x.status === 'assignment')
+					for (let index = 0; index < this.holdingList.length; index++) {
+						const el = this.holdingList[index]
+						if (this.productDatas.filter(x => x.id === el.productID).length > 0)
+							el.product = this.productDatas.filter(x => x.id === el.productID)[0]
+					}
+					this.assignmentDatas = res.assignments
+					if (res.assignments.filter(x => x.status === null).length === 0) this.holdingText = '홀딩 요청'
+					else if (res.assignments.filter(x => x.status === 'reject').length > 0) this.holdingText = '미승인'
+					else this.holdingText = `홀딩 취소`
+					this.waitingHoldingList = res.assignments.filter(x => x.status === null)[0]
+					this.rejectHoldingList = res.assignments.filter(x => x.status === 'reject')[0]
+					console.log(res.assignments)
+				})
+		},
+		createAssignment() {
+			if (this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3).length > 0) {
+				const data = {
+					userID: this.$store.state.meData.id,
+					status: null,
+					type: 'time',
+					start: this.$moment().format('HH:mm:ss:SSS'),
+					end: this.$moment()
+						.add(Number(this.time.replace('분', '')), 'm')
+						.format('HH:mm:ss:SSS'),
+					productID: this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3)[0]
+						.id,
+					orderType: 'couselor',
+					holdingTime: this.time,
+					businessID: this.$store.state.meData.businessID,
+				}
+				this.$store.dispatch('createAssignment', data).then(() => {
+					this.holdingDialog.open = false
+					this.assignments()
+				})
+			} else {
+				alert('오류가 발생하였습니다. 다시 신청해주세요.')
+			}
+		},
 		holding() {
-			alert('홀딩')
+			if (!this.product1) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '주택형을 선택해주세요.' })
+			else if (!this.product2) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '동을 선택해주세요.' })
+			else if (!this.product3) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '호수를 선택해주세요.' })
+			this.holdingDialog.open = true
+			this.holdingDialog.datatable.items = []
+			this.holdingDialog.datatable.items.push({
+				protect1: this.product1,
+				protect2: this.product2,
+				protect3: this.product3,
+				time: this.time,
+			})
 		},
 		openQr() {
 			this.dialogQr.open = true
