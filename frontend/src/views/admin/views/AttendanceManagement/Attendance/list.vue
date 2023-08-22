@@ -425,7 +425,6 @@ export default {
 					for (let i = 0; i < res.users.length; i++) {
 						this.userIDArr.push(res.users[i].id)
 					}
-
 					res.users.forEach(element => {
 						let listData = {}
 						listData.all = element
@@ -719,7 +718,6 @@ export default {
 			}
 		},
 		createGotoworkAction(data) {
-			console.log(data)
 			this.$store
 				.dispatch('createGotowork', data)
 				.then(async () => {

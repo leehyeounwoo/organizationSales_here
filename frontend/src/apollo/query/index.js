@@ -60,7 +60,6 @@ export const users = gql`
 		$username: String
 		$roleName: String
 		$businessID_null: Boolean
-		$date: Date
 		$workingStatus: Boolean
 		$businessID: String
 	) {
@@ -71,7 +70,6 @@ export const users = gql`
 		}
 		users(
 			where: {
-				date: $date
 				id: $idArr
 				username_contains: $username
 				teamID: $teamID
