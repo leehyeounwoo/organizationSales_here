@@ -48,7 +48,7 @@
 				<span style="font-size: 20px;"> 카메라 전환</span></v-btn
 			>
 		</qrcode-stream>
-		<sweetAlert :dialog="sweetInfo" @close_active="sweetInfo.title === '오류발생' ? $router.go(-1) : ''" />
+		<sweetAlert :dialog="sweetInfo" @close_active="sweetInfo.title === '오류발생' ? windowClose() : ''" />
 	</div>
 </template>
 
@@ -181,6 +181,9 @@ export default {
 		}
 	},
 	methods: {
+		windowClose() {
+			window.open('', '_self').close()
+		},
 		degreesToRadians(degrees) {
 			let radians = (degrees * Math.PI) / 180
 			return radians
@@ -204,7 +207,8 @@ export default {
 				code: this.$route.params.code,
 			}
 			this.$store.dispatch('businesses', data).then(res => {
-				if (res.businesses.length === 0) this.open_disable_dialog({ title: '오류발생', content: '존재하지 않는 사업지입니다.' }, 'error')
+				if (res.businesses.length === 0)
+					return this.open_disable_dialog({ title: '오류발생', content: '존재하지 않는 사업지입니다.' }, 'error')
 				else {
 					this.business = res.businesses[0]
 					this.ourCoords.latitude = Number(this.business.location.split('_')[0])

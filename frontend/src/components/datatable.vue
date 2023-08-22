@@ -1839,7 +1839,7 @@
 				<div>{{ item.manager ? item.manager.phoneNumber : '' }}</div>
 			</template>
 			<template v-slot:[`item.workCheckURL`]="{ item }">
-				<div>{{ item.code ? item.code : '' }}</div>
+				<v-btn class="detail_etc_btn" small @click="openWindow(item)" :color="'#9A9C9B'" depressed>바로가기</v-btn>
 			</template>
 			<!-- 사업지관리 - 등록상품 -->
 			<template v-slot:[`item.select_product`]="{ item }">
@@ -2362,6 +2362,9 @@ export default {
 		},
 	},
 	methods: {
+		openWindow(item) {
+			window.open(location.protocol + '//' + location.host + '/QRenter/' + item.code)
+		},
 		viewAttachment(e, val) {
 			const url = process.env.VUE_APP_BACKEND_URL + val
 			const link = document.createElement('a')

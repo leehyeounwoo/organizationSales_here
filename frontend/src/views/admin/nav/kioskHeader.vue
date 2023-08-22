@@ -9,6 +9,7 @@
 				<v-layout align-center>
 					<v-layout align-center justify-end style="height:60px">
 						<selectBoxValueItems
+							class="mr-4 mt-2"
 							:sel="$store.state.businessSelectBox"
 							v-model="$store.state.businessSelectBox.value"
 							:items="$store.state.businessSelectBox.items"

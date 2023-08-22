@@ -193,8 +193,8 @@ export default {
 						// 		let trial = { err }.err.graphQLErrors[0].extensions.exception.data.data[0].messages[0].message
 						// 		this.pwerrorMessages = `패스워드가 정확하지 않습니다. (${trial}/5)`
 						// 	} else {
-						// 		this.iderrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
-						// 		this.pwerrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
+						this.iderrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
+						this.pwerrorMessages = '아이디 혹은 비밀번호가 정확하지 않습니다.'
 						// 	}
 						// } else {
 						// 	alert('네트워크오류입니다.')
