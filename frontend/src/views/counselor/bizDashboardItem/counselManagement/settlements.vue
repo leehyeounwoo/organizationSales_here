@@ -225,17 +225,25 @@ export default {
 					userID: this.$store.state.meData.id,
 				}
 				if (type !== 'first') {
-					data.contractDate_gte = this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z'
-					data.contractDate_lte = this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z'
+					data.contractDate_gte =
+						this.$moment(this.startPicker.date)
+							.subtract('h', 9)
+							.format('YYYY-MM-DD') + 'T00:00:00.000Z'
+					data.contractDate_lte = this.$moment(this.endPicker.date).format('YYYY-MM-DD') + 'T15:00:00.000Z'
 					if (this.search) {
 						if (this.selectType === '이름') data.name = this.search
 						else data.phone = this.search
 					}
 					if (this.product1 && this.product2 && this.product3) {
-						const productID = this.productDatas.filter(
-							x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3,
-						)[0].id
-						data.ProductID = productID
+						if (
+							this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3).length >
+							0
+						) {
+							const productID = this.productDatas.filter(
+								x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3,
+							)[0].id
+							data.ProductID = productID
+						}
 					}
 				}
 				this.$store.dispatch('settlementsList', data).then(res => {
