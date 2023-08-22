@@ -2,9 +2,7 @@
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
 			<v-layout align-center justify-start>
-				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;">
-					{{ date_filter(date) }}
-				</v-flex>
+				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;"> {{ date }} ({{ day }}) </v-flex>
 				<v-flex>
 					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
 						><v-icon color="#8C72F9" @click="click_date_before">mdi-menu-left</v-icon></v-btn
@@ -133,7 +131,8 @@ export default {
 
 	data() {
 		return {
-			date: this.$moment(),
+			date: '',
+			day: '',
 			agreeType: false,
 			startTimeDialog: false,
 			endTimeDialog: false,
@@ -295,6 +294,7 @@ export default {
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
+		this.date_filter()
 	},
 	mounted() {},
 
@@ -326,7 +326,8 @@ export default {
 		},
 		async me() {
 			await this.$store.dispatch('me').then(res => {
-				this.$store.state.meData = res.data
+				console.log(res)
+				this.$store.state.meData = res.me
 			})
 		},
 		async dataSetting() {
@@ -462,25 +463,11 @@ export default {
 				await this.viewUsers(range)
 			}
 		},
-		date_filter(val) {
-			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
+		date_filter() {
+			this.date = this.$moment().format('YYYY년-MM월-DD일')
+			let week = ['일', '월', '화', '수', '목', '금', '토']
+			let dayOfweek = new Date().getDay()
+			this.day = week[dayOfweek]
 		},
 		update() {
 			let input = {
