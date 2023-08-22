@@ -322,7 +322,6 @@ export default {
 		},
 
 		async clickSave() {
-			console.log(this.setdialog.editData)
 			this.$store.state.loading = true
 			if (this.rightInfoBottom[0].radio === 'agree') {
 				const startDate = this.$moment(this.setdialog.editData.vacationStart)

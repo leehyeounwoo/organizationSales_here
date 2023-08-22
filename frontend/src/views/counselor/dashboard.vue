@@ -241,6 +241,7 @@ export default {
 			rejectHoldingList: {},
 			rank: {},
 			business: {},
+			assignmentHoldingList: {},
 		}
 	},
 	created() {
@@ -281,7 +282,6 @@ export default {
 					this.time = this.times[0]
 				}
 				this.business.splitHoldingTime
-				console.log(res.businesses)
 			})
 		},
 		ranks() {
@@ -309,25 +309,32 @@ export default {
 				.dispatch('assignments', {
 					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
 					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
-					end_gte: this.$moment().format('HH:mm:ss') + '.000',
 					businessID: this.$store.state.meData.businessID,
 					status: 'assignment',
 					sort: 'created_at:desc',
 				})
 				.then(res => {
-					for (let index = 0; index < res.assignments.length; index++) {
-						const el = res.assignments[index]
+					const filterDatas = res.assignments.filter(
+						x => x.status === 'allday' || this.secondChange(this.$moment().format('HH:mm')) < this.secondChange(x.end),
+					)
+					for (let index = 0; index < filterDatas.length; index++) {
+						const el = filterDatas[index]
 						if (this.productDatas.filter(x => x.id === el.productID).length > 0)
 							el.product = this.productDatas.filter(x => x.id === el.productID)[0]
 					}
-					this.holdingListDialog.datatable.items = res.assignments
+					this.holdingListDialog.datatable.items = filterDatas
 				})
 		},
 		cancelHolding() {
-			this.$store.dispatch('updateAssignment', { id: this.waitingHoldingList.id, status: 'counselorNoAssignment' }).then(() => {
-				this.sweetInfo2.open = false
-				this.products()
-			})
+			this.$store
+				.dispatch('updateAssignment', {
+					id: this.waitingHoldingList ? this.waitingHoldingList.id : this.assignmentHoldingList.id,
+					status: 'counselorNoAssignment',
+				})
+				.then(() => {
+					this.sweetInfo2.open = false
+					this.products()
+				})
 		},
 		open_twobtn_dialog(data, info) {
 			// 불가 팝업 열기
@@ -373,50 +380,50 @@ export default {
 				.dispatch('assignments', {
 					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
 					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
-					end_gte: this.$moment().format('HH:mm:ss') + '.000',
+
 					businessID: this.$store.state.meData.businessID,
-					userID: this.$store.state.meData.id,
 					sort: 'created_at:desc',
 				})
 				.then(res => {
-					this.holdingList = res.assignments.filter(x => x.status === 'assignment')
+					this.holdingList = res.assignments.filter(
+						x => x.status === 'assignment' && this.secondChange(this.$moment().format('HH:mm')) < this.secondChange(x.end),
+					)
+					let myData = res.assignments.filter(x => x.userID === this.$store.state.meData.id)
 					for (let index = 0; index < this.holdingList.length; index++) {
 						const el = this.holdingList[index]
 						if (this.productDatas.filter(x => x.id === el.productID).length > 0)
 							el.product = this.productDatas.filter(x => x.id === el.productID)[0]
 					}
-					this.assignmentDatas = res.assignments
 					if (
-						res.assignments.filter(x => x.status === 'assignment').length > 0 &&
-						this.secondChange(res.assignments.filter(x => x.status === 'assignment')[0].end) -
-							this.secondChange(this.$moment().format('HH:mm')) >
-							0
+						myData.filter(x => x.status === 'assignment').length > 0 &&
+						this.secondChange(myData.filter(x => x.status === 'assignment')[0].end) - this.secondChange(this.$moment().format('HH:mm')) > 0
 					) {
-						const holdingData = res.assignments.filter(x => x.status === 'assignment')[0]
+						const holdingData = myData.filter(x => x.status === 'assignment')[0]
 						const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
 						if (holdingData.type === 'allday') this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] All Day`
 						else
 							this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] 남은시간:${(this.secondChange(
-								res.assignments.filter(x => x.status === 'assignment')[0].end,
+								myData.filter(x => x.status === 'assignment')[0].end,
 							) -
 								this.secondChange(this.$moment().format('HH:mm'))) /
 								60}분`
-					} else if (res.assignments.filter(x => x.status === 'waiting').length === 0) this.holdingText = '홀딩 요청'
-					else if (res.assignments.filter(x => x.status === 'reject').length > 0) this.holdingText = '미승인'
-					else if (res.assignments.filter(x => x.status === 'waiting').length > 0) {
-						const holdingData = res.assignments.filter(x => x.status === 'waiting')[0]
+					} else if (myData[0].status === 'reject') this.holdingText = '미승인 [다시 홀딩 요청하기]'
+					else if (myData.filter(x => x.status === 'waiting').length === 0) this.holdingText = '홀딩 요청'
+					else if (myData.filter(x => x.status === 'waiting').length > 0) {
+						const holdingData = myData.filter(x => x.status === 'waiting')[0]
 						const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
-						this.holdingText = `홀딩 취소 [${product.housingType} ${product.dong} ${product.ho}]`
+						this.holdingText = `홀딩 요청중 [${product.housingType} ${product.dong} ${product.ho}]`
 					}
-					this.waitingHoldingList = res.assignments.filter(x => x.status === 'waiting')[0]
-					this.rejectHoldingList = res.assignments.filter(x => x.status === 'reject')[0]
+					this.assignmentHoldingList = myData.filter(x => x.status === 'assignment')[0]
+					this.waitingHoldingList = myData.filter(x => x.status === 'waiting')[0]
+					this.rejectHoldingList = myData.filter(x => x.status === 'reject')[0]
 				})
 		},
 		createAssignment() {
 			if (this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3).length > 0) {
 				const data = {
 					userID: this.$store.state.meData.id,
-					type: 'time',
+					type: 'now',
 					start: this.$moment().format('HH:mm:ss:SSS'),
 					end: this.$moment()
 						.add(Number(this.time.replace('분', '')), 'm')
@@ -446,7 +453,7 @@ export default {
 					},
 					'error',
 				)
-			else if (this.holdingText.indexOf('홀딩 취소') === -1) {
+			else if (this.holdingText.indexOf('홀딩 요청중') === -1) {
 				if (this.secondChange(this.business.workingHoursStart) > this.secondChange(this.$moment().format('HH:mm')))
 					return this.open_disable_dialog({
 						title: '홀딩 시작전',

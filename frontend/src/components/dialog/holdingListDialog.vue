@@ -8,7 +8,7 @@
 		<div class="qr-layout px-10" wrap>
 			<strong>
 				<div class="text-left point4--text mt-4 mb-2" style="font-size: 12px;">
-					금일 홀딩 물건입니다.
+					현재시간 기준으로 홀딩된 물건입니다.
 				</div>
 			</strong>
 			<datatable :datatable="setdialog.datatable" class="front-datatable mb-2" />
