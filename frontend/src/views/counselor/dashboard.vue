@@ -7,12 +7,11 @@
 					<div class="title">
 						{{ $store.state.meData.name }}
 					</div>
-					<div class="ml-2"><span class="point">상담사</span>님, 오늘도 즐거운 하루 되세요.</div>
+					<div class="ml-2">
+						<span class="point">{{ rank.rankName }}</span
+						>님, 오늘도 즐거운 하루 되세요.
+					</div>
 				</v-layout>
-
-				<v-btn v-if="rank.rankName === '팀장'" elevation="0" block color="primary2" dark @click="$router.push({ name: 'QRenter' })"
-					><v-icon class="mr-1">mdi-qrcode-scan</v-icon> QR스캐너</v-btn
-				>
 				<v-btn block color="point4" dark elevation="0" class="mt-2" @click="openQr">
 					<v-icon class="mr-1">
 						mdi-qrcode-scan
@@ -43,6 +42,20 @@
 				<div class="main-text">
 					물건 홀딩 요청
 				</div>
+				<v-btn
+					@click="
+						() => {
+							if (countDown === 0) refresh()
+						}
+					"
+					small
+					color="point4"
+					dark
+					rounded
+					class="ml-2"
+				>
+					{{ countDown > 0 ? countDown : '새로고침' }}
+				</v-btn>
 				<v-spacer></v-spacer>
 				<v-flex xs4 class="pl-2">
 					<v-select :items="times" v-model="time" solo outlined class="nomal-select" hideDetails color="primary2"></v-select>
@@ -134,6 +147,7 @@ export default {
 	},
 	data() {
 		return {
+			countDown: 0,
 			holdingListDialog: {
 				open: false,
 				datatable: {
@@ -307,6 +321,16 @@ export default {
 					this.ranks()
 				})
 			})
+		},
+		refresh() {
+			this.countDown = 5
+			const countDown = setInterval(() => {
+				this.countDown -= 1
+				if (this.countDown === 0) {
+					clearInterval(countDown)
+				}
+			}, 1000)
+			this.assignments()
 		},
 		assignments() {
 			this.$store
