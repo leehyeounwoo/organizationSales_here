@@ -14,12 +14,9 @@
     "rejectComment": {
       "type": "text"
     },
-    "gotoworks": {
-      "via": "vacation",
-      "collection": "gotoworks"
-    },
-    "vacationType": {
-      "type": "string"
+    "gotowork": {
+      "model": "gotoworks",
+      "via": "vacation"
     },
     "vacationStatus": {
       "type": "enumeration",
@@ -32,10 +29,7 @@
     "userID": {
       "type": "string"
     },
-    "start": {
-      "type": "date"
-    },
-    "end": {
+    "date": {
       "type": "date"
     },
     "vacationReason": {
@@ -43,6 +37,16 @@
     },
     "adminInfo": {
       "type": "json"
+    },
+    "vacationType": {
+      "type": "enumeration",
+      "enum": [
+        "morningVacation",
+        "afternoonVacation",
+        "vacation",
+        "sick",
+        "etc"
+      ]
     }
   }
 }

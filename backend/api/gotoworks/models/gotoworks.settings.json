@@ -37,8 +37,8 @@
       "type": "string"
     },
     "vacation": {
-      "model": "vacation",
-      "via": "gotoworks"
+      "via": "gotowork",
+      "model": "vacation"
     }
   }
 }

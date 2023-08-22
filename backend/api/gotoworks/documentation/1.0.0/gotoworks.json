@@ -558,13 +558,7 @@
               "rejectComment": {
                 "type": "string"
               },
-              "gotoworks": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "vacationType": {
+              "gotowork": {
                 "type": "string"
               },
               "vacationStatus": {
@@ -573,10 +567,7 @@
               "userID": {
                 "type": "string"
               },
-              "start": {
-                "type": "string"
-              },
-              "end": {
+              "date": {
                 "type": "string"
               },
               "vacationReason": {
@@ -584,6 +575,9 @@
               },
               "adminInfo": {
                 "type": "object"
+              },
+              "vacationType": {
+                "type": "string"
               },
               "published_at": {
                 "type": "datetime"
