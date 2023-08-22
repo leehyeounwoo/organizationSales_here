@@ -77,9 +77,6 @@
 							<v-flex xs8>
 								<v-layout class="pt-3">
 									<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
-									<v-flex>
-										<v-btn elevation="0" class="ml-2 new_biz_btn">주소복사</v-btn>
-									</v-flex>
 								</v-layout>
 							</v-flex>
 						</v-flex>
@@ -119,7 +116,11 @@
 								<v-layout class="pt-3">
 									<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 									<v-flex>
-										<v-btn elevation="0" class="ml-2 new_biz_btn" style="min-width:30px !important; width:30px !important"
+										<v-btn
+											@click="checkLocation"
+											elevation="0"
+											class="ml-2 new_biz_btn"
+											style="min-width:30px !important; width:30px !important"
 											><v-icon small>mdi-crosshairs</v-icon></v-btn
 										>
 									</v-flex>
@@ -260,6 +261,28 @@ export default {
 		},
 	},
 	methods: {
+		open_disable_dialog(data, info) {
+			// 불가 팝업 열기
+
+			this.sweetInfo.title = data.title
+			this.sweetInfo.content = data.content
+			if (!info) this.sweetInfo.modalIcon = `info`
+			else this.sweetInfo.modalIcon = info
+			this.sweetInfo.open = true
+		},
+		computeDistance(startCoords) {
+			var startLatRads = startCoords.latitude
+			var startLongRads = startCoords.longitude
+			return String(startLatRads.toFixed(5)) + '_' + String(startLongRads.toFixed(5))
+		},
+		checkLocation() {
+			if (!navigator.geolocation) {
+				return this.open_disable_dialog({ title: '오류발생', content: '위치정보를 허용해 주세요.' }, 'error')
+			}
+			navigator.geolocation.getCurrentPosition(position => {
+				this.setdialog.items[6].value = this.computeDistance(position.coords)
+			})
+		},
 		select2(select) {
 			if (select.selectBox.value === '30분') {
 				select.selectBox2.items = ['60분', '90분', '120분']
@@ -384,6 +407,7 @@ export default {
 				splitHoldingTime: this.setdialog.items[3].selectBox.value,
 				maximumHoldingTime: this.setdialog.items[3].selectBox2.value,
 				product: this.setdialog.items[5].value ? this.parseCsv : [],
+				location: this.setdialog.items[6].value ? this.setdialog.items[6].value : null,
 			}
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('createBusiness', data).then(res => {

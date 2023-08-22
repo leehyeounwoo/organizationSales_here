@@ -248,6 +248,7 @@ export const businesses = gql`
 			code
 			created_at
 			product
+			location
 		}
 	}
 `

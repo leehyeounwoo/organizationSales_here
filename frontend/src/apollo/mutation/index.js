@@ -376,10 +376,12 @@ export const createBusiness = gql`
 		$maximumHoldingTime: String
 		$workCheckURL: String
 		$product: JSON
+		$location: String
 	) {
 		createBusiness(
 			input: {
 				data: {
+					location: $location
 					name: $name
 					phoneNumber: $phoneNumber
 					workingHoursStart: $workingHoursStart
@@ -409,6 +411,7 @@ export const updateBusiness = gql`
 		$maximumHoldingTime: String
 		$workCheckURL: String
 		$product: JSON
+		$location: String
 	) {
 		updateBusiness(
 			input: {
@@ -422,6 +425,7 @@ export const updateBusiness = gql`
 					maximumHoldingTime: $maximumHoldingTime
 					workCheckURL: $workCheckURL
 					product: $product
+					location: $location
 				}
 			}
 		) {

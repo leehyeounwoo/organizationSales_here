@@ -133,7 +133,7 @@ export default {
 							outlined: true,
 							hideDetail: true,
 							errorMessage: '',
-							disable: true,
+							readonly: true,
 						},
 					},
 					// 5
@@ -162,7 +162,7 @@ export default {
 							outlined: true,
 							hideDetail: true,
 							errorMessage: '',
-							disable: true,
+							readonly: true,
 							placeholder: '위도, 경도',
 						},
 					},
@@ -417,10 +417,11 @@ export default {
 				this.createDialog.items[3].selectBox2.items = ['60분', '120분']
 			}
 			this.createDialog.items[3].selectBox2.value = item.maximumHoldingTime
-			this.createDialog.items[4].value = item.code
+			this.createDialog.items[4].value = location.protocol + '//' + location.host + '/QRenter/' + item.code
 			this.right_data[0].txtfield1.value = item.manager ? item.manager.username : ''
 			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
 			this.right_data[0].txtfield3.value = item.manager ? item.manager.email : ''
+			this.createDialog.items[6].value = item.location
 			console.log(this.right_data)
 			this.createDialog.dialog = true
 		},
