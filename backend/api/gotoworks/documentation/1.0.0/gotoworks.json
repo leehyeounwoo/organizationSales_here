@@ -540,7 +540,8 @@
               "morningVacation",
               "afternoonVacation",
               "none",
-              "etc"
+              "etc",
+              "sick"
             ]
           },
           "userID": {
@@ -620,7 +621,8 @@
               "morningVacation",
               "afternoonVacation",
               "none",
-              "etc"
+              "etc",
+              "sick"
             ]
           },
           "userID": {

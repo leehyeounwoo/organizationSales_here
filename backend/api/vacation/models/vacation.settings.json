@@ -15,8 +15,8 @@
       "type": "text"
     },
     "gotoworks": {
-      "collection": "gotoworks",
-      "via": "vacation"
+      "via": "vacation",
+      "collection": "gotoworks"
     },
     "vacationType": {
       "type": "string"
