@@ -283,6 +283,8 @@ export default {
 				return '오전반차'
 			} else if (val === 'vacation') {
 				return '휴가'
+			} else if (val === 'sick') {
+				return '병가'
 			} else {
 				return '출근'
 			}
@@ -431,6 +433,7 @@ export default {
 			}
 		},
 		async viewUsers(data) {
+			console.log(data)
 			this.$store.state.loading = true
 			if (this.search_project) {
 				data.username = this.search_project
@@ -483,6 +486,7 @@ export default {
 		},
 		async gotoworksView(data2) {
 			await this.$store.dispatch('gotoWork', data2).then(res => {
+				console.log(res)
 				res.gotoworks.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 					this.userLists[workIndex]['gotoworks'].push(el)
@@ -651,21 +655,21 @@ export default {
 				}
 				th:nth-child(3) {
 					position: sticky;
-					left: 165px;
+					left: 248px;
 					z-index: 2 !important;
 					border-left: 1px solid #d1d1d1;
-					border-right: 1px solid #d1d1d1;
+					// border-right: 1px solid #d1d1d1;
 				}
 				th:nth-child(4) {
 					position: sticky;
-					left: 165px;
+					left: 348px;
 					z-index: 2 !important;
 					border-left: 1px solid #d1d1d1;
-					border-right: 1px solid #d1d1d1;
+					// border-right: 1px solid #d1d1d1;
 				}
 				th:nth-child(5) {
 					position: sticky;
-					left: 165px;
+					left: 448px;
 					z-index: 2 !important;
 					border-left: 1px solid #d1d1d1;
 					border-right: 1px solid #d1d1d1;
@@ -676,8 +680,8 @@ export default {
 }
 
 .table_style_1 > .v-data-table__wrapper > table {
-	max-width: calc(100% - 200px);
-	width: calc(100% - 200px);
+	// max-width: calc(100% - 200px);
+	// width: calc(100% - 200px);
 	tbody {
 		tr {
 			// td:not(:last-of-type) {
@@ -693,32 +697,32 @@ export default {
 				left: 0;
 				z-index: 2 !important;
 				border-left: 1px solid #d1d1d1;
-				// border-right: 1px solid #d1d1d1;
+				border-right: 1px solid #d1d1d1;
 			}
 			td:nth-child(2) {
 				position: sticky;
 				left: 65px;
 				z-index: 2 !important;
 				border-left: 1px solid #d1d1d1;
-				// border-right: 1px solid #d1d1d1;
+				border-right: 1px solid #d1d1d1;
 			}
 			td:nth-child(3) {
 				position: sticky;
-				left: 165px;
+				left: 248px;
 				z-index: 2 !important;
 				border-left: 1px solid #d1d1d1;
 				border-right: 1px solid #d1d1d1;
 			}
-			th:nth-child(4) {
+			td:nth-child(4) {
 				position: sticky;
-				left: 165px;
+				left: 348px;
 				z-index: 2 !important;
 				border-left: 1px solid #d1d1d1;
 				border-right: 1px solid #d1d1d1;
 			}
-			th:nth-child(5) {
+			td:nth-child(5) {
 				position: sticky;
-				left: 165px;
+				left: 448px;
 				z-index: 2 !important;
 				border-left: 1px solid #d1d1d1;
 				border-right: 1px solid #d1d1d1;
