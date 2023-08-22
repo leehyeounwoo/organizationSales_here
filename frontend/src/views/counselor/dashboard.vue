@@ -340,14 +340,14 @@ export default {
 							) -
 								this.secondChange(this.$moment().format('HH:mm'))) /
 								60}분`
-					} else if (res.assignments.filter(x => x.status === null).length === 0) this.holdingText = '홀딩 요청'
+					} else if (res.assignments.filter(x => x.status === 'waiting').length === 0) this.holdingText = '홀딩 요청'
 					else if (res.assignments.filter(x => x.status === 'reject').length > 0) this.holdingText = '미승인'
-					else if (res.assignments.filter(x => x.status === null).length > 0) {
-						const holdingData = res.assignments.filter(x => x.status === null)[0]
+					else if (res.assignments.filter(x => x.status === 'waiting').length > 0) {
+						const holdingData = res.assignments.filter(x => x.status === 'waiting')[0]
 						const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
 						this.holdingText = `홀딩 취소 [${product.housingType} ${product.dong} ${product.ho}]`
 					}
-					this.waitingHoldingList = res.assignments.filter(x => x.status === null)[0]
+					this.waitingHoldingList = res.assignments.filter(x => x.status === 'waiting')[0]
 					this.rejectHoldingList = res.assignments.filter(x => x.status === 'reject')[0]
 				})
 		},
@@ -355,7 +355,6 @@ export default {
 			if (this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3).length > 0) {
 				const data = {
 					userID: this.$store.state.meData.id,
-					status: null,
 					type: 'time',
 					start: this.$moment().format('HH:mm:ss:SSS'),
 					end: this.$moment()
