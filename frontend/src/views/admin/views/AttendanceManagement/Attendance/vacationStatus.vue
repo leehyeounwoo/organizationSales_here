@@ -328,7 +328,6 @@ export default {
 				const startDate = this.$moment(this.setdialog.editData.vacationStart)
 				const endDate = this.$moment(this.setdialog.editData.vacationEnd)
 				const currentDate = startDate.clone()
-				const gotoworkID = []
 
 				while (currentDate <= endDate) {
 					if (currentDate.day() !== 0 && currentDate.day() !== 6) {
@@ -340,24 +339,24 @@ export default {
 						}
 
 						await this.$store.dispatch('createGotowork', input).then(res => {
-							gotoworkID.push(res.createGotowork.gotowork.id)
+							let input2 = {
+								id: this.setdialog.editData.vacationID,
+								vacationStatus: 'agree',
+								gotowork: res.createGotowork.gotowork.id,
+								adminInfo: this.$store.state.meData,
+							}
+							this.$store.dispatch('updateVacation', input2).then(() => {
+								if (endDate === currentDate) {
+									this.sweetDialog.open = false
+									this.setdialog.dialog = false
+									this.$emit('update')
+									this.$store.state.loading = false
+								}
+							})
 						})
 					}
 					currentDate.add(1, 'day')
 				}
-
-				let input2 = {
-					id: this.setdialog.editData.vacationID,
-					vacationStatus: 'agree',
-					gotoworks: gotoworkID,
-					adminInfo: this.$store.state.meData,
-				}
-				this.$store.dispatch('updateVacation', input2).then(() => {
-					this.sweetDialog.open = false
-					this.setdialog.dialog = false
-					this.$emit('update')
-					this.$store.state.loading = false
-				})
 			} else {
 				let input2 = {
 					id: this.setdialog.editData.vacationID,

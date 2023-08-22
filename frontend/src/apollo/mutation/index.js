@@ -154,10 +154,10 @@ export const deleteProduct = gql`
 export const updateVacation = gql`
 	mutation updateVacation(
 		$id: ID!
-		$gotoworks: [ID]
+		$gotowork: ID
 		$vacationStatus: ENUM_VACATION_VACATIONSTATUS
 		$adminInfo: JSON
-		$vacationType: String
+		$vacationType: ENUM_VACATION_VACATIONTYPE
 		$rejectComment: String
 	) {
 		updateVacation(
@@ -166,7 +166,7 @@ export const updateVacation = gql`
 				data: {
 					vacationStatus: $vacationStatus
 					adminInfo: $adminInfo
-					gotoworks: $gotoworks
+					gotowork: $gotowork
 					vacationType: $vacationType
 					rejectComment: $rejectComment
 				}
@@ -174,7 +174,7 @@ export const updateVacation = gql`
 		) {
 			vacation {
 				id
-				gotoworks {
+				gotowork {
 					id
 				}
 			}
