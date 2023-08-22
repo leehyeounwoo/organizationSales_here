@@ -121,12 +121,6 @@ const routes = [
 				name: 'counselorManage',
 				meta: { requiresAuth: true, counselor: true },
 			},
-			{
-				path: '/counselor/QRenter',
-				name: 'QRenter',
-				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/QR/QRenter.vue'),
-				meta: { requiresAuth: true, counselor: true },
-			},
 			// 공지사항  - 공지사항
 			{
 				path: '/counselor/notice',
@@ -135,6 +129,12 @@ const routes = [
 				meta: { requiresAuth: true, counselor: true },
 			},
 		],
+	},
+	{
+		path: '/QRenter/:code',
+		name: 'QRenter',
+		component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/QR/QRenter.vue'),
+		meta: { requiresAuth: true },
 	},
 	{
 		path: '/KIOSK',

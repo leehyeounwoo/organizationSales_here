@@ -236,8 +236,8 @@ export const products = gql`
 	}
 `
 export const businesses = gql`
-	query($name: String, $idArr: [ID]) {
-		businesses(where: { name_contains: $name, id: $idArr }) {
+	query($name: String, $idArr: [ID], $code: String) {
+		businesses(where: { name_contains: $name, id: $idArr, code: $code }) {
 			id
 			name
 			phoneNumber

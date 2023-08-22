@@ -284,6 +284,8 @@ export default {
 						// })
 					}
 					if (this.settlement.settlement_turn_tables.length > 0) {
+						let totalamountValue = 0
+						let totalamout = 0
 						this.settlement.settlement_turn_tables.forEach((el, index) => {
 							this.moneyDatatable.items.push({
 								trun: el.turnTableDegree,
@@ -292,11 +294,10 @@ export default {
 								amount: el.amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
 								depositFile: el.depositFile,
 							})
-							let totalamountValue = 0
-							let totalamout = 0
 							totalamout += el.amount
 							totalamountValue += Math.floor((el.amount / this.settlement.totalPrice) * 100)
-							if (index === this.settlement.settlement_turn_tables.length - 1)
+							if (index === this.settlement.settlement_turn_tables.length - 1) {
+								console.log(totalamountValue)
 								this.moneyDatatable.items.push({
 									trun: '지급금액',
 									contractDate: '',
@@ -304,13 +305,14 @@ export default {
 									amount: totalamout.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
 									depositFile: '',
 								})
-							this.moneyDatatable.items.push({
-								trun: '잔여금액',
-								contractDate: '',
-								amountValue: String(100 - totalamountValue) + '%',
-								amount: (this.settlement.totalPrice - totalamout).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
-								depositFile: '',
-							})
+								this.moneyDatatable.items.push({
+									trun: '잔여금액',
+									contractDate: '',
+									amountValue: String(100 - totalamountValue) + '%',
+									amount: (this.settlement.totalPrice - totalamout).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
+									depositFile: '',
+								})
+							}
 						})
 					}
 					this.datatable.items.push({
