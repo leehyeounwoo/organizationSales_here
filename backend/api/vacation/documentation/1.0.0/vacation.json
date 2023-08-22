@@ -525,48 +525,42 @@
           "rejectComment": {
             "type": "string"
           },
-          "gotoworks": {
-            "type": "array",
-            "items": {
-              "required": [
-                "id"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "startWork": {
-                  "type": "time"
-                },
-                "endWork": {
-                  "type": "time"
-                },
-                "date": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "userID": {
-                  "type": "string"
-                },
-                "vacation": {
-                  "type": "string"
-                },
-                "published_at": {
-                  "type": "datetime"
-                },
-                "created_by": {
-                  "type": "string"
-                },
-                "updated_by": {
-                  "type": "string"
-                }
+          "gotowork": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "startWork": {
+                "type": "time"
+              },
+              "endWork": {
+                "type": "time"
+              },
+              "date": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "userID": {
+                "type": "string"
+              },
+              "vacation": {
+                "type": "string"
+              },
+              "published_at": {
+                "type": "datetime"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
               }
             }
-          },
-          "vacationType": {
-            "type": "string"
           },
           "vacationStatus": {
             "type": "string",
@@ -579,10 +573,7 @@
           "userID": {
             "type": "string"
           },
-          "start": {
-            "type": "string"
-          },
-          "end": {
+          "date": {
             "type": "string"
           },
           "vacationReason": {
@@ -590,6 +581,16 @@
           },
           "adminInfo": {
             "type": "object"
+          },
+          "vacationType": {
+            "type": "string",
+            "enum": [
+              "morningVacation",
+              "afternoonVacation",
+              "vacation",
+              "sick",
+              "etc"
+            ]
           },
           "published_at": {
             "type": "datetime"
@@ -601,13 +602,7 @@
           "rejectComment": {
             "type": "string"
           },
-          "gotoworks": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "vacationType": {
+          "gotowork": {
             "type": "string"
           },
           "vacationStatus": {
@@ -621,10 +616,7 @@
           "userID": {
             "type": "string"
           },
-          "start": {
-            "type": "string"
-          },
-          "end": {
+          "date": {
             "type": "string"
           },
           "vacationReason": {
@@ -632,6 +624,16 @@
           },
           "adminInfo": {
             "type": "object"
+          },
+          "vacationType": {
+            "type": "string",
+            "enum": [
+              "morningVacation",
+              "afternoonVacation",
+              "vacation",
+              "sick",
+              "etc"
+            ]
           },
           "published_at": {
             "type": "datetime"

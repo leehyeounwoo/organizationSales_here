@@ -531,11 +531,13 @@
           },
           "status": {
             "type": "string",
+            "default": "waiting",
             "enum": [
               "assignment",
               "counselorNoAssignment",
               "noAssignment",
-              "reject"
+              "reject",
+              "waiting"
             ]
           },
           "type": {
@@ -586,11 +588,13 @@
           },
           "status": {
             "type": "string",
+            "default": "waiting",
             "enum": [
               "assignment",
               "counselorNoAssignment",
               "noAssignment",
-              "reject"
+              "reject",
+              "waiting"
             ]
           },
           "type": {
