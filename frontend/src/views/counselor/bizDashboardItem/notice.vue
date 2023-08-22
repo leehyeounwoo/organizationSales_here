@@ -52,8 +52,6 @@
 					</template>
 					<template v-slot:[`item.title`]="{ item }">
 						<div>
-							<!-- <v-badge color="green" left content="new" v-if="$moment().diff($moment(item.created_at), 'days') < 8"> -->
-							<!-- </v-badge> -->
 							<v-layout v-if="item.fixYn" align-center>
 								<v-img
 									lazy-src="https://picsum.photos/id/11/10/6"
@@ -65,8 +63,7 @@
 									{{ item.title }}
 								</v-flex>
 							</v-layout>
-							<v-layout v-else-if="$moment().diff($moment(item.created_at), 'days') < 8" align-center>
-								<!-- <v-img lazy-src="" width="15" height="15" src="@/assets/images/ico/clip.png"></v-img> -->
+							<v-layout v-else-if="$moment().diff($moment(item.created_at), 'days') < 3" align-center>
 								<v-img
 									lazy-src="https://picsum.photos/id/11/10/6"
 									max-height="12"
@@ -77,7 +74,6 @@
 									{{ item.title }}
 								</v-flex>
 							</v-layout>
-							<!-- <v-img src="@/assets/images/ico/n_mark.png" width="15" style="display:inline-flex" /> -->
 
 							<v-layout v-else align-center>
 								<v-flex>
@@ -90,13 +86,7 @@
 						<td :colspan="headers.length">More info about {{ item.name }}</td>
 					</template>
 				</v-data-table>
-				<!-- <v-layout justify-end>
-			<v-btn color="point3" dark @click="excelExport">
-				엑셀저장
-			</v-btn>
-		</v-layout> -->
 			</div>
-			<!-- <counselorFooter class="bottom_fix" /> -->
 			<noticeDialog :dialog="noticeDialog" />
 		</div>
 	</div>
@@ -117,7 +107,7 @@ export default {
 				title: '',
 				content: '',
 				created_at: '',
-				file: {},
+				files: [],
 			},
 			headers: [
 				{
@@ -173,9 +163,8 @@ export default {
 			})
 		},
 		openNotice(val) {
-			console.log(val)
 			this.noticeDialog.title = val.title
-			this.noticeDialog.content = val.content
+			this.noticeDialog.content = val.detail
 			this.noticeDialog.created_at = val.created_at
 			this.noticeDialog.files = val.fileUpload ? val.fileUpload : {}
 			this.noticeDialog.open = true
