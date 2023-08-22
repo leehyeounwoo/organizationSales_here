@@ -45,6 +45,26 @@
 				{{ header.text }}
 				<v-icon small style="background-color:white; border: 0.1px solid gray;" @click="teamChoiceClick">mdi-format-list-group-plus</v-icon>
 			</template>
+			<template v-slot:[`item.holdingDashboardUser`]="{ item }">
+				<div>
+					{{ `${item.assingnmentTeamData.title} / ${item.assingnmentUserData.username}` }}
+				</div>
+			</template>
+			<template v-slot:[`item.holdingDashboarduUpdated_at`]="{ item }">
+				<div>
+					{{ $moment(item.updated_at).format('YYYY-MM-DD HH:mm') }}
+				</div>
+			</template>
+			<template v-slot:[`item.holdingDashboardEtc`]="{ item }">
+				<v-btn
+					class="search_btn product_table"
+					elevation="0"
+					color="#f0f2f8"
+					style="margin:0 !important"
+					@click="updateAssignmentAction(item)"
+					>해제</v-btn
+				>
+			</template>
 			<template v-slot:[`item.visit`]="{}">
 				<div>
 					현장등록
@@ -1683,11 +1703,21 @@
 						<v-flex xs8 v-if="item.select_holding.value !== ''">
 							<v-layout v-if="item.select_holding.value === '종일 홀딩' || item.select_holding.value === '시간 홀딩'">
 								<v-flex xs5>
-									<TimepickerDialog :setdialog="item.holdingTime1" @input="holdingStart($event, item)"></TimepickerDialog>
+									<TimepickerDialog
+										:setdialog="item.holdingTime1"
+										:minTime="item.holdingTime1.minTime"
+										:maxTime="item.holdingTime1.maxTime"
+										@input="holdingStart($event, item)"
+									></TimepickerDialog>
 								</v-flex>
 								<div class="px-1">~</div>
 								<v-flex xs5>
-									<TimepickerDialog :setdialog="item.holdingTime2" @input="holdingEnd($event, item)"></TimepickerDialog>
+									<TimepickerDialog
+										:setdialog="item.holdingTime2"
+										:minTime="item.holdingTime2.minTime"
+										:maxTime="item.holdingTime2.maxTime"
+										@input="holdingEnd($event, item)"
+									></TimepickerDialog>
 								</v-flex>
 							</v-layout>
 							<v-layout v-else>

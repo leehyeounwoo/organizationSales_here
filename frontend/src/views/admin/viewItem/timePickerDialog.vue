@@ -14,7 +14,7 @@
 				@click:append="setdialog.dialog = true"
 			></v-text-field>
 		</template>
-		<v-time-picker v-model="picker">
+		<v-time-picker v-model="picker" :min="minTime" :max="maxTime">
 			<v-btn text @click="$emit('input', picker)">확인</v-btn>
 			<v-spacer></v-spacer>
 			<v-btn text @click="setdialog.dialog = false">취소</v-btn>
@@ -26,6 +26,14 @@
 export default {
 	props: {
 		setdialog: Object,
+		minTime: {
+			type: String,
+			default: '',
+		},
+		maxTime: {
+			type: String,
+			default: '',
+		},
 	},
 	data() {
 		return {

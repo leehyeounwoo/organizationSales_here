@@ -17,7 +17,7 @@
 			</v-layout>
 			<v-layout class="px-10">
 				<v-flex xs12>
-					<datatable :datatable="holdingDashboard"></datatable>
+					<datatable :datatable="setdialog.holdingDashboard" :updateAssignmentAction="updateAssignmentAction"></datatable>
 				</v-flex>
 			</v-layout>
 			<v-layout class="px-10" justify-end>
@@ -36,27 +36,10 @@ export default {
 	},
 	props: {
 		setdialog: Object,
+		updateAssignmentAction: Function,
 	},
 	data() {
-		return {
-			holdingDashboard: {
-				headers: [
-					{ text: '주택형', value: '' },
-					{ text: '동', value: '' },
-					{ text: '층', value: '' },
-					{ text: '호수', value: '' },
-					{ text: '담당자', value: '' },
-					{ text: '배정시간', value: '' },
-					{ text: '비고', value: '' },
-				],
-				class: 'datatablehover3',
-				items: [],
-				noweditting: '',
-				itemsPerPage: 10,
-				page: 1,
-				pageCount: 0,
-			},
-		}
+		return {}
 	},
 	methods: {},
 }

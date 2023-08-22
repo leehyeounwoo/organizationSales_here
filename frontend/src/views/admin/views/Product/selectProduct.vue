@@ -25,7 +25,7 @@
 		></datatable>
 
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
-		<holdTimeDetail :setdialog="holdingDetail" />
+		<holdTimeDetail :setdialog="holdingDetail" :updateAssignmentAction="updateAssignmentAction" />
 	</div>
 </template>
 
@@ -68,6 +68,23 @@ export default {
 			holdingDetail: {
 				dialog: false,
 				todayTime: '',
+				holdingDashboard: {
+					headers: [
+						{ text: '주택형', value: 'housingType' },
+						{ text: '동', value: 'dong' },
+						{ text: '층', value: '' },
+						{ text: '호수', value: 'ho' },
+						{ text: '담당자', value: 'holdingDashboardUser' },
+						{ text: '배정시간', value: 'holdingDashboarduUpdated_at' },
+						{ text: '비고', value: 'holdingDashboardEtc' },
+					],
+					class: 'datatablehover3',
+					items: [],
+					noweditting: '',
+					itemsPerPage: 10,
+					page: 1,
+					pageCount: 0,
+				},
 			},
 			productFilter1: {
 				placeholder: '주택형 선택',
@@ -142,8 +159,8 @@ export default {
 			await this.teamView(teamViewData)
 		},
 		holdingTypeChoice(val, item) {
-			let splitStartData = this.businessData.workingHoursStart.split(':')[0] + ':' + this.businessData.workingHoursStart.split(':')[1]
-			let splitEndData = this.businessData.workingHoursEnd.split(':')[0] + ':' + this.businessData.workingHoursEnd.split(':')[1]
+			let splitStartData = this.businessData.workingHoursStart.substr(0, 5)
+			let splitEndData = this.businessData.workingHoursEnd.substr(0, 5)
 			if (val === '종일 홀딩') {
 				item.holdingTime1.time = splitStartData
 				item.holdingTime1.disabled = true
@@ -152,11 +169,14 @@ export default {
 			} else if (val === '시간 홀딩') {
 				item.holdingTime1.time = ''
 				item.holdingTime1.disabled = false
+				item.holdingTime1.minTime = this.businessData.workingHoursStart.substr(0, 5)
+				item.holdingTime1.maxTime = this.businessData.workingHoursEnd.substr(0, 5)
 				item.holdingTime2.time = ''
 				item.holdingTime2.disabled = false
+				item.holdingTime2.minTime = this.businessData.workingHoursStart.substr(0, 5)
+				item.holdingTime2.maxTime = this.businessData.workingHoursEnd.substr(0, 5)
+				console.log(item)
 			}
-			// else{
-			// }
 		},
 		async businessView(businessViewData) {
 			await this.$store.dispatch('businesses', businessViewData).then(async res => {
@@ -164,66 +184,71 @@ export default {
 			})
 		},
 		createAssignmentAction(item) {
-			console.log(item)
-			console.log(item.product_manager.value)
-			if (item.product_manager.value === '미지정') {
-				return alert('담당자를 선택해주세요.')
-			}
-			if (item.team.value === '') {
-				return alert('담당자를 선택해주세요.')
-			}
-			if (item.user.value === '') {
-				return alert('담당자를 선택해주세요.')
-			}
-			if (item.select_holding.value === '') {
-				return alert('홀딩타입을 선택해주세요.')
-			}
-			if (item.select_holding.value === '') {
-				return alert('홀딩타입을 선택해주세요.')
-			}
-			if (item.select_holding.value === '즉시 홀딩') {
-				if (item.holdingTime3.value === '') {
-					return alert('홀딩시간을 선택해주세요.')
-				}
-			} else {
-				if (item.holdingTime1.time === '') {
-					return alert('홀딩시간을 선택해주세요.')
-				}
-				if (item.holdingTime2.time === '') {
-					return alert('홀딩시간을 선택해주세요.')
-				}
-			}
-			const data = {
-				useYn: true,
-				userID: item.user.value,
-				status: 'assignment',
-				start: item.holdingTime1.time + ':00.000',
-				end: item.holdingTime2.time + ':00.000',
-				productID: item.id,
-				orderType: 'admin',
-				businessID: this.$store.state.businessSelectBox.value,
-			}
-			if (item.select_holding.value === '종일 홀딩') {
-				data.type = 'allday'
-				data.start = item.holdingTime1.time + ':00.000'
-				data.end = item.holdingTime2.time + ':00.000'
-			} else if (item.select_holding.value === '즉시 홀딩') {
-				data.type = 'now'
-				data.start = item.holdingTime1.time + ':00.000'
-				data.end = item.holdingTime2.time + ':00.000'
-			} else if (item.select_holding.value === '시간 홀딩') {
-				data.type = 'time'
-				data.holdingTime = item.holdingTime3.value
-			}
+			let nowTime = this.$moment().format('YYYY-MM-DD ')
+			let startTime = this.businessData.workingHoursStart.substr(0, 5)
+			let endTime = this.businessData.workingHoursEnd.substr(0, 5)
 
-			this.$store
-				.dispatch('createAssignment', data)
-				.then(async () => {
-					this.productSelectData()
-				})
-				.catch(err => {
-					console.log(err)
-				})
+			if (this.$moment() >= this.$moment(nowTime + startTime) && this.$moment() <= this.$moment(nowTime + endTime)) {
+				if (item.product_manager.value === '미지정') {
+					return alert('담당자를 선택해주세요.')
+				}
+				if (item.team.value === '') {
+					return alert('담당자를 선택해주세요.')
+				}
+				if (item.user.value === '') {
+					return alert('담당자를 선택해주세요.')
+				}
+				if (item.select_holding.value === '') {
+					return alert('홀딩타입을 선택해주세요.')
+				}
+				if (item.select_holding.value === '') {
+					return alert('홀딩타입을 선택해주세요.')
+				}
+				if (item.select_holding.value === '즉시 홀딩') {
+					if (item.holdingTime3.value === '') {
+						return alert('홀딩시간을 선택해주세요.')
+					}
+				} else {
+					if (item.holdingTime1.time === '') {
+						return alert('홀딩시간을 선택해주세요.')
+					}
+					if (item.holdingTime2.time === '') {
+						return alert('홀딩시간을 선택해주세요.')
+					}
+				}
+				const data = {
+					useYn: true,
+					userID: item.user.value,
+					status: 'assignment',
+					start: item.holdingTime1.time + ':00.000',
+					end: item.holdingTime2.time + ':00.000',
+					productID: item.id,
+					orderType: 'admin',
+					businessID: this.$store.state.businessSelectBox.value,
+				}
+				if (item.select_holding.value === '종일 홀딩') {
+					data.type = 'allday'
+					data.start = item.holdingTime1.time + ':00.000'
+					data.end = item.holdingTime2.time + ':00.000'
+				} else if (item.select_holding.value === '즉시 홀딩') {
+					data.type = 'now'
+					data.start = item.holdingTime1.time + ':00.000'
+					data.end = item.holdingTime2.time + ':00.000'
+				} else if (item.select_holding.value === '시간 홀딩') {
+					data.type = 'time'
+					data.holdingTime = item.holdingTime3.value
+				}
+				this.$store
+					.dispatch('createAssignment', data)
+					.then(async () => {
+						this.productSelectData()
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			} else {
+				alert(`근무시간이 아닙니다.\n(근무시간:${startTime}~${endTime})`)
+			}
 		},
 		updateAssignmentAction(item) {
 			if (confirm('배정을 해제하시겠습니까?')) {
@@ -231,9 +256,9 @@ export default {
 					id: item.assingnmentData.id,
 					useYn: false,
 				}
-
 				this.$store.dispatch('updateAssignment', data).then(async res => {
 					console.log(res)
+					this.productSelectData()
 				})
 			}
 		},
@@ -364,11 +389,15 @@ export default {
 						dialog: false,
 						time: '',
 						disabled: false,
+						minTime: '',
+						maxTime: '',
 					}
 					element.holdingTime2 = {
 						dialog: false,
 						time: '',
 						disabled: false,
+						minTime: '',
+						maxTime: '',
 					}
 					element.holdingTime3 = {
 						placeholder: '선택',
@@ -383,6 +412,8 @@ export default {
 			})
 		},
 		holdTimeShow() {
+			console.log()
+			this.holdingDetail.holdingDashboard.items = this.productManager.items.filter(x => x.assingnmentData)
 			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
 			this.holdingDetail.dialog = true
 		},
