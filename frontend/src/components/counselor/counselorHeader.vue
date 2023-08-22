@@ -14,7 +14,7 @@
 				<div class="white--text">
 					{{ $store.state.meData.name }}
 				</div>
-				<div class="white--text">
+				<div class="white--text" v-if="$store.state.meData.team && auth">
 					{{ $store.state.meData.team.title }}
 				</div>
 			</div>

@@ -100,6 +100,7 @@
 						v-model="product3"
 						solo
 						flat
+						:disabled="!product2"
 						outlined
 						class="nomal-select"
 						hideDetails
@@ -233,22 +234,56 @@ export default {
 			holdingList: [],
 			dialogQr: { open: false, code: '!', business: { title: '' }, meData: { created_at: this.$moment(), name: '' } },
 			times: [],
-			time: '30분',
+			time: '',
 			productDatas: [],
 			assignmentDatas: [],
 			waitingHoldingList: {},
 			rejectHoldingList: {},
 			rank: {},
+			business: {},
 		}
 	},
 	created() {
-		for (let index = 1; index < 7; index++) {
-			const el = index * 10
+		for (let index = 1; index < 2; index++) {
+			const el = index * 30
 			this.times.push(String(el) + '분')
 		}
 		this.products()
 	},
 	methods: {
+		businesses() {
+			this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
+				this.business = res.businesses[0]
+				if (this.business.splitHoldingTime && this.business.maximumHoldingTime) {
+					this.times = []
+					if (this.business.maximumHoldingTime === '60') {
+						if (this.business.maximumHoldingTime === '60') this.times.push('60분')
+						if (this.business.maximumHoldingTime === '30') {
+							this.times.push('30분')
+							this.times.push('60분')
+						}
+					} else if (this.business.maximumHoldingTime === '90') {
+						this.times.push('30분')
+						this.times.push('60분')
+						this.times.push('90분')
+					} else if (this.business.maximumHoldingTime === '120') {
+						if (this.business.maximumHoldingTime === '60') {
+							this.times.push('60분')
+							this.times.push('120분')
+						}
+						if (this.business.maximumHoldingTime === '30') {
+							this.times.push('30분')
+							this.times.push('60분')
+							this.times.push('90분')
+							this.times.push('120분')
+						}
+					}
+					this.time = this.times[0]
+				}
+				this.business.splitHoldingTime
+				console.log(res.businesses)
+			})
+		},
 		ranks() {
 			this.$store
 				.dispatch('ranks', { idArr: [this.$store.state.meData.rankID], useYn: true, businessID: this.$store.state.meData.businessID })
@@ -319,6 +354,7 @@ export default {
 					this.products1 = res.products.map(x => x.housingType)
 					this.assignments()
 					this.ranks()
+					this.businesses()
 				})
 			})
 		},
@@ -410,7 +446,17 @@ export default {
 					'error',
 				)
 			else if (this.holdingText.indexOf('홀딩 취소') === -1) {
-				if (!this.product1) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '주택형을 선택해주세요.' })
+				if (this.secondChange(this.business.workingHoursStart) > this.secondChange(this.$moment().format('HH:mm')))
+					return this.open_disable_dialog({
+						title: '홀딩 시작전',
+						content: `금일 홀딩요청은 [${this.business.workingHoursStart.substr(0, 5)}] 부터 입니다.`,
+					})
+				else if (this.secondChange(this.business.workingHoursEnd) < this.secondChange(this.$moment().format('HH:mm')))
+					return this.open_disable_dialog({
+						title: '홀딩종료',
+						content: `금일 홀딩요청은 [${this.business.workingHoursEnd.substr(0, 5)}] 까지입니다.`,
+					})
+				else if (!this.product1) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '주택형을 선택해주세요.' })
 				else if (!this.product2) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '동을 선택해주세요.' })
 				else if (!this.product3) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '호수를 선택해주세요.' })
 				this.holdingDialog.open = true
