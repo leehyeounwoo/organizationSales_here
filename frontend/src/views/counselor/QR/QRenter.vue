@@ -48,7 +48,7 @@
 				<span style="font-size: 20px;"> 카메라 전환</span></v-btn
 			>
 		</qrcode-stream>
-		<sweetAlert :dialog="sweetInfo" />
+		<sweetAlert :dialog="sweetInfo" @close_active="sweetInfo.title === '오류발생' ? $router.go(-1) : ''" />
 	</div>
 </template>
 
@@ -69,6 +69,7 @@ export default {
 		const selected = options[1]
 
 		return {
+			business: {},
 			sweetInfo: {
 				open: false,
 				title: '',
@@ -137,6 +138,11 @@ export default {
 				AlreadyStartWork: { voice: '', version: 0 },
 				AlreadyLeaveWork: { voice: '', version: 0 },
 			},
+			ourCoords: {
+				//서울 시청 좌표
+				latitude: 37.5666263, //위도
+				longitude: 126.9783924, //경도
+			},
 		}
 	},
 	computed: {
@@ -168,7 +174,44 @@ export default {
 			return this.windowHeight
 		},
 	},
+	created() {
+		this.businesses()
+		if (!navigator.geolocation) {
+			return alert('위치 정보가 지원되지 않습니다.')
+		}
+		navigator.geolocation.getCurrentPosition(position => {
+			this.computeDistance(position.coords, this.ourCoords)
+		})
+	},
 	methods: {
+		degreesToRadians(degrees) {
+			let radians = (degrees * Math.PI) / 180
+			return radians
+		},
+		computeDistance(startCoords, destCoords) {
+			var startLatRads = this.degreesToRadians(startCoords.latitude)
+			var startLongRads = this.degreesToRadians(startCoords.longitude)
+			var destLatRads = this.degreesToRadians(destCoords.latitude)
+			var destLongRads = this.degreesToRadians(destCoords.longitude)
+
+			var Radius = 6371 //지구의 반경(km)
+			var distance =
+				Math.acos(
+					Math.sin(startLatRads) * Math.sin(destLatRads) +
+						Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads),
+				) * Radius
+			console.log(distance)
+			return distance
+		},
+		businesses() {
+			const data = {
+				code: this.$route.params.code,
+			}
+			this.$store.dispatch('businesses', data).then(res => {
+				if (res.businesses.length === 0) this.open_disable_dialog({ title: '오류발생', content: '존재하지 않는 사업지입니다.' }, 'error')
+				else this.business = res.businesses[0]
+			})
+		},
 		open_disable_dialog(data, info) {
 			// 불가 팝업 열기
 
@@ -373,7 +416,7 @@ export default {
 
 <style lang="scss">
 .qrReader {
-	height: 80vh !important;
+	height: 100vh !important;
 }
 /// 상단 메뉴 css
 .qrHead {

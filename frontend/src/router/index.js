@@ -131,16 +131,17 @@ const routes = [
 		],
 	},
 	{
+		path: '/QRenter/:code',
+		name: 'QRenter',
+		component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/QR/QRenter.vue'),
+		meta: { requiresAuth: true },
+	},
+	{
 		path: '/KIOSK',
 		name: 'KIOSK',
 		component: KIOSK,
 		meta: { requiresAuth: true },
 		children: [
-			{
-				path: '/QRenter',
-				name: 'QRenter',
-				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/QR/QRenter.vue'),
-			},
 			{
 				path: '/',
 				name: 'dashBoard',
