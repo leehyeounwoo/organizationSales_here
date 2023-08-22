@@ -108,12 +108,6 @@ const routes = [
 					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
-			{
-				path: '/counselor/bizDashboardItem/clientManagement',
-				name: 'counselorClients',
-				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/clientManagement/index.vue'),
-				meta: { requiresAuth: true, counselor: true },
-			},
 
 			{
 				path: '/counselor/commuteManagement/manage',

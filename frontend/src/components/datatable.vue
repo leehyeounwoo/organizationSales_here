@@ -104,6 +104,7 @@
 					v-else
 					:class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''"
 					icon
+					v-show="item.depositFile"
 					color="primary2"
 					@click="e => viewAttachment(e, item.depositFile.url)"
 					><v-icon>mdi-file</v-icon></v-btn

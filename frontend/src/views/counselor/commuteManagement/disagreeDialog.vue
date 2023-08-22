@@ -86,7 +86,8 @@
 export default {
 	methods: {
 		dataCheck() {
-			this.actionSave()
+			this.dialog.open = false
+			// this.actionSave()
 		},
 
 		async actionSave() {
