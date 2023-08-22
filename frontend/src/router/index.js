@@ -68,12 +68,6 @@ const routes = [
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{
-				path: '/counselor/bizDashboard/:id',
-				name: 'counselorBizDashboard',
-				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboard.vue'),
-				meta: { requiresAuth: true, counselor: true },
-			},
-			{
 				path: '/counselor/settlements',
 				name: 'settlements',
 				component: () =>
