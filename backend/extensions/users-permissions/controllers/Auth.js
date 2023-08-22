@@ -697,7 +697,6 @@ module.exports = {
         teamID: null,
         username: ctx.request.body.username,
       });
-      console.log(ApiList);
       fs.writeFile(
         `./public/user_data_api.json`,
         JSON.stringify(ApiList),
@@ -733,7 +732,6 @@ module.exports = {
     }
   },
   async userInfoEdit(ctx) {
-    console.log(ctx);
     // let updateData = {
     //   ...ctx.request.body,
     // };

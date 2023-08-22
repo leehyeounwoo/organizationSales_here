@@ -76,7 +76,6 @@ Vue.config.productionTip = false
 
 Vue.use(VueMeta)
 // env 파일 로드
-console.log(process.env)
 new Vue({
 	router,
 	store,

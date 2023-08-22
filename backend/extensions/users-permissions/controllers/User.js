@@ -44,7 +44,6 @@ module.exports = {
    * @return {Object|Array}
    */
   async find(ctx, next, { populate } = {}) {
-    console.log(ctx.query);
     let users;
 
     if (_.has(ctx.query, '_q')) {
