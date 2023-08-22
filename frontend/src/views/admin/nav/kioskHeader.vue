@@ -2,7 +2,7 @@
 	<div style="width:100%; height:60px; background-color:#fff; box-shadow:0 0 5px 0">
 		<v-layout justify-end align-center>
 			<v-flex class="pl-10">
-				<v-btn class="kiosk_header_btn">현황판</v-btn>
+				<v-btn class="kiosk_header_btn" @click="holdTimeShow">현황판</v-btn>
 				<v-btn class="kiosk_header_btn ml-3">물건배정</v-btn>
 			</v-flex>
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
@@ -27,18 +27,25 @@
 				</v-layout>
 			</v-flex>
 		</v-layout>
+		<holdTimeDetail :setdialog="holdingDetail" />
 	</div>
 </template>
 
 <script>
 import { selectBoxValueItems } from '@/components/index'
+import holdTimeDetail from '../viewItem/holdTimeDetail.vue'
 
 export default {
 	components: {
 		selectBoxValueItems,
+		holdTimeDetail,
 	},
 	data() {
 		return {
+			holdingDetail: {
+				dialog: false,
+				todayTime: '',
+			},
 			defalutImg: location.protocol + '//' + location.host + '/image/default_pic.png',
 			overlay: false,
 			drawer: false,
@@ -106,6 +113,10 @@ export default {
 		// }
 	},
 	methods: {
+		holdTimeShow() {
+			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
+			this.holdingDetail.dialog = true
+		},
 		businessView() {
 			this.$store.dispatch('businesses').then(res => {
 				console.log(res)

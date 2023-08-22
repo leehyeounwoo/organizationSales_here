@@ -610,15 +610,6 @@ export default {
 	border-left: 1px solid #c8c8c8;
 	border-right: 1px solid #c8c8c8;
 }
-.save_biz {
-	width: 100px !important;
-	height: 26px !important;
-	padding: 0 10px !important;
-	font-weight: bold;
-	color: white !important;
-	background: #3e7ccc !important;
-	border-radius: 0 !important;
-}
 .etc_btn {
 	height: 26px !important;
 	padding: 0 !important;

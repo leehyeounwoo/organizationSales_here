@@ -21,7 +21,7 @@
 				</v-flex>
 			</v-layout>
 			<v-layout class="px-10" justify-end>
-				<v-btn class="my-4 save_biz"><v-icon>mdi-check</v-icon>확인</v-btn>
+				<v-btn class="my-4 save_biz" @click="setdialog.dialog = false"><v-icon>mdi-check</v-icon>확인</v-btn>
 			</v-layout>
 		</div>
 	</v-dialog>
