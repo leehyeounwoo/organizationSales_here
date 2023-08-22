@@ -59,6 +59,28 @@ Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
 export default new Vuex.Store({
 	state: {
+		countShow: [
+			{
+				count1: 0,
+				count2: 0,
+				count3: 0,
+			},
+			{
+				count1: 0,
+				count2: 0,
+				count3: 0,
+			},
+			{
+				count1: 0,
+				count2: 0,
+				count3: 0,
+			},
+			{
+				count1: 0,
+				count2: 0,
+				count3: 0,
+			},
+		],
 		backServer: process.env.VUE_APP_BACKEND_URL,
 		headerMobileStatus: false,
 		footerMobileStatus: false,
