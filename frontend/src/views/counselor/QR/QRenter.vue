@@ -177,11 +177,8 @@ export default {
 	created() {
 		this.businesses()
 		if (!navigator.geolocation) {
-			return alert('위치 정보가 지원되지 않습니다.')
+			return this.open_disable_dialog({ title: '오류발생', content: '위치정보를 허용해 주세요.' }, 'error')
 		}
-		navigator.geolocation.getCurrentPosition(position => {
-			this.computeDistance(position.coords, this.ourCoords)
-		})
 	},
 	methods: {
 		degreesToRadians(degrees) {
@@ -200,7 +197,6 @@ export default {
 					Math.sin(startLatRads) * Math.sin(destLatRads) +
 						Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads),
 				) * Radius
-			console.log(distance)
 			return distance
 		},
 		businesses() {
@@ -209,7 +205,16 @@ export default {
 			}
 			this.$store.dispatch('businesses', data).then(res => {
 				if (res.businesses.length === 0) this.open_disable_dialog({ title: '오류발생', content: '존재하지 않는 사업지입니다.' }, 'error')
-				else this.business = res.businesses[0]
+				else {
+					this.business = res.businesses[0]
+					this.ourCoords.latitude = Number(this.business.location.split('_')[0])
+					this.ourCoords.longitude = Number(this.business.location.split('_')[1])
+					navigator.geolocation.getCurrentPosition(position => {
+						if (this.computeDistance(position.coords, this.ourCoords) > 3) {
+							this.open_disable_dialog({ title: '오류발생', content: '지정된 장소의 3km 이내의 위치에서 QR Reader를 켜주세요.' }, 'error')
+						}
+					})
+				}
 			})
 		},
 		open_disable_dialog(data, info) {

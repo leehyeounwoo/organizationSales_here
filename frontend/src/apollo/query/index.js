@@ -166,8 +166,7 @@ export const gotoWork = gql`
 				vacationType
 				created_at
 				userID
-				start
-				end
+				date
 				rejectComment
 				adminInfo
 				vacationReason
@@ -241,6 +240,7 @@ export const businesses = gql`
 			id
 			name
 			phoneNumber
+			location
 			workingHoursStart
 			workingHoursEnd
 			workCheckURL
@@ -269,6 +269,10 @@ export const notices = gql`
 			useYn
 			fixYn
 			detail
+			fileUpload {
+				url
+				name
+			}
 			businesses {
 				id
 				name

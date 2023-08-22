@@ -96,7 +96,7 @@
 							<v-checkbox v-model="date.checkBoxValue" hide-details :disabled="checkBoxStatus(date)"></v-checkbox>
 						</div>
 						<v-flex
-							v-if="!date.agree"
+							v-if="date.vacation.vacationStatus === 'agree'"
 							py-1
 							my-1
 							mr-1
@@ -114,15 +114,6 @@
 									: '기타승인'
 							}}
 						</v-flex>
-						<!-- <v-flex
-							v-else-if="date.result === 'disagree'"
-							py-1
-							my-1
-							mr-1
-							style="text-align: center; background-color:white; border-radius:5px; color:black; border:1px solid #633efd; color:#633efd;"
-							xs5
-							>{{ date.status === 'vacation' ? '연차신청' : date.status === 'afternoonVacation' ? '오후반차신청' : '오전반차신청' }}
-						</v-flex> -->
 						<v-flex
 							v-else
 							py-1
@@ -236,18 +227,6 @@ export default {
 			// 뒤로가기 버튼
 			this.$router.go(-1)
 		},
-		systemsView(variable) {
-			this.$store
-				.dispatch('systems', variable)
-				.then(res => {
-					console.log(res)
-					this.vacation_input = res.systems[0].vacationReservation
-				})
-				.catch(err => {
-					console.log({ err })
-					this.$store.state.loading = false
-				})
-		},
 		checkBoxStatus(val) {
 			if (this.$moment(val.date) > this.$moment().add(this.vacation_input, 'd')) {
 				if (
@@ -294,18 +273,12 @@ export default {
 				val.status === 'vacation' ||
 				val.status === 'morningVacation' ||
 				val.status === 'afternoonVacation' ||
-				val.status === 'waiting' ||
 				val.status === 'etc' ||
 				val.status === 'sick'
 			) {
-				if (val.result === 'disagree') {
-					return true
-				} else {
-					return false
-				}
-			} else {
-				return true
-			}
+				if (val.vacation) return false
+				else return true
+			} else return true
 		},
 		secondChange(data) {
 			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
@@ -338,6 +311,7 @@ export default {
 					checkBoxValue: false,
 					comment: '',
 					textAreaStatus: true,
+					vacation: null,
 				})
 			}
 			this.workDate = result
@@ -368,7 +342,6 @@ export default {
 			this.$store
 				.dispatch('gotoWork', data)
 				.then(res => {
-					console.log(res.gotoworks)
 					res.gotoworks.forEach(element => {
 						let idx = this.workDate.findIndex(x => x.date === element.date)
 						let arr = this.workDate.filter(x => x.date === element.date)
@@ -376,6 +349,7 @@ export default {
 							arr[0].startWork = element.startWork
 							arr[0].endWork = element.endWork
 							arr[0].status = element.status
+							arr[0].vacation = element.vacation
 						}
 						this.workDate[idx] = arr[0]
 					})
@@ -391,8 +365,6 @@ export default {
 			ok += 1
 			if (this.$store.state.meData.businessID) {
 				this.headerCheckAction(this.startPicker.date, this.endPicker.date)
-				const data1 = { business: this.$store.state.meData.businessID }
-				this.systemsView(data1)
 				clearInterval(meDataCheck)
 			} else if (ok === 5) {
 				clearInterval(meDataCheck)

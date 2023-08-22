@@ -181,6 +181,36 @@ export const updateVacation = gql`
 		}
 	}
 `
+export const createVacation = gql`
+	mutation createVacation(
+		$gotowork: ID
+		$vacationStatus: ENUM_VACATION_VACATIONSTATUS
+		$vacationType: ENUM_VACATION_VACATIONTYPE
+		$userID: String
+		$vacationReason: String
+		$date: Date
+	) {
+		createVacation(
+			input: {
+				data: {
+					date: $date
+					userID: $userID
+					vacationStatus: $vacationStatus
+					gotowork: $gotowork
+					vacationType: $vacationType
+					vacationReason: $vacationReason
+				}
+			}
+		) {
+			vacation {
+				id
+				gotowork {
+					id
+				}
+			}
+		}
+	}
+`
 export const register = gql`
 	mutation(
 		$name: String!

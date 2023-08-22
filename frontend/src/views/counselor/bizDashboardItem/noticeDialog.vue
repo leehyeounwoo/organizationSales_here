@@ -19,9 +19,9 @@
 			<div class="notice-title" style="width:50px;">내용</div>
 			<div class="notice-title ml-2" style="max-height:186px; overflow-y:auto; width:100%;" v-html="dialog.content"></div>
 		</v-layout>
-		<v-layout align-center class="mb-8" v-if="dialog.file.name">
+		<v-layout align-center class="mb-8" v-if="dialog.files.length > 0">
 			<div class="notice-title" style="width:50px;">첨부파일</div>
-			<div class="notice-title cursor" @click="download">{{ dialog.file.name }}</div>
+			<div class="notice-title cursor" @click="download(file)" v-for="(file, i) in dialog.files" :key="i">{{ file.name }}</div>
 		</v-layout>
 	</v-dialog>
 </template>
@@ -31,12 +31,12 @@ export default {
 		dialog: Object,
 	},
 	methods: {
-		download() {
-			const url = process.env.VUE_APP_BACKEND_URL + this.dialog.file.url
+		download(file) {
+			const url = process.env.VUE_APP_BACKEND_URL + file.url
 			const link = document.createElement('a')
 			link.href = url
 			link.target = '_blank'
-			link.download = this.dialog.file.name
+			link.download = file.name
 			link.click()
 			link.remove()
 			window.URL.revokeObjectURL(url)

@@ -2362,9 +2362,14 @@ export default {
 	},
 	methods: {
 		viewAttachment(e, val) {
-			e.stopPropagation()
-			location = process.env.VUE_APP_BACKEND_URL + val
-			window.open(location)
+			const url = process.env.VUE_APP_BACKEND_URL + val
+			const link = document.createElement('a')
+			link.href = url
+			link.target = '_blank'
+			link.download = val
+			link.click()
+			link.remove()
+			window.URL.revokeObjectURL(url)
 		},
 		secondChange(data) {
 			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60

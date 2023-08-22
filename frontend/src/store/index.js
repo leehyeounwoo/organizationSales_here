@@ -33,6 +33,7 @@ import {
 	createRank,
 	createSettlement,
 	updateSettlement_front,
+	createVacation,
 } from '../apollo/mutation'
 import {
 	me,
@@ -651,7 +652,27 @@ export default new Vuex.Store({
 					})
 			})
 		},
-
+		// eslint-disable-next-line no-empty-pattern
+		createVacation({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: createVacation,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
 		// eslint-disable-next-line no-empty-pattern
 		updateSettlement_front({}, input) {
 			return new Promise((resolve, reject) => {

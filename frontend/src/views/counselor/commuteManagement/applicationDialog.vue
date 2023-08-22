@@ -108,12 +108,11 @@ export default {
 				if (element.dialogType === 'etc') {
 					if (element.comment !== '') {
 						const data = {
-							vacationDate: this.$moment(element.date).format('YYYY-MM-DD'),
-							type: element.dialogType,
+							date: this.$moment(element.date).format('YYYY-MM-DD'),
+							vacationType: element.dialogType,
 							status: 'waiting',
-							viewStatus: true,
-							users_permissions_user: this.$store.state.meData.id,
-							comment: element.comment,
+							userID: this.$store.state.meData.id,
+							vacationReason: element.comment,
 						}
 						await this.createVacationAction(data, index)
 					} else {
@@ -121,11 +120,11 @@ export default {
 					}
 				} else {
 					const data = {
-						vacationDate: this.$moment(element.date).format('YYYY-MM-DD'),
-						type: element.dialogType,
-						status: 'waiting',
-						viewStatus: true,
-						users_permissions_user: this.$store.state.meData.id,
+						date: this.$moment(element.date).format('YYYY-MM-DD'),
+						vacationType: element.dialogType,
+						vacationStatus: 'waiting',
+						vacationReason: '',
+						userID: this.$store.state.meData.id,
 					}
 					await this.createVacationAction(data, index)
 				}
@@ -133,14 +132,24 @@ export default {
 		},
 		async createVacationAction(data, index) {
 			await this.$store
-				.dispatch('createVacation', data)
-				.then(() => {
-					if (index === this.checkData.length - 1) {
-						this.dialog.open = false
-					}
+				.dispatch('createGotowork', {
+					date: data.date,
+					userID: this.$store.state.meData.id,
+					status: data.vacationType,
 				})
-				.catch(err => {
-					console.log({ err })
+				.then(async res => {
+					console.log(res)
+					data.gotowork = res.createGotowork.gotowork.id
+					await this.$store
+						.dispatch('createVacation', data)
+						.then(() => {
+							if (index === this.checkData.length - 1) {
+								this.dialog.open = false
+							}
+						})
+						.catch(err => {
+							console.log({ err })
+						})
 				})
 		},
 		dayOfTheWeek(val) {

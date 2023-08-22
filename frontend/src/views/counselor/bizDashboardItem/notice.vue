@@ -173,10 +173,11 @@ export default {
 			})
 		},
 		openNotice(val) {
+			console.log(val)
 			this.noticeDialog.title = val.title
 			this.noticeDialog.content = val.content
 			this.noticeDialog.created_at = val.created_at
-			this.noticeDialog.file = val.file ? val.file : {}
+			this.noticeDialog.files = val.fileUpload ? val.fileUpload : {}
 			this.noticeDialog.open = true
 			let readNotice = ''
 			if (localStorage.getItem('readNotice')) readNotice = localStorage.getItem('readNotice')
