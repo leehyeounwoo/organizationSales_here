@@ -54,7 +54,8 @@
       "via": "settlement"
     },
     "turn": {
-      "type": "string"
+      "type": "string",
+      "default": "1"
     },
     "totalPrice": {
       "type": "biginteger"

@@ -24,8 +24,10 @@
         "assignment",
         "counselorNoAssignment",
         "noAssignment",
-        "reject"
-      ]
+        "reject",
+        "waiting"
+      ],
+      "default": "waiting"
     },
     "type": {
       "type": "enumeration",

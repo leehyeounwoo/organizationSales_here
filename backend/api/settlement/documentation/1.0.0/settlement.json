@@ -675,7 +675,8 @@
             }
           },
           "turn": {
-            "type": "string"
+            "type": "string",
+            "default": "1"
           },
           "totalPrice": {
             "type": "integer"
@@ -736,7 +737,8 @@
             }
           },
           "turn": {
-            "type": "string"
+            "type": "string",
+            "default": "1"
           },
           "totalPrice": {
             "type": "integer"
