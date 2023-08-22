@@ -320,7 +320,7 @@ export default {
 			this.product3 = ''
 		},
 		product2Change(val) {
-			this.products3 = this.productDatas.filter(x => x.dong === val).map(x => x.ho)
+			this.products3 = this.productDatas.filter(x => x.dong === val && x.housingType === this.product1).map(x => x.ho)
 			this.product3 = ''
 		},
 		deleteFiles(i) {
@@ -340,7 +340,7 @@ export default {
 						this.product1 = res.products.filter(x => x.id === this.settlement.ProductID)[0].housingType
 						this.products2 = res.products.filter(x => x.housingType === this.product1).map(x => x.dong)
 						this.product2 = res.products.filter(x => x.id === this.settlement.ProductID)[0].dong
-						this.products3 = res.products.filter(x => x.dong === this.product2).map(x => x.ho)
+						this.products3 = res.products.filter(x => x.dong === this.product2 && x.housingType === this.product1).map(x => x.ho)
 						this.product3 = res.products.filter(x => x.id === this.settlement.ProductID)[0].ho
 					} else this.products1 = res.products.map(x => x.housingType)
 				})

@@ -201,7 +201,7 @@ export default {
 			this.product3 = ''
 		},
 		product2Change(val) {
-			this.products3 = this.productDatas.filter(x => x.dong === val).map(x => x.ho)
+			this.products3 = this.productDatas.filter(x => x.dong === val && x.housingType === this.product1).map(x => x.ho)
 			this.product3 = ''
 		},
 		products() {

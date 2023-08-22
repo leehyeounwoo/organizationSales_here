@@ -262,7 +262,7 @@ export default {
 			this.product3 = ''
 		},
 		product2Change(val) {
-			this.products3 = this.productDatas.filter(x => x.dong === val).map(x => x.ho)
+			this.products3 = this.productDatas.filter(x => x.dong === val && x.housingType === this.product1).map(x => x.ho)
 			this.product3 = ''
 		},
 		secondChange(data) {
@@ -395,7 +395,8 @@ export default {
 					this.products()
 				})
 			} else {
-				alert('오류가 발생하였습니다. 다시 신청해주세요.')
+				this.holdingDialog.open = false
+				this.open_disable_dialog({ title: '일시적 오류', content: '오류가 발생하였습니다. 새로고침 후 다시 신청해주세요.' }, 'error')
 			}
 		},
 		holding() {
