@@ -111,7 +111,8 @@
 						지급 회차
 					</v-flex>
 					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<selectBox :sel="timessel" :class="'searchSel'" style="font-size:12px"></selectBox>
+						<span style="font-size:12px;">{{ timessel.value }}</span>
+						<!-- <selectBox :sel="timessel" :class="'searchSel'" :readonly="timessel.readonlyd" style="font-size:12px"></selectBox> -->
 					</v-flex>
 					<v-flex
 						v-for="(items, idx) of start_date_picker"
@@ -138,7 +139,12 @@
 						style="display: flex; justify-content: center;align-items: center;"
 						@click="alertRate(idx)"
 					>
-						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
+						<txtField
+							:txtField="items.txtField"
+							v-model="items.txtField.value"
+							@focusOut="amountDown(idx)"
+							class="search_box_admin"
+						></txtField>
 					</v-flex>
 				</v-layout>
 				<v-layout>
@@ -155,7 +161,12 @@
 						class="notice_right_table2"
 						style="display: flex; justify-content: center;align-items: center;"
 					>
-						<txtField :txtField="items.txtField" v-model="items.txtField.value" class="search_box_admin"></txtField>
+						<txtField
+							:txtField="items.txtField"
+							v-model="items.txtField.value"
+							@focusOut="rateDown(idx)"
+							class="search_box_admin"
+						></txtField>
 					</v-flex>
 				</v-layout>
 				<v-flex class="d-flex justify-end">
@@ -433,6 +444,7 @@ export default {
 			timessel: {
 				value: '',
 				errorMessage: '',
+				readonly: true,
 				hideDetail: true,
 				items: ['1차', '2차', '3차', '4차', '5차'],
 				outlined: true,
@@ -512,7 +524,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge2: {
@@ -523,7 +535,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge3: {
@@ -534,7 +546,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge4: {
@@ -545,7 +557,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge5: {
@@ -556,7 +568,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 			},
@@ -581,7 +593,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge2: {
@@ -592,7 +604,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge3: {
@@ -603,7 +615,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge4: {
@@ -614,7 +626,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge5: {
@@ -625,7 +637,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 			},
@@ -637,7 +649,7 @@ export default {
 					hideDetail: true,
 					errorMessage: '',
 					placeholder: '-',
-					readonly: true,
+					readonly: false,
 				},
 			},
 			paymentAmount: {
@@ -649,7 +661,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge2: {
@@ -660,7 +672,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge3: {
@@ -671,7 +683,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge4: {
@@ -682,7 +694,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				charge5: {
@@ -693,7 +705,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 			},
@@ -707,7 +719,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				2: {
@@ -718,7 +730,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				3: {
@@ -729,7 +741,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				4: {
@@ -740,7 +752,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 				5: {
@@ -751,7 +763,7 @@ export default {
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '-',
-						readonly: true,
+						readonly: false,
 					},
 				},
 			},
@@ -883,6 +895,29 @@ export default {
 	mounted() {},
 
 	methods: {
+		amountDown(idx) {
+			let account = (this.paymentRate[idx].txtField.value / 100) * this.charge.txtField.value
+			this.paymentAmount[idx].txtField.value = account.toString()
+			let sum
+			for (let index = 0; index < this.paymentRate.length; index++) {
+				const element = this.paymentRate[index]
+				sum += element
+			}
+			console.log(sum)
+			this.charge.txtField.value = sum
+		},
+		rateDown(idx) {
+			// Math.floor()
+			let account = (this.paymentAmount[idx].txtField.value / this.charge.txtField.value) * 100
+			// this.paymentAmount[idx].txtField.value = (account / 100) * this.charge.txtField.value
+			this.paymentRate[idx].txtField.value = account.toString()
+			let sum
+			for (let index = 0; index < this.paymentAmount.length; index++) {
+				const element = this.paymentAmount[index]
+				sum += element
+			}
+			this.paymentRateSum.txtField.value = sum
+		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
 			console.log(this.searchsel1.value.value)
@@ -937,6 +972,7 @@ export default {
 		async settlementView(settlementViewData) {
 			let completeAmount = []
 			await this.$store.dispatch('settlements', settlementViewData).then(res => {
+				console.log(res)
 				this.processTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
@@ -1162,29 +1198,29 @@ export default {
 		},
 		alertRate(val) {
 			let valChange = Number(val.replace('charge', '')) + ''
-			let timeChange = Number(this.timessel.value.replace(/차/g, '')) + ''
+			// let timeChange = Number(this.timessel.value.replace(/차/g, '')) + ''
 
-			if (this.timessel.value === '') {
-				this.sweetDialog_false.title = `비율 지정 실패`
-				this.sweetDialog_false.content = `지급 회차를 먼저 선택해주세요`
-				this.sweetDialog_false.modalValue = ''
-				this.sweetDialog_false.modalIcon = 'info'
-				this.sweetDialog_false.buttonType = 'oneBtn'
-				this.sweetDialog_false.open = true
-			}
-			if (valChange > timeChange) {
-				this.sweetDialog_false.title = `비율 지정 실패`
-				this.sweetDialog_false.content = `지정한 지급 회차를 확인해주세요`
-				this.sweetDialog_false.modalValue = ''
-				this.sweetDialog_false.buttonType = 'oneBtn'
-				this.sweetDialog_false.modalIcon = 'info'
-				this.sweetDialog_false.open = true
-			}
+			// if (this.timessel.value === '') {
+			// 	this.sweetDialog_false.title = `비율 지정 실패`
+			// 	this.sweetDialog_false.content = `지급 회차를 먼저 선택해주세요`
+			// 	this.sweetDialog_false.modalValue = ''
+			// 	this.sweetDialog_false.modalIcon = 'info'
+			// 	this.sweetDialog_false.buttonType = 'oneBtn'
+			// 	this.sweetDialog_false.open = true
+			// }
+			// if (valChange > timeChange) {
+			// 	this.sweetDialog_false.title = `비율 지정 실패`
+			// 	this.sweetDialog_false.content = `지정한 지급 회차를 확인해주세요`
+			// 	this.sweetDialog_false.modalValue = ''
+			// 	this.sweetDialog_false.buttonType = 'oneBtn'
+			// 	this.sweetDialog_false.modalIcon = 'info'
+			// 	this.sweetDialog_false.open = true
+			// }
 
-			for (let i = 0; i < this.finalSettlementData.settlements.settlement_turn_tables.length; i++) {
+			for (let i = 0; i < this.finalSettlementData[0].settlements.settlement_turn_tables.length; i++) {
 				if (
-					this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
-					this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree === valChange
+					this.finalSettlementData[0].settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
+					this.finalSettlementData[0].settlements.settlement_turn_tables[i].turnTableDegree === valChange
 				) {
 					this.paymentRate[`charge${i + 1}`].txtField.readonly = true
 					this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
@@ -1203,22 +1239,31 @@ export default {
 		async checkRequestData(val) {
 			this.datatableInfoFirst = true
 			await this.processRequestData(val)
+
 			this.datatableInfoFirst = false
 		},
+		async resetAmountData() {
+			for (let i = 0; i < 5; i++) {
+				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
+				this.paymentRate[`charge${i + 1}`].txtField.value = ''
+				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+			}
+		},
 		async forTest(val) {
-			console.log(val)
+			if (Array.isArray(val)) {
+				this.finalSettlementData = []
+				this.finalSettlementData = val
+			} else {
+				this.finalSettlementData = []
+				this.finalSettlementData.push(val)
+			}
 			this.editAmountData = []
 			if (val.settlements.settlement_turn_tables.length > 0) {
 				this.editAmountData = val
 			} else {
 				this.editAmountData = []
 			}
-			console.log(this.editAmountData)
-			for (let i = 0; i < 5; i++) {
-				this.paymentAmount[`charge${i + 1}`].txtField.value = ''
-				this.paymentRate[`charge${i + 1}`].txtField.value = ''
-				this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
-			}
+			await this.resetAmountData()
 			// this.charge.txtField.value = val.settlements.totalPrice
 			this.charge.txtField.value = ''
 			this.charge.txtField.value = val.totalPrice ? val.totalPrice + '' : ''
@@ -1228,25 +1273,24 @@ export default {
 				this.paymentRate[`charge${index + 1}`].txtField.value = element.percent.toString()
 				this.paymentAmount[`charge${index + 1}`].txtField.value = element.amount.toString()
 				this.start_date_picker[index + 1].date = element.prePaymentDate
+				console.log(this.paymentRateSum.txtField.value)
 			}
-			this.timessel.value = ''
-			this.timessel.value =
-				val.turn === '1'
-					? (this.timessel.value = '1차')
-					: val.turn === '2'
-					? (this.timessel.value = '2차')
-					: val.turn === '3'
-					? (this.timessel.value = '3차')
-					: val.turn === '4'
-					? (this.timessel.value = '4차')
-					: val.turn === '5'
-					? (this.timessel.value = '5차')
-					: ''
+			// this.timessel.value = ''
+			// this.timessel.value =
+			// 	val.turn === '1'
+			// 		? (this.timessel.value = '1차')
+			// 		: val.turn === '2'
+			// 		? (this.timessel.value = '2차')
+			// 		: val.turn === '3'
+			// 		? (this.timessel.value = '3차')
+			// 		: val.turn === '4'
+			// 		? (this.timessel.value = '4차')
+			// 		: val.turn === '5'
+			// 		? (this.timessel.value = '5차')
+			// 		: ''
 
-			this.finalSettlementData = []
 			this.amountData = []
 			this.amountData = val.settlements.settlement_turn_tables
-			this.finalSettlementData = val
 
 			this.pdfLists = []
 
@@ -1261,6 +1305,7 @@ export default {
 					return
 				}
 			})
+
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
 				usernameSpan.textContent = `${val.username}`
@@ -1322,7 +1367,6 @@ export default {
 			}
 		},
 		async click_agree2() {
-			console.log(this.pdfLists[0].numberList.file)
 			let li = ''
 			let messages = []
 			for (let i = 0; i < this.pdfLists.length; i++) {
@@ -1335,7 +1379,7 @@ export default {
 							li = res.data[0].id
 						})
 					}
-					console.log(li)
+
 					let input = {
 						bank: this.amountData[i].bank,
 						bankAccount: this.amountData[i].bankAccount,
@@ -1345,7 +1389,7 @@ export default {
 						turnStatus: 'complete',
 						depositFile: li,
 					}
-					console.log(input)
+
 					this.$store.dispatch('updateSettlementTurnTable', input).then(() => {
 						this.sweetDialog_false.open = false
 						this.$store.state.loading = true
@@ -1365,11 +1409,11 @@ export default {
 			}
 
 			if (this.paymentCheckBox) {
-				let finalMessage = `[테스트] ${this.finalSettlementData.username}님 \n
-				${this.finalSettlementData.product} 관련 \n
+				let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 \n
+				${this.finalSettlementData[0].product} 관련 \n
 				${messages.join()}차  정산금 입금이 완료되었습니다 `
 				let input = {
-					phoneNumber: this.finalSettlementData.users.phoneNumber.replace(/-/g, ''),
+					phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
 					content: finalMessage,
 				}
 				this.$store
@@ -1380,7 +1424,7 @@ export default {
 		},
 
 		openProcessModal() {
-			if (this.finalSettlementData.length === 0) {
+			if (this.finalSettlementData[0].length === 0) {
 				this.sweetDialog_false.title = `저장 실패`
 				this.sweetDialog_false.content = `정산할 직원을 선택해주세요`
 				this.sweetDialog_false.modalValue = ''
@@ -1392,7 +1436,7 @@ export default {
 				this.sweetDialog_false.modalValue = ''
 				this.sweetDialog_false.buttonType = 'oneBtn'
 				this.sweetDialog_false.open = true
-			} else if (this.paymentRateSum.txtField.value !== '100%') {
+			} else if (this.timessel.value === '5차' && this.paymentRateSum.txtField.value !== '100%') {
 				this.sweetDialog_false.title = `저장 실패`
 				this.sweetDialog_false.content = `지급 비율이 100%가 아닙니다`
 				this.sweetDialog_false.modalValue = ''
@@ -1405,7 +1449,7 @@ export default {
 			}
 		},
 
-		click_agree() {
+		async click_agree() {
 			this.$store.state.loading = true
 
 			let start_date = []
@@ -1420,18 +1464,18 @@ export default {
 				finalPaymentAmount.push(numericPaymentAmount)
 
 				if (this.editAmountData.length === 0) {
-					let data = {
-						prePaymentDate: this.start_date_picker[i].date,
-						turnStatus: 'waiting',
-						amount: numericPaymentAmount,
-						settlements: this.finalSettlementData.id,
-						turnTableDegree: i + '',
-						bank: this.finalSettlementData.bank,
-						bankAccount: this.finalSettlementData.accountNumber,
-						useYn: true,
-					}
+					// let data = {
+					// 	prePaymentDate: this.start_date_picker[i].date,
+					// 	turnStatus: 'waiting',
+					// 	amount: numericPaymentAmount,
+					// 	settlements: this.finalSettlementData[0].id,
+					// 	turnTableDegree: i + '',
+					// 	bank: this.finalSettlementData[0].bank,
+					// 	bankAccount: this.finalSettlementData[0].accountNumber,
+					// 	useYn: true,
+					// }
 
-					this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+					// await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
 					if (this.processCheckBox) {
 						let message = `${i}차 정산일은 ${
 							this.start_date_picker[i].date
@@ -1439,28 +1483,28 @@ export default {
 						messages.push(message)
 					}
 
-					let data2 = {
-						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-						turn: this.timessel.value.replace(/차/g, ''),
-						id: this.finalSettlementData.id,
-					}
+					// let data2 = {
+					// 	totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+					// 	turn: this.timessel.value.replace(/차/g, ''),
+					// 	id: this.finalSettlementData[0].id,
+					// }
 
-					this.$store.dispatch('updateSettlement', data2).then(() => {
-						this.sweetDialog_false.open = false
-						this.$store.state.loading = true
-						this.saveDialogStatus.title = `승인 처리 완료`
-						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-						this.saveDialogStatus.buttonType = 'oneBtn'
-						this.saveDialogStatus.cancelBtnText = '확인'
-						this.saveDialogStatus.open = true
-						this.$store.state.loading = false
-					})
+					// await this.$store.dispatch('updateSettlement', data2).then(() => {
+					// 	this.sweetDialog_false.open = false
+					// 	this.$store.state.loading = true
+					// 	this.saveDialogStatus.title = `승인 처리 완료`
+					// 	this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+					// 	this.saveDialogStatus.buttonType = 'oneBtn'
+					// 	this.saveDialogStatus.cancelBtnText = '확인'
+					// 	this.saveDialogStatus.open = true
+					// 	this.$store.state.loading = false
+					// })
 				} else {
-					if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData.turn) {
-						for (let j = 0; j < this.finalSettlementData.settlements.settlement_turn_tables.length; j++) {
-							if (this.finalSettlementData.settlements.settlement_turn_tables[j].turnStatus === 'waiting') {
+					if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData[0].turn) {
+						for (let j = 0; j < this.finalSettlementData[0].settlements.settlement_turn_tables.length; j++) {
+							if (this.finalSettlementData[0].settlements.settlement_turn_tables[j].turnStatus === 'waiting') {
 								let updateData = {
-									id: this.finalSettlementData.settlements.settlement_turn_tables[j].id,
+									id: this.finalSettlementData[0].settlements.settlement_turn_tables[j].id,
 									useYn: false,
 								}
 
@@ -1474,10 +1518,10 @@ export default {
 								prePaymentDate: this.start_date_picker[i].date,
 								turnStatus: 'waiting',
 								amount: numericPaymentAmount,
-								settlements: this.finalSettlementData.id,
+								settlements: this.finalSettlementData[0].id,
 								turnTableDegree: i + '',
-								bank: this.finalSettlementData.bank,
-								bankAccount: this.finalSettlementData.accountNumber,
+								bank: this.finalSettlementData[0].bank,
+								bankAccount: this.finalSettlementData[0].accountNumber,
 								useYn: true,
 							}
 
@@ -1495,10 +1539,10 @@ export default {
 							prePaymentDate: this.start_date_picker[i].date,
 							turnStatus: 'waiting',
 							amount: numericPaymentAmount,
-							settlements: this.finalSettlementData.id,
+							settlements: this.finalSettlementData[0].id,
 							turnTableDegree: i + '',
-							bank: this.finalSettlementData.bank,
-							bankAccount: this.finalSettlementData.accountNumber,
+							bank: this.finalSettlementData[0].bank,
+							bankAccount: this.finalSettlementData[0].accountNumber,
 							id: this.editAmountData.settlements.settlement_turn_tables[i - 1].id,
 						}
 
@@ -1518,7 +1562,7 @@ export default {
 					let data2 = {
 						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
 						turn: this.timessel.value.replace(/차/g, ''),
-						id: this.finalSettlementData.id,
+						id: this.finalSettlementData[0].id,
 					}
 
 					this.$store.dispatch('updateSettlement', data2).then(() => {
@@ -1534,9 +1578,9 @@ export default {
 				}
 			}
 			if (this.processCheckBox) {
-				let finalMessage = `[테스트] ${this.finalSettlementData.username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
+				let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
 				let input = {
-					phoneNumber: this.finalSettlementData.users.phoneNumber.replace(/-/g, ''),
+					phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
 					content: finalMessage,
 				}
 
@@ -1549,12 +1593,10 @@ export default {
 
 		calculatePaymentAmount(paymentNumber) {
 			paymentAmount = ''
-			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value)
-
+			let paymentRate = Number(this.paymentRate[`charge${paymentNumber}`].txtField.value.replace(/,/g, ''))
 			let charge = Number(this.charge.txtField.value.replace(/,/g, ''))
 
 			let paymentAmount = Number((paymentRate / 100) * charge)
-
 			paymentAmount = Math.floor(paymentAmount)
 				.toString()
 				.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -1570,24 +1612,41 @@ export default {
 
 			return paymentRateAmount
 		},
-		updatePaymentRateSum() {
+		updatePaymentRateSum(idx) {
 			let sum = 0
 			for (let i = 1; i <= 5; i++) {
 				let paymentRate = Number(this.paymentRate[`charge${i}`].txtField.value)
 				sum += paymentRate
 			}
+			console.log(sum)
+			// console.log(Number(this.paymentRate[`charge${idx}`].txtField.value))
+			// if (!this.datatableInfoFirst) {
+			// 	sum = sum + Number(this.paymentRate[`charge${idx}`].txtField.value)
+			// }
+			// console.log(sum)
 			if (sum > 100) {
+				this.timessel.value = `${idx - 1}차`
+				this.paymentRate[`charge${idx}`].txtField.value = ''
+				this.paymentAmount[`charge${idx}`].txtField.value = ''
 				this.sweetDialog_false.title = `비율 지정 실패`
 				this.sweetDialog_false.content = `지급 비율은 100%를 넘을 수 없습니다`
 				this.sweetDialog_false.modalValue = ''
 				this.sweetDialog_false.buttonType = 'oneBtn'
 				this.sweetDialog_false.modalIcon = 'info'
 				this.sweetDialog_false.open = true
+				return
 			}
 			this.paymentRatesum = sum
 			this.$nextTick(() => {
 				this.paymentRateSum.txtField.value = sum + '%'
 			})
+			if (sum === 100) {
+				for (let index = idx + 1; index < 6; index++) {
+					console.log(index)
+					this.paymentRate[`charge${index}`].txtField.readonly = true
+					this.paymentAmount[`charge${index}`].txtField.readonly = true
+				}
+			}
 		},
 		updateBank(degree, value) {
 			if (!this.amountData[degree - 1]) {
@@ -1603,134 +1662,212 @@ export default {
 		},
 	},
 	computed: {
-		calculatedPaymentAmount1() {
-			return this.calculatePaymentAmount(1)
-		},
-		calculatedPaymentAmount2() {
-			return this.calculatePaymentAmount(2)
-		},
-		calculatedPaymentAmount3() {
-			return this.calculatePaymentAmount(3)
-		},
-		calculatedPaymentAmount4() {
-			return this.calculatePaymentAmount(4)
-		},
-		calculatedPaymentAmount5() {
-			return this.calculatePaymentAmount(5)
-		},
+		// calculatedPaymentAmount1() {
+		// 	return this.calculatePaymentAmount(1)
+		// },
+		// calculatedPaymentAmount2() {
+		// 	return this.calculatePaymentAmount(2)
+		// },
+		// calculatedPaymentAmount3() {
+		// 	return this.calculatePaymentAmount(3)
+		// },
+		// calculatedPaymentAmount4() {
+		// 	return this.calculatePaymentAmount(4)
+		// },
+		// calculatedPaymentAmount5() {
+		// 	return this.calculatePaymentAmount(5)
+		// },
 	},
 	watch: {
-		'timessel.value'(newValue) {
-			let time = Number(newValue.replace(/차/g, ''))
-			console.log(time)
-
-			if (this.finalSettlementData.settlements.settlement_turn_tables.length === 0) {
-				for (let j = 0; j < 5; j++) {
-					this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
-					this.paymentRate[`charge${j + 1}`].txtField.readonly = false
-					this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
-				}
-			} else {
-				for (let i = 0; i <= this.finalSettlementData.settlements.settlement_turn_tables.length; i++) {
-					if (
-						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
-						Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time &&
-						!this.datatableInfoFirst
-					) {
-						this.sweetDialog_false.title = `지정 실패`
-						this.sweetDialog_false.content = `이미 지급이 완료된 회차는 변경하실 수 없습니다`
-						this.sweetDialog_false.modalValue = ''
-						this.sweetDialog_false.buttonType = 'oneBtn'
-						this.sweetDialog_false.modalIcon = 'info'
-						this.sweetDialog_false.open = true
-						return
-					}
-				}
-
-				for (let i = 0; i < 5; i++) {
-					if (
-						this.finalSettlementData.settlements.settlement_turn_tables[i].turnStatus !== 'complete' &&
-						Number(this.finalSettlementData.settlements.settlement_turn_tables[i].turnTableDegree) === time
-					) {
-						this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
-						this.paymentRate[`charge${i + 1}`].txtField.readonly = true
-						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
-						this.paymentAmount[`charge${i + 1}`].txtField.value = ''
-						this.paymentRate[`charge${i + 1}`].txtField.value = ''
-						this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
-					} else {
-						this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
-						this.paymentRate[`charge${i + 1}`].txtField.readonly = false
-						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = false
-					}
-				}
-			}
-		},
-
-		'paymentRate.charge1.txtField.value': {
-			immediate: true,
-			handler() {
-				console.log(this.datatableInfoFirst)
-				if (!this.datatableInfoFirst) {
-					this.paymentAmount.charge5.txtField.value = ''
-					this.paymentAmount.charge2.txtField.value = ''
-					this.paymentAmount.charge3.txtField.value = ''
-					this.paymentAmount.charge4.txtField.value = ''
-					this.paymentRate.charge2.txtField.value = ''
-					this.paymentRate.charge3.txtField.value = ''
-					this.paymentRate.charge4.txtField.value = ''
-					this.paymentRate.charge5.txtField.value = ''
-				}
-				this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
-				this.updatePaymentRateSum()
-			},
-		},
-		'paymentRate.charge2.txtField.value': {
-			immediate: true,
-			handler() {
-				if (!this.datatableInfoFirst) {
-					this.paymentRate.charge3.txtField.value = ''
-					this.paymentRate.charge4.txtField.value = ''
-					this.paymentRate.charge5.txtField.value = ''
-					this.paymentAmount.charge5.txtField.value = ''
-					this.paymentAmount.charge3.txtField.value = ''
-					this.paymentAmount.charge4.txtField.value = ''
-				}
-				this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
-				this.updatePaymentRateSum()
-			},
-		},
-		'paymentRate.charge3.txtField.value': {
-			immediate: true,
-			handler() {
-				if (!this.datatableInfoFirst) {
-					this.paymentRate.charge4.txtField.value = ''
-					this.paymentRate.charge5.txtField.value = ''
-					this.paymentAmount.charge5.txtField.value = ''
-					this.paymentAmount.charge4.txtField.value = ''
-				}
-				this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
-				this.updatePaymentRateSum()
-			},
-		},
-		'paymentRate.charge4.txtField.value': {
-			immediate: true,
-			handler() {
-				if (!this.datatableInfoFirst) {
-					this.paymentRate.charge5.txtField.value = ''
-					this.paymentAmount.charge5.txtField.value = ''
-				}
-				this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
-				this.updatePaymentRateSum()
-			},
-		},
-		'paymentRate.charge5.txtField.value': {
-			immediate: true,
-			handler() {
-				this.paymentAmount.charge5.txtField.value = this.calculatePaymentAmount(5)
-				this.updatePaymentRateSum()
-			},
-		},
+		// 'timessel.value'(newValue) {
+		// let time = Number(newValue.replace(/차/g, ''))
+		// if (this.finalSettlementData.length !== 0) {
+		// 	if (this.finalSettlementData[0].settlements.settlement_turn_tables.length === 0) {
+		// 		for (let j = 0; j < 5; j++) {
+		// 			this.paymentAmount[`charge${j + 1}`].txtField.readonly = false
+		// 			this.paymentRate[`charge${j + 1}`].txtField.readonly = false
+		// 			this.paymentCircuit[`charge${j + 1}`].txtField.readonly = false
+		// 		}
+		// 	} else {
+		// 		// for (let index = 0; index < array.length; index++) {
+		// 		// 	const element = array[index]
+		// 		// }
+		// 		for (let i = 0; i < this.finalSettlementData[0].settlements.settlement_turn_tables.length; i++) {
+		// 			if (
+		// 				this.finalSettlementData[0].settlements.settlement_turn_tables[i].turnStatus === 'complete' &&
+		// 				Number(this.finalSettlementData[0].settlements.settlement_turn_tables[i].turnTableDegree) === time &&
+		// 				!this.datatableInfoFirst
+		// 			) {
+		// 				this.sweetDialog_false.title = `지정 실패`
+		// 				this.sweetDialog_false.content = `이미 지급이 완료된 회차는 변경하실 수 없습니다`
+		// 				this.sweetDialog_false.modalValue = ''
+		// 				this.sweetDialog_false.buttonType = 'oneBtn'
+		// 				this.sweetDialog_false.modalIcon = 'info'
+		// 				this.sweetDialog_false.open = true
+		// 				return
+		// 			}
+		// 		}
+		// 		if (!this.datatableInfoFirst) {
+		// 			for (let i = 0; i < 5; i++) {
+		// 				if (this.finalSettlementData[0].settlements.settlement_turn_tables[i]) {
+		// 					if (
+		// 						this.finalSettlementData[0].settlements.settlement_turn_tables[i].turnStatus !== 'complete' &&
+		// 						Number(this.finalSettlementData[0].settlements.settlement_turn_tables[i].turnTableDegree) === time
+		// 					) {
+		// 						// this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+		// 						// this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+		// 						// this.paymentCircuit[`charge${i + 1}`].txtField.readonly = true
+		// 						this.paymentAmount[`charge${i + 1}`].txtField.value = ''
+		// 						this.paymentRate[`charge${i + 1}`].txtField.value = ''
+		// 						this.paymentCircuit[`charge${i + 1}`].txtField.value = ''
+		// 					} else {
+		// 						this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
+		// 						this.paymentRate[`charge${i + 1}`].txtField.readonly = false
+		// 						this.paymentCircuit[`charge${i + 1}`].txtField.readonly = false
+		// 					}
+		// 				} else {
+		// 					this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
+		// 					this.paymentRate[`charge${i + 1}`].txtField.readonly = false
+		// 					this.paymentCircuit[`charge${i + 1}`].txtField.readonly = false
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// },
+		// 'paymentRate.charge1.txtField.value': {
+		// 	immediate: true,
+		// 	async handler() {
+		// 		if (this.paymentRate.charge1.txtField.value === 100) {
+		// 			this.paymentRate.charge2.txtField.readonly = true
+		// 			this.paymentAmount.charge2.txtField.readonly = true
+		// 			this.paymentRate.charge3.txtField.readonly = true
+		// 			this.paymentAmount.charge3.txtField.readonly = true
+		// 			this.paymentRate.charge4.txtField.readonly = true
+		// 			this.paymentAmount.charge4.txtField.readonly = true
+		// 			this.paymentRate.charge5.txtField.readonly = true
+		// 			this.paymentAmount.charge5.txtField.readonly = true
+		// 		} else {
+		// 			this.paymentRate.charge2.txtField.readonly = false
+		// 			this.paymentAmount.charge2.txtField.readonly = false
+		// 			this.paymentRate.charge3.txtField.readonly = false
+		// 			this.paymentAmount.charge3.txtField.readonly = false
+		// 			this.paymentRate.charge4.txtField.readonly = false
+		// 			this.paymentAmount.charge4.txtField.readonly = false
+		// 			this.paymentRate.charge5.txtField.readonly = false
+		// 			this.paymentAmount.charge5.txtField.readonly = false
+		// 			await this.updatePaymentRateSum(1)
+		// 			this.timessel.value = '1차'
+		// 			if (!this.datatableInfoFirst) {
+		// 				this.paymentAmount.charge2.txtField.value = ''
+		// 				this.paymentAmount.charge3.txtField.value = ''
+		// 				this.paymentAmount.charge4.txtField.value = ''
+		// 				this.paymentAmount.charge5.txtField.value = ''
+		// 				this.paymentRate.charge2.txtField.value = ''
+		// 				this.paymentRate.charge3.txtField.value = ''
+		// 				this.paymentRate.charge4.txtField.value = ''
+		// 				this.paymentRate.charge5.txtField.value = ''
+		// 			}
+		// 			this.paymentAmount.charge1.txtField.value = this.calculatePaymentAmount(1)
+		// 		}
+		// 	},
+		// },
+		// 'paymentRate.charge2.txtField.value': {
+		// 	immediate: true,
+		// 	async handler() {
+		// 		if (this.paymentRate.charge1.txtField.value + this.paymentRate.charge2.txtField.value === 100) {
+		// 			this.paymentRate.charge3.txtField.readonly = true
+		// 			this.paymentAmount.charge3.txtField.readonly = true
+		// 			this.paymentRate.charge4.txtField.readonly = true
+		// 			this.paymentAmount.charge4.txtField.readonly = true
+		// 			this.paymentRate.charge5.txtField.readonly = true
+		// 			this.paymentAmount.charge5.txtField.readonly = true
+		// 		} else {
+		// 			this.paymentRate.charge3.txtField.readonly = false
+		// 			this.paymentAmount.charge3.txtField.readonly = false
+		// 			this.paymentRate.charge4.txtField.readonly = false
+		// 			this.paymentAmount.charge4.txtField.readonly = false
+		// 			this.paymentRate.charge5.txtField.readonly = false
+		// 			this.paymentAmount.charge5.txtField.readonly = false
+		// 			await this.updatePaymentRateSum(2)
+		// 			this.timessel.value = '2차'
+		// 			if (!this.datatableInfoFirst) {
+		// 				this.paymentRate.charge3.txtField.value = ''
+		// 				this.paymentRate.charge4.txtField.value = ''
+		// 				this.paymentRate.charge5.txtField.value = ''
+		// 				this.paymentAmount.charge5.txtField.value = ''
+		// 				this.paymentAmount.charge3.txtField.value = ''
+		// 				this.paymentAmount.charge4.txtField.value = ''
+		// 			}
+		// 			this.paymentAmount.charge2.txtField.value = this.calculatePaymentAmount(2)
+		// 		}
+		// 	},
+		// },
+		// 'paymentRate.charge3.txtField.value': {
+		// 	immediate: true,
+		// 	async handler() {
+		// 		if (
+		// 			this.paymentRate.charge1.txtField.value + this.paymentRate.charge2.txtField.value + this.paymentRate.charge3.txtField.value ===
+		// 			100
+		// 		) {
+		// 			this.paymentRate.charge4.txtField.readonly = true
+		// 			this.paymentAmount.charge4.txtField.readonly = true
+		// 			this.paymentRate.charge5.txtField.readonly = true
+		// 			this.paymentAmount.charge5.txtField.readonly = true
+		// 		} else {
+		// 			this.paymentRate.charge4.txtField.readonly = false
+		// 			this.paymentAmount.charge4.txtField.readonly = false
+		// 			this.paymentRate.charge5.txtField.readonly = false
+		// 			this.paymentAmount.charge5.txtField.readonly = false
+		// 			await this.updatePaymentRateSum(3)
+		// 			this.timessel.value = '3차'
+		// 			if (!this.datatableInfoFirst) {
+		// 				this.paymentRate.charge4.txtField.value = ''
+		// 				this.paymentRate.charge5.txtField.value = ''
+		// 				this.paymentAmount.charge5.txtField.value = ''
+		// 				this.paymentAmount.charge4.txtField.value = ''
+		// 			}
+		// 			this.paymentAmount.charge3.txtField.value = this.calculatePaymentAmount(3)
+		// 		}
+		// 	},
+		// },
+		// 'paymentRate.charge4.txtField.value': {
+		// 	immediate: true,
+		// 	async handler() {
+		// 		if (
+		// 			this.paymentRate.charge1.txtField.value +
+		// 				this.paymentRate.charge2.txtField.value +
+		// 				this.paymentRate.charge3.txtField.value +
+		// 				this.paymentRate.charge4.txtField.value ===
+		// 			100
+		// 		) {
+		// 			this.paymentRate.charge5.txtField.readonly = true
+		// 			this.paymentAmount.charge5.txtField.readonly = true
+		// 		} else {
+		// 			this.paymentRate.charge5.txtField.readonly = false
+		// 			this.paymentAmount.charge5.txtField.readonly = false
+		// 			await this.updatePaymentRateSum(4)
+		// 			if (this.paymentRate.charge4.txtField.value === '') {
+		// 				this.timessel.value = '3차'
+		// 			} else {
+		// 				this.timessel.value = '4차'
+		// 			}
+		// 			if (!this.datatableInfoFirst) {
+		// 				this.paymentRate.charge5.txtField.value = ''
+		// 				this.paymentAmount.charge5.txtField.value = ''
+		// 			}
+		// 			this.paymentAmount.charge4.txtField.value = this.calculatePaymentAmount(4)
+		// 		}
+		// 	},
+		// },
+		// 'paymentRate.charge5.txtField.value': {
+		// 	immediate: true,
+		// 	async handler() {
+		// 		await this.updatePaymentRateSum(5)
+		// 		this.timessel.value = '5차'
+		// 		this.paymentAmount.charge5.txtField.value = this.calculatePaymentAmount(5)
+		// 	},
+		// },
 	},
 }
 </script>

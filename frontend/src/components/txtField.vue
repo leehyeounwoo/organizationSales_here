@@ -23,6 +23,7 @@
 			autocomplete="new-password"
 			dense
 			:max="txtField.max"
+			@blur="$emit('focusOut', $event)"
 			@keyup="$emit('keyup', $event)"
 			@keyup.enter="$emit('enter', $event)"
 			:oninput="

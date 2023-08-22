@@ -38,7 +38,7 @@ export default {
 				})
 				console.log(this.timeArr)
 				const assignmentsViewData = {
-					status: 'noAssignment',
+					status: 'waiting',
 				}
 				await this.assignmentsView(assignmentsViewData)
 				const usersViewData = {
@@ -98,6 +98,7 @@ export default {
 		// },
 		async assignmentsView(data) {
 			await this.$store.dispatch('assignments', data).then(async res => {
+				console.log(res)
 				this.productIDArr = res.assignments.map(x => x.productID)
 				this.userIDArr = res.assignments.map(x => x.userID)
 				this.productTable.items = res.assignments

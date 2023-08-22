@@ -220,8 +220,6 @@ export default {
 					useYn: true,
 					userID: item.user.value,
 					status: 'assignment',
-					start: item.holdingTime1.time + ':00.000',
-					end: item.holdingTime2.time + ':00.000',
 					productID: item.id,
 					orderType: 'admin',
 					businessID: this.$store.state.businessSelectBox.value,
@@ -230,13 +228,18 @@ export default {
 					data.type = 'allday'
 					data.start = item.holdingTime1.time + ':00.000'
 					data.end = item.holdingTime2.time + ':00.000'
-				} else if (item.select_holding.value === '즉시 홀딩') {
-					data.type = 'now'
-					data.start = item.holdingTime1.time + ':00.000'
-					data.end = item.holdingTime2.time + ':00.000'
 				} else if (item.select_holding.value === '시간 홀딩') {
 					data.type = 'time'
+					data.start = item.holdingTime1.time + ':00.000'
+					data.end = item.holdingTime2.time + ':00.000'
+				} else if (item.select_holding.value === '즉시 홀딩') {
+					data.type = 'now'
 					data.holdingTime = item.holdingTime3.value
+					data.start = this.$moment().format('HH:mm') + ':00.000'
+					data.end =
+						this.$moment()
+							.add(item.holdingTime3.value.replace(/[^0-9]/g, ''), 'm')
+							.format('HH:mm') + ':00.000'
 				}
 				this.$store
 					.dispatch('createAssignment', data)
