@@ -152,7 +152,7 @@
 						지급 금액
 					</v-flex>
 					<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
-						<txtField3 :txtField="charge.txtField" v-model="charge.txtField.value" class="search_box_admin"></txtField3
+						<txtField3 :txtField="totalCharge.txtField" v-model="totalCharge.txtField.value" class="search_box_admin"></txtField3
 					></v-flex>
 					<v-flex
 						v-for="(items, idx) of paymentAmount"
@@ -453,6 +453,17 @@ export default {
 				itemText: 'title',
 			},
 			charge: {
+				txtField: {
+					maxlength: '255',
+					value: '',
+					outlined: true,
+					hideDetail: true,
+					errorMessage: '',
+					placeholder: '-',
+					readonly: false,
+				},
+			},
+			totalCharge: {
 				txtField: {
 					maxlength: '255',
 					value: '',
@@ -896,27 +907,79 @@ export default {
 
 	methods: {
 		amountDown(idx) {
-			let account = (this.paymentRate[idx].txtField.value / 100) * this.charge.txtField.value
-			this.paymentAmount[idx].txtField.value = account.toString()
-			let sum
-			for (let index = 0; index < this.paymentRate.length; index++) {
-				const element = this.paymentRate[index]
-				sum += element
+			let sum = 0
+			let totalSum = 0
+			let status = true
+			for (let index = 0; index < 5; index++) {
+				const element = this.paymentRate[`charge${index + 1}`]
+				if (element.txtField.value) {
+					console.log(element.txtField.value)
+					sum += Number(element.txtField.value)
+					if (sum === 100 && status) {
+						this.timessel.value = `${index + 1}차`
+
+						status = false
+					}
+				}
 			}
-			console.log(sum)
-			this.charge.txtField.value = sum
+
+			if (Number(sum) > 100) {
+				alert('지급 비율이 100%를 초과할 수 없습니다.')
+				this.paymentRate[idx].txtField.value = ''
+				this.paymentAmount[idx].txtField.value = ''
+				return
+			} else {
+				let account = (this.paymentRate[idx].txtField.value / 100) * this.charge.txtField.value
+				this.paymentAmount[idx].txtField.value = account.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+				for (let index = 0; index < 5; index++) {
+					const element = this.paymentAmount[`charge${index + 1}`]
+					if (element.txtField.value) {
+						totalSum += Number(element.txtField.value.replace(/,/g, ''))
+					}
+					// if (totalSum === Number(this.totalCharge.txtField.value)) {
+					// 	this.timessel.value = `${index + 1}차`
+					// 	break
+					// }
+				}
+				this.totalCharge.txtField.value = totalSum.toString()
+				this.paymentRateSum.txtField.value = sum.toString()
+			}
 		},
 		rateDown(idx) {
-			// Math.floor()
-			let account = (this.paymentAmount[idx].txtField.value / this.charge.txtField.value) * 100
-			// this.paymentAmount[idx].txtField.value = (account / 100) * this.charge.txtField.value
-			this.paymentRate[idx].txtField.value = account.toString()
-			let sum
-			for (let index = 0; index < this.paymentAmount.length; index++) {
-				const element = this.paymentAmount[index]
-				sum += element
+			let sum = 0
+			let totalSum = 0
+			let status = true
+			for (let index = 0; index < 5; index++) {
+				const element = this.paymentAmount[`charge${index + 1}`]
+
+				if (element.txtField.value) {
+					totalSum += Number(element.txtField.value.replace(/,/g, ''))
+					if (totalSum === Number(this.charge.txtField.value) && status) {
+						this.timessel.value = `${index + 1}차`
+
+						status = false
+					}
+				}
 			}
-			this.paymentRateSum.txtField.value = sum
+			if (Number(this.charge.txtField.value) < totalSum) {
+				alert(`최대 지급 금액(${this.charge.txtField.value})을 초과할 수 없습니다.`)
+				this.paymentRate[idx].txtField.value = ''
+				this.paymentAmount[idx].txtField.value = ''
+				return
+			} else {
+				let account = (this.paymentAmount[idx].txtField.value.replace(/,/g, '') / this.charge.txtField.value) * 100
+				this.paymentRate[idx].txtField.value = account.toString()
+				this.paymentAmount[idx].txtField.value = this.paymentAmount[idx].txtField.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+				for (let index = 0; index < 5; index++) {
+					const element = this.paymentRate[`charge${index + 1}`]
+					if (element.txtField.value) {
+						sum += Number(element.txtField.value)
+					}
+				}
+				this.paymentRateSum.txtField.value = sum.toString()
+				this.totalCharge.txtField.value = totalSum.toString()
+			}
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
@@ -1239,7 +1302,6 @@ export default {
 		async checkRequestData(val) {
 			this.datatableInfoFirst = true
 			await this.processRequestData(val)
-
 			this.datatableInfoFirst = false
 		},
 		async resetAmountData() {
@@ -1265,29 +1327,35 @@ export default {
 			}
 			await this.resetAmountData()
 			// this.charge.txtField.value = val.settlements.totalPrice
+			let sum = 0
+			let totalSum = 0
 			this.charge.txtField.value = ''
 			this.charge.txtField.value = val.totalPrice ? val.totalPrice + '' : ''
 			for (let index = 0; index < val.settlements.settlement_turn_tables.length; index++) {
 				const element = val.settlements.settlement_turn_tables[index]
 				element.percent = (element.amount / val.settlements.totalPrice) * 100
 				this.paymentRate[`charge${index + 1}`].txtField.value = element.percent.toString()
-				this.paymentAmount[`charge${index + 1}`].txtField.value = element.amount.toString()
+				this.paymentAmount[`charge${index + 1}`].txtField.value = element.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 				this.start_date_picker[index + 1].date = element.prePaymentDate
 				console.log(this.paymentRateSum.txtField.value)
+				sum += element.percent
+				totalSum += element.amount
 			}
-			// this.timessel.value = ''
-			// this.timessel.value =
-			// 	val.turn === '1'
-			// 		? (this.timessel.value = '1차')
-			// 		: val.turn === '2'
-			// 		? (this.timessel.value = '2차')
-			// 		: val.turn === '3'
-			// 		? (this.timessel.value = '3차')
-			// 		: val.turn === '4'
-			// 		? (this.timessel.value = '4차')
-			// 		: val.turn === '5'
-			// 		? (this.timessel.value = '5차')
-			// 		: ''
+			this.totalCharge.txtField.value = totalSum.toString()
+			this.paymentRateSum.txtField.value = sum.toString()
+			this.timessel.value = ''
+			this.timessel.value =
+				val.turn === '1'
+					? (this.timessel.value = '1차')
+					: val.turn === '2'
+					? (this.timessel.value = '2차')
+					: val.turn === '3'
+					? (this.timessel.value = '3차')
+					: val.turn === '4'
+					? (this.timessel.value = '4차')
+					: val.turn === '5'
+					? (this.timessel.value = '5차')
+					: ''
 
 			this.amountData = []
 			this.amountData = val.settlements.settlement_turn_tables
@@ -1464,18 +1532,18 @@ export default {
 				finalPaymentAmount.push(numericPaymentAmount)
 
 				if (this.editAmountData.length === 0) {
-					// let data = {
-					// 	prePaymentDate: this.start_date_picker[i].date,
-					// 	turnStatus: 'waiting',
-					// 	amount: numericPaymentAmount,
-					// 	settlements: this.finalSettlementData[0].id,
-					// 	turnTableDegree: i + '',
-					// 	bank: this.finalSettlementData[0].bank,
-					// 	bankAccount: this.finalSettlementData[0].accountNumber,
-					// 	useYn: true,
-					// }
+					let data = {
+						prePaymentDate: this.start_date_picker[i].date,
+						turnStatus: 'waiting',
+						amount: numericPaymentAmount,
+						settlements: this.finalSettlementData[0].id,
+						turnTableDegree: i + '',
+						bank: this.finalSettlementData[0].bank,
+						bankAccount: this.finalSettlementData[0].accountNumber,
+						useYn: true,
+					}
 
-					// await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+					await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
 					if (this.processCheckBox) {
 						let message = `${i}차 정산일은 ${
 							this.start_date_picker[i].date
@@ -1483,22 +1551,22 @@ export default {
 						messages.push(message)
 					}
 
-					// let data2 = {
-					// 	totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-					// 	turn: this.timessel.value.replace(/차/g, ''),
-					// 	id: this.finalSettlementData[0].id,
-					// }
+					let data2 = {
+						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+						turn: this.timessel.value.replace(/차/g, ''),
+						id: this.finalSettlementData[0].id,
+					}
 
-					// await this.$store.dispatch('updateSettlement', data2).then(() => {
-					// 	this.sweetDialog_false.open = false
-					// 	this.$store.state.loading = true
-					// 	this.saveDialogStatus.title = `승인 처리 완료`
-					// 	this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-					// 	this.saveDialogStatus.buttonType = 'oneBtn'
-					// 	this.saveDialogStatus.cancelBtnText = '확인'
-					// 	this.saveDialogStatus.open = true
-					// 	this.$store.state.loading = false
-					// })
+					await this.$store.dispatch('updateSettlement', data2).then(() => {
+						this.sweetDialog_false.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `승인 처리 완료`
+						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+					})
 				} else {
 					if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData[0].turn) {
 						for (let j = 0; j < this.finalSettlementData[0].settlements.settlement_turn_tables.length; j++) {
