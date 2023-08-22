@@ -258,8 +258,8 @@ export default {
 			this.holdingListDialog.open = true
 			this.$store
 				.dispatch('assignments', {
-					created_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
-					created_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
 					businessID: this.$store.state.meData.businessID,
 					userID: this.$store.state.meData.id,
 					status: 'assignment',
@@ -311,8 +311,8 @@ export default {
 		assignments() {
 			this.$store
 				.dispatch('assignments', {
-					created_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
-					created_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
 					businessID: this.$store.state.meData.businessID,
 					userID: this.$store.state.meData.id,
 					sort: 'created_at:desc',
