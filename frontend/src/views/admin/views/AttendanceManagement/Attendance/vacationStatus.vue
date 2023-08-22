@@ -326,37 +326,28 @@ export default {
 			this.$store.state.loading = true
 			if (this.rightInfoBottom[0].radio === 'agree') {
 				const startDate = this.$moment(this.setdialog.editData.vacationStart)
-				const endDate = this.$moment(this.setdialog.editData.vacationEnd)
 				const currentDate = startDate.clone()
-
-				while (currentDate <= endDate) {
-					if (currentDate.day() !== 0 && currentDate.day() !== 6) {
-						let input = {
-							date: currentDate.format('YYYY-MM-DD'),
-							userID: this.setdialog.editData.id,
-							status: 'vacation',
-							vacation: this.setdialog.editData.vacationID,
-						}
-
-						await this.$store.dispatch('createGotowork', input).then(res => {
-							let input2 = {
-								id: this.setdialog.editData.vacationID,
-								vacationStatus: 'agree',
-								gotowork: res.createGotowork.gotowork.id,
-								adminInfo: this.$store.state.meData,
-							}
-							this.$store.dispatch('updateVacation', input2).then(() => {
-								if (endDate === currentDate) {
-									this.sweetDialog.open = false
-									this.setdialog.dialog = false
-									this.$emit('update')
-									this.$store.state.loading = false
-								}
-							})
-						})
-					}
-					currentDate.add(1, 'day')
+				let input = {
+					date: currentDate.format('YYYY-MM-DD'),
+					userID: this.setdialog.editData.id,
+					status: 'vacation',
+					vacation: this.setdialog.editData.vacationID,
 				}
+
+				await this.$store.dispatch('createGotowork', input).then(res => {
+					let input2 = {
+						id: this.setdialog.editData.vacationID,
+						vacationStatus: 'agree',
+						gotowork: res.createGotowork.gotowork.id,
+						adminInfo: this.$store.state.meData,
+					}
+					this.$store.dispatch('updateVacation', input2).then(() => {
+						this.sweetDialog.open = false
+						this.setdialog.dialog = false
+						this.$emit('update')
+						this.$store.state.loading = false
+					})
+				})
 			} else {
 				let input2 = {
 					id: this.setdialog.editData.vacationID,

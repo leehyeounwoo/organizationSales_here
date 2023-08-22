@@ -58,7 +58,7 @@
 				</v-btn>
 				<v-spacer></v-spacer>
 				<v-flex xs4 class="pl-2">
-					<v-select :items="times" v-model="time" solo outlined class="nomal-select" hideDetails color="primary2"></v-select>
+					<v-select :items="times" v-model="time" solo outlined class="nomal-select" hideDetails color="primary2" flat></v-select>
 				</v-flex>
 			</v-layout>
 			<v-layout align-center wrap class="mt-4">
@@ -309,8 +309,8 @@ export default {
 				.dispatch('assignments', {
 					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
 					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					end_gte: this.$moment().format('HH:mm:ss') + '.000',
 					businessID: this.$store.state.meData.businessID,
-					userID: this.$store.state.meData.id,
 					status: 'assignment',
 					sort: 'created_at:desc',
 				})
@@ -373,6 +373,7 @@ export default {
 				.dispatch('assignments', {
 					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
 					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					end_gte: this.$moment().format('HH:mm:ss') + '.000',
 					businessID: this.$store.state.meData.businessID,
 					userID: this.$store.state.meData.id,
 					sort: 'created_at:desc',

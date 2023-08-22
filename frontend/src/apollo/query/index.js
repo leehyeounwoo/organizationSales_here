@@ -403,9 +403,11 @@ export const assignments = gql`
 		$businessID: String
 		$userID: String
 		$sort: String
+		$end_gte: Time
 	) {
 		assignments(
 			where: {
+				end_gte: $end_gte
 				productID: $productArr
 				created_at_lte: $created_at_lte
 				created_at_gte: $created_at_gte

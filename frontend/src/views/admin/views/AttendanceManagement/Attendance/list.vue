@@ -221,9 +221,10 @@ import detail from './detail.vue'
 import vacationStatus from './vacationStatus.vue'
 // import moment from 'moment'
 // import 'moment/locale/ko'
-
+import downloadExcel from 'vue-json-excel'
 export default {
 	components: {
+		downloadExcel,
 		selectBox,
 		txtField,
 		detail,
@@ -411,7 +412,6 @@ export default {
 			if (this.userIDArr !== []) {
 				input.userID = this.userIDArr
 			}
-			console.log(input)
 
 			await this.$store
 				.dispatch('users', input)
@@ -507,7 +507,6 @@ export default {
 		},
 
 		async vacationView(item) {
-			console.log(item)
 			await this.$store.dispatch('vacations', item).then(res => {
 				console.log(res.vacations)
 				console.log(this.userIDArr)
