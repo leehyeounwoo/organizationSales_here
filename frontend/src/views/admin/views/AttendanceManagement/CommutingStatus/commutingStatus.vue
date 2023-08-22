@@ -162,7 +162,7 @@ export default {
 		}
 		await this.viewUsers(data)
 		let data2 = {
-			data_gte: this.start_date_picker.date,
+			date_gte: this.start_date_picker.date,
 			date_lte: this.end_date_picker.date,
 			userID: this.userIDArr,
 			roleName: 'Counselor',

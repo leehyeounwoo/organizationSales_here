@@ -177,11 +177,11 @@ export const gotoWork = gql`
 `
 export const vacations = gql`
 	query vacations($idArr: [ID], $date: Date) {
-		vacations(where: { userID: $idArr, start: $date }) {
+		vacations(where: { userID: $idArr, date: $date }) {
 			id
 			created_at
 			rejectComment
-			gotoworks {
+			gotowork {
 				id
 				startWork
 				endWork
@@ -194,8 +194,7 @@ export const vacations = gql`
 			userID
 			adminInfo
 			vacationReason
-			start
-			end
+			date
 		}
 	}
 `

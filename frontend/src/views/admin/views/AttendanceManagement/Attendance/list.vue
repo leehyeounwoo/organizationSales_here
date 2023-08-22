@@ -367,9 +367,10 @@ export default {
 			start: 0,
 			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
-			roleName: 'Counselor',
+			// roleName: 'Counselor',
 			userID: this.userIDArr,
 		}
+		console.log(input3)
 		await this.gotoworksView(input2)
 		await this.vacationView(input3)
 		this.$store.state.loading = false
@@ -508,7 +509,7 @@ export default {
 		async vacationView(item) {
 			console.log(item)
 			await this.$store.dispatch('vacations', item).then(res => {
-				console.log('res', res)
+				console.log(res.vacations)
 				console.log(this.userIDArr)
 				res.vacations.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
