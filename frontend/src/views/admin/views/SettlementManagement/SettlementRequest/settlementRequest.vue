@@ -453,7 +453,7 @@ export default {
 					date: this.$moment(this.date).format('YYYY-MM-DD'),
 				}
 
-				await this.viewUsers(range)
+				await this.usersView(range)
 			} else if (item.itemsPerPage !== this.table.itemsPerPage) {
 				// 한페이지에 보여줄 아이템 개수 변경
 				let range = {
@@ -464,7 +464,7 @@ export default {
 					date: this.$moment(this.date).format('YYYY-MM-DD'),
 				}
 
-				await this.viewUsers(range)
+				await this.usersView(range)
 			} else if (item.page < this.table.page) {
 				// 이전 페이지
 				let range = {
@@ -475,35 +475,20 @@ export default {
 					date: this.$moment(this.date).format('YYYY-MM-DD'),
 				}
 
-				await this.viewUsers(range)
+				await this.usersView(range)
 			}
 		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
+
+			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${date})`
 		},
 		update() {
 			let input = {
 				date: this.$moment(this.date).format('YYYY-MM-DD'),
 			}
 
-			this.viewUsers(input)
+			this.usersView(input)
 		},
 		click_date_before() {
 			let input = {
@@ -512,7 +497,7 @@ export default {
 					.format('YYYY-MM-DD'),
 			}
 
-			this.viewUsers(input)
+			this.usersView(input)
 
 			this.date = this.$moment(this.date).subtract(1, 'd')
 		},
@@ -523,7 +508,7 @@ export default {
 					.format('YYYY-MM-DD'),
 			}
 
-			this.viewUsers(input)
+			this.usersView(input)
 			this.date = this.$moment(this.date).add(1, 'd')
 		},
 		click_date_now() {
@@ -531,7 +516,7 @@ export default {
 				date: this.$moment().format('YYYY-MM-DD'),
 			}
 
-			this.viewUsers(input)
+			this.usersView(input)
 			this.date = this.$moment()
 		},
 		click_date_picker() {
@@ -541,7 +526,7 @@ export default {
 			if (this.$store.state.meData.role.id !== '4') {
 				input.business = this.$store.state.meData.businessID
 			}
-			this.viewUsers(input)
+			this.usersView(input)
 			this.date = this.$moment(this.date_picker.date)
 		},
 		editUserData(val) {
