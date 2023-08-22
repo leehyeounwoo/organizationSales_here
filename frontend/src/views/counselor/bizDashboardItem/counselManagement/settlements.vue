@@ -247,7 +247,6 @@ export default {
 					}
 				}
 				this.$store.dispatch('settlementsList', data).then(res => {
-					console.log(res.settlements)
 					this.total = res.settlements.length
 					for (let index = 0; index < res.settlements.length; index++) {
 						const el = res.settlements[index]
