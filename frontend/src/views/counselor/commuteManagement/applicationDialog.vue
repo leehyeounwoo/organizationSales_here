@@ -131,26 +131,25 @@ export default {
 			}
 		},
 		async createVacationAction(data, index) {
+			// await this.$store
+			// 	.dispatch('createGotowork', {
+			// 		date: data.date,
+			// 		userID: this.$store.state.meData.id,
+			// 		status: data.vacationType,
+			// 	})
+			// 	.then(async res => {
+			// 		data.gotowork = res.createGotowork.gotowork.id
 			await this.$store
-				.dispatch('createGotowork', {
-					date: data.date,
-					userID: this.$store.state.meData.id,
-					status: data.vacationType,
+				.dispatch('createVacation', data)
+				.then(() => {
+					if (index === this.checkData.length - 1) {
+						this.dialog.open = false
+					}
 				})
-				.then(async res => {
-					console.log(res)
-					data.gotowork = res.createGotowork.gotowork.id
-					await this.$store
-						.dispatch('createVacation', data)
-						.then(() => {
-							if (index === this.checkData.length - 1) {
-								this.dialog.open = false
-							}
-						})
-						.catch(err => {
-							console.log({ err })
-						})
+				.catch(err => {
+					console.log({ err })
 				})
+			// })
 		},
 		dayOfTheWeek(val) {
 			if (val === '0') {
