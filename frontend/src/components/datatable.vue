@@ -1799,9 +1799,9 @@
 							? '대기'
 							: item.settlementStatus === 'agree'
 							? '승인'
-							: item.settlementStatus === null
-							? ''
-							: '반려'
+							: item.settlementStatus === 'disagree'
+							? '반려'
+							: '-'
 					}}
 				</div>
 			</template>

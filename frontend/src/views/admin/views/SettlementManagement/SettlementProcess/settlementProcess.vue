@@ -1504,7 +1504,7 @@ export default {
 				this.sweetDialog_false.modalValue = ''
 				this.sweetDialog_false.buttonType = 'oneBtn'
 				this.sweetDialog_false.open = true
-			} else if (this.timessel.value === '5차' && this.paymentRateSum.txtField.value !== '100%') {
+			} else if (this.paymentRateSum.txtField.value !== '100') {
 				this.sweetDialog_false.title = `저장 실패`
 				this.sweetDialog_false.content = `지급 비율이 100%가 아닙니다`
 				this.sweetDialog_false.modalValue = ''

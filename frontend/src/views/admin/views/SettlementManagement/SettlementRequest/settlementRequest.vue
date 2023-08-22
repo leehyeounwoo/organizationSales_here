@@ -275,6 +275,7 @@ export default {
 		await this.searchSelect()
 		const settlementData = {
 			date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+			// settlementStatus: 'agree',
 		}
 		await this.settlementView(settlementData)
 		const usersViewData = {
@@ -345,6 +346,7 @@ export default {
 
 		async settlementView(settlementData) {
 			await this.$store.dispatch('settlements', settlementData).then(res => {
+				console.log(res)
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
@@ -417,13 +419,27 @@ export default {
 		},
 
 		async productsView(productsViewData) {
-			await this.$store.dispatch('products', productsViewData).then(res =>
-				res.products.forEach(element => {
-					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
-					listData.products = element
-					listData.product = element.housingType + element.dong + '동' + element.ho + '호'
-				}),
-			)
+			await this.$store.dispatch('products', productsViewData).then(res => {
+				for (let index = 0; index < this.list.length; index++) {
+					const element = this.list[index]
+
+					let productData = res.products.filter(x => x.id === element.ProductID)
+
+					if (productData.length > 0) {
+						element.products = productData[0]
+						element.product = productData[0].housingType + productData[0].dong + '동' + productData[0].ho + '호'
+					}
+				}
+			})
+
+			// res.products.forEach(element => {
+			// 	let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
+			// 	console.log(this.list.filter(x => x.ProductID === element.id))
+			// 	console.log(this.list)
+			// 	listData.products = element
+			// 	listData.product = element.housingType + element.dong + '동' + element.ho + '호'
+			// }),
+			// )
 		},
 
 		async pagination(item) {
