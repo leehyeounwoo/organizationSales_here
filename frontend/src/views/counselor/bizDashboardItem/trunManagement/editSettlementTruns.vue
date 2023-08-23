@@ -272,8 +272,7 @@ export default {
 			this.$store.dispatch('me').then(() => {
 				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
 					this.productDatas = res.products
-					console.log(this.settlement)
-					if (this.settlement.settlementStatus === 'disagree')
+					if (this.settlement.paymentReject)
 						this.open_disable_dialog(
 							{
 								title: '반려사유',
@@ -281,13 +280,7 @@ export default {
 							},
 							'warning',
 						)
-					if (this.settlement.totalPrice) {
-						// this.moneyDatatable.items.push({
-						// 	trun: el.turnTableDegree,
-						// 	contractDate: el.prePaymentDate,
-						// 	product_settlements: el.
-						// })
-					}
+
 					if (this.settlement.settlement_turn_tables.length > 0) {
 						let totalamountValue = 0
 						let totalamout = 0
@@ -304,7 +297,6 @@ export default {
 								totalamountValue += Math.floor((el.amount / this.settlement.totalPrice) * 100)
 							}
 							if (index === this.settlement.settlement_turn_tables.length - 1) {
-								console.log(totalamountValue)
 								this.moneyDatatable.items.push({
 									trun: '지급금액',
 									contractDate: '',

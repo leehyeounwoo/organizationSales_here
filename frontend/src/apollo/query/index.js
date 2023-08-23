@@ -458,6 +458,7 @@ export const settlementsList = gql`
 			}
 		) {
 			id
+			paymentReject
 			ProductID
 			userID
 			contractDate
