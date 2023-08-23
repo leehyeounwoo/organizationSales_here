@@ -280,7 +280,7 @@ export default {
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '10%' },
 					{ text: '등록일', value: 'created_at', align: 'center', width: '7%' },
-					{ text: '팀', value: 'team', align: 'center', width: '7%' },
+					{ text: '팀', value: 'team_rank', align: 'center', width: '7%' },
 					{ text: '상태', value: 'data5', align: 'center', width: '7%' },
 					{ text: '출근시간', value: 'data3', align: 'center', width: '10%' },
 					{ text: '퇴근시간', value: 'data4', align: 'center', width: '10%' },
@@ -378,7 +378,7 @@ export default {
 		}
 		await this.gotoworksView(input2)
 		await this.vacationView(input3)
-		// await this.dataSetting()
+		await this.dataSetting()
 		this.$store.state.loading = false
 	},
 	mounted() {},
@@ -390,10 +390,8 @@ export default {
 			})
 		},
 		async dataSetting() {
-			console.log(this.teamData)
-			console.log(this.rankData)
 			for (let index = 0; index < this.userLists.length; index++) {
-				const element = this.userData[index]
+				const element = this.userLists[index]
 				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
 				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
 
@@ -408,7 +406,9 @@ export default {
 					element.rankTitle = rankTitle
 				}
 				if (teamData && rankData) {
-					element.team_rank = `${teamData.title}(${rankData.rankName})`
+					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else {
+					element.team_rank = '-'
 				}
 				element.salesPhoneNumber_txtField = {
 					value: '',
@@ -425,8 +425,8 @@ export default {
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 			}
-			this.table.items = JSON.parse(JSON.stringify(this.userData))
-			this.table.origin_items = JSON.parse(JSON.stringify(this.userData))
+			this.table.items = JSON.parse(JSON.stringify(this.userLists))
+			this.table.origin_items = JSON.parse(JSON.stringify(this.userLists))
 		},
 		async getTeams() {
 			let data = {
@@ -499,7 +499,8 @@ export default {
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 							: '-'
 						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
-						listData.team = element.teamID ? element.teamID + '/' + element.rankID : '-'
+						listData.teamID = element.teamID ? element.teamID : '-'
+						listData.rankID = element.rankID ? element.rankID : '-'
 						listData.history = element.history ? element.history : []
 						listData.data5 === '미확인' ? (listData.vacation = '-') : ''
 						list.push(listData)
