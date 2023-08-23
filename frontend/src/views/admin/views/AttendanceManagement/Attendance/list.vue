@@ -367,6 +367,7 @@ export default {
 			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
 			roleName: 'Counselor',
+			userID: this.userIDArr,
 		}
 		let input3 = {
 			start: 0,
@@ -527,51 +528,44 @@ export default {
 		},
 
 		async gotoworksView(input2) {
-			console.log(this.userLists)
 			await this.$store.dispatch('gotoWork', input2).then(res2 => {
-				console.log(res2)
 				res2.gotoworks.forEach(element2 => {
 					let workIndex = this.userLists.findIndex(item => item.id === element2.userID)
-					if (workIndex !== -1) {
-						console.log(workIndex)
-						this.userLists[workIndex]['gotoworksAll'] = element2 ? element2 : []
-						this.userLists[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
-						this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
-						this.userLists[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
-						this.endTime = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
-						this.userLists[workIndex]['data5'] =
-							element2.status === 'endWork'
-								? '퇴근'
-								: element2.status === 'afternoonVacation'
-								? '오후반차'
-								: element2.status === 'morningVacation'
-								? '오전반차'
-								: element2.status === 'vacation'
-								? '휴가'
-								: '출근'
-						if (element2.status === 'vacation') {
-							this.userLists[workIndex]['data6'] = true
-							this.userLists[workIndex]['data7'] = true
-							this.userLists[workIndex]['data8'] = '-'
-						} else {
-							this.userLists[workIndex]['data6'] = element2.startWork ? true : false
-							this.userLists[workIndex]['data7'] = element2.endWork ? true : false
-						}
-
-						if (element2.startWork && element2.endWork) {
-							this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
-						}
-
-						this.table.items = this.userLists
+					this.userLists[workIndex]['gotoworksAll'] = element2 ? element2 : []
+					this.userLists[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
+					this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
+					this.userLists[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
+					this.endTime = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
+					this.userLists[workIndex]['data5'] =
+						element2.status === 'endWork'
+							? '퇴근'
+							: element2.status === 'afternoonVacation'
+							? '오후반차'
+							: element2.status === 'morningVacation'
+							? '오전반차'
+							: element2.status === 'vacation'
+							? '휴가'
+							: '출근'
+					if (element2.status === 'vacation') {
+						this.userLists[workIndex]['data6'] = true
+						this.userLists[workIndex]['data7'] = true
+						this.userLists[workIndex]['data8'] = '-'
+					} else {
+						this.userLists[workIndex]['data6'] = element2.startWork ? true : false
+						this.userLists[workIndex]['data7'] = element2.endWork ? true : false
 					}
+
+					if (element2.startWork && element2.endWork) {
+						this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
+					}
+
+					this.table.items = this.userLists
 				})
 			})
 		},
 
 		async vacationView(item) {
 			await this.$store.dispatch('vacations', item).then(res => {
-				console.log(res.vacations)
-				console.log(this.userIDArr)
 				res.vacations.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
@@ -656,6 +650,7 @@ export default {
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -681,6 +676,7 @@ export default {
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -704,6 +700,7 @@ export default {
 			let input2 = {
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -724,6 +721,7 @@ export default {
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -801,6 +799,7 @@ export default {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
 						roleName: 'Counselor',
+						userID: this.userIDArr,
 					}
 					// let input2 = {
 					// 	roleName: 'Counselor',
@@ -820,6 +819,7 @@ export default {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
 						roleName: 'Counselor',
+						userID: this.userIDArr,
 					}
 					// let input2 = {
 					// 	roleName: 'Counselor',
@@ -838,6 +838,7 @@ export default {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
 						roleName: 'Counselor',
+						userID: this.userIDArr,
 					}
 					let input2 = {
 						roleName: 'Counselor',
@@ -873,6 +874,7 @@ export default {
 				start: 0,
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
