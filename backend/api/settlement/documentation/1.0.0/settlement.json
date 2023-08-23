@@ -530,11 +530,12 @@
           },
           "settlementStatus": {
             "type": "string",
-            "default": "waiting",
+            "default": "created",
             "enum": [
               "agree",
               "waiting",
-              "disagree"
+              "disagree",
+              "created"
             ]
           },
           "degree": {
@@ -711,11 +712,12 @@
           },
           "settlementStatus": {
             "type": "string",
-            "default": "waiting",
+            "default": "created",
             "enum": [
               "agree",
               "waiting",
-              "disagree"
+              "disagree",
+              "created"
             ]
           },
           "degree": {

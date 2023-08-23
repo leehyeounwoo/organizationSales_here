@@ -22,9 +22,10 @@
       "enum": [
         "agree",
         "waiting",
-        "disagree"
+        "disagree",
+        "created"
       ],
-      "default": "waiting"
+      "default": "created"
     },
     "degree": {
       "type": "string"
