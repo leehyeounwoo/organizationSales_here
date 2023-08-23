@@ -267,18 +267,7 @@ export default {
 			}
 			this.sweetDialog.open = true
 		},
-		async getworkTime() {
-			this.$store.state.loading = true
 
-			let input = {
-				user: this.setdialog.editData.all.id,
-				status_check: ['startWork', 'endWork'],
-			}
-			await this.$store.dispatch('gotoWork', input).then(res => {
-				this.leftInfoTop[6].value = res.gotoworksConnection.aggregate.count + '일'
-				this.$store.state.loading = false
-			})
-		},
 		async me() {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.me
