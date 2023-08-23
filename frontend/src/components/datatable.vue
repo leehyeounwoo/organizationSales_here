@@ -109,14 +109,17 @@
 					:class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''"
 					v-if="item.trun === '지급금액' || item.trun === '잔여금액'"
 				></div>
+				<div v-else-if="item.trun !== '지급금액' && item.trun !== '잔여금액' && !item.depositFile">{{ item.trun }}차 지급대기</div>
 				<v-btn
 					v-else
 					:class="item.trun === '지급금액' ? 'send-color' : item.trun === '잔여금액' ? 'leave-color' : ''"
-					icon
 					v-show="item.depositFile"
 					color="primary2"
+					small
+					dark
+					elevation="0"
 					@click="e => viewAttachment(e, item.depositFile.url)"
-					><v-icon>mdi-file</v-icon></v-btn
+					><v-icon>mdi-file</v-icon> {{ item.trun }}차 지급완료</v-btn
 				>
 			</template>
 			<template v-slot:[`item.holding_product`]="{ item }">

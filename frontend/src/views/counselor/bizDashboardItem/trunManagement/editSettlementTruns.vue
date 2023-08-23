@@ -299,8 +299,10 @@ export default {
 								amount: el.amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','),
 								depositFile: el.depositFile,
 							})
-							totalamout += el.amount
-							totalamountValue += Math.floor((el.amount / this.settlement.totalPrice) * 100)
+							if (el.depositFile) {
+								totalamout += el.amount
+								totalamountValue += Math.floor((el.amount / this.settlement.totalPrice) * 100)
+							}
 							if (index === this.settlement.settlement_turn_tables.length - 1) {
 								console.log(totalamountValue)
 								this.moneyDatatable.items.push({
