@@ -275,7 +275,7 @@ export default {
 					if (this.settlement.paymentReject)
 						this.open_disable_dialog(
 							{
-								title: '반려사유',
+								title: '정산요청 반려사유',
 								content: `${this.settlement.rejectComment}`,
 							},
 							'warning',
