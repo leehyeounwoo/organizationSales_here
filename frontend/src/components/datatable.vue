@@ -45,6 +45,15 @@
 				{{ header.text }}
 				<v-icon small style="background-color:white; border: 0.1px solid gray;" @click="teamChoiceClick">mdi-format-list-group-plus</v-icon>
 			</template>
+			<template v-slot:[`item.settlement_turn_tables`]="{ item }">
+				<div v-if="item.settlement_turn_tables.length > 0">
+					{{
+						item.settlement_turn_tables.filter(x => x.depositFile !== null && x.PaymentDate !== null).length === 0
+							? '지급대기'
+							: item.settlement_turn_tables.filter(x => x.depositFile !== null && x.PaymentDate !== null)[0].turnTableDegree + '차 지급완료'
+					}}
+				</div>
+			</template>
 			<template v-slot:[`item.holdingDashboardUser`]="{ item }">
 				<div>
 					{{ `${item.assingnmentTeamData.title} / ${item.assingnmentUserData.username}` }}

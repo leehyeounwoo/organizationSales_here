@@ -212,13 +212,15 @@
 					<span style="color:white;	font-weight: bold;"> {{ $route.name === 'editSettlement' ? '수정하기' : '등록하기' }} </span>
 				</v-btn>
 				<v-btn
-					v-if="$route.name === 'editSettlement'"
+					v-if="
+						$route.name === 'editSettlement' && (settlement.settlementStatus === 'created' || settlement.settlementStatus === 'disagree')
+					"
 					elevation="0"
 					height="48"
 					class="loginButton_small"
 					block
 					color="primary"
-					@click="$router.push({ name: 'settlementTruns' })"
+					@click="updateSettlement_front"
 					rounded
 				>
 					<span style="color:white;	font-weight: bold;"> 정산등록하기 </span>
@@ -233,7 +235,13 @@
 			/>
 			<sweetAlert
 				:dialog="sweetInfo"
-				@close_active="sweetInfo.title === '등록완료' || sweetInfo.title === '접근불가' ? $router.push({ name: 'settlements' }) : ''"
+				@close_active="
+					sweetInfo.title === '등록완료' || sweetInfo.title === '접근불가'
+						? $router.push({ name: 'settlements' })
+						: sweetInfo.title === '정산요청완료'
+						? this.$router.push({ name: 'settlementTruns' })
+						: ''
+				"
 			/>
 		</div>
 	</v-layout>
@@ -314,6 +322,11 @@ export default {
 		} else this.products()
 	},
 	methods: {
+		updateSettlement_front() {
+			this.$store.dispatch('updateSettlement_front', { id: this.settlement.id, settlementStatus: 'waiting' }).then(() => {
+				this.open_disable_dialog({ title: '정산요청완료', content: '정상적으로 요청 되었습니다.' }, 'success')
+			})
+		},
 		product1Change(val) {
 			this.products2 = this.productDatas.filter(x => x.housingType === val).map(x => x.dong)
 			this.product2 = ''

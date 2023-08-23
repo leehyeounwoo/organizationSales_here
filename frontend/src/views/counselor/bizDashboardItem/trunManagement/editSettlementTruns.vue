@@ -14,7 +14,7 @@
 						</v-btn>
 					</div>
 					<span>
-						계약등록
+						정산요청
 					</span>
 				</v-layout>
 			</div>

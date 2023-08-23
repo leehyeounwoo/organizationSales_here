@@ -162,7 +162,7 @@ export default {
 						align: 'center',
 						value: 'product_settlements',
 					},
-					{ text: '상태', value: 'settlementStatus', align: 'center' },
+					{ text: '상태', value: 'settlement_turn_tables', align: 'center' },
 				],
 				class: 'mt-0',
 				items: [],
@@ -220,6 +220,7 @@ export default {
 			this.$store.dispatch('me').then(() => {
 				const data = {
 					userID: this.$store.state.meData.id,
+					settlementStatus: 'agree',
 				}
 				if (type !== 'first') {
 					data.contractDate_gte =
@@ -245,6 +246,7 @@ export default {
 					}
 				}
 				this.$store.dispatch('settlementsList', data).then(res => {
+					console.log(res.settlements)
 					this.total = res.settlements.length
 					for (let index = 0; index < res.settlements.length; index++) {
 						const el = res.settlements[index]

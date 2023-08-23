@@ -771,11 +771,13 @@ export const updateSettlement_front = gql`
 		$location: String
 		$subLocation: String
 		$id: ID!
+		$settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS
 	) {
 		updateSettlement(
 			input: {
 				where: { id: $id }
 				data: {
+					settlementStatus: $settlementStatus
 					ProductID: $ProductID
 					contractDate: $contractDate
 					userID: $userID
