@@ -407,7 +407,7 @@ export default {
 							) -
 								this.secondChange(this.$moment().format('HH:mm'))) /
 								60}분`
-					} else if (myData[0].status === 'reject') this.holdingText = '미승인 [다시 홀딩 요청하기]'
+					} else if (myData.length > 0 ? myData[0].status === 'reject' : false) this.holdingText = '미승인 [다시 홀딩 요청하기]'
 					else if (myData.filter(x => x.status === 'waiting').length === 0) this.holdingText = '홀딩 요청'
 					else if (myData.filter(x => x.status === 'waiting').length > 0) {
 						const holdingData = myData.filter(x => x.status === 'waiting')[0]
