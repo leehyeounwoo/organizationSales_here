@@ -592,7 +592,7 @@ export default {
 			let count = this.$moment.duration(this.$moment(endDate).diff(this.$moment(startDate))).asDays() + 1
 			let result = []
 			this.table.headers = [
-				{ text: '상담사', value: 'name', align: 'center', width: '100px' },
+				{ text: '상담사', value: 'name', align: 'center', width: '183px' },
 				{ text: '팀', value: 'team', align: 'center', width: '100px' },
 				{ text: '근무일', value: 'workday', align: 'center', width: '100px' },
 				{ text: '휴무일', value: 'holiday', align: 'center', width: '100px' },
