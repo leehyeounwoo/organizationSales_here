@@ -597,6 +597,9 @@
               "subLocation": {
                 "type": "string"
               },
+              "paymentReject": {
+                "type": "boolean"
+              },
               "published_at": {
                 "type": "datetime"
               },

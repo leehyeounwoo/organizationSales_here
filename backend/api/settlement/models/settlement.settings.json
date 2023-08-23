@@ -75,6 +75,10 @@
     },
     "subLocation": {
       "type": "text"
+    },
+    "paymentReject": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -697,6 +697,10 @@
           "subLocation": {
             "type": "string"
           },
+          "paymentReject": {
+            "type": "boolean",
+            "default": false
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -759,6 +763,10 @@
           },
           "subLocation": {
             "type": "string"
+          },
+          "paymentReject": {
+            "type": "boolean",
+            "default": false
           },
           "published_at": {
             "type": "datetime"
