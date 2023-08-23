@@ -801,11 +801,13 @@ export default {
 						roleName: 'Counselor',
 						userID: this.userIDArr,
 					}
-					// let input2 = {
-					// 	roleName: 'Counselor',
-					// }
-					// await this.viewUsers(input2)
+					let input2 = {
+						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.dataSetting()
 				})
 				.catch(err => {
 					console.log({ err })
@@ -821,11 +823,13 @@ export default {
 						roleName: 'Counselor',
 						userID: this.userIDArr,
 					}
-					// let input2 = {
-					// 	roleName: 'Counselor',
-					// }
-					// await this.viewUsers(input2)
+					let input2 = {
+						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.dataSetting()
 				})
 				.catch(err => {
 					console.log({ err })
