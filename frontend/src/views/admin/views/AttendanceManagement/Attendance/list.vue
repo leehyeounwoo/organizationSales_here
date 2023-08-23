@@ -280,7 +280,7 @@ export default {
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '10%' },
 					{ text: '등록일', value: 'created_at', align: 'center', width: '7%' },
-					{ text: '팀', value: 'team', align: 'center', width: '7%' },
+					{ text: '팀', value: 'team_rank', align: 'center', width: '7%' },
 					{ text: '상태', value: 'data5', align: 'center', width: '7%' },
 					{ text: '출근시간', value: 'data3', align: 'center', width: '10%' },
 					{ text: '퇴근시간', value: 'data4', align: 'center', width: '10%' },
@@ -345,6 +345,8 @@ export default {
 			},
 			userLists: [],
 			userIDArr: [],
+			teamData: [],
+			rankData: [],
 		}
 	},
 
@@ -352,10 +354,12 @@ export default {
 		this.$store.state.loading = true
 		await this.me()
 		await this.getTeams()
+		await this.getRanks()
 		let input = {
 			start: 0,
 			limit: 10,
 			roleName: 'Counselor',
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.viewUsers(input)
 		let input2 = {
@@ -363,6 +367,7 @@ export default {
 			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
 			roleName: 'Counselor',
+			userID: this.userIDArr,
 		}
 		let input3 = {
 			start: 0,
@@ -371,9 +376,9 @@ export default {
 			// roleName: 'Counselor',
 			userID: this.userIDArr,
 		}
-		console.log(input3)
 		await this.gotoworksView(input2)
 		await this.vacationView(input3)
+		await this.dataSetting()
 		this.$store.state.loading = false
 	},
 	mounted() {},
@@ -381,18 +386,73 @@ export default {
 	methods: {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
-				this.$store.state.meData = res.data
-				console.log(this.$store.state.meData)
+				this.$store.state.meData = res.me
 			})
 		},
+		async dataSetting() {
+			for (let index = 0; index < this.userLists.length; index++) {
+				const element = this.userLists[index]
+				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
+
+				let teamTitle = '-'
+				let rankTitle = '-'
+				if (teamData) {
+					teamTitle = teamData.id
+					element.teamTitle = teamTitle
+				}
+				if (rankData) {
+					rankTitle = rankData.id
+					element.rankTitle = rankTitle
+				}
+				if (teamData && rankData) {
+					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else {
+					element.team_rank = '-'
+				}
+				element.salesPhoneNumber_txtField = {
+					value: '',
+					txtfield: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: false,
+						errorMessage: '',
+						placeholder: '',
+					},
+				}
+				element.workingStatusName = element.workingStatus ? '재직' : '퇴사'
+				element.created_at_format = this.$moment(element.created_at).format('YYYY년MM월DD일')
+				element.teamItems = this.teamData
+				element.rankItems = this.rankData
+			}
+			this.table.items = JSON.parse(JSON.stringify(this.userLists))
+			this.table.origin_items = JSON.parse(JSON.stringify(this.userLists))
+		},
 		async getTeams() {
-			let data = {}
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
 
 			await this.$store.dispatch('teams', data).then(res => {
 				this.searchsel1.items = JSON.parse(JSON.stringify(res.teams))
 				this.searchsel1.items.unshift('전체')
 				this.searchsel1.value = '전체'
+				this.teamData = res.teams
 			})
+		},
+		async getRanks() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.$store
+				.dispatch('ranks', data)
+				.then(res => {
+					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
 		},
 		async viewUsers(input) {
 			this.$store.state.loading = true
@@ -439,10 +499,10 @@ export default {
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 							: '-'
 						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
-						listData.team = element.teamID ? element.teamID + '팀' : '-'
+						listData.teamID = element.teamID ? element.teamID : '-'
+						listData.rankID = element.rankID ? element.rankID : '-'
 						listData.history = element.history ? element.history : []
 						listData.data5 === '미확인' ? (listData.vacation = '-') : ''
-
 						list.push(listData)
 						this.table.total = res.usersConnection.aggregate.count
 						this.table.page = input.page
@@ -472,7 +532,7 @@ export default {
 			await this.$store.dispatch('gotoWork', input2).then(res2 => {
 				res2.gotoworks.forEach(element2 => {
 					let workIndex = this.userLists.findIndex(item => item.id === element2.userID)
-					this.userLists[workIndex]['gotoworksAll'] = element2
+					this.userLists[workIndex]['gotoworksAll'] = element2 ? element2 : []
 					this.userLists[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
 					this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
 					this.userLists[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
@@ -499,30 +559,24 @@ export default {
 					if (element2.startWork && element2.endWork) {
 						this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
 					}
-
-					this.table.items = this.userLists
 				})
 			})
 		},
 
 		async vacationView(item) {
 			await this.$store.dispatch('vacations', item).then(res => {
-				console.log(res.vacations)
-				console.log(this.userIDArr)
 				res.vacations.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
-					this.userLists[workIndex]['vacationStart'] = el.start
-					this.userLists[workIndex]['vacationEnd'] = el.end
+					// this.userLists[workIndex]['vacationStart'] = el.start
+					// this.userLists[workIndex]['vacationEnd'] = el.end
+					this.userLists[workIndex]['vacationDate'] = el.date
 					this.userLists[workIndex]['vacationReason'] = el.vacationReason
 					this.userLists[workIndex]['vacation'] = el.vacationStatus
 					this.userLists[workIndex]['vacationType'] = el.vacationType
 					this.userLists[workIndex]['vacationCreated_at'] = el.created_at
 					this.userLists[workIndex]['vacationID'] = el.id
 					this.userLists[workIndex]['vacationRejectComment'] = el.rejectComment
-
-					this.table.items = this.userLists
-					console.log('최종', this.table.items)
 				})
 			})
 		},
@@ -564,24 +618,35 @@ export default {
 			}
 		},
 
-		update() {
+		async update() {
 			let input = {
-				date: this.$moment(this.date).format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 			}
-
+			let input2 = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+			}
+			let input3 = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+			}
 			this.viewUsers(input)
+			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 		},
 
 		async click_date_before() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -595,17 +660,20 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		async click_date_next() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -619,15 +687,18 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		async click_date_now() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -639,14 +710,17 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -658,6 +732,7 @@ export default {
 			await this.vacationView(input3)
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.dataSetting()
 			this.date = this.$moment(this.date_picker.date)
 		},
 
@@ -724,12 +799,15 @@ export default {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
 						roleName: 'Counselor',
+						userID: this.userIDArr,
 					}
-					// let input2 = {
-					// 	roleName: 'Counselor',
-					// }
-					// await this.viewUsers(input2)
+					let input2 = {
+						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.dataSetting()
 				})
 				.catch(err => {
 					console.log({ err })
@@ -743,12 +821,15 @@ export default {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
 						roleName: 'Counselor',
+						userID: this.userIDArr,
 					}
-					// let input2 = {
-					// 	roleName: 'Counselor',
-					// }
-					// await this.viewUsers(input2)
+					let input2 = {
+						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.dataSetting()
 				})
 				.catch(err => {
 					console.log({ err })
@@ -761,12 +842,15 @@ export default {
 					let input = {
 						date: this.$moment(this.date).format('YYYY-MM-DD'),
 						roleName: 'Counselor',
+						userID: this.userIDArr,
 					}
 					let input2 = {
 						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
 					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.dataSetting()
 				})
 				.catch(err => {
 					console.log({ err })
@@ -789,11 +873,13 @@ export default {
 				start: 0,
 				limit: 10,
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				start: 0,
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
@@ -805,6 +891,7 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 		},
 		gotoWorkDialogOpen(item) {
 			this.editGotoworkData = {
@@ -896,6 +983,7 @@ export default {
 			this.newDialog2.editData = item
 		},
 		click_vacation_status(item) {
+			console.log(item)
 			this.newDialog.title = '신청 연차 관리'
 			this.newDialog.dialog = true
 			this.newDialog.edit = true

@@ -3037,13 +3037,6 @@ td:has(.leave-color) {
 		}
 	}
 }
-.product_table {
-	border: 1px solid #cfdcdd !important;
-	border-radius: 0;
-	.v-btn__content {
-		color: black;
-	}
-}
 .status_box {
 	// width: 60px;
 	border: 1px solid #c5c5c5;

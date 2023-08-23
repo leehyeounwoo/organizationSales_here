@@ -424,23 +424,23 @@ export default {
 		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY-MM-DD') + ` (${text})`
+			// let text
+			// if (date === 'Sun') {
+			// 	text = '일'
+			// } else if (date === 'Mon') {
+			// 	text = '월'
+			// } else if (date === 'Tue') {
+			// 	text = '화'
+			// } else if (date === 'Wed') {
+			// 	text = '수'
+			// } else if (date === 'Thu') {
+			// 	text = '목'
+			// } else if (date === 'Fri') {
+			// 	text = '금'
+			// } else if (date === 'Sat') {
+			// 	text = '토'
+			// }
+			return this.$moment(val).format('YYYY-MM-DD') + ` (${date})`
 		},
 		workStatusChange(data) {
 			if (data === 'vacation') {
@@ -565,12 +565,18 @@ export default {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
-						this.leftInfoTop[3].value = this.setdialog.editData.all.businessID
+						let itemName = ''
+						for (let i = 0; i < this.$store.state.businessSelectBox.items.length; i++) {
+							if (this.$store.state.businessSelectBox.items[i].id === this.setdialog.editData.all.businessID) {
+								itemName = this.$store.state.businessSelectBox.items[i].name
+								break
+							} else {
+								itemName = '-'
+							}
+						}
+						this.leftInfoTop[3].value = itemName
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
-						this.leftInfoTop[5].value = this.setdialog.editData.team
-							? this.setdialog.editData.team +
-							  (this.setdialog.editData.all.rankId ? '/' + '상담사' : '/' + this.setdialog.editData.all.rankId)
-							: '-'
+						this.leftInfoTop[5].value = this.setdialog.editData.team_rank ? this.setdialog.editData.team_rank : '-'
 
 						this.leftInfoTop[7].value = this.setdialog.editData.teamID
 

@@ -3361,3 +3361,10 @@ input[type='number']::-webkit-inner-spin-button {
 	background: #3e7ccc !important;
 	border-radius: 0 !important;
 }
+.product_table {
+	border: 1px solid #cfdcdd !important;
+	border-radius: 0 !important;
+	.v-btn__content {
+		color: black !important;
+	}
+}
