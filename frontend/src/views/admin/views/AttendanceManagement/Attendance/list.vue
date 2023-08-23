@@ -102,7 +102,9 @@
 				</v-layout>
 			</template>
 		</v-data-table>
-		<v-btn small class="btn-style3" @click="createUnattendedVacation()"> <span style="color: white;">연차신청 미처리 : 00건</span> </v-btn>
+		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
+			<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
+		</v-btn>
 		<v-btn small class="btn-style2" @click="clickExport()">
 			<img src="@/assets/images/excel-img2.png" />
 			엑셀 다운로드
@@ -239,6 +241,7 @@ export default {
 
 	data() {
 		return {
+			unattendedLength: 0,
 			date: this.$moment(),
 			startTimeDialog: false,
 			endTimeDialog: false,
@@ -382,6 +385,7 @@ export default {
 			userID: this.userIDArr,
 		}
 		await this.gotoworksView(input2)
+		await this.unattendedVacation()
 		await this.vacationView(input3)
 		await this.dataSetting()
 		this.$store.state.loading = false
@@ -998,6 +1002,18 @@ export default {
 			this.newDialog3.title = '미처리 연차 신청 현황'
 			this.newDialog3.dialog = true
 			this.newDialog3.edit = true
+		},
+		async unattendedVacation() {
+			let unattendedData = {
+				start: 0,
+				limit: 10,
+				vacationStatus: 'waiting',
+			}
+
+			await this.$store.dispatch('vacations', unattendedData).then(res => {
+				this.unattendedLength = res.vacations.length
+			})
+			console.log(this.unattendedLength)
 		},
 		vacation_filter(val) {
 			if (val) {

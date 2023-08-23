@@ -15,7 +15,6 @@
 							고객목록
 						</span>
 					</v-layout>
-
 					<datatable :datatable="unattendedTable" @click="checkVacationData" class="table_header datatablehover3"></datatable>
 				</v-flex>
 				<v-flex xs4 class="pl-11">
@@ -196,6 +195,7 @@ export default {
 			teamData: [],
 			rankData: [],
 			vacationData: [],
+			currentVacationData: {},
 		}
 	},
 	methods: {
@@ -214,39 +214,67 @@ export default {
 		async clickSave() {
 			this.$store.state.loading = true
 			if (this.rightInfoBottom[0].radio === 'agree') {
-				// const startDate = this.$moment(this.setdialog.editData.vacationStart)
-				// const currentDate = startDate.clone()
-				let input = {
-					date: this.setdialog.editData.vacationDate,
-					userID: this.setdialog.editData.id,
-					status: 'vacation',
-					vacation: this.setdialog.editData.vacationID,
-				}
-
-				await this.$store.dispatch('createGotowork', input).then(res => {
-					let input2 = {
-						id: this.setdialog.editData.vacationID,
-						vacationStatus: 'agree',
-						gotowork: res.createGotowork.gotowork.id,
-						adminInfo: this.$store.state.meData,
+				for (let i = 0; i < this.vacationData.length; i++) {
+					let input = {
+						date: this.vacationData[i].date,
+						userID: this.vacationData[i].userID,
+						status: 'vacation',
+						vacation: this.vacationData[i].id,
 					}
-					this.$store.dispatch('updateVacation', input2).then(() => {
-						this.sweetDialog.open = false
-						this.setdialog.dialog = false
-						this.$emit('update')
-						this.$store.state.loading = false
+					await this.$store.dispatch('createGotowork', input).then(res => {
+						let input2 = {
+							id: this.vacationData[i].id,
+							vacationStatus: 'agree',
+							gotowork: res.createGotowork.gotowork.id,
+							adminInfo: this.$store.state.meData,
+						}
+						this.$store.dispatch('updateVacation', input2).then(() => {
+							this.sweetDialog.open = false
+							this.setdialog.dialog = false
+							this.$emit('update')
+							this.$store.state.loading = false
+						})
 					})
-				})
+				}
 			} else {
 				let input2 = {
-					id: this.setdialog.editData.vacationID,
+					id: this.currentVacationData.id,
 					rejectComment: this.rightInfoBottom[1].value,
 					adminInfo: this.$store.state.meData,
 					vacationStatus: 'disagree',
 				}
-				this.$store.dispatch('updateVacation', input2).then(() => {
+				this.$store.dispatch('updateVacation', input2).then(async () => {
 					this.sweetDialog.open = false
-					this.setdialog.dialog = false
+					this.currentVacationData = {}
+					this.rightInfoBottom[1].value = ''
+					this.rightInfoTop[0].value = ''
+					this.rightInfoTop[1].value = ''
+					this.rightInfoTop[2].value = ''
+					await this.getTeams()
+					await this.getRanks()
+					let input3 = {
+						start: 0,
+						limit: 10,
+						vacationStatus: 'waiting',
+					}
+					let input = {
+						start: 0,
+						limit: 10,
+						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
+						idArr: this.userIDArr,
+					}
+					await this.vacationView(input3)
+					await this.viewUsers(input)
+					let input2 = {
+						start: 0,
+						limit: 10,
+						roleName: 'Counselor',
+						userID: this.userIDArr,
+					}
+
+					await this.gotoworksView(input2)
+					await this.dataSetting()
 					this.$emit('update')
 					this.$store.state.loading = false
 				})
@@ -254,7 +282,10 @@ export default {
 		},
 
 		checkVacationData(val) {
-			this.rightInfoTop[0].value = val.created_at
+			this.currentVacationData = {}
+			this.currentVacationData = val
+			console.log(this.currentVacationData)
+			this.rightInfoTop[0].value = val.date
 			this.rightInfoTop[1].value = val.vacationType
 			this.rightInfoTop[2].value = val.vacationReason
 		},
