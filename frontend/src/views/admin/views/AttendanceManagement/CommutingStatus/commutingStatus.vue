@@ -63,7 +63,7 @@
 									<td>
 										{{ d.username }}
 									</td>
-									<td style="border-right:1px solid #d1d1d1; ">{{ d.teamID }}팀 / {{ d.rankId === '1' ? '상담사' : '' }}</td>
+									<td style="border-right:1px solid #d1d1d1; ">{{ d.team_rank }}</td>
 									<td style="border-right:1px solid #d1d1d1; ">
 										{{ d.gotoworks.filter(x => x.status === 'endWork').length }}Day <br />
 										{{ allTimeCheck(d.gotoworks) }}
@@ -154,11 +154,14 @@ export default {
 	},
 	async created() {
 		await this.me()
+		await this.getTeams()
+		await this.getRanks()
 		await this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
 		let data = {
 			data_gte: this.start_date_picker.date,
 			date_lte: this.end_date_picker.date,
 			roleName: 'Counselor',
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.viewUsers(data)
 		let data2 = {
@@ -168,6 +171,7 @@ export default {
 			roleName: 'Counselor',
 		}
 		await this.gotoworksView(data2)
+		await this.dataSetting()
 	},
 	data() {
 		return {
@@ -432,6 +436,72 @@ export default {
 					.format('YYYY-MM-DD')
 			}
 		},
+		async dataSetting() {
+			console.log(this.userLists)
+			for (let index = 0; index < this.userLists.length; index++) {
+				const element = this.userLists[index]
+				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
+
+				let teamTitle = '-'
+				let rankTitle = '-'
+				if (teamData) {
+					teamTitle = teamData.id
+					element.teamTitle = teamTitle
+				}
+				if (rankData) {
+					rankTitle = rankData.id
+					element.rankTitle = rankTitle
+				}
+				if (teamData && rankData) {
+					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else {
+					element.team_rank = '-'
+				}
+				element.salesPhoneNumber_txtField = {
+					value: '',
+					txtfield: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: false,
+						errorMessage: '',
+						placeholder: '',
+					},
+				}
+				element.workingStatusName = element.workingStatus ? '재직' : '퇴사'
+				element.created_at_format = this.$moment(element.created_at).format('YYYY년MM월DD일')
+				element.teamItems = this.teamData
+				element.rankItems = this.rankData
+			}
+			this.table.items = JSON.parse(JSON.stringify(this.userLists))
+			this.table.origin_items = JSON.parse(JSON.stringify(this.userLists))
+		},
+		async getTeams() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+
+			await this.$store.dispatch('teams', data).then(res => {
+				this.searchsel1.items = JSON.parse(JSON.stringify(res.teams))
+				this.searchsel1.items.unshift('전체')
+				this.searchsel1.value = '전체'
+				this.teamData = res.teams
+			})
+		},
+		async getRanks() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.$store
+				.dispatch('ranks', data)
+				.then(res => {
+					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
+		},
 		async viewUsers(data) {
 			console.log(data)
 			this.$store.state.loading = true
@@ -510,10 +580,7 @@ export default {
 						}
 					}
 				})
-
-				console.log('유리', this.userLists)
 				this.table.items = this.userLists
-				console.log('디테', this.table.items)
 			})
 		},
 		headerCheckAction(startDate, endDate) {

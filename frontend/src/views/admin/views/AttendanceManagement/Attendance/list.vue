@@ -559,8 +559,6 @@ export default {
 					if (element2.startWork && element2.endWork) {
 						this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
 					}
-
-					this.table.items = this.userLists
 				})
 			})
 		},
@@ -579,9 +577,6 @@ export default {
 					this.userLists[workIndex]['vacationCreated_at'] = el.created_at
 					this.userLists[workIndex]['vacationID'] = el.id
 					this.userLists[workIndex]['vacationRejectComment'] = el.rejectComment
-
-					this.table.items = this.userLists
-					console.log('최종', this.table.items)
 				})
 			})
 		},
@@ -665,6 +660,7 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		async click_date_next() {
@@ -691,6 +687,7 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		async click_date_now() {
@@ -713,6 +710,7 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
@@ -734,6 +732,7 @@ export default {
 			await this.vacationView(input3)
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.dataSetting()
 			this.date = this.$moment(this.date_picker.date)
 		},
 
@@ -847,6 +846,7 @@ export default {
 					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.dataSetting()
 				})
 				.catch(err => {
 					console.log({ err })
@@ -887,6 +887,7 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.dataSetting()
 		},
 		gotoWorkDialogOpen(item) {
 			this.editGotoworkData = {

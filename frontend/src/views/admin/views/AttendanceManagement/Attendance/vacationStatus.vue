@@ -394,14 +394,13 @@ export default {
 			async handler() {
 				if (this.setdialog.dialog) {
 					console.log(this.setdialog.editData)
-					console.log(this.setdialog.edit)
 					if (this.setdialog.edit) {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
 						this.leftInfoTop[3].value = this.setdialog.editData.title ? this.setdialog.editData.title : '-'
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:MM')
-						this.leftInfoTop[5].value = this.setdialog.editData.team
+						this.leftInfoTop[5].value = this.setdialog.editData.team_rank
 
 						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:MM')
 						this.rightInfoTop[1].value =

@@ -567,10 +567,7 @@ export default {
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
 						this.leftInfoTop[3].value = this.setdialog.editData.all.businessID
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
-						this.leftInfoTop[5].value = this.setdialog.editData.team
-							? this.setdialog.editData.team +
-							  (this.setdialog.editData.all.rankId ? '/' + '상담사' : '/' + this.setdialog.editData.all.rankId)
-							: '-'
+						this.leftInfoTop[5].value = this.setdialog.editData.team_rank ? this.setdialog.editData.team_rank : '-'
 
 						this.leftInfoTop[7].value = this.setdialog.editData.teamID
 
