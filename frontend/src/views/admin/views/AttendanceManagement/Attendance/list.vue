@@ -512,8 +512,9 @@ export default {
 				res.vacations.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
-					this.userLists[workIndex]['vacationStart'] = el.start
-					this.userLists[workIndex]['vacationEnd'] = el.end
+					// this.userLists[workIndex]['vacationStart'] = el.start
+					// this.userLists[workIndex]['vacationEnd'] = el.end
+					this.userLists[workIndex]['vacationDate'] = el.date
 					this.userLists[workIndex]['vacationReason'] = el.vacationReason
 					this.userLists[workIndex]['vacation'] = el.vacationStatus
 					this.userLists[workIndex]['vacationType'] = el.vacationType
@@ -564,13 +565,22 @@ export default {
 			}
 		},
 
-		update() {
+		async update() {
 			let input = {
-				date: this.$moment(this.date).format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 			}
-
+			let input2 = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+			}
+			let input3 = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+			}
 			this.viewUsers(input)
+			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 		},
 
 		async click_date_before() {
@@ -896,6 +906,7 @@ export default {
 			this.newDialog2.editData = item
 		},
 		click_vacation_status(item) {
+			console.log(item)
 			this.newDialog.title = '신청 연차 관리'
 			this.newDialog.dialog = true
 			this.newDialog.edit = true

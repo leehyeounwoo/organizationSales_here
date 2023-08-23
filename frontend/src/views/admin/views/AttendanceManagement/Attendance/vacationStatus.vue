@@ -80,7 +80,7 @@
 								</v-layout>
 							</v-flex>
 							<v-flex class="nomal-input-type px-2" xs9 v-if="index === 0">
-								<v-radio-group v-model="right.radio" row class="project_message">
+								<v-radio-group v-model="right.radio" :disabled="setdialog.editData.vacation !== 'waiting'" row class="project_message">
 									<v-radio label="승인" value="agree" color="#2699FB" @click="click_radio()"></v-radio>
 									<v-radio label="반려" value="disagree" color="#2699FB" @click="click_radio()"></v-radio>
 								</v-radio-group>
@@ -92,9 +92,12 @@
 					</div>
 					<v-layout wrap class="pt-10">
 						<v-flex xs12 class="ml-auto mb-8">
-							<v-layout justify-end>
+							<v-layout justify-end v-if="setdialog.editData.vacation === 'waiting'">
 								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#5B5B5B" class="mr-3">취소</v-btn>
 								<v-btn @click="businessAdd" dense width="100" height="26" dark color="#0500B7">저장</v-btn>
+							</v-layout>
+							<v-layout justify-end v-else>
+								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#0500B7" class="mr-3">확인</v-btn>
 							</v-layout>
 						</v-flex>
 					</v-layout>
@@ -324,10 +327,10 @@ export default {
 		async clickSave() {
 			this.$store.state.loading = true
 			if (this.rightInfoBottom[0].radio === 'agree') {
-				const startDate = this.$moment(this.setdialog.editData.vacationStart)
-				const currentDate = startDate.clone()
+				// const startDate = this.$moment(this.setdialog.editData.vacationStart)
+				// const currentDate = startDate.clone()
 				let input = {
-					date: currentDate.format('YYYY-MM-DD'),
+					date: this.setdialog.editData.vacationDate,
 					userID: this.setdialog.editData.id,
 					status: 'vacation',
 					vacation: this.setdialog.editData.vacationID,
@@ -400,15 +403,17 @@ export default {
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:MM')
 						this.leftInfoTop[5].value = this.setdialog.editData.team
 
-						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:mm:ss')
+						this.rightInfoTop[0].value = this.$moment(this.setdialog.editData.vacationCreated_at).format('YYYY-MM-DD HH:MM')
 						this.rightInfoTop[1].value =
-							this.setdialog.editData.vacationType === 'vacation'
-								? '휴가'
-								: this.setdialog.editData.vacationType === 'afternoonVacation'
+							this.setdialog.editData.vacationType === 'afternoonVacation'
 								? '오후 반차'
-								: '오전 반차'
-						this.rightInfoTop[2].value = this.$moment(this.setdialog.editData.vacationStart).format('YYYY-MM-DD')
-						this.rightInfoTop[2].value2 = this.$moment(this.setdialog.editData.vacationEnd).format('YYYY-MM-DD')
+								: this.setdialog.editData.vacationType === 'morningVacation'
+								? '오전 반차'
+								: this.setdialog.editData.vacationType === 'sick'
+								? '병가'
+								: '연차'
+						this.rightInfoTop[2].value = this.setdialog.editData.vacationDate
+						this.rightInfoTop[2].value2 = this.setdialog.editData.vacationDate
 						this.rightInfoTop[3].value = this.setdialog.editData.vacationReason
 						if (this.setdialog.editData.vacation !== 'waiting') {
 							this.rightInfoBottom[0].radio = this.setdialog.editData.vacation === 'agree' ? 'agree' : 'disagree'
