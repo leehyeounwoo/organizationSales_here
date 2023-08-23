@@ -424,23 +424,23 @@ export default {
 		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY-MM-DD') + ` (${text})`
+			// let text
+			// if (date === 'Sun') {
+			// 	text = '일'
+			// } else if (date === 'Mon') {
+			// 	text = '월'
+			// } else if (date === 'Tue') {
+			// 	text = '화'
+			// } else if (date === 'Wed') {
+			// 	text = '수'
+			// } else if (date === 'Thu') {
+			// 	text = '목'
+			// } else if (date === 'Fri') {
+			// 	text = '금'
+			// } else if (date === 'Sat') {
+			// 	text = '토'
+			// }
+			return this.$moment(val).format('YYYY-MM-DD') + ` (${date})`
 		},
 		workStatusChange(data) {
 			if (data === 'vacation') {

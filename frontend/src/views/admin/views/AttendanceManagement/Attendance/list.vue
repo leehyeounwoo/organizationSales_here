@@ -345,6 +345,8 @@ export default {
 			},
 			userLists: [],
 			userIDArr: [],
+			teamData: [],
+			rankData: [],
 		}
 	},
 
@@ -352,10 +354,12 @@ export default {
 		this.$store.state.loading = true
 		await this.me()
 		await this.getTeams()
+		await this.getRanks()
 		let input = {
 			start: 0,
 			limit: 10,
 			roleName: 'Counselor',
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.viewUsers(input)
 		let input2 = {
@@ -371,9 +375,9 @@ export default {
 			// roleName: 'Counselor',
 			userID: this.userIDArr,
 		}
-		console.log(input3)
 		await this.gotoworksView(input2)
 		await this.vacationView(input3)
+		// await this.dataSetting()
 		this.$store.state.loading = false
 	},
 	mounted() {},
@@ -381,18 +385,73 @@ export default {
 	methods: {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
-				this.$store.state.meData = res.data
-				console.log(this.$store.state.meData)
+				this.$store.state.meData = res.me
 			})
 		},
+		async dataSetting() {
+			console.log(this.teamData)
+			console.log(this.rankData)
+			for (let index = 0; index < this.userLists.length; index++) {
+				const element = this.userData[index]
+				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
+
+				let teamTitle = '-'
+				let rankTitle = '-'
+				if (teamData) {
+					teamTitle = teamData.id
+					element.teamTitle = teamTitle
+				}
+				if (rankData) {
+					rankTitle = rankData.id
+					element.rankTitle = rankTitle
+				}
+				if (teamData && rankData) {
+					element.team_rank = `${teamData.title}(${rankData.rankName})`
+				}
+				element.salesPhoneNumber_txtField = {
+					value: '',
+					txtfield: {
+						maxlength: '255',
+						outlined: true,
+						hideDetail: false,
+						errorMessage: '',
+						placeholder: '',
+					},
+				}
+				element.workingStatusName = element.workingStatus ? '재직' : '퇴사'
+				element.created_at_format = this.$moment(element.created_at).format('YYYY년MM월DD일')
+				element.teamItems = this.teamData
+				element.rankItems = this.rankData
+			}
+			this.table.items = JSON.parse(JSON.stringify(this.userData))
+			this.table.origin_items = JSON.parse(JSON.stringify(this.userData))
+		},
 		async getTeams() {
-			let data = {}
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
 
 			await this.$store.dispatch('teams', data).then(res => {
 				this.searchsel1.items = JSON.parse(JSON.stringify(res.teams))
 				this.searchsel1.items.unshift('전체')
 				this.searchsel1.value = '전체'
+				this.teamData = res.teams
 			})
+		},
+		async getRanks() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.$store
+				.dispatch('ranks', data)
+				.then(res => {
+					this.rankData = res.ranks
+				})
+				.catch(err => {
+					console.log(err)
+					this.$store.state.loading = false
+				})
 		},
 		async viewUsers(input) {
 			this.$store.state.loading = true
@@ -439,10 +498,9 @@ export default {
 							? element.salesPhoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 							: '-'
 						listData.created_at = this.$moment(element.created_at).format('YYYY-MM-DD')
-						listData.team = element.teamID ? element.teamID + '팀' : '-'
+						listData.team = element.teamID ? element.teamID + '/' + element.rankID : '-'
 						listData.history = element.history ? element.history : []
 						listData.data5 === '미확인' ? (listData.vacation = '-') : ''
-
 						list.push(listData)
 						this.table.total = res.usersConnection.aggregate.count
 						this.table.page = input.page
@@ -469,38 +527,43 @@ export default {
 		},
 
 		async gotoworksView(input2) {
+			console.log(this.userLists)
 			await this.$store.dispatch('gotoWork', input2).then(res2 => {
+				console.log(res2)
 				res2.gotoworks.forEach(element2 => {
 					let workIndex = this.userLists.findIndex(item => item.id === element2.userID)
-					this.userLists[workIndex]['gotoworksAll'] = element2
-					this.userLists[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
-					this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
-					this.userLists[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
-					this.endTime = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
-					this.userLists[workIndex]['data5'] =
-						element2.status === 'endWork'
-							? '퇴근'
-							: element2.status === 'afternoonVacation'
-							? '오후반차'
-							: element2.status === 'morningVacation'
-							? '오전반차'
-							: element2.status === 'vacation'
-							? '휴가'
-							: '출근'
-					if (element2.status === 'vacation') {
-						this.userLists[workIndex]['data6'] = true
-						this.userLists[workIndex]['data7'] = true
-						this.userLists[workIndex]['data8'] = '-'
-					} else {
-						this.userLists[workIndex]['data6'] = element2.startWork ? true : false
-						this.userLists[workIndex]['data7'] = element2.endWork ? true : false
-					}
+					if (workIndex !== -1) {
+						console.log(workIndex)
+						this.userLists[workIndex]['gotoworksAll'] = element2 ? element2 : []
+						this.userLists[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
+						this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
+						this.userLists[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
+						this.endTime = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
+						this.userLists[workIndex]['data5'] =
+							element2.status === 'endWork'
+								? '퇴근'
+								: element2.status === 'afternoonVacation'
+								? '오후반차'
+								: element2.status === 'morningVacation'
+								? '오전반차'
+								: element2.status === 'vacation'
+								? '휴가'
+								: '출근'
+						if (element2.status === 'vacation') {
+							this.userLists[workIndex]['data6'] = true
+							this.userLists[workIndex]['data7'] = true
+							this.userLists[workIndex]['data8'] = '-'
+						} else {
+							this.userLists[workIndex]['data6'] = element2.startWork ? true : false
+							this.userLists[workIndex]['data7'] = element2.endWork ? true : false
+						}
 
-					if (element2.startWork && element2.endWork) {
-						this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
-					}
+						if (element2.startWork && element2.endWork) {
+							this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
+						}
 
-					this.table.items = this.userLists
+						this.table.items = this.userLists
+					}
 				})
 			})
 		},
@@ -586,6 +649,7 @@ export default {
 		async click_date_before() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
@@ -610,6 +674,7 @@ export default {
 		async click_date_next() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
@@ -634,6 +699,7 @@ export default {
 		async click_date_now() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment().format('YYYY-MM-DD'),
@@ -654,6 +720,7 @@ export default {
 		async click_date_picker() {
 			let input = {
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
@@ -774,6 +841,7 @@ export default {
 					}
 					let input2 = {
 						roleName: 'Counselor',
+						businessID: this.$store.state.businessSelectBox.value,
 					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
@@ -799,6 +867,7 @@ export default {
 				start: 0,
 				limit: 10,
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
 				start: 0,

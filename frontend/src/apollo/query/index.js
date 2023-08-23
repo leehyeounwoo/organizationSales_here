@@ -96,6 +96,7 @@ export const users = gql`
 			bank
 			accountNumber
 			teamID
+			rankID
 			workingStatus
 			copyAccount {
 				id
