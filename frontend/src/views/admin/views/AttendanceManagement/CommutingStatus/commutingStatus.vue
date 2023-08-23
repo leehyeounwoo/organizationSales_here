@@ -63,7 +63,7 @@
 									<td>
 										{{ d.username }}
 									</td>
-									<td style="border-right:1px solid #d1d1d1; ">{{ d.team_rank }}</td>
+									<td style="border-right:1px solid #d1d1d1; ">{{ d.teamID }}팀 / {{ d.rankId === '1' ? '상담사' : '' }}</td>
 									<td style="border-right:1px solid #d1d1d1; ">
 										{{ d.gotoworks.filter(x => x.status === 'endWork').length }}Day <br />
 										{{ allTimeCheck(d.gotoworks) }}
@@ -146,11 +146,13 @@
 
 <script>
 import { DatepickerDialog, selectBox, txtField } from '@/components'
+import downloadExcel from 'vue-json-excel'
 export default {
 	components: {
 		DatepickerDialog,
 		selectBox,
 		txtField,
+		downloadExcel,
 	},
 	async created() {
 		await this.me()
@@ -580,7 +582,10 @@ export default {
 						}
 					}
 				})
+
+				console.log('유리', this.userLists)
 				this.table.items = this.userLists
+				console.log('디테', this.table.items)
 			})
 		},
 		headerCheckAction(startDate, endDate) {
