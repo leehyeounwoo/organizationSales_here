@@ -565,7 +565,16 @@ export default {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
-						this.leftInfoTop[3].value = this.setdialog.editData.all.businessID
+						let itemName = ''
+						for (let i = 0; i < this.$store.state.businessSelectBox.items.length; i++) {
+							if (this.$store.state.businessSelectBox.items[i].id === this.setdialog.editData.all.businessID) {
+								itemName = this.$store.state.businessSelectBox.items[i].name
+								break
+							} else {
+								itemName = '-'
+							}
+						}
+						this.leftInfoTop[3].value = itemName
 						this.leftInfoTop[4].value = this.$moment(this.setdialog.editData.all.created_at).format('YYYY-MM-DD HH:mm')
 						this.leftInfoTop[5].value = this.setdialog.editData.team_rank ? this.setdialog.editData.team_rank : '-'
 
