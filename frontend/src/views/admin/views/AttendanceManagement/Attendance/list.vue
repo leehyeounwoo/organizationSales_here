@@ -102,6 +102,7 @@
 				</v-layout>
 			</template>
 		</v-data-table>
+		<v-btn small class="btn-style3" @click="createUnattendedVacation()"> <span style="color: white;">연차신청 미처리 : 00건</span> </v-btn>
 		<v-btn small class="btn-style2" @click="clickExport()">
 			<img src="@/assets/images/excel-img2.png" />
 			엑셀 다운로드
@@ -211,6 +212,7 @@
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 		<detail :setdialog="newDialog2"></detail>
 		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
+		<unattendedVacation :setdialog="newDialog3" @update="update"></unattendedVacation>
 	</div>
 </template>
 
@@ -222,6 +224,7 @@ import vacationStatus from './vacationStatus.vue'
 // import moment from 'moment'
 // import 'moment/locale/ko'
 import downloadExcel from 'vue-json-excel'
+import unattendedVacation from './unattendedVacation.vue'
 export default {
 	components: {
 		downloadExcel,
@@ -231,6 +234,7 @@ export default {
 		vacationStatus,
 		saveDialog,
 		DatepickerDialog,
+		unattendedVacation,
 	},
 
 	data() {
@@ -267,7 +271,7 @@ export default {
 				dialog: false,
 				edit: false,
 				editData: {},
-				title: '출퇴근 리스트',
+				title: '미처리 연차 신청 현황',
 			},
 			selected: [],
 			allCounselor: 0,
@@ -347,6 +351,7 @@ export default {
 			userIDArr: [],
 			teamData: [],
 			rankData: [],
+			vacationData: [],
 		}
 	},
 
@@ -989,6 +994,11 @@ export default {
 			this.newDialog.edit = true
 			this.newDialog.editData = item
 		},
+		createUnattendedVacation() {
+			this.newDialog3.title = '미처리 연차 신청 현황'
+			this.newDialog3.dialog = true
+			this.newDialog3.edit = true
+		},
 		vacation_filter(val) {
 			if (val) {
 				if (val === 'agree') {
@@ -1276,5 +1286,16 @@ export default {
 	position: absolute;
 	bottom: 15px;
 	left: 0px;
+}
+.btn-style3 {
+	box-shadow: none;
+	background-color: #ff7519 !important;
+	border: 1px solid #ff7519;
+	color: #ff7519;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 15px;
+	height: 15px;
+	left: 130px;
 }
 </style>

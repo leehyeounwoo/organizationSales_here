@@ -175,8 +175,8 @@ export const gotoWork = gql`
 	}
 `
 export const vacations = gql`
-	query vacations($idArr: [ID], $date: Date, $date_gte: Date, $date_lte: Date) {
-		vacations(where: { userID: $idArr, date: $date, date_lte: $date_lte, date_gte: $date_gte }) {
+	query vacations($idArr: [ID], $date: Date, $date_gte: Date, $date_lte: Date, $vacationStatus: String) {
+		vacations(where: { userID: $idArr, date: $date, date_lte: $date_lte, date_gte: $date_gte, vacationStatus: $vacationStatus }) {
 			id
 			created_at
 			rejectComment
