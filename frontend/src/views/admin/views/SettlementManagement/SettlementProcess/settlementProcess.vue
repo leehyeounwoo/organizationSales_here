@@ -121,7 +121,10 @@
 						class="notice_right_table2 date_picker2"
 						style="display: flex; justify-content: center;align-items: center; "
 					>
-						<DatepickerDialog :picker="items" class="d-flex align-center date_picker3"></DatepickerDialog>
+						<span v-if="items.disable" style="font-size:0.75rem;">
+							{{ items.date }}
+						</span>
+						<DatepickerDialog v-else :picker="items" class="d-flex align-center date_picker3"></DatepickerDialog>
 					</v-flex>
 				</v-layout>
 				<v-layout>
@@ -263,7 +266,7 @@
 							></DatepickerDialog>
 						</v-flex>
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
-							<div class="pdfFileBox mt-1" @click="pdfFileUpload">
+							<div class="pdfFileBox mt-1" @click="pdfFileUpload(degree)">
 								<label
 									style="display: flex; justify-content: center; align-items: center; overflow: hidden; font-size: 12px; color: black; cursor:pointer;"
 								>
@@ -276,11 +279,21 @@
 									}}
 								</label>
 							</div>
-							<div @click="pdfFileUpload" style="border: 1px solid rgba(0, 0, 0, 1); width: 20% !important; " class="pdfFileBox mt-1">
+							<div
+								@click="pdfFileUpload(degree)"
+								style="border: 1px solid rgba(0, 0, 0, 1); width: 20% !important; "
+								class="pdfFileBox mt-1"
+							>
 								<v-icon>
 									mdi-tray-arrow-up
 								</v-icon>
-								<input type="file" style="display:none;" id="pdf_files" @change="pdfFileUploadChange" accept="pdf" />
+								<input
+									type="file"
+									style="display:none;"
+									:id="`pdf_files${degree}`"
+									@change="pdfFileUploadChange($event, degree)"
+									accept="pdf"
+								/>
 							</div>
 						</v-flex>
 					</v-layout>
@@ -471,33 +484,38 @@ export default {
 					hideDetail: true,
 					errorMessage: '',
 					placeholder: '-',
-					readonly: false,
+					readonly: true,
 				},
 			},
 
 			start_date_picker: {
 				1: {
 					date: this.$moment().format('YYYY-MM-DD'),
+					disable: false,
 				},
 				2: {
 					date: this.$moment(this.date)
 						.add(1, 'd')
 						.format('YYYY-MM-DD'),
+					disable: false,
 				},
 				3: {
 					date: this.$moment(this.date)
 						.add(2, 'd')
 						.format('YYYY-MM-DD'),
+					disable: false,
 				},
 				4: {
 					date: this.$moment(this.date)
 						.add(3, 'd')
 						.format('YYYY-MM-DD'),
+					disable: false,
 				},
 				5: {
 					date: this.$moment(this.date)
 						.add(4, 'd')
 						.format('YYYY-MM-DD'),
+					disable: false,
 				},
 			},
 
@@ -591,7 +609,7 @@ export default {
 					hideDetail: true,
 					errorMessage: '',
 					placeholder: '-',
-					readonly: false,
+					readonly: true,
 				},
 			},
 
@@ -907,6 +925,7 @@ export default {
 
 	methods: {
 		amountDown(idx) {
+			console.log(1)
 			let sum = 0
 			let totalSum = 0
 			let status = true
@@ -924,12 +943,11 @@ export default {
 			}
 
 			if (Number(sum) > 100) {
-				alert('지급 비율이 100%를 초과할 수 없습니다.')
 				this.paymentRate[idx].txtField.value = ''
 				this.paymentAmount[idx].txtField.value = ''
-				return
+				return alert('지급 비율이 100%를 초과할 수 없습니다.')
 			} else {
-				let account = (this.paymentRate[idx].txtField.value / 100) * this.charge.txtField.value
+				let account = (this.paymentRate[idx].txtField.value / 100) * Number(this.charge.txtField.value.replace(/,/g, ''))
 				this.paymentAmount[idx].txtField.value = account.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 				for (let index = 0; index < 5; index++) {
 					const element = this.paymentAmount[`charge${index + 1}`]
@@ -946,6 +964,7 @@ export default {
 			}
 		},
 		rateDown(idx) {
+			console.log(2)
 			let sum = 0
 			let totalSum = 0
 			let status = true
@@ -962,15 +981,14 @@ export default {
 				}
 			}
 			if (Number(this.charge.txtField.value) < totalSum) {
-				alert(`최대 지급 금액(${this.charge.txtField.value})을 초과할 수 없습니다.`)
 				this.paymentRate[idx].txtField.value = ''
 				this.paymentAmount[idx].txtField.value = ''
-				return
+				return alert(`최대 지급 금액(${this.charge.txtField.value})을 초과할 수 없습니다.`)
 			} else {
-				let account = (this.paymentAmount[idx].txtField.value.replace(/,/g, '') / this.charge.txtField.value) * 100
+				let account =
+					(this.paymentAmount[idx].txtField.value.replace(/,/g, '') / Number(this.charge.txtField.value.replace(/,/g, ''))) * 100
 				this.paymentRate[idx].txtField.value = account.toString()
 				this.paymentAmount[idx].txtField.value = this.paymentAmount[idx].txtField.value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-
 				for (let index = 0; index < 5; index++) {
 					const element = this.paymentRate[`charge${index + 1}`]
 					if (element.txtField.value) {
@@ -1109,13 +1127,16 @@ export default {
 		},
 
 		async productsView(productsViewData) {
-			await this.$store.dispatch('products', productsViewData).then(res =>
+			await this.$store.dispatch('products', productsViewData).then(res => {
+				console.log(res)
 				res.products.forEach(element => {
+					console.log(this.list)
 					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
+					console.log(listData)
 					listData.products = element
 					listData.product = element.housingType + element.dong + '동' + element.ho + '호'
-				}),
-			)
+				})
+			})
 		},
 		async teamsView(teamsViewData) {
 			await this.$store
@@ -1243,10 +1264,10 @@ export default {
 			this.date = this.$moment(this.date_picker.date)
 		},
 
-		pdfFileUpload() {
-			document.getElementById(`pdf_files`).click()
+		pdfFileUpload(val) {
+			document.getElementById(`pdf_files${val}`).click()
 		},
-		pdfFileUploadChange(val) {
+		pdfFileUploadChange(val, degree) {
 			console.log(val)
 			this.pdfFiles.file = val.target.files[0]
 			this.pdfFiles.name = val.target.files[0].name
@@ -1254,10 +1275,8 @@ export default {
 			this.pdfFiles.url = URL.createObjectURL(val.target.files[0])
 			this.pdfFiles.id = ''
 			this.pdfLists.push({ numberList: this.pdfFiles })
-			document.getElementById(`pdf_files`).value = ''
+			document.getElementById(`pdf_files${degree}`).value = ''
 			this.pdfFiles = {}
-			console.log(this.pdfFiles)
-			console.log(this.pdfLists)
 		},
 		alertRate(val) {
 			let valChange = Number(val.replace('charge', '')) + ''
@@ -1293,10 +1312,11 @@ export default {
 					this.sweetDialog_false.buttonType = 'oneBtn'
 					this.sweetDialog_false.modalIcon = 'info'
 					this.sweetDialog_false.open = true
-				} else {
-					this.paymentRate[`charge${i + 1}`].txtField.readonly = false
-					this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
 				}
+				// else {
+				// 					this.paymentRate[`charge${i + 1}`].txtField.readonly = false
+				// 					this.paymentAmount[`charge${i + 1}`].txtField.readonly = false
+				// 				}
 			}
 		},
 		async checkRequestData(val) {
@@ -1312,6 +1332,7 @@ export default {
 			}
 		},
 		async forTest(val) {
+			console.log(val)
 			if (Array.isArray(val)) {
 				this.finalSettlementData = []
 				this.finalSettlementData = val
@@ -1327,35 +1348,53 @@ export default {
 			}
 			await this.resetAmountData()
 			// this.charge.txtField.value = val.settlements.totalPrice
+			if (val.settlements.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length > 0) {
+				this.charge.txtField.readonly = true
+			} else {
+				this.charge.txtField.readonly = false
+			}
 			let sum = 0
 			let totalSum = 0
 			this.charge.txtField.value = ''
 			this.charge.txtField.value = val.totalPrice ? val.totalPrice + '' : ''
+			// console.log(val.settlements.settlement_turn_tables)
 			for (let index = 0; index < val.settlements.settlement_turn_tables.length; index++) {
 				const element = val.settlements.settlement_turn_tables[index]
+
 				element.percent = (element.amount / val.settlements.totalPrice) * 100
+
 				this.paymentRate[`charge${index + 1}`].txtField.value = element.percent.toString()
 				this.paymentAmount[`charge${index + 1}`].txtField.value = element.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 				this.start_date_picker[index + 1].date = element.prePaymentDate
-				console.log(this.paymentRateSum.txtField.value)
 				sum += element.percent
 				totalSum += element.amount
 			}
+
+			for (let index = 0; index < Number(val.settlements.settlement_turn_tables.length); index++) {
+				console.log(index)
+				if (val.settlements.settlement_turn_tables[index].turnStatus === 'complete') {
+					this.paymentRate[`charge${index + 1}`].txtField.readonly = true
+					this.paymentAmount[`charge${index + 1}`].txtField.readonly = true
+					this.start_date_picker[index + 1].disable = true
+				}
+				this.timessel.value = index + 1 + '차'
+			}
+
 			this.totalCharge.txtField.value = totalSum.toString()
 			this.paymentRateSum.txtField.value = sum.toString()
-			this.timessel.value = ''
-			this.timessel.value =
-				val.turn === '1'
-					? (this.timessel.value = '1차')
-					: val.turn === '2'
-					? (this.timessel.value = '2차')
-					: val.turn === '3'
-					? (this.timessel.value = '3차')
-					: val.turn === '4'
-					? (this.timessel.value = '4차')
-					: val.turn === '5'
-					? (this.timessel.value = '5차')
-					: ''
+			// this.timessel.value = ''
+			// this.timessel.value =
+			// 	val.turn === '1'
+			// 		? (this.timessel.value = '1차')
+			// 		: val.turn === '2'
+			// 		? (this.timessel.value = '2차')
+			// 		: val.turn === '3'
+			// 		? (this.timessel.value = '3차')
+			// 		: val.turn === '4'
+			// 		? (this.timessel.value = '4차')
+			// 		: val.turn === '5'
+			// 		? (this.timessel.value = '5차')
+			// 		: ''
 
 			this.amountData = []
 			this.amountData = val.settlements.settlement_turn_tables
@@ -1518,46 +1557,42 @@ export default {
 		},
 
 		async click_agree() {
+			// -------------------------
 			this.$store.state.loading = true
+			let filterData = this.finalSettlementData[0].settlements.settlement_turn_tables.filter(x => x.turnStatus !== 'complete')
 
-			let start_date = []
-			let finalPaymentAmount = []
-			let messages = []
-
+			for (let index = 0; index < filterData.length; index++) {
+				const element = filterData[index]
+				let updateData = {
+					id: element.id,
+					useYn: false,
+				}
+				this.$store
+					.dispatch('updateSettlementTurnTable', updateData)
+					.then(res => {
+						console.log(res)
+					})
+					.catch(() => {})
+			}
+			// -------------------------
 			let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
-			for (let i = 1; i <= timesCheck; i++) {
-				start_date.push(this.start_date_picker[i].date)
-				let paymentAmountString = this.paymentAmount[`charge${i}`].txtField.value
-				let numericPaymentAmount = parseFloat(paymentAmountString.replace(/,/g, ''))
-				finalPaymentAmount.push(numericPaymentAmount)
 
-				if (this.editAmountData.length === 0) {
+			for (let index = 0; index < timesCheck; index++) {
+				const element = this.paymentAmount[`charge${index + 1}`]
+
+				if (element.txtField.readonly === false) {
 					let data = {
-						prePaymentDate: this.start_date_picker[i].date,
+						prePaymentDate: this.start_date_picker[index].date,
 						turnStatus: 'waiting',
-						amount: numericPaymentAmount,
+						amount: Number(element.txtField.value.replace(/,/g, '')),
 						settlements: this.finalSettlementData[0].id,
-						turnTableDegree: i + '',
+						turnTableDegree: index + '',
 						bank: this.finalSettlementData[0].bank,
 						bankAccount: this.finalSettlementData[0].accountNumber,
 						useYn: true,
 					}
-
-					await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
-					if (this.processCheckBox) {
-						let message = `${i}차 정산일은 ${
-							this.start_date_picker[i].date
-						}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-						messages.push(message)
-					}
-
-					let data2 = {
-						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-						turn: this.timessel.value.replace(/차/g, ''),
-						id: this.finalSettlementData[0].id,
-					}
-
-					await this.$store.dispatch('updateSettlement', data2).then(() => {
+					console.log(data)
+					await this.$store.dispatch('createSettlementTurnTable', data).then(() => {
 						this.sweetDialog_false.open = false
 						this.$store.state.loading = true
 						this.saveDialogStatus.title = `승인 처리 완료`
@@ -1567,96 +1602,181 @@ export default {
 						this.saveDialogStatus.open = true
 						this.$store.state.loading = false
 					})
-				} else {
-					if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData[0].turn) {
-						for (let j = 0; j < this.finalSettlementData[0].settlements.settlement_turn_tables.length; j++) {
-							if (this.finalSettlementData[0].settlements.settlement_turn_tables[j].turnStatus === 'waiting') {
-								let updateData = {
-									id: this.finalSettlementData[0].settlements.settlement_turn_tables[j].id,
-									useYn: false,
-								}
-
-								this.$store
-									.dispatch('updateSettlementTurnTable', updateData)
-									.then(() => {})
-									.catch(() => {})
-							}
-
-							let data = {
-								prePaymentDate: this.start_date_picker[i].date,
-								turnStatus: 'waiting',
-								amount: numericPaymentAmount,
-								settlements: this.finalSettlementData[0].id,
-								turnTableDegree: i + '',
-								bank: this.finalSettlementData[0].bank,
-								bankAccount: this.finalSettlementData[0].accountNumber,
-								useYn: true,
-							}
-
-							if (this.processCheckBox) {
-								let message = `${i}차 정산일은 ${
-									this.start_date_picker[i].date
-								}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-								messages.push(message)
-							}
-
-							this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
-						}
-					} else {
-						let data = {
-							prePaymentDate: this.start_date_picker[i].date,
-							turnStatus: 'waiting',
-							amount: numericPaymentAmount,
-							settlements: this.finalSettlementData[0].id,
-							turnTableDegree: i + '',
-							bank: this.finalSettlementData[0].bank,
-							bankAccount: this.finalSettlementData[0].accountNumber,
-							id: this.editAmountData.settlements.settlement_turn_tables[i - 1].id,
-						}
-
-						this.$store
-							.dispatch('updateSettlementTurnTable', data)
-							.then(() => {})
-							.catch(() => {})
-
-						if (this.processCheckBox) {
-							let message = `${i}차 정산일은 ${
-								this.start_date_picker[i].date
-							}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-							messages.push(message)
-						}
-					}
-
-					let data2 = {
-						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-						turn: this.timessel.value.replace(/차/g, ''),
-						id: this.finalSettlementData[0].id,
-					}
-
-					this.$store.dispatch('updateSettlement', data2).then(() => {
-						this.sweetDialog_false.open = false
-						this.$store.state.loading = true
-						this.saveDialogStatus.title = `승인 처리 완료`
-						this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-						this.saveDialogStatus.buttonType = 'oneBtn'
-						this.saveDialogStatus.cancelBtnText = '확인'
-						this.saveDialogStatus.open = true
-						this.$store.state.loading = false
-					})
+					// -----------
+					// if (this.processCheckBox) {
+					// 	let message = `${i}차 정산일은 ${
+					// 		this.start_date_picker[i].date
+					// 	}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+					// 	messages.push(message)
 				}
 			}
-			if (this.processCheckBox) {
-				let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
-				let input = {
-					phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
-					content: finalMessage,
-				}
 
-				this.$store
-					.dispatch('sendSmsSettlement', input)
-					.then(() => {})
-					.catch(() => {})
-			}
+			// console.log(timesCheck)
+			// console.log(createData)
+			// for (let index = 0; index < createData.length; index++) {
+			// 	const element = createData[index]
+
+			// let data = {
+			// 	prePaymentDate: this.start_date_picker[i].date,
+			// 	turnStatus: 'waiting',
+			// 	amount: numericPaymentAmount,
+			// 	settlements: this.finalSettlementData[0].id,
+			// 	turnTableDegree: i + '',
+			// 	bank: this.finalSettlementData[0].bank,
+			// 	bankAccount: this.finalSettlementData[0].accountNumber,
+			// 	useYn: true,
+			// }
+
+			// 	await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+			// 	if (this.processCheckBox) {
+			// 		let message = `${i}차 정산일은 ${
+			// 			this.start_date_picker[i].date
+			// 		}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+			// 		messages.push(message)
+			// 	}
+			// }
+
+			// this.$store.state.loading = true
+			// let start_date = []
+			// let finalPaymentAmount = []
+			// let messages = []
+
+			// let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
+			// for (let i = 1; i <= timesCheck; i++) {
+			// 	start_date.push(this.start_date_picker[i].date)
+			// 	let paymentAmountString = this.paymentAmount[`charge${i}`].txtField.value
+			// 	let numericPaymentAmount = parseFloat(paymentAmountString.replace(/,/g, ''))
+			// 	finalPaymentAmount.push(numericPaymentAmount)
+
+			// if (this.editAmountData.length === 0) {
+			// 	let data = {
+			// 		prePaymentDate: this.start_date_picker[i].date,
+			// 		turnStatus: 'waiting',
+			// 		amount: numericPaymentAmount,
+			// 		settlements: this.finalSettlementData[0].id,
+			// 		turnTableDegree: i + '',
+			// 		bank: this.finalSettlementData[0].bank,
+			// 		bankAccount: this.finalSettlementData[0].accountNumber,
+			// 		useYn: true,
+			// 	}
+
+			// 	await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+			// 	if (this.processCheckBox) {
+			// 		let message = `${i}차 정산일은 ${
+			// 			this.start_date_picker[i].date
+			// 		}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+			// 		messages.push(message)
+			// 	}
+
+			// 		let data2 = {
+			// 			totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+			// 			turn: this.timessel.value.replace(/차/g, ''),
+			// 			degree: this.timessel.value.replace(/차/g, ''),
+			// 			id: this.finalSettlementData[0].id,
+			// 		}
+
+			// 		await this.$store.dispatch('updateSettlement', data2).then(() => {
+			// 			this.sweetDialog_false.open = false
+			// 			this.$store.state.loading = true
+			// 			this.saveDialogStatus.title = `승인 처리 완료`
+			// 			this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+			// 			this.saveDialogStatus.buttonType = 'oneBtn'
+			// 			this.saveDialogStatus.cancelBtnText = '확인'
+			// 			this.saveDialogStatus.open = true
+			// 			this.$store.state.loading = false
+			// 		})
+			// 	} else {
+			// 		console.log(this.editAmountData)
+			// 		if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData[0].turn) {
+			// 			for (let j = 0; j < this.finalSettlementData[0].settlements.settlement_turn_tables.length; j++) {
+			// 				if (this.finalSettlementData[0].settlements.settlement_turn_tables[j].turnStatus === 'waiting') {
+			// 	let updateData = {
+			// 		id: this.finalSettlementData[0].settlements.settlement_turn_tables[j].id,
+			// 		useYn: false,
+			// 	}
+
+			// 	this.$store
+			// 		.dispatch('updateSettlementTurnTable', updateData)
+			// 		.then(() => {})
+			// 		.catch(() => {})
+			// }
+
+			// 				let data = {
+			// 					prePaymentDate: this.start_date_picker[i].date,
+			// 					turnStatus: 'waiting',
+			// 					amount: numericPaymentAmount,
+			// 					settlements: this.finalSettlementData[0].id,
+			// 					turnTableDegree: i + '',
+			// 					bank: this.finalSettlementData[0].bank,
+			// 					bankAccount: this.finalSettlementData[0].accountNumber,
+			// 					useYn: true,
+			// 				}
+
+			// 				if (this.processCheckBox) {
+			// 					let message = `${i}차 정산일은 ${
+			// 						this.start_date_picker[i].date
+			// 					}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+			// 					messages.push(message)
+			// 				}
+
+			// 				this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
+			// 			}
+			// 		} else {
+			// 			let data = {
+			// 				prePaymentDate: this.start_date_picker[i].date,
+			// 				turnStatus: 'waiting',
+			// 				amount: numericPaymentAmount,
+			// 				settlements: this.finalSettlementData[0].id,
+			// 				turnTableDegree: i + '',
+			// 				bank: this.finalSettlementData[0].bank,
+			// 				bankAccount: this.finalSettlementData[0].accountNumber,
+			// 				id: this.editAmountData.settlements.settlement_turn_tables[i - 1].id,
+			// 			}
+
+			// 			this.$store
+			// 				.dispatch('updateSettlementTurnTable', data)
+			// 				.then(() => {})
+			// 				.catch(() => {})
+
+			// 			if (this.processCheckBox) {
+			// 				let message = `${i}차 정산일은 ${
+			// 					this.start_date_picker[i].date
+			// 				}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+			// 				messages.push(message)
+			// 			}
+			// 		}
+
+			// 		let data2 = {
+			// 			totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+			// 			turn: this.timessel.value.replace(/차/g, ''),
+			// 			degree: this.timessel.value.replace(/차/g, ''),
+			// 			id: this.finalSettlementData[0].id,
+			// 		}
+
+			// 		this.$store.dispatch('updateSettlement', data2).then(() => {
+			// this.sweetDialog_false.open = false
+			// this.$store.state.loading = true
+			// this.saveDialogStatus.title = `승인 처리 완료`
+			// this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+			// this.saveDialogStatus.buttonType = 'oneBtn'
+			// this.saveDialogStatus.cancelBtnText = '확인'
+			// this.saveDialogStatus.open = true
+			// this.$store.state.loading = false
+			// 		})
+			// 	}
+			// }
+			// if (this.processCheckBox) {
+			// 	let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
+			// 	let input = {
+			// 		phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
+			// 		content: finalMessage,
+			// 	}
+
+			// 	this.$store
+			// 		.dispatch('sendSmsSettlement', input)
+			// 		.then(() => {})
+			// 		.catch(() => {})
+			// }
 		},
 
 		calculatePaymentAmount(paymentNumber) {
@@ -1747,6 +1867,9 @@ export default {
 		// },
 	},
 	watch: {
+		// 'charge.txtField.value'(newValue) {
+		// 	this.totalCharge.txtField.value = newValue
+		// },
 		// 'timessel.value'(newValue) {
 		// let time = Number(newValue.replace(/차/g, ''))
 		// if (this.finalSettlementData.length !== 0) {

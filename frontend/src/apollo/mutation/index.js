@@ -320,6 +320,7 @@ export const updateSettlement = gql`
 		$rejectComment: String
 		$totalPrice: Long
 		$turn: String
+		$degree: String
 	) {
 		updateSettlement(
 			input: {
@@ -331,6 +332,7 @@ export const updateSettlement = gql`
 					settlementStatus: $settlementStatus
 					adminName: $adminName
 					rejectComment: $rejectComment
+					degree: $degree
 				}
 			}
 		) {
