@@ -761,7 +761,6 @@ export default {
 		goToWorkStatus(status) {
 			let ifStartWork = this.$moment().format('HH:mm:ss.SSS')
 			let elseStartWork = this.$moment(this.date).format('HH:mm:ss.SSS')
-			console.log(status)
 			if (status.data6) {
 				const data = {
 					id: status.gotoworksAll.id,
@@ -784,7 +783,6 @@ export default {
 			}
 		},
 		leaveWorkStatus(status) {
-			console.log(status)
 			if (status.data7) {
 				const data = {
 					id: status.gotoworksAll.id,
@@ -836,7 +834,6 @@ export default {
 				})
 		},
 		updateGotoworkAction(data) {
-			console.log(data)
 			this.$store
 				.dispatch('updateGotowork', data)
 				.then(async () => {
@@ -925,7 +922,6 @@ export default {
 			this.editGotoworkDialog = true
 		},
 		leaveWorkDialogOpen(item) {
-			console.log(item)
 			this.editGotoworkData = {
 				title: '퇴근 시간변경',
 				counselor: item.data1,
@@ -1005,7 +1001,6 @@ export default {
 			this.newDialog2.editData = item
 		},
 		click_vacation_status(item) {
-			console.log(item)
 			this.newDialog.title = '신청 연차 관리'
 			this.newDialog.dialog = true
 			this.newDialog.edit = true
@@ -1026,7 +1021,6 @@ export default {
 			await this.$store.dispatch('vacations', unattendedData).then(res => {
 				this.unattendedLength = res.vacations.length
 			})
-			console.log(this.unattendedLength)
 		},
 		vacation_filter(val) {
 			if (val) {

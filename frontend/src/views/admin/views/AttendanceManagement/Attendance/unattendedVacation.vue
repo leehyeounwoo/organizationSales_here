@@ -266,14 +266,6 @@ export default {
 					}
 					await this.vacationView(input3)
 					await this.viewUsers(input)
-					let input2 = {
-						start: 0,
-						limit: 10,
-						roleName: 'Counselor',
-						userID: this.userIDArr,
-					}
-
-					await this.gotoworksView(input2)
 					await this.dataSetting()
 					this.$emit('update')
 					this.$store.state.loading = false
@@ -284,7 +276,6 @@ export default {
 		checkVacationData(val) {
 			this.currentVacationData = {}
 			this.currentVacationData = val
-			console.log(this.currentVacationData)
 			this.rightInfoTop[0].value = val.date
 			this.rightInfoTop[1].value = val.vacationType
 			this.rightInfoTop[2].value = val.vacationReason
@@ -366,41 +357,7 @@ export default {
 				})
 			})
 		},
-		async gotoworksView(input2) {
-			await this.$store.dispatch('gotoWork', input2).then(res2 => {
-				res2.gotoworks.forEach(element2 => {
-					let workIndex = this.vacationData.findIndex(item => item.userID === element2.userID)
-					this.vacationData[workIndex]['gotoworksAll'] = element2 ? element2 : []
-					this.vacationData[workIndex]['data3'] = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
-					this.startTime = element2.startWork !== null ? this.$moment(element2.startWork)._i.slice(0, 5) : '-'
-					this.vacationData[workIndex]['data4'] = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
-					this.endTime = element2.endWork !== null ? this.$moment(element2.endWork)._i.slice(0, 5) : '-'
-					this.vacationData[workIndex]['data5'] =
-						element2.status === 'endWork'
-							? '퇴근'
-							: element2.status === 'afternoonVacation'
-							? '오후반차'
-							: element2.status === 'morningVacation'
-							? '오전반차'
-							: element2.status === 'vacation'
-							? '휴가'
-							: '출근'
-					if (element2.status === 'vacation') {
-						this.vacationData[workIndex]['data6'] = true
-						this.vacationData[workIndex]['data7'] = true
-						this.vacationData[workIndex]['data8'] = '-'
-					} else {
-						this.vacationData[workIndex]['data6'] = element2.startWork ? true : false
-						this.vacationData[workIndex]['data7'] = element2.endWork ? true : false
-					}
 
-					// if (element2.startWork && element2.endWork) {
-					// 	this.userLists[workIndex]['data8'] = this.timeCheck(element2.startWork, element2.endWork)
-					// }
-				})
-				this.unattendedTable.items = this.vacationData
-			})
-		},
 		async vacationView(item) {
 			await this.$store.dispatch('vacations', item).then(res => {
 				this.unattendedTable.total = res.vacations.length
@@ -480,14 +437,6 @@ export default {
 		}
 		await this.vacationView(input3)
 		await this.viewUsers(input)
-		let input2 = {
-			start: 0,
-			limit: 10,
-			roleName: 'Counselor',
-			userID: this.userIDArr,
-		}
-
-		await this.gotoworksView(input2)
 		await this.dataSetting()
 	},
 }
