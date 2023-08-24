@@ -69,7 +69,7 @@
 						<v-flex xs12 class="ml-auto mb-8">
 							<v-layout justify-end>
 								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#5b5b5b" class="mr-3">확인</v-btn>
-								<v-btn @click="businessAdd" dense width="100" height="26" dark color="#0500B7">저장</v-btn>
+								<v-btn @click="businessAdd" dense width="100" height="26" dark color="#0500B7">{{ saveButton }}</v-btn>
 							</v-layout>
 						</v-flex>
 					</v-layout>
@@ -91,6 +91,11 @@ export default {
 	},
 	props: {
 		setdialog: Object,
+	},
+	computed: {
+		saveButton() {
+			return this.rightInfoBottom[0].radio === 'disagree' ? '저장' : '일괄저장'
+		},
 	},
 
 	data() {
