@@ -412,7 +412,7 @@ export default {
 					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '7%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
-					{ text: '팀', sortable: false, value: 'teamText', align: 'center', width: '7%' },
+					{ text: '팀', sortable: false, value: 'team_rank', align: 'center', width: '7%' },
 					{ text: '승인일', sortable: false, value: 'settlementUpdated_at', align: 'center', width: '7%' },
 					{ text: '상태', sortable: false, value: 'turnStatus', align: 'center', width: '8%' },
 					{ text: '지급예정일', sortable: false, value: 'paymentDate', align: 'center', width: '8%' },
@@ -904,6 +904,7 @@ export default {
 		await this.settlementView(settlementViewData)
 		const usersViewData = {
 			idArr: this.userArrData,
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.usersView(usersViewData)
 		const productsViewData = {
@@ -1036,18 +1037,31 @@ export default {
 			})
 		},
 		async dataSetting() {
-			for (let index = 0; index < this.userData.length; index++) {
-				const element = this.userData[index]
+			for (let index = 0; index < this.list.length; index++) {
+				const element = this.list[index]
+				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
 
-				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-
-				element.teamID = `${teamTitle} `
-				this.list.teamID = element.teamID
+				let teamTitle = '-'
+				let rankTitle = '-'
+				if (teamData) {
+					teamTitle = teamData.id
+					element.teamTitle = teamTitle
+				}
+				if (rankData) {
+					rankTitle = rankData.id
+					element.rankTitle = rankTitle
+				}
+				if (teamData && rankData) {
+					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else {
+					element.team_rank = '-'
+				}
+				element.teamItems = this.teamData
+				element.rankItems = this.rankData
 			}
-
-			this.processTable.items = this.list
+			this.processTable.items = JSON.parse(JSON.stringify(this.list))
 			this.processTable.origin_items = JSON.parse(JSON.stringify(this.list))
-			console.log(this.processTable.items)
 		},
 
 		async settlementView(settlementViewData) {
@@ -1105,7 +1119,8 @@ export default {
 								items.username = element.username
 								items.phoneNumber = element.phoneNumber
 								items.settlementPhoneNumber = element.salesPhoneNumber
-								items.teamID = element.teamID
+								items.teamID = element.teamID ? element.teamID : ''
+								items.rankID = element.rankID ? element.rankID : ''
 								let teamText = this.searchsel1.items.filter(el => el.value === String(items.teamID))
 								if (items.teamID && teamText.length > 0) {
 									items.teamText = teamText[0].title
@@ -1198,23 +1213,23 @@ export default {
 		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
+			// let text
+			// if (date === 'Sun') {
+			// 	text = '일'
+			// } else if (date === 'Mon') {
+			// 	text = '월'
+			// } else if (date === 'Tue') {
+			// 	text = '화'
+			// } else if (date === 'Wed') {
+			// 	text = '수'
+			// } else if (date === 'Thu') {
+			// 	text = '목'
+			// } else if (date === 'Fri') {
+			// 	text = '금'
+			// } else if (date === 'Sat') {
+			// 	text = '토'
+			// }
+			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${date})`
 		},
 		update() {
 			let input = {

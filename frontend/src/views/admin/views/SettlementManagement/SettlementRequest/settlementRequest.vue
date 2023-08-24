@@ -185,7 +185,7 @@ export default {
 					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '10%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
-					{ text: '팀', sortable: false, value: 'teamText', align: 'center', width: '10%' },
+					{ text: '팀', sortable: false, value: 'team_rank', align: 'center', width: '10%' },
 					{ text: '계약일', sortable: false, value: 'contractDate', align: 'center', width: '10%' },
 					{ text: '계약물건', sortable: false, value: 'product', align: 'center', width: '10%' },
 					{ text: '요청일', sortable: false, value: 'settlementCreated_at', align: 'center', width: '15%' },
@@ -281,6 +281,7 @@ export default {
 		const usersViewData = {
 			idArr: this.userArrData,
 			roleName: 'Counselor',
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.usersView(usersViewData)
 		const productsViewData = {
@@ -289,10 +290,12 @@ export default {
 		await this.productsView(productsViewData)
 		const teamsViewData = {
 			idArr: this.teamArrData,
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.teamsView(teamsViewData)
 		const ranksViewData = {
 			idArr: this.rankArrData,
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()
@@ -331,16 +334,31 @@ export default {
 			})
 		},
 		async dataSetting() {
-			for (let index = 0; index < this.userData.length; index++) {
-				const element = this.userData[index]
+			for (let index = 0; index < this.list.length; index++) {
+				const element = this.list[index]
+				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
 
-				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-
-				element.teamID = `${teamTitle}`
-				this.list.teamID = element.teamID
+				let teamTitle = '-'
+				let rankTitle = '-'
+				if (teamData) {
+					teamTitle = teamData.id
+					element.teamTitle = teamTitle
+				}
+				if (rankData) {
+					rankTitle = rankData.id
+					element.rankTitle = rankTitle
+				}
+				if (teamData && rankData) {
+					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else {
+					element.team_rank = '-'
+				}
+				element.teamItems = this.teamData
+				element.rankItems = this.rankData
 			}
-
-			this.settlementTable.items = this.list
+			console.log(this.list)
+			this.settlementTable.items = JSON.parse(JSON.stringify(this.list))
 			this.settlementTable.origin_items = JSON.parse(JSON.stringify(this.list))
 		},
 
@@ -377,7 +395,8 @@ export default {
 								items.username = element.username
 								items.phoneNumber = element.phoneNumber
 								items.settlementPhoneNumber = element.salesPhoneNumber
-								items.teamID = element.teamID
+								items.teamID = element.teamID ? element.teamID : '-'
+								items.rankID = element.rankID ? element.rankID : '-'
 								let teamText = this.searchsel1.items.filter(el => el.value === String(items.teamID))
 								if (items.teamID && teamText.length > 0) {
 									items.teamText = teamText[0].title

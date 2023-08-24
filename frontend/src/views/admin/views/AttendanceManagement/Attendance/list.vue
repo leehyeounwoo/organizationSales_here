@@ -440,6 +440,7 @@ export default {
 		async getTeams() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 
 			await this.$store.dispatch('teams', data).then(res => {
@@ -452,6 +453,7 @@ export default {
 		async getRanks() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 			await this.$store
 				.dispatch('ranks', data)
