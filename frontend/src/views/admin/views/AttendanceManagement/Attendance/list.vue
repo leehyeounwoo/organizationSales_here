@@ -382,7 +382,7 @@ export default {
 			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
 			// roleName: 'Counselor',
-			userID: this.userIDArr,
+			idArr: this.userIDArr,
 		}
 		await this.gotoworksView(input2)
 		await this.unattendedVacation()
@@ -579,9 +579,7 @@ export default {
 				res.vacations.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
-					// this.userLists[workIndex]['vacationStart'] = el.start
-					// this.userLists[workIndex]['vacationEnd'] = el.end
-					this.userLists[workIndex]['vacationDate'] = el.date
+					this.userLists[workIndex]['vacationDate'] = el.date ? el.date : '-'
 					this.userLists[workIndex]['vacationReason'] = el.vacationReason
 					this.userLists[workIndex]['vacation'] = el.vacationStatus
 					this.userLists[workIndex]['vacationType'] = el.vacationType
@@ -890,29 +888,31 @@ export default {
 			return timeData
 		},
 		async SearchBiz() {
+			this.$store.state.loading = true
 			let input = {
 				start: 0,
 				limit: 10,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
+			await this.viewUsers(input)
 			let input2 = {
 				start: 0,
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				userID: this.userIDArr,
 			}
+			await this.gotoworksView(input2)
 			let input3 = {
 				start: 0,
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
-				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
-			await this.viewUsers(input)
-			await this.gotoworksView(input2)
+
 			await this.vacationView(input3)
 			await this.dataSetting()
+			this.$store.state.loading = false
 		},
 		gotoWorkDialogOpen(item) {
 			this.editGotoworkData = {

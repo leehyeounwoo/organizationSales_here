@@ -212,12 +212,14 @@ export default {
 				itemText: 'title',
 			},
 			searchsel1: {
-				value: '상담사 이름',
+				value: '',
 				errorMessage: '',
 				hideDetail: true,
-				items: ['상담사 이름', '휴대전화'],
+				items: [],
 				outlined: true,
-				placeholder: '상담사 이름/휴대전화',
+				placeholder: '',
+				returnObject: true,
+				itemText: 'title',
 			},
 			start_date_picker: {
 				date: this.$moment()
@@ -296,6 +298,7 @@ export default {
 			}
 		},
 		async click_search() {
+			this.$store.state.loading = true
 			this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
 			let data = {
 				date_gte: this.start_date_picker.date,
@@ -303,20 +306,19 @@ export default {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
-			if (this.searchsel1.value === '상담사 이름') {
-				data.name = this.search_project
-			} else if (this.searchsel1.value === '휴대전화') {
-				data.phone = this.search_project
+			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
+				data.teamID = this.searchsel1.value.id
 			}
+			await this.viewUsers(data)
 			let data2 = {
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
 				userID: this.userIDArr,
 				roleName: 'Counselor',
 			}
-			await this.viewUsers(data)
 			await this.gotoworksView(data2)
 			await this.dataSetting()
+			this.$store.state.loading = false
 		},
 
 		timeCheck(start, end) {
@@ -442,7 +444,6 @@ export default {
 			}
 		},
 		async dataSetting() {
-			console.log(this.userLists)
 			for (let index = 0; index < this.userLists.length; index++) {
 				const element = this.userLists[index]
 				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
@@ -484,12 +485,13 @@ export default {
 		async getTeams() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 
 			await this.$store.dispatch('teams', data).then(res => {
 				this.searchsel1.items = JSON.parse(JSON.stringify(res.teams))
-				this.searchsel1.items.unshift('전체')
-				this.searchsel1.value = '전체'
+				this.searchsel1.items.unshift('팀 선택')
+				this.searchsel1.value = '팀 선택'
 				this.teamData = res.teams
 			})
 		},
@@ -508,7 +510,6 @@ export default {
 				})
 		},
 		async viewUsers(data) {
-			console.log(data)
 			this.$store.state.loading = true
 			if (this.search_project) {
 				data.username = this.search_project
@@ -520,12 +521,12 @@ export default {
 				.dispatch('users', data)
 				.then(res => {
 					let list = []
-					console.log(res)
+
 					this.userIDArr = []
 					for (let i = 0; i < res.users.length; i++) {
 						this.userIDArr.push(res.users[i].id)
 					}
-					console.log(this.userIDArr)
+
 					for (let index = 0; index < res.users.length; index++) {
 						const element = res.users[index]
 						// element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
@@ -561,7 +562,6 @@ export default {
 		},
 		async gotoworksView(data2) {
 			await this.$store.dispatch('gotoWork', data2).then(res => {
-				console.log(res)
 				res.gotoworks.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 					this.userLists[workIndex]['gotoworks'].push(el)
@@ -586,9 +586,7 @@ export default {
 					}
 				})
 
-				console.log('유리', this.userLists)
 				this.table.items = this.userLists
-				console.log('디테', this.table.items)
 			})
 		},
 		headerCheckAction(startDate, endDate) {
