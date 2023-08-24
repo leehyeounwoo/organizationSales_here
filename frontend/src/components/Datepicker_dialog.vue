@@ -63,8 +63,13 @@ export default {
 				return this.picker.date
 			}
 		},
-		pickerDate() {
-			return this.$moment(this.picker.date).format('YYYY-MM-DD')
+		pickerDate: {
+			get() {
+				return this.$moment(this.picker.date).format('YYYY-MM-DD')
+			},
+			set(newValue) {
+				this.picker.date = this.$moment(newValue).format('YYYY-MM-DD')
+			},
 		},
 	},
 	data() {
