@@ -104,11 +104,18 @@ export default {
 			return this.$store.state.bellNum
 		},
 	},
+	beforeCreate() {
+		this.$store.dispatch('businesses').then(res => {
+			console.log(res)
+			this.$store.state.businessSelectBox.items = res.businesses
+			this.$store.state.businessSelectBox.value = res.businesses[0].id
+		})
+	},
 	async created() {
 		if (!sessionStorage.getItem('reserveLite-t')) {
 			// this.$router.push({ name: 'kioskLogin' }).catch(() => {})
 		}
-		this.businessView()
+		// this.businessView()
 		// else {
 		// this.meData()
 		// }

@@ -1829,7 +1829,13 @@
 			<!-- 정산금 지급 처리 - 상태 -->
 			<template v-slot:[`item.turnStatus`]="{ item }">
 				<div>
-					{{ item.turnStatus === 'waiting' ? item.turnTableDegree + '차 지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
+					{{
+						item.turnStatus === 'waiting'
+							? item.turnTableDegree + '차 지급 대기'
+							: item.turnStatus === 'complete'
+							? '지급 완료'
+							: '지급 일정 입력 전'
+					}}
 				</div>
 			</template>
 			<!-- 정산금 지급 처리 - 지급예정일 -->
