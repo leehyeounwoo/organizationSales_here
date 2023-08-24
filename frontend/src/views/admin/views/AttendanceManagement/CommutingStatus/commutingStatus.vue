@@ -63,7 +63,7 @@
 									<td>
 										{{ d.username }}
 									</td>
-									<td style="border-right:1px solid #d1d1d1; ">{{ d.teamID }}팀 / {{ d.rankId === '1' ? '상담사' : '' }}</td>
+									<td style="border-right:1px solid #d1d1d1; ">{{ d.team_rank }}</td>
 									<td style="border-right:1px solid #d1d1d1; ">
 										{{ d.gotoworks.filter(x => x.status === 'endWork').length }}Day <br />
 										{{ allTimeCheck(d.gotoworks) }}
@@ -301,6 +301,7 @@ export default {
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			if (this.searchsel1.value === '상담사 이름') {
 				data.name = this.search_project
@@ -311,9 +312,11 @@ export default {
 				date_gte: this.start_date_picker.date,
 				date_lte: this.end_date_picker.date,
 				userID: this.userIDArr,
+				roleName: 'Counselor',
 			}
 			await this.viewUsers(data)
 			await this.gotoworksView(data2)
+			await this.dataSetting()
 		},
 
 		timeCheck(start, end) {

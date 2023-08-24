@@ -109,7 +109,10 @@ export default {
 						value: '',
 						selectBox: {
 							value: '',
-							items: ['30분', '60분'],
+							items: [
+								{ text: '30분', value: '30' },
+								{ text: '60분', value: '60' },
+							],
 							hideDetail: true,
 							outlined: true,
 							class: 'small_font bizInput',

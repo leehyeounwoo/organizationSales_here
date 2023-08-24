@@ -102,6 +102,9 @@
 				</v-layout>
 			</template>
 		</v-data-table>
+		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
+			<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
+		</v-btn>
 		<v-btn small class="btn-style2" @click="clickExport()">
 			<img src="@/assets/images/excel-img2.png" />
 			엑셀 다운로드
@@ -211,6 +214,7 @@
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 		<detail :setdialog="newDialog2"></detail>
 		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
+		<unattendedVacation :setdialog="newDialog3" @update="update"></unattendedVacation>
 	</div>
 </template>
 
@@ -222,6 +226,7 @@ import vacationStatus from './vacationStatus.vue'
 // import moment from 'moment'
 // import 'moment/locale/ko'
 import downloadExcel from 'vue-json-excel'
+import unattendedVacation from './unattendedVacation.vue'
 export default {
 	components: {
 		downloadExcel,
@@ -231,10 +236,12 @@ export default {
 		vacationStatus,
 		saveDialog,
 		DatepickerDialog,
+		unattendedVacation,
 	},
 
 	data() {
 		return {
+			unattendedLength: 0,
 			date: this.$moment(),
 			startTimeDialog: false,
 			endTimeDialog: false,
@@ -267,7 +274,7 @@ export default {
 				dialog: false,
 				edit: false,
 				editData: {},
-				title: '출퇴근 리스트',
+				title: '미처리 연차 신청 현황',
 			},
 			selected: [],
 			allCounselor: 0,
@@ -347,6 +354,7 @@ export default {
 			userIDArr: [],
 			teamData: [],
 			rankData: [],
+			vacationData: [],
 		}
 	},
 
@@ -377,6 +385,7 @@ export default {
 			userID: this.userIDArr,
 		}
 		await this.gotoworksView(input2)
+		await this.unattendedVacation()
 		await this.vacationView(input3)
 		await this.dataSetting()
 		this.$store.state.loading = false
@@ -431,6 +440,7 @@ export default {
 		async getTeams() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 
 			await this.$store.dispatch('teams', data).then(res => {
@@ -443,6 +453,7 @@ export default {
 		async getRanks() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 			await this.$store
 				.dispatch('ranks', data)
@@ -619,21 +630,34 @@ export default {
 		},
 
 		async update() {
+			await this.me()
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
-				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				start: 0,
+				limit: 10,
 				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
+			await this.viewUsers(input)
 			let input2 = {
-				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				start: 0,
+				limit: 10,
+				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
 			let input3 = {
-				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
-				roleName: 'Counselor',
+				start: 0,
+				limit: 10,
+				date: this.$moment().format('YYYY-MM-DD'),
+				// roleName: 'Counselor',
+				userID: this.userIDArr,
 			}
-			this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.unattendedVacation()
 			await this.vacationView(input3)
+			await this.dataSetting()
 		},
 
 		async click_date_before() {
@@ -739,7 +763,6 @@ export default {
 		goToWorkStatus(status) {
 			let ifStartWork = this.$moment().format('HH:mm:ss.SSS')
 			let elseStartWork = this.$moment(this.date).format('HH:mm:ss.SSS')
-			console.log(status)
 			if (status.data6) {
 				const data = {
 					id: status.gotoworksAll.id,
@@ -762,7 +785,6 @@ export default {
 			}
 		},
 		leaveWorkStatus(status) {
-			console.log(status)
 			if (status.data7) {
 				const data = {
 					id: status.gotoworksAll.id,
@@ -814,7 +836,6 @@ export default {
 				})
 		},
 		updateGotoworkAction(data) {
-			console.log(data)
 			this.$store
 				.dispatch('updateGotowork', data)
 				.then(async () => {
@@ -903,7 +924,6 @@ export default {
 			this.editGotoworkDialog = true
 		},
 		leaveWorkDialogOpen(item) {
-			console.log(item)
 			this.editGotoworkData = {
 				title: '퇴근 시간변경',
 				counselor: item.data1,
@@ -983,11 +1003,26 @@ export default {
 			this.newDialog2.editData = item
 		},
 		click_vacation_status(item) {
-			console.log(item)
 			this.newDialog.title = '신청 연차 관리'
 			this.newDialog.dialog = true
 			this.newDialog.edit = true
 			this.newDialog.editData = item
+		},
+		createUnattendedVacation() {
+			this.newDialog3.title = '미처리 연차 신청 현황'
+			this.newDialog3.dialog = true
+			this.newDialog3.edit = true
+		},
+		async unattendedVacation() {
+			let unattendedData = {
+				start: 0,
+				limit: 10,
+				vacationStatus: 'waiting',
+			}
+
+			await this.$store.dispatch('vacations', unattendedData).then(res => {
+				this.unattendedLength = res.vacations.length
+			})
 		},
 		vacation_filter(val) {
 			if (val) {
@@ -1276,5 +1311,16 @@ export default {
 	position: absolute;
 	bottom: 15px;
 	left: 0px;
+}
+.btn-style3 {
+	box-shadow: none;
+	background-color: #ff7519 !important;
+	border: 1px solid #ff7519;
+	color: #ff7519;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 15px;
+	height: 15px;
+	left: 130px;
 }
 </style>

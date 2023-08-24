@@ -284,10 +284,17 @@ export default {
 			})
 		},
 		select2(select) {
-			if (select.selectBox.value === '30분') {
-				select.selectBox2.items = ['60분', '90분', '120분']
+			if (select.selectBox.value === '30') {
+				select.selectBox2.items = [
+					{ text: '60분', value: '60' },
+					{ text: '90분', value: '90' },
+					{ text: '120분', value: '120' },
+				]
 			} else {
-				select.selectBox2.items = ['60분', '120분']
+				select.selectBox2.items = [
+					{ text: '60분', value: '60' },
+					{ text: '120분', value: '120' },
+				]
 			}
 		},
 		addManager() {
