@@ -10,7 +10,7 @@
 			<v-flex xs1 class="mr-2">
 				<selectBox :sel="productFilter3" style="font-size:13px"></selectBox>
 			</v-flex>
-			<v-btn class="ml-3 search_btn" color="#009dac">적용</v-btn>
+			<v-btn class="ml-3 search_btn" color="#009dac" @click="searchProduct">적용</v-btn>
 		</v-layout>
 		<v-layout justify-end>
 			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
@@ -121,6 +121,7 @@ export default {
 				],
 				class: 'datatablehover3',
 				items: [],
+				items_origin: [],
 				noweditting: '',
 				itemsPerPage: 10,
 				page: 1,
@@ -129,6 +130,19 @@ export default {
 		}
 	},
 	methods: {
+		searchProduct() {
+			let item = this.productManager.items_origin
+			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
+				item = item.filter(el => el.housingType === this.productFilter1.value)
+			}
+			if (this.productFilter2.value && this.productFilter2.value !== 'all') {
+				item = item.filter(el => el.dong === this.productFilter2.value)
+			}
+			if (this.productFilter3.value && this.productFilter3.value !== 'all') {
+				item = item.filter(el => el.ho === this.productFilter3.value)
+			}
+			this.productManager.items = item
+		},
 		async productSelectData() {
 			const businessViewData = {
 				idArr: this.$store.state.businessSelectBox.value,
@@ -359,6 +373,17 @@ export default {
 						}
 					})
 					console.log(this.productManager.items)
+					let data1 = [{ text: '전체', value: 'all' }]
+					let data2 = [{ text: '전체', value: 'all' }]
+					let data3 = [{ text: '전체', value: 'all' }]
+					this.productManager.items.forEach(el => {
+						data1.push({ text: el.housingType, value: el.housingType })
+						data2.push({ text: el.dong + '동', value: el.dong })
+						data3.push({ text: el.ho + '호', value: el.ho })
+					})
+					this.productFilter1.items = data1
+					this.productFilter2.items = data2
+					this.productFilter3.items = data3
 					// this.productManager.items.team.value= this.productManager.items.assingnmentTeamData.id
 				})
 				.catch(err => {
@@ -425,13 +450,18 @@ export default {
 					element.holdingTime3 = {
 						placeholder: '선택',
 						value: '',
-						items: ['30분', '60분', '90분'],
+						items: [
+							{ text: '30분', value: '30' },
+							{ text: '60분', value: '60' },
+							{ text: '90분', value: '90' },
+						],
 						hideDetail: true,
 						outlined: true,
 						class: 'searchSel',
 					}
 				}
 				this.productManager.items = res.products
+				this.productManager.items_origin = JSON.parse(JSON.stringify(res.products))
 			})
 		},
 		holdTimeShow() {
