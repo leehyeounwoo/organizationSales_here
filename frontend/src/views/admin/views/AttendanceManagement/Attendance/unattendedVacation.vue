@@ -68,7 +68,7 @@
 					<v-layout wrap class="pt-10">
 						<v-flex xs12 class="ml-auto mb-8">
 							<v-layout justify-end>
-								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#5b5b5b" class="mr-3">확인</v-btn>
+								<v-btn @click="reset()" dense width="100" height="26" dark color="#5b5b5b" class="mr-3">확인</v-btn>
 								<v-btn @click="businessAdd" dense width="100" height="26" dark color="#0500B7">{{ saveButton }}</v-btn>
 							</v-layout>
 						</v-flex>
@@ -213,6 +213,11 @@ export default {
 			}
 		},
 		reset() {
+			this.currentVacationData = {}
+			this.rightInfoBottom[1].value = ''
+			this.rightInfoTop[0].value = ''
+			this.rightInfoTop[1].value = ''
+			this.rightInfoTop[2].value = ''
 			this.setdialog.dialog = false
 		},
 
