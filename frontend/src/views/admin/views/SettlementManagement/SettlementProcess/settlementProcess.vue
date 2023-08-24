@@ -913,10 +913,12 @@ export default {
 		await this.productsView(productsViewData)
 		const teamsViewData = {
 			idArr: this.teamArrData,
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.teamsView(teamsViewData)
 		const ranksViewData = {
 			idArr: this.rankArrData,
+			businessID: this.$store.state.businessSelectBox.value,
 		}
 		await this.ranksView(ranksViewData)
 		await this.dataSetting()

@@ -401,7 +401,6 @@ export default {
 
 		async userView(userViewData) {
 			await this.$store.dispatch('users', userViewData).then(res => {
-				console.log(res.users[0].businessID)
 				this.businessID = res.users[0].businessID
 			})
 		},
@@ -412,7 +411,6 @@ export default {
 		async messageView(businessData) {
 			await this.$store.dispatch('messages', businessData).then(res => {
 				let data = res.messages
-				console.log(data)
 
 				data.forEach(el => {
 					el['type'] =
@@ -429,24 +427,25 @@ export default {
 					el['SMSuseYn'] = el.useYn === 'true' ? '사용' : '미사용'
 				})
 				this.evidenceTable.items = data
-				console.log(this.evidenceTable.items)
 			})
 		},
 
 		async infoView(businessData) {
-			await this.$store.dispatch('systems', businessData).then(res => {
-				res.systems.forEach(element => {
-					const data = {}
+			if (this.$store.state.businessSelectBox.value === businessData.idArr) {
+				await this.$store.dispatch('systems', businessData).then(res => {
+					res.systems.forEach(element => {
+						const data = {}
 
-					if (element.turn !== 'etc') {
-						data.degree = element.turn
-						data.evidence = element.inputFiles.evidence
-						this.addedItems.push(data)
-					} else {
-						this.etcInfo.txtField.value = element.inputFiles.evidence
-					}
+						if (element.turn !== 'etc') {
+							data.degree = element.turn
+							data.evidence = element.inputFiles.evidence
+							this.addedItems.push(data)
+						} else {
+							this.etcInfo.txtField.value = element.inputFiles.evidence
+						}
+					})
 				})
-			})
+			}
 		},
 
 		async pagination(item) {
@@ -555,7 +554,6 @@ export default {
 			if (this.addedItems.length < 5) {
 				let splitLine = this.EvidenceField.evidence.txtField.value.split('\n')
 
-				console.log(splitLine)
 				const newItem = {
 					degree: this.EvidenceField.degree.txtField.value,
 					evidence: splitLine,
@@ -577,8 +575,6 @@ export default {
 					this.EvidenceField.degree.txtField.value = ''
 					this.EvidenceField.evidence.txtField.value = ''
 				}
-
-				console.log(this.addedItems)
 			} else {
 				this.sweetDialog_info.title = `추가 실패`
 				this.sweetDialog_info.content = `지급 안내는 최대 5차까지 가능합니다`
@@ -589,7 +585,6 @@ export default {
 		},
 
 		openSaveInfoModal() {
-			console.log(this.addedItems)
 			if (this.addedItems.length === 0) {
 				this.sweetDialog_info.title = `저장 실패`
 				this.sweetDialog_info.content = `증빙자료, 기타 안내를 입력해주세요`
@@ -611,7 +606,7 @@ export default {
 							inputFiles: {
 								evidence: i === addEtcLength ? this.etcInfo.txtField.value : this.addedItems[i].evidence,
 							},
-							businessID: this.businessID,
+							businessID: this.$store.state.businessSelectBox.value,
 						}
 
 						this.$store.dispatch('createSystem', data).then(() => {
