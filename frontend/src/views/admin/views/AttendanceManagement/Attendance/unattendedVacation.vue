@@ -110,8 +110,8 @@ export default {
 			},
 			sweetDialog: {
 				open: false,
-				title: '신청 연차 관리',
-				content: `승인 결과를 저장합니다.`,
+				title: '미처리 연차 신청 저장',
+				content: `승인 결과를 저장합니다 \n 반려되지 않은 모든 연차가 승인처리됩니다`,
 				cancelBtnText: '취소',
 				buttonType: 'twoBtn',
 				saveBtnText: '저장',
@@ -121,6 +121,7 @@ export default {
 				itemKey: 'date',
 				headers: [
 					{ text: '이름', value: 'username' },
+					{ text: '신청일', value: 'date' },
 					{ text: '연락처', value: 'phoneNumber' },
 					{ text: '지점', value: 'businessName' },
 					{ text: '팀', value: 'team_rank' },
