@@ -20,7 +20,7 @@
 		</template>
 
 		<v-date-picker
-			v-model="picker.date"
+			v-model="pickerDate"
 			:multiple="picker.multiple"
 			:range="picker.range"
 			:allowed-dates="allowed_dates"
@@ -62,6 +62,9 @@ export default {
 			} else {
 				return this.picker.date
 			}
+		},
+		pickerDate() {
+			return this.$moment(this.picker.date).format('YYYY-MM-DD')
 		},
 	},
 	data() {

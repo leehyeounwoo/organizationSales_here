@@ -755,7 +755,7 @@ export default {
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
 			await this.dataSetting()
-			this.date = this.$moment(this.date_picker.date)
+			this.date_picker.date = this.$moment(this.date_picker.date)
 		},
 
 		goToWorkStatus(status) {

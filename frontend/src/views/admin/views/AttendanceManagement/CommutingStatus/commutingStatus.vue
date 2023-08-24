@@ -155,6 +155,7 @@ export default {
 		downloadExcel,
 	},
 	async created() {
+		this.$store.state.loading = true
 		await this.me()
 		await this.getTeams()
 		await this.getRanks()
@@ -174,6 +175,7 @@ export default {
 		}
 		await this.gotoworksView(data2)
 		await this.dataSetting()
+		this.$store.state.loading = false
 	},
 	data() {
 		return {
