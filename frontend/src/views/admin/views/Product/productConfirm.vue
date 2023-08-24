@@ -2,7 +2,7 @@
 	<div class="mt-7">
 		<v-layout align-center justify-end class="header_search">
 			<v-flex xs1 class="mr-2">
-				<selectBox :sel="productFilter1" style="font-size:13px;"></selectBox>
+				<selectBox :sel="productFilter1" style="font-size:13px;" @change="selectFilter2"></selectBox>
 			</v-flex>
 			<v-flex xs1 class="mr-2">
 				<selectBox :sel="productFilter2" style="font-size:13px"></selectBox>
@@ -67,6 +67,9 @@ export default {
 		}, 1000)
 	},
 	methods: {
+		selectFilter2() {
+			console.log(123)
+		},
 		editAssignmentAction(item) {
 			const data = {
 				id: item.id,
@@ -135,6 +138,11 @@ export default {
 				}
 				console.log(this.productTable.items)
 				this.productTable.items = JSON.parse(JSON.stringify(this.productTable.items))
+				let data1 = [{ text: '전체', value: 'all' }]
+				this.productTable.items.forEach(el => {
+					data1.push({ text: el.product.housingType, value: el.product.housingType })
+				})
+				this.productFilter1.items = data1
 			})
 		},
 		async teamView(teamViewData) {

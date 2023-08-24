@@ -264,6 +264,7 @@ export default {
 					this.productSelectData()
 				})
 			}
+			this.holdingDetail.dialog = false
 		},
 		managerChoiceStatusChange(val, item) {
 			if (val === '담당자 지정') {
@@ -339,6 +340,25 @@ export default {
 						}
 					}
 					this.productManager.items = JSON.parse(JSON.stringify(this.productManager.items))
+					this.productManager.items.forEach(el => {
+						if (el.assingnmentData) {
+							el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
+								this.$moment(),
+								'minute',
+							)
+							if (el.leaveTime < 0) {
+								const data = {
+									id: el.assingnmentData.id,
+									useYn: false,
+								}
+								this.$store.dispatch('updateAssignment', data).then(async res => {
+									console.log(res)
+									this.productSelectData()
+								})
+							}
+						}
+					})
+					console.log(this.productManager.items)
 					// this.productManager.items.team.value= this.productManager.items.assingnmentTeamData.id
 				})
 				.catch(err => {
@@ -415,10 +435,10 @@ export default {
 			})
 		},
 		holdTimeShow() {
-			console.log()
 			this.holdingDetail.holdingDashboard.items = this.productManager.items.filter(x => x.assingnmentData)
 			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
 			this.holdingDetail.dialog = true
+			console.log(this.holdingDetail.holdingDashboard.items)
 		},
 	},
 }

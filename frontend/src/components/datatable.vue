@@ -1771,7 +1771,7 @@
 						{{ item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1] }}
 					</div>
 					<!-- <div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div> -->
-					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
+					<div v-if="item.leaveTime !== null" class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
 						잔여시간 :
 						<!-- {{
 							$moment().diff(
@@ -1781,7 +1781,7 @@
 								'hours',
 							)
 						}} -->
-						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.assingnmentData.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
+						{{ item.leaveTime }} 분
 					</div>
 					<v-spacer></v-spacer>
 					<v-btn
