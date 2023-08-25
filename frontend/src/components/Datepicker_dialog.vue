@@ -58,7 +58,7 @@ export default {
 			if (this.language === 'ko') {
 				return moment(this.picker.date)
 					.locale('ko')
-					.format('YYYY년-MM월-DD일(ddd)')
+					.format('YYYY년 MM월 DD일(ddd)')
 			} else {
 				return this.picker.date
 			}
