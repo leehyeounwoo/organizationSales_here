@@ -112,7 +112,7 @@
 		<download-excel
 			class="btn btn-default"
 			id="clientExcel"
-			:data="table.items"
+			:data="selected"
 			style="display:none"
 			:fields="table.json_fields"
 			type="text/csv;charset=utf8"
@@ -212,6 +212,7 @@
 		</v-dialog>
 
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
+		<saveDialog :dialog="downloadDialogStatus" :activeSave="downloadActiveSave"></saveDialog>
 		<detail :setdialog="newDialog2"></detail>
 		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
 		<unattendedVacation :setdialog="newDialog3" @update="update"></unattendedVacation>
@@ -276,6 +277,11 @@ export default {
 				editData: {},
 				title: '미처리 연차 신청 현황',
 			},
+			downloadDialogStatus: {
+				open: false,
+				content: '저장하시겠습니까?',
+				btnTxt: '저장',
+			},
 			selected: [],
 			allCounselor: 0,
 			work: 0,
@@ -302,13 +308,12 @@ export default {
 				json_fields: {
 					직원명: 'data1',
 					연락처: 'data2',
-					지점: 'position',
-					부서: 'team',
-					직급: 'rank',
+					영업번호: 'salesPhoneNumber',
+					등록일: 'created_at',
+					팀: 'team_rank',
 					상태: 'data5',
 					출근시간: 'data3',
 					퇴근시간: 'data4',
-					'신청 연차 관리': 'vaction',
 				},
 				itemsPerPage: 10,
 				page: 1,
@@ -588,6 +593,31 @@ export default {
 					this.userLists[workIndex]['vacationRejectComment'] = el.rejectComment
 				})
 			})
+		},
+		clickExport() {
+			if (this.selected.length > 0) {
+				this.downloadDialogStatus = {
+					open: true,
+					content: '엑셀 다운로드를 받으시겠습니까?',
+					cancelBtnTxt: '취소',
+					cancelBtn: true,
+					btnTxt: '다운로드',
+					activeBtn: true,
+				}
+				// document.getElementById('clientExcel').click()
+			} else {
+				this.downloadDialogStatus = {
+					open: true,
+					content: '엑셀 다운로드 받을 상담사를 선택해주세요.',
+					cancelBtnTxt: '확인',
+					cancelBtn: true,
+				}
+			}
+			// document.getElementById(`clientExcel`).click()
+		},
+		downloadActiveSave() {
+			document.getElementById('clientExcel').click()
+			this.downloadDialogStatus.open = false
 		},
 
 		async pagination(item) {
