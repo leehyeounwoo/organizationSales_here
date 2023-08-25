@@ -2,8 +2,10 @@
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
 			<v-layout align-center justify-start>
-				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;">
-					{{ date_filter(date) }}
+				<v-flex xs4>
+					<div class="d-flex align-center date_picker2 ml-3 mr-2" style="width:200px;">
+						<DatepickerDialog :picker="date_picker" language="ko" @change="click_date_picker"></DatepickerDialog>
+					</div>
 				</v-flex>
 				<v-flex>
 					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
@@ -122,13 +124,14 @@
 	</div>
 </template>
 <script>
-import { selectBox, txtField, datatable, sweetAlert } from '@/components/index.js'
+import { selectBox, txtField, datatable, sweetAlert, DatepickerDialog } from '@/components/index.js'
 export default {
 	components: {
 		selectBox,
 		txtField,
 		datatable,
 		sweetAlert,
+		DatepickerDialog,
 	},
 
 	data() {

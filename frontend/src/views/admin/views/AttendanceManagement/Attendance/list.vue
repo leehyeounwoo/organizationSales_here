@@ -855,8 +855,17 @@ export default {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
 					}
+					let input3 = {
+						start: 0,
+						limit: 10,
+						date: this.$moment().format('YYYY-MM-DD'),
+						// roleName: 'Counselor',
+						idArr: this.userIDArr,
+					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.unattendedVacation()
+					await this.vacationView(input3)
 					await this.dataSetting()
 				})
 				.catch(err => {
@@ -876,8 +885,17 @@ export default {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
 					}
+					let input3 = {
+						start: 0,
+						limit: 10,
+						date: this.$moment().format('YYYY-MM-DD'),
+						// roleName: 'Counselor',
+						idArr: this.userIDArr,
+					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.unattendedVacation()
+					await this.vacationView(input3)
 					await this.dataSetting()
 				})
 				.catch(err => {
@@ -897,8 +915,17 @@ export default {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
 					}
+					let input3 = {
+						start: 0,
+						limit: 10,
+						date: this.$moment().format('YYYY-MM-DD'),
+						// roleName: 'Counselor',
+						idArr: this.userIDArr,
+					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.unattendedVacation()
+					await this.vacationView(input3)
 					await this.dataSetting()
 				})
 				.catch(err => {
