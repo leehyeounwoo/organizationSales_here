@@ -24,7 +24,7 @@
 		<v-layout>
 			<v-flex mr-1 v-for="(team, index) in teamData" :key="index" xs2 style="font-size:0.75rem;">
 				<v-layout mt-1 justify-center style="border:1px solid black; cursor:pointer;" @click="dataSetting(team, index)">
-					{{ team.title }}/{{ team.count }} 명
+					{{ team.title }} / {{ team.count }} 명
 				</v-layout>
 				<v-layout mt-1 v-if="team.userData">
 					<v-flex mr-1 class="blueBox text-center">{{ team.workCount }}명</v-flex>
@@ -146,6 +146,7 @@ export default {
 	async created() {
 		this.$store.state.loading = true
 		const teamsViewData = {
+			businessID: this.$store.state.businessSelectBox.value,
 			useYn: true,
 		}
 		await this.teamsView(teamsViewData)
@@ -158,6 +159,7 @@ export default {
 		for (let index = 0; index < this.teamData.length; index++) {
 			const element = this.teamData[index]
 			const usersConnectionTeamViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
 				teamID: element.id,
 			}
 			await this.usersConnectionTeamView(usersConnectionTeamViewData)
@@ -183,6 +185,7 @@ export default {
 		async searchSelect() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 			await this.$store.dispatch('teams', data).then(res => {
 				let item = [{ title: '전체', value: 'all' }]
@@ -193,14 +196,11 @@ export default {
 			})
 		},
 		async usersView(usersViewData, index) {
-			console.log(usersViewData)
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
-					console.log(res)
 					this.teamData[index].userData = res.users
 					this.teamData = JSON.parse(JSON.stringify(this.teamData))
-					console.log(this.teamData)
 				})
 				.catch(err => {
 					console.log(err)
@@ -234,7 +234,6 @@ export default {
 			await this.$store
 				.dispatch('usersConnection', {})
 				.then(async res => {
-					console.log(res)
 					this.totalUserLength = res.usersConnection.aggregate.count
 				})
 				.catch(err => {
@@ -261,6 +260,7 @@ export default {
 				this.$store.state.loading = false
 			} else {
 				const usersViewData = {
+					businessID: this.$store.state.businessSelectBox.value,
 					role: 3,
 					teamID: team.id,
 				}
@@ -296,7 +296,6 @@ export default {
 			await this.$store
 				.dispatch('gotoWork', gotoworksView)
 				.then(res => {
-					console.log(res)
 					this.totalWorkCount = res.gotoworks.filter(x => x.vacation === null).length
 					this.totalVacationCount = res.gotoworks.filter(x => x.vacation !== null).length
 				})
@@ -313,7 +312,6 @@ export default {
 			this.rightEdit[4].value = this.$moment(user.created_at).format('YYYY-MM-DD HH:mm')
 			this.rightEdit[5].value = team.title
 			this.rightEdit[6].value = Math.floor(this.$moment.duration(this.$moment().diff(this.$moment(user.created_at))).asDays()) + '일'
-			console.log(user.profile)
 			if (user.profile) {
 				this.dialogFileUrl = user.profile.url
 			} else {
