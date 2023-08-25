@@ -88,7 +88,7 @@
 					</v-layout>
 					<v-layout justify-end style="color:black">
 						<v-btn elevation="0" class="refresh_btn mt-2" color="#f0f2f8" @click="editReset"><v-icon small>mdi-refresh</v-icon></v-btn>
-						<v-btn elevation="0" class="search_btn right1_btn mt-2" color="#f0f2f8" @click="editCheck">변경 내용 저장</v-btn>
+						<v-btn elevation="0" class="right1_btn mt-2" color="#f0f2f8" @click="editCheck">변경 내용 저장</v-btn>
 					</v-layout>
 					<v-layout class="my-3" style="border: 1px solid #d7d8e9;">
 						<v-flex xs3 class="right_table2" style="background:#f0f2f8; height:250px; border-bottom:0">변경이력</v-flex>

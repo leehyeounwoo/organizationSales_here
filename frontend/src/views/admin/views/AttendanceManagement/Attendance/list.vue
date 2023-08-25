@@ -766,6 +766,7 @@ export default {
 			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
+			this.$store.state.loading = true
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -777,15 +778,16 @@ export default {
 			let input3 = {
 				start: 0,
 				limit: 10,
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
-			await this.vacationView(input3)
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date)
+			this.$store.state.loading = false
 		},
 
 		goToWorkStatus(status) {

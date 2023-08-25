@@ -850,7 +850,7 @@
 						:sel="workingStatusSelectBox"
 						:value="item.workingStatus ? '재직' : '퇴사'"
 						class="table_small_sel"
-						@change="change_default"
+						@change="change_status($event, item)"
 					></selectBoxValue>
 				</div>
 			</template>
@@ -2631,6 +2631,14 @@ export default {
 		},
 
 		change_default() {},
+		change_status(val, item) {
+			if (val === '재직') {
+				item.workingStatus = true
+			} else {
+				item.workingStatus = false
+			}
+			this.workingStatusSave(item)
+		},
 		change_team(val, item) {
 			item.teamTitle = val
 		},
@@ -2804,6 +2812,7 @@ export default {
 		productDetailClick: Function,
 		refreshTable: Function,
 		editProduct: Function,
+		workingStatusSave: Function,
 	},
 }
 </script>

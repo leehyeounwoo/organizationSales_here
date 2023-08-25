@@ -278,6 +278,8 @@ export const updateUser = gql`
 		$rankID: String
 		$editLog: JSON
 		$id: ID!
+		$teamID: String
+		$workingStatus: Boolean
 	) {
 		updateUser(
 			input: {
@@ -300,6 +302,8 @@ export const updateUser = gql`
 					company: $company
 					rankID: $rankID
 					editLog: $editLog
+					teamID: $teamID
+					workingStatus: $workingStatus
 				}
 			}
 		) {
