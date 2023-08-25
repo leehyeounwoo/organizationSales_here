@@ -492,8 +492,13 @@ export default {
 	},
 
 	async created() {
-		await this.getListAction()
-		await this.searchSelect()
+		const createInterval = setInterval(async () => {
+			if (this.$store.state.businessSelectBox.value !== '') {
+				await this.getListAction()
+				await this.searchSelect()
+				clearInterval(createInterval)
+			}
+		}, 1000)
 		// if (!navigator.geolocation) {
 		// 	return alert('위치 정보가 지원되지 않습니다.')
 		// }
