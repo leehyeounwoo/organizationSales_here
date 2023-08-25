@@ -260,8 +260,8 @@ export const businesses_title = gql`
 	}
 `
 export const notices = gql`
-	query($title: String) {
-		notices(where: { title_contains: $title }) {
+	query($title: String, $businesses: [ID]) {
+		notices(where: { title_contains: $title, businesses: $businesses }) {
 			id
 			title
 			created_at
