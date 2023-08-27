@@ -101,7 +101,7 @@
 				</v-btn>
 			</v-flex>
 			<v-flex v-if="editUser.btn" style="text-align: end;">
-				<v-btn small class="btn-style2" @click="detailSave()">
+				<v-btn small class="btn-style2" @click="saveCheck()">
 					저장
 				</v-btn>
 			</v-flex>
@@ -128,11 +128,12 @@
 			:applyRank="applyRank"
 		></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
+		<sweetAlert :dialog="sweetDialog" @click="detailSave" />
 	</div>
 </template>
 
 <script>
-import { selectBox, txtField, datatable, btn } from '@/components/index.js'
+import { selectBox, txtField, datatable, btn, sweetAlert } from '@/components/index.js'
 import { saveDialog } from '@/components'
 import downloadExcel from 'vue-json-excel'
 import teamEdit from '../../viewItem/teamEditDialog.vue'
@@ -146,10 +147,20 @@ export default {
 		btn,
 		downloadExcel,
 		teamEdit,
+		sweetAlert,
 	},
 
 	data() {
 		return {
+			sweetDialog: {
+				open: false,
+				title: '상담사 정보 저장',
+				content: '상담사 정보를 저장합니다.',
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
 			editUser: {
 				btn: false,
 				detail: [],
@@ -538,6 +549,9 @@ export default {
 	mounted() {},
 
 	methods: {
+		saveCheck() {
+			this.sweetDialog.open = true
+		},
 		fileUpload(event, index) {
 			if (index === 5) {
 				this.rightEdit[index].txtField2.value = event.target.files[0].name
@@ -721,6 +735,7 @@ export default {
 			}
 		},
 		async detailSave() {
+			this.$store.state.loading = true
 			let data = {
 				id: this.editUser.detail.id,
 				username: this.editUser.detail.username,
@@ -746,8 +761,9 @@ export default {
 					})
 				}
 			}
-			await this.$store.dispatch('updateUser', data).then(res => {
-				console.log(res)
+			await this.$store.dispatch('updateUser', data).then(() => {
+				this.sweetDialog.open = false
+				this.$store.state.loading = false
 			})
 		},
 		teamRankSave(val) {
