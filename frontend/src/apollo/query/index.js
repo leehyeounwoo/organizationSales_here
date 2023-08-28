@@ -290,6 +290,7 @@ export const settlements = gql`
 		$contractDate_gte: DateTime
 		$name: String
 		$phone: String
+		$businessID: String
 	) {
 		settlementsConnection(
 			where: {
@@ -300,13 +301,14 @@ export const settlements = gql`
 				contractDate_gte: $contractDate_gte
 				name_contains: $name
 				phone_contains: $phone
+				businessID: $businessID
 			}
 		) {
 			aggregate {
 				count
 			}
 		}
-		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID, created_at_lte: $date }) {
+		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID, created_at_lte: $date, businessID: $businessID }) {
 			id
 			ProductID
 			userID

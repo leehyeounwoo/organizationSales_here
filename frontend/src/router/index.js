@@ -19,6 +19,7 @@ const organizationStatus = () =>
 	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/organizationManagement/organizationStatus.vue')
 const settlementManagement = () =>
 	import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/SettlementManagement/settlementManagement.vue')
+const statusBoard = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/statusBoard/statusBoard.vue')
 
 const routes = [
 	{
@@ -134,6 +135,11 @@ const routes = [
 				path: '/',
 				name: 'dashBoard',
 				component: dashBoard,
+			},
+			{
+				path: '/admin/statusBoard',
+				name: 'statusBoard',
+				component: statusBoard,
 			},
 			{
 				path: '/admin/productManagement',
