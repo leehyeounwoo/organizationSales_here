@@ -47,16 +47,16 @@
 							['items-per-page-text']: `• Total : ${table.items.length}`,
 						}"
 					>
-						<template v-slot:body="{ headers, items, isSelected, select }">
+						<template v-slot:body="{ headers, items }">
 							<tbody>
 								<tr v-for="(d, index) in items" :key="index">
 									<td>
 										<v-checkbox
-											:input-value="isSelected(d)"
+											:input-value="isInExcelList(d)"
 											style="margin:0px;padding:0px"
 											color="#535353"
 											hide-details
-											@click="select(d, !isSelected(d))"
+											@click="toggleExcelList(d)"
 										>
 										</v-checkbox>
 									</td>
@@ -141,11 +141,12 @@
 				</div>
 			</v-flex>
 		</v-layout>
+		<saveDialog :dialog="downloadDialogStatus"></saveDialog>
 	</div>
 </template>
 
 <script>
-import { DatepickerDialog, selectBox, txtField } from '@/components'
+import { DatepickerDialog, selectBox, txtField, saveDialog } from '@/components'
 import downloadExcel from 'vue-json-excel'
 export default {
 	components: {
@@ -153,6 +154,7 @@ export default {
 		selectBox,
 		txtField,
 		downloadExcel,
+		saveDialog,
 	},
 	async created() {
 		this.$store.state.loading = true
@@ -242,25 +244,46 @@ export default {
 				items: [],
 				select_items: [],
 				json_fields: {
-					상담사: 'name',
-					연락처: 'phone',
+					상담사: 'username',
 					검색기간: 'rangeDate',
 					'휴무일(연차+반차)': 'vacationLength',
 					근무일: 'amount',
 				},
 			},
+			downloadDialogStatus: {
+				open: false,
+				content: '저장하시겠습니까?',
+				btnTxt: '저장',
+			},
 			selected: [],
 			excelData: [],
 			userLists: [],
 			userIDArr: [],
+			excelLists: [],
 		}
 	},
 	methods: {
+		isInExcelList(item) {
+			return this.excelLists.includes(item)
+		},
+		toggleExcelList(item) {
+			const index = this.excelLists.indexOf(item)
+			if (index === -1) {
+				this.excelLists.push(item)
+			} else {
+				this.excelLists.splice(index, 1)
+			}
+		},
 		async clickExport() {
+			this.selected = this.excelLists
+
 			if (this.selected.length === 0) {
-				this.sweetInfo.open = true
-				this.sweetInfo.title = '파일 다운로드 에러'
-				this.sweetInfo.content = '데이터를 클릭후 엑셀 다운로드를 해주세요'
+				this.downloadDialogStatus = {
+					open: true,
+					content: '엑셀 다운로드 받을 상담사를 선택해주세요.',
+					cancelBtnTxt: '확인',
+					cancelBtn: true,
+				}
 				return
 			}
 			this.excelData = JSON.parse(JSON.stringify(this.selected))
@@ -279,7 +302,9 @@ export default {
 				amount: total,
 				vacationLength: totalVacation,
 			})
-			document.getElementById(`attendanceManagement_Excel`).click()
+			setTimeout(() => {
+				document.getElementById(`attendanceManagement_Excel`).click()
+			}, 200)
 		},
 		reset() {
 			this.setdialog.dialog = false
@@ -531,25 +556,9 @@ export default {
 
 					for (let index = 0; index < res.users.length; index++) {
 						const element = res.users[index]
-						// element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
 
-						// let num1 = element.gotoworks.filter(x => x.status === 'vacation').length
-						// let num2 = element.gotoworks.filter(x => x.status === 'morningVacation' || x.status === 'afternoonVacation').length
-						// element.vacationLength = num1 + num2 * 0.5
 						element.gotoworks = []
 						element.rangeDate = this.start_date_picker.date + '~' + this.end_date_picker.date
-						// if (element.gotoworks.length !== 0) {
-						// for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
-						// 	const e = this.table.headers.slice(2, this.table.headers.length)[i]
-						// 	if (element.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
-						// 		element['data' + i] = this.workStatus(
-						// 			element.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
-						// 		)
-						// 	} else {
-						// 		element['data' + i] = '-'
-						// 	}
-						// }
-						// element.amount = element.gotoworks.filter(x => x.status === 'endWork').length
 
 						list.push(element)
 					}
@@ -564,30 +573,42 @@ export default {
 		},
 		async gotoworksView(data2) {
 			await this.$store.dispatch('gotoWork', data2).then(res => {
+				const userMap = {}
+
+				this.userLists.forEach(user => {
+					userMap[user.id] = { ...user }
+					userMap[user.id].gotoworks = [...user.gotoworks]
+					userMap[user.id].amount = 0
+					userMap[user.id].vacationLength = 0
+				})
+
 				res.gotoworks.forEach(el => {
-					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
-					this.userLists[workIndex]['gotoworks'].push(el)
+					if (el.userID in userMap) {
+						userMap[el.userID].gotoworks.push(el)
 
-					let num1 = res.gotoworks.filter(x => x.status === 'vacation').length
-					let num2 = res.gotoworks.filter(x => x.status === 'morningVacation' || x.status === 'afternoonVacation').length
-					let num3 = res.gotoworks.filter(x => x.status === 'endWork').length
-					this.userLists[workIndex]['amount'] = num3
-					this.userLists[workIndex]['vacationLength'] = num1 + num2 * 0.5
+						const num1 = userMap[el.userID].gotoworks.filter(x => x.status === 'vacation').length
+						const num2 = userMap[el.userID].gotoworks.filter(x => x.status === 'morningVacation' || x.status === 'afternoonVacation').length
+						const num3 = userMap[el.userID].gotoworks.filter(x => x.status === 'endWork').length
 
-					if (res.gotoworks.length !== 0) {
-						for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
-							const e = this.table.headers.slice(2, this.table.headers.length)[i]
-							if (res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
-								this.userLists[workIndex]['data' + i] = this.workStatus(
-									res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
-								)
-							} else {
-								this.userLists[workIndex]['data' + i] = '-'
+						userMap[el.userID].amount = num3
+						userMap[el.userID].vacationLength = num1 + num2 * 0.5
+
+						if (res.gotoworks.length !== 0) {
+							for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
+								const e = this.table.headers.slice(2, this.table.headers.length)[i]
+								if (res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
+									userMap[el.userID]['data' + i] = this.workStatus(
+										res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
+									)
+								} else {
+									userMap[el.userID]['data' + i] = '-'
+								}
 							}
 						}
 					}
 				})
 
+				this.userLists = Object.values(userMap)
 				this.table.items = this.userLists
 			})
 		},
