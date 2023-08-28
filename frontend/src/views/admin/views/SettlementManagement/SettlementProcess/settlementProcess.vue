@@ -1,20 +1,6 @@
 <template>
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
-			<v-layout align-center justify-start>
-				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;">
-					{{ date_filter(date) }}
-				</v-flex>
-				<v-flex>
-					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
-						><v-icon color="#8C72F9" @click="click_date_before">mdi-menu-left</v-icon></v-btn
-					>
-					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
-						><v-icon color="#8C72F9" @click="click_date_next">mdi-menu-right</v-icon></v-btn
-					>
-					<v-btn class="search_btn_type2" color="#FFFFFF" elevation="0" @click="click_date_now">오늘</v-btn>
-				</v-flex>
-			</v-layout>
 			<v-layout align-center justify-end>
 				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
 					<selectBox :sel="searchsel1" :class="'searchSel'" style="font-size:12px"></selectBox>
@@ -1071,12 +1057,15 @@ export default {
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
-			console.log(this.searchsel1.value.value)
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
 				item = item.filter(el => el.teamID === this.searchsel1.value.value)
 			}
-			if (this.searchsel.value.value && this.searchsel.value.value !== 'all') {
+			if (this.searchsel.value.value && this.searchsel.value.value === 'waiting') {
+				item = item.filter(el => el.turnStatus === this.searchsel.value.value || el.turnStatus == '')
+			} else if (this.searchsel.value.value && this.searchsel.value.value === 'complete') {
 				item = item.filter(el => el.turnStatus === this.searchsel.value.value)
+			} else {
+				item = JSON.parse(JSON.stringify(this.processTable.origin_items))
 			}
 			if (this.search_project) {
 				item = item.filter(el => el.username.indexOf(this.search_project) !== -1)
@@ -1086,6 +1075,7 @@ export default {
 		async searchSelect() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 			await this.$store.dispatch('teams', data).then(res => {
 				let item = [{ title: '전체', value: 'all' }]
