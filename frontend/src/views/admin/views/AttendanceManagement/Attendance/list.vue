@@ -37,12 +37,6 @@
 			v-model="selected"
 			item-key="id"
 			class="elevation-0 table_style_2 mt-2"
-			:footer-props="{
-				['items-per-page-text']: `• Total : ${table.total ? table.total : table.items.length}`,
-				['page-text']: ` 1 - ${table.itemsPerPage ? Math.ceil(table.total / table.itemsPerPage) : Math.ceil(table.items.length / 10)} of ${
-					table.page ? table.page : 1
-				} `,
-			}"
 			@pagination="pagination($event)"
 		>
 			<template v-slot:[`item.data3`]="{ item }">
@@ -102,6 +96,9 @@
 				</v-layout>
 			</template>
 		</v-data-table>
+		<div class="text-center mt-4">
+			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
+		</div>
 		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
 			<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
 		</v-btn>
@@ -254,6 +251,18 @@ export default {
 				counselor: '',
 				status: '',
 			},
+			rowperpageSel: {
+				value: 10,
+				errorMessage: '',
+				hideDetail: true,
+				items: [10, 20, 30],
+				fullItem: [],
+				outlined: true,
+				label: '',
+				returnObject: true,
+				itemText: 'name',
+				itemValue: 'id',
+			},
 			saveDialogStatus: {
 				open: false,
 				content: '저장하시겠습니까?',
@@ -368,6 +377,7 @@ export default {
 		await this.me()
 		await this.getTeams()
 		await this.getRanks()
+		await this.rowperpageChange()
 		let input = {
 			start: 0,
 			limit: 10,
@@ -401,6 +411,23 @@ export default {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.me
+			})
+		},
+		async rowperpageChange() {
+			this.$store.state.loading = true
+			this.table.itemsPerPage = this.rowperpageSel.value
+			let data = {
+				start: 0,
+				limit: 10,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.first_users(data)
+		},
+		first_users(data) {
+			this.$store.dispatch('users', data).then(res => {
+				this.table.items = res.users
+				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 			})
 		},
 		async dataSetting() {
