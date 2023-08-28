@@ -779,7 +779,7 @@ export default {
 		async getListAction() {
 			this.$store.state.loading = true
 			const usersViewData = {
-				role: 3,
+				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.usersView(usersViewData)
@@ -1029,6 +1029,7 @@ export default {
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
+					console.log(res.users)
 					this.userData = res.users
 					// this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
 					// this.rankArrData = res.users.filter(x => x.rankID).map(x => x.rankID)

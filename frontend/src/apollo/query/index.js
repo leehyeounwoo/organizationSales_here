@@ -63,7 +63,7 @@ export const users = gql`
 		$workingStatus: Boolean
 		$businessID: String
 	) {
-		usersConnection(where: { role: { name: $roleName }, businessID: $businessID }) {
+		usersConnection(where: { role: { name: $roleName }, businessID: $businessID, workingStatus: $workingStatus }) {
 			aggregate {
 				count
 			}
@@ -371,11 +371,14 @@ export const systems = gql`
 	}
 `
 export const usersConnection = gql`
-	query usersConnection($teamID: String, $businessID: String) {
-		usersConnection(where: { teamID: $teamID, businessID: $businessID, role: 3 }) {
+	query usersConnection($teamID: String, $businessID: String, $workingStatus: Boolean, $roleName: String) {
+		usersConnection(where: { role: { name: $roleName }, teamID: $teamID, businessID: $businessID, workingStatus: $workingStatus }) {
 			aggregate {
 				count
 				totalCount
+			}
+			values {
+				id
 			}
 		}
 	}

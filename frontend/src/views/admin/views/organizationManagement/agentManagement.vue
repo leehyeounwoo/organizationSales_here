@@ -150,7 +150,11 @@ export default {
 			useYn: true,
 		}
 		await this.teamsView(teamsViewData)
-		await this.usersConnectionView()
+		const connectionUser = {
+			businessID: this.$store.state.businessSelectBox.value,
+			workingStatus: true,
+		}
+		await this.usersConnectionView(connectionUser)
 
 		const ranksViewData = {
 			useYn: true,
@@ -161,6 +165,8 @@ export default {
 			const usersConnectionTeamViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
 				teamID: element.id,
+				workStatus: true,
+				roleName: 'Counselor',
 			}
 			await this.usersConnectionTeamView(usersConnectionTeamViewData)
 		}
@@ -169,6 +175,7 @@ export default {
 		}
 		await this.firstGotoworksView(firstGotoworksViewData)
 		this.teamData = JSON.parse(JSON.stringify(this.teamData))
+		console.log(this.teamData)
 		this.teamData_origin = JSON.parse(JSON.stringify(this.teamData))
 		// await this.dataSetting()
 		await this.searchSelect()
@@ -211,6 +218,7 @@ export default {
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(async res => {
+					console.log(res.teams)
 					this.teamData = res.teams
 					// this.teamData = JSON.parse(JSON.stringify(res.teams))
 				})
@@ -223,6 +231,7 @@ export default {
 			await this.$store
 				.dispatch('ranks', teamsViewData)
 				.then(res => {
+					console.log(res.ranks)
 					this.rankData = res.ranks
 				})
 				.catch(err => {
@@ -230,10 +239,11 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
-		async usersConnectionView() {
+		async usersConnectionView(connectionUser) {
 			await this.$store
-				.dispatch('usersConnection', {})
+				.dispatch('usersConnection', connectionUser)
 				.then(async res => {
+					console.log(res.usersConnection)
 					this.totalUserLength = res.usersConnection.aggregate.count
 				})
 				.catch(err => {
@@ -245,6 +255,7 @@ export default {
 			await this.$store
 				.dispatch('usersConnection', usersConnectionTeamViewData)
 				.then(res => {
+					console.log(res.usersConnection)
 					this.teamData.filter(x => x.id === usersConnectionTeamViewData.teamID)[0]['count'] = res.usersConnection.aggregate.count
 				})
 				.catch(err => {
@@ -254,6 +265,7 @@ export default {
 		},
 		async dataSetting(team, index) {
 			this.$store.state.loading = true
+			console.log(team)
 			if (team.userData) {
 				delete team.userData
 				this.teamData = JSON.parse(JSON.stringify(this.teamData))
@@ -261,11 +273,12 @@ export default {
 			} else {
 				const usersViewData = {
 					businessID: this.$store.state.businessSelectBox.value,
-					role: 3,
+					roleName: 'Counselor',
 					teamID: team.id,
+					workingStatus: true,
 				}
-				if (this.searchsel2.value.value !== 'all') {
-					usersViewData['workingStatus'] = this.searchsel2.value.value
+				if (this.searchsel2.value.value && this.searchsel2.value.value !== 'all') {
+					usersViewData.workingStatus = this.searchsel2.value.value
 				}
 				if (this.search_project) {
 					usersViewData['username'] = this.search_project
@@ -275,6 +288,7 @@ export default {
 					date: this.$moment().format('YYYY-MM-DD'),
 					userID: this.teamData[index].userData.map(x => x.id),
 				}
+				console.log(this.teamData)
 				await this.gotoworksView(gotoworksView, index)
 				this.$store.state.loading = false
 			}
@@ -283,6 +297,7 @@ export default {
 			await this.$store
 				.dispatch('gotoWork', gotoworksView)
 				.then(res => {
+					console.log(res.gotoworks)
 					this.teamData[index].workCount = res.gotoworks.filter(x => x.vacation === null).length
 					this.teamData[index].vacationCount = res.gotoworks.filter(x => x.vacation !== null).length
 					this.teamData = JSON.parse(JSON.stringify(this.teamData))
