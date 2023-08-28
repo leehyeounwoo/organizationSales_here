@@ -701,6 +701,9 @@
             "type": "boolean",
             "default": false
           },
+          "businessID": {
+            "type": "string"
+          },
           "published_at": {
             "type": "datetime"
           }
@@ -767,6 +770,9 @@
           "paymentReject": {
             "type": "boolean",
             "default": false
+          },
+          "businessID": {
+            "type": "string"
           },
           "published_at": {
             "type": "datetime"

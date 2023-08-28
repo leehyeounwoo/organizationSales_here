@@ -600,6 +600,9 @@
               "paymentReject": {
                 "type": "boolean"
               },
+              "businessID": {
+                "type": "string"
+              },
               "published_at": {
                 "type": "datetime"
               },

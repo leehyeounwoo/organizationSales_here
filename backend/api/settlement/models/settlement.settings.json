@@ -79,6 +79,9 @@
     "paymentReject": {
       "type": "boolean",
       "default": false
+    },
+    "businessID": {
+      "type": "string"
     }
   }
 }
