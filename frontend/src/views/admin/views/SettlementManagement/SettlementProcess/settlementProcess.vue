@@ -312,7 +312,13 @@
 								<v-icon>
 									mdi-tray-arrow-up
 								</v-icon>
-								<input type="file" style="display:none;" :id="`pdf_files`" @change="pdfFileUploadChange($event, degree)" accept="pdf" />
+								<input
+									type="file"
+									style="display:none;"
+									:id="`pdf_files${degree}`"
+									@change="pdfFileUploadChange($event, degree)"
+									accept="pdf"
+								/>
 							</div>
 						</v-flex>
 					</v-layout>
@@ -958,32 +964,36 @@ export default {
 	async created() {
 		await this.me()
 		await this.searchSelect()
-		const settlementViewData = {
-			settlementStatus: 'agree',
-		}
-		await this.settlementView(settlementViewData)
-		const usersViewData = {
-			idArr: this.userArrData,
-		}
-		await this.usersView(usersViewData)
-		const productsViewData = {
-			idArr: this.productArrData,
-		}
-		await this.productsView(productsViewData)
-		const teamsViewData = {
-			idArr: this.teamArrData,
-		}
-		await this.teamsView(teamsViewData)
-		const ranksViewData = {
-			idArr: this.rankArrData,
-		}
-		await this.ranksView(ranksViewData)
-		await this.dataSetting()
+		await this.refreshData(this.$moment())
 		console.log(this.$store.state.meData)
 	},
 	mounted() {},
 
 	methods: {
+		async refreshData(date) {
+			const settlementViewData = {
+				settlementStatus: 'agree',
+				date: date,
+			}
+			await this.settlementView(settlementViewData)
+			const usersViewData = {
+				idArr: this.userArrData,
+			}
+			await this.usersView(usersViewData)
+			const productsViewData = {
+				idArr: this.productArrData,
+			}
+			await this.productsView(productsViewData)
+			const teamsViewData = {
+				idArr: this.teamArrData,
+			}
+			await this.teamsView(teamsViewData)
+			const ranksViewData = {
+				idArr: this.rankArrData,
+			}
+			await this.ranksView(ranksViewData)
+			await this.dataSetting()
+		},
 		amountDown(idx) {
 			console.log(1)
 			let sum = 0
@@ -1259,23 +1269,23 @@ export default {
 		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
+			// let text
+			// if (date === 'Sun') {
+			// 	text = '일'
+			// } else if (date === 'Mon') {
+			// 	text = '월'
+			// } else if (date === 'Tue') {
+			// 	text = '화'
+			// } else if (date === 'Wed') {
+			// 	text = '수'
+			// } else if (date === 'Thu') {
+			// 	text = '목'
+			// } else if (date === 'Fri') {
+			// 	text = '금'
+			// } else if (date === 'Sat') {
+			// 	text = '토'
+			// }
+			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${date})`
 		},
 		update() {
 			let input = {
@@ -1285,33 +1295,31 @@ export default {
 			this.viewUsers(input)
 		},
 		async click_date_before() {
-			let input = {
-				date: this.$moment(this.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
-				settlementStatus: 'agree',
-			}
-
-			await this.settlementView(input)
+			// let input = {
+			// 	date: this.$moment(this.date)
+			// 		.subtract(1, 'd')
+			// 		.format('YYYY-MM-DD'),
+			// 	settlementStatus: 'agree',
+			// }
 
 			this.date = this.$moment(this.date).subtract(1, 'd')
+			await this.refreshData(this.$moment(this.date))
 		},
-		click_date_next() {
-			let input = {
-				date: this.$moment(this.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
-			}
+		async click_date_next() {
+			// let input = {
+			// 	date: this.$moment(this.date)
+			// 		.add(1, 'd')
+			// 		.format('YYYY-MM-DD'),
+			// }
 
-			this.viewUsers(input)
 			this.date = this.$moment(this.date).add(1, 'd')
+			await this.refreshData(this.$moment(this.date))
 		},
 		click_date_now() {
 			let input = {
 				date: this.$moment().format('YYYY-MM-DD'),
 			}
-
-			this.viewUsers(input)
+			this.usersView(input)
 			this.date = this.$moment()
 		},
 		click_date_picker() {
@@ -1325,23 +1333,18 @@ export default {
 			this.date = this.$moment(this.date_picker.date)
 		},
 
-		pdfFileUpload() {
-			// console.log(val)
-			document.getElementById(`pdf_files`).click()
+		pdfFileUpload(val) {
+			document.getElementById(`pdf_files${val}`).click()
 		},
 		pdfFileUploadChange(val, degree) {
-			console.log(val)
-			console.log(degree)
 			this.pdfFiles.file = val.target.files[0]
 			this.pdfFiles.name = val.target.files[0].name
 			this.pdfFiles.Upload = true
 			this.pdfFiles.url = URL.createObjectURL(val.target.files[0])
 			this.pdfFiles.id = ''
-			console.log(this.pdfLists)
-			console.log(this.pdfLists[degree])
-			this.pdfLists[degree].numberList = this.pdfFiles
+			this.pdfLists[degree - 1].numberList = this.pdfFiles
 			// this.pdfLists.push({ numberList: this.pdfFiles })
-			document.getElementById(`pdf_files`).value = ''
+			document.getElementById(`pdf_files${degree}`).value = ''
 			this.pdfFiles = {}
 		},
 		alertRate(val) {
@@ -1547,20 +1550,12 @@ export default {
 				this.agreeDialogStatus.open = true
 			}
 		},
-		async click_agree2() {
-			let li = ''
-			let messages = []
-			for (let i = 0; i < this.pdfLists.length; i++) {
-				if (this.amountData[i].turnStatus === 'waiting') {
-					if (this.pdfLists[i].numberList.id === '') {
-						let file_input = {
-							file: this.pdfLists[i].numberList.file,
-						}
-						await this.$store.dispatch('upload', file_input).then(res => {
-							li = res.data[0].id
-						})
-					}
-
+		async depositSave(i) {
+			if (this.pdfLists[i].numberList.file) {
+				let file_input = {
+					file: this.pdfLists[i].numberList.file,
+				}
+				await this.$store.dispatch('upload', file_input).then(res => {
 					let input = {
 						bank: this.amountData[i].bank,
 						bankAccount: this.amountData[i].bankAccount,
@@ -1568,7 +1563,7 @@ export default {
 						adminName: this.$store.state.meData.username,
 						PaymentDate: this.paymentProcess_date_picker[i + 1].date,
 						turnStatus: 'complete',
-						depositFile: li,
+						depositFile: res.data[0].id,
 					}
 
 					this.$store.dispatch('updateSettlementTurnTable', input).then(() => {
@@ -1581,27 +1576,40 @@ export default {
 						this.agreeDialogStatus.open = true
 						this.$store.state.loading = false
 					})
+				})
+			}
+			//  else {
+			// 				alert(`${i}차 입금증을 첨부해주세요.`)
+			// 			}
+		},
+		async click_agree2() {
+			console.log(this.amountData)
+			// let li = ''
+			// let messages = []
 
-					if (this.paymentCheckBox) {
-						let message = `${i + 1}`
-						messages.push(message)
-					}
+			for (let i = 0; i < this.pdfLists.length; i++) {
+				if (this.amountData[i].turnStatus === 'waiting') {
+					await this.depositSave(i)
+					// if (this.paymentCheckBox) {
+					// 	let message = `${i + 1}`
+					// 	messages.push(message)
+					// }
 				}
 			}
 
-			if (this.paymentCheckBox) {
-				let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 \n
-				${this.finalSettlementData[0].product} 관련 \n
-				${messages.join()}차  정산금 입금이 완료되었습니다 `
-				let input = {
-					phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
-					content: finalMessage,
-				}
-				this.$store
-					.dispatch('sendSmsSettlement', input)
-					.then(() => {})
-					.catch(() => {})
-			}
+			// if (this.paymentCheckBox) {
+			// 	let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 \n
+			// 	${this.finalSettlementData[0].product} 관련 \n
+			// 	${messages.join()}차  정산금 입금이 완료되었습니다 `
+			// 	let input = {
+			// 		phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
+			// 		content: finalMessage,
+			// 	}
+			// 	this.$store
+			// 		.dispatch('sendSmsSettlement', input)
+			// 		.then(() => {})
+			// 		.catch(() => {})
+			// }
 		},
 
 		openProcessModal() {
