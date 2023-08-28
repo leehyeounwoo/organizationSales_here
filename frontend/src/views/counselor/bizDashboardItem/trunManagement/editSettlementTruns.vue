@@ -376,7 +376,6 @@ export default {
 							paymentReject: false,
 							attachment: filesId,
 							id: this.settlement.id,
-							businessID: this.$store.state.meData.businessID,
 						}
 						this.$store
 							.dispatch('updateSettlement_front', data)
