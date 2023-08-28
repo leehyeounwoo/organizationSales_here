@@ -2,8 +2,10 @@
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
 			<v-layout align-center justify-start>
-				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;">
-					{{ date_filter(date) }}
+				<v-flex xs4>
+					<div class="d-flex align-center date_picker2 ml-3 mr-2" style="width:200px;">
+						<DatepickerDialog :picker="date_picker" language="ko" @change="click_date_picker"></DatepickerDialog>
+					</div>
 				</v-flex>
 				<v-flex>
 					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
@@ -122,13 +124,14 @@
 	</div>
 </template>
 <script>
-import { selectBox, txtField, datatable, sweetAlert } from '@/components/index.js'
+import { selectBox, txtField, datatable, sweetAlert, DatepickerDialog } from '@/components/index.js'
 export default {
 	components: {
 		selectBox,
 		txtField,
 		datatable,
 		sweetAlert,
+		DatepickerDialog,
 	},
 
 	data() {
@@ -189,8 +192,8 @@ export default {
 					{ text: '계약일', sortable: false, value: 'contractDate', align: 'center', width: '10%' },
 					{ text: '계약물건', sortable: false, value: 'product', align: 'center', width: '10%' },
 					{ text: '요청일', sortable: false, value: 'settlementCreated_at', align: 'center', width: '15%' },
-					{ text: '차수', sortable: false, value: 'degree', align: 'center', width: '10%' },
-					{ text: '상태', sortable: false, value: 'settlementStatus', align: 'center', width: '5%' },
+					// { text: '차수', sortable: false, value: 'degree', align: 'center', width: '10%' },
+					{ text: '상태', sortable: false, value: 'settlementStatus', align: 'center', width: '10%' },
 					{ text: '비고', sortable: false, value: 'detailEtc', align: 'center', width: '5%' },
 				],
 				headerCheck: false,
@@ -319,6 +322,7 @@ export default {
 		async searchSelect() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 			await this.$store.dispatch('teams', data).then(res => {
 				let item = [{ title: '전체', value: 'all' }]
@@ -357,14 +361,21 @@ export default {
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 			}
-			console.log(this.list)
 			this.settlementTable.items = JSON.parse(JSON.stringify(this.list))
 			this.settlementTable.origin_items = JSON.parse(JSON.stringify(this.list))
 		},
 
 		async settlementView(settlementData) {
+			if (this.searchsel.value !== '상태' && this.searchsel.value !== '') {
+				if (this.searchsel.value === '승인') {
+					settlementData.settlementStatus === 'agree'
+				} else if (this.searchsel.value === '반려') {
+					settlementData.settlementStatus === 'disagree'
+				} else if (this.searchsel.value === '대기') {
+					settlementData.settlementStatus === 'waiting'
+				}
+			}
 			await this.$store.dispatch('settlements', settlementData).then(res => {
-				console.log(res)
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
@@ -384,6 +395,17 @@ export default {
 		},
 
 		async usersView(usersViewData) {
+			if (this.search_project) {
+				usersViewData.username = this.search_project
+			} else {
+				usersViewData
+			}
+			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
+				usersViewData.teamID = this.searchsel1.value.id
+			}
+			if (this.userIDArr !== []) {
+				usersViewData.userID = this.userIDArr
+			}
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
@@ -394,7 +416,7 @@ export default {
 								items.users = element
 								items.username = element.username
 								items.phoneNumber = element.phoneNumber
-								items.settlementPhoneNumber = element.salesPhoneNumber
+								items.settlementPhoneNumber = element.salesPhoneNumber ? element.salesPhoneNumber : '-'
 								items.teamID = element.teamID ? element.teamID : '-'
 								items.rankID = element.rankID ? element.rankID : '-'
 								let teamText = this.searchsel1.items.filter(el => el.value === String(items.teamID))
@@ -446,7 +468,7 @@ export default {
 
 					if (productData.length > 0) {
 						element.products = productData[0]
-						element.product = productData[0].housingType + productData[0].dong + '동' + productData[0].ho + '호'
+						element.product = `${productData[0].housingType} ${productData[0].dong}동 ${productData[0].ho}호`
 					}
 				}
 			})
@@ -509,60 +531,162 @@ export default {
 
 			this.usersView(input)
 		},
-		click_date_before() {
+		async click_date_before() {
+			this.list = []
+			this.settlementTable.items = []
+			this.editLogsVariable = []
+			this.attachmentNameList = []
+			this.finalSettlementData = []
+			await this.searchSelect()
+
 			let input = {
-				date: this.$moment(this.date)
+				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
+					.format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
 			}
-
-			this.usersView(input)
-
-			this.date = this.$moment(this.date).subtract(1, 'd')
+			await this.settlementView(input)
+			let input2 = {
+				idArr: this.userArrData,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			this.usersView(input2)
+			let input3 = {
+				idArr: this.productArrData,
+			}
+			await this.productsView(input3)
+			let input4 = {
+				idArr: this.teamArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.teamsView(input4)
+			let input5 = {
+				idArr: this.rankArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.ranksView(input5)
+			await this.dataSetting()
+			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
-		click_date_next() {
+		async click_date_next() {
+			this.list = []
+			this.settlementTable.items = []
+			this.editLogsVariable = []
+			this.attachmentNameList = []
+			this.finalSettlementData = []
+
+			await this.searchSelect()
+
 			let input = {
-				date: this.$moment(this.date)
+				date: this.$moment(this.date_picker.date)
 					.add(1, 'd')
-					.format('YYYY-MM-DD'),
+					.format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
 			}
-
-			this.usersView(input)
-			this.date = this.$moment(this.date).add(1, 'd')
+			await this.settlementView(input)
+			let input2 = {
+				idArr: this.userArrData,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			this.usersView(input2)
+			let input3 = {
+				idArr: this.productArrData,
+			}
+			await this.productsView(input3)
+			let input4 = {
+				idArr: this.teamArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.teamsView(input4)
+			let input5 = {
+				idArr: this.rankArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.ranksView(input5)
+			await this.dataSetting()
+			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
-		click_date_now() {
-			let input = {
-				date: this.$moment().format('YYYY-MM-DD'),
-			}
+		async click_date_now() {
+			this.list = []
+			this.settlementTable.items = []
+			this.editLogsVariable = []
+			this.attachmentNameList = []
+			this.finalSettlementData = []
+			await this.searchSelect()
 
-			this.usersView(input)
-			this.date = this.$moment()
-		},
-		click_date_picker() {
 			let input = {
-				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
+				date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
 			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.businessID
+			await this.settlementView(input)
+			let input2 = {
+				idArr: this.userArrData,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
-			this.usersView(input)
-			this.date = this.$moment(this.date_picker.date)
+			this.usersView(input2)
+			let input3 = {
+				idArr: this.productArrData,
+			}
+			await this.productsView(input3)
+			let input4 = {
+				idArr: this.teamArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.teamsView(input4)
+			let input5 = {
+				idArr: this.rankArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.ranksView(input5)
+			await this.dataSetting()
+			this.date_picker.date = this.$moment()
+		},
+		async click_date_picker() {
+			this.list = []
+			this.settlementTable.items = []
+			this.editLogsVariable = []
+			this.attachmentNameList = []
+			this.finalSettlementData = []
+			await this.searchSelect()
+
+			let input = {
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+			}
+			await this.settlementView(input)
+			let input2 = {
+				idArr: this.userArrData,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			this.usersView(input2)
+			let input3 = {
+				idArr: this.productArrData,
+			}
+			await this.productsView(input3)
+			let input4 = {
+				idArr: this.teamArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.teamsView(input4)
+			let input5 = {
+				idArr: this.rankArrData,
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.ranksView(input5)
+			await this.dataSetting()
+			this.date_picker.date = this.$moment(this.date_picker.date)
 		},
 		editUserData(val) {
 			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []
 			this.finalSettlementData = val
-			console.log('파이널', this.finalSettlementData)
 			let data = {
 				settlementID: this.finalSettlementData.ProductID,
 			}
-			console.log(data)
 			this.$store.dispatch('settlementEditLogs', data).then(res => {
-				console.log(res)
 				if (this.finalSettlementData.settlements.productID === res.settlementEditLogs.settlementID)
 					this.editLogsVariable = res.settlementEditLogs
-				console.log(this.editLogsVariable)
 			})
 			const usernameSpan = document.getElementById('usernameSpan')
 			if (usernameSpan) {

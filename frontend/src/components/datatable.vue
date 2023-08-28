@@ -850,7 +850,7 @@
 						:sel="workingStatusSelectBox"
 						:value="item.workingStatus ? '재직' : '퇴사'"
 						class="table_small_sel"
-						@change="change_default"
+						@change="change_status($event, item)"
 					></selectBoxValue>
 				</div>
 			</template>
@@ -1771,7 +1771,7 @@
 						{{ item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1] }}
 					</div>
 					<!-- <div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div> -->
-					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
+					<div v-if="item.leaveTime !== null" class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
 						잔여시간 :
 						<!-- {{
 							$moment().diff(
@@ -1781,7 +1781,7 @@
 								'hours',
 							)
 						}} -->
-						{{ $moment($moment().format(`YYYY-MM-DD`) + ' ' + item.assingnmentData.end.substr(0, 5)).diff($moment(), 'minute') + '분' }}
+						{{ item.leaveTime }} 분
 					</div>
 					<v-spacer></v-spacer>
 					<v-btn
@@ -1829,7 +1829,13 @@
 			<!-- 정산금 지급 처리 - 상태 -->
 			<template v-slot:[`item.turnStatus`]="{ item }">
 				<div>
-					{{ item.turnStatus === 'waiting' ? item.turnTableDegree + '차 지급 대기' : item.turnStatus === 'complete' ? '지급 완료' : '-' }}
+					{{
+						item.turnStatus === 'waiting'
+							? item.turnTableDegree + '차 지급 대기'
+							: item.turnStatus === 'complete'
+							? '지급 완료'
+							: '지급 일정 입력 전'
+					}}
 				</div>
 			</template>
 			<!-- 정산금 지급 처리 - 지급예정일 -->
@@ -2625,6 +2631,14 @@ export default {
 		},
 
 		change_default() {},
+		change_status(val, item) {
+			if (val === '재직') {
+				item.workingStatus = true
+			} else {
+				item.workingStatus = false
+			}
+			this.workingStatusSave(item)
+		},
 		change_team(val, item) {
 			item.teamTitle = val
 		},
@@ -2798,6 +2812,7 @@ export default {
 		productDetailClick: Function,
 		refreshTable: Function,
 		editProduct: Function,
+		workingStatusSave: Function,
 	},
 }
 </script>

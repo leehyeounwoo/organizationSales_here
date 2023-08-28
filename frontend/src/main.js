@@ -14,6 +14,7 @@ moment.locale('ko')
 Vue.use(VueMoment, { moment })
 
 Vue.use(VueMask)
+
 // vue 가드설정
 router.beforeEach(async (to, from, next) => {
 	if (to.matched.some(record => record.meta.requiresAuth)) {

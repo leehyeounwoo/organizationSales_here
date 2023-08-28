@@ -10,7 +10,7 @@
 			<v-flex xs1 class="mr-2">
 				<selectBox :sel="productFilter3" style="font-size:13px"></selectBox>
 			</v-flex>
-			<v-btn class="ml-3 search_btn" color="#009dac">적용</v-btn>
+			<v-btn class="ml-3 search_btn" color="#009dac" @click="searchProduct">적용</v-btn>
 		</v-layout>
 		<datatable :datatable="productTable" :editAssignmentAction="editAssignmentAction" class="mt-5"></datatable>
 	</div>
@@ -67,6 +67,37 @@ export default {
 		}, 1000)
 	},
 	methods: {
+		searchProduct() {
+			let item = this.productTable.items_origin
+			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
+				let data1 = []
+				item.forEach(el => {
+					if (el.product.housingType === this.productFilter1.value) {
+						data1.push(el)
+					}
+				})
+				item = data1
+			}
+			if (this.productFilter2.value && this.productFilter2.value !== 'all') {
+				let data2 = []
+				item.forEach(el => {
+					if (el.product.dong === this.productFilter2.value) {
+						data2.push(el)
+					}
+				})
+				item = data2
+			}
+			if (this.productFilter3.value && this.productFilter3.value !== 'all') {
+				let data3 = []
+				item.forEach(el => {
+					if (el.product.ho === this.productFilter3.value) {
+						data3.push(el)
+					}
+				})
+				item = data3
+			}
+			this.productTable.items = item
+		},
 		editAssignmentAction(item) {
 			const data = {
 				id: item.id,
@@ -135,6 +166,19 @@ export default {
 				}
 				console.log(this.productTable.items)
 				this.productTable.items = JSON.parse(JSON.stringify(this.productTable.items))
+				this.productTable.items_origin = JSON.parse(JSON.stringify(this.productTable.items))
+
+				let data1 = [{ text: '전체', value: 'all' }]
+				let data2 = [{ text: '전체', value: 'all' }]
+				let data3 = [{ text: '전체', value: 'all' }]
+				this.productTable.items.forEach(el => {
+					data1.push({ text: el.product.housingType, value: el.product.housingType })
+					data2.push({ text: el.product.dong + '동', value: el.product.dong })
+					data3.push({ text: el.product.ho + '호', value: el.product.ho })
+				})
+				this.productFilter1.items = data1
+				this.productFilter2.items = data2
+				this.productFilter3.items = data3
 			})
 		},
 		async teamView(teamViewData) {
@@ -197,6 +241,7 @@ export default {
 				],
 				class: 'datatablehover3',
 				items: [],
+				items_origin: [],
 				noweditting: '',
 				itemsPerPage: 10,
 				page: 1,

@@ -134,7 +134,9 @@ export default {
 		}
 	},
 	created() {
-		this.notices()
+		this.$store.dispatch('me').then(() => {
+			this.notices()
+		})
 	},
 	methods: {
 		to_bizDashboard() {
@@ -143,7 +145,7 @@ export default {
 		},
 		notices() {
 			const data = {
-				business: this.$route.params.id,
+				businesses: [this.$store.state.meData.businessID],
 				show: true,
 				status: true,
 			}

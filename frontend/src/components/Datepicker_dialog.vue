@@ -20,7 +20,7 @@
 		</template>
 
 		<v-date-picker
-			v-model="picker.date"
+			v-model="pickerDate"
 			:multiple="picker.multiple"
 			:range="picker.range"
 			:allowed-dates="allowed_dates"
@@ -58,10 +58,18 @@ export default {
 			if (this.language === 'ko') {
 				return moment(this.picker.date)
 					.locale('ko')
-					.format('YYYY년-MM월-DD일(ddd)')
+					.format('YYYY년 MM월 DD일(ddd)')
 			} else {
 				return this.picker.date
 			}
+		},
+		pickerDate: {
+			get() {
+				return this.$moment(this.picker.date).format('YYYY-MM-DD')
+			},
+			set(newValue) {
+				this.picker.date = this.$moment(newValue).format('YYYY-MM-DD')
+			},
 		},
 	},
 	data() {

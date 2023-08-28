@@ -260,8 +260,8 @@ export const businesses_title = gql`
 	}
 `
 export const notices = gql`
-	query($title: String) {
-		notices(where: { title_contains: $title }) {
+	query($title: String, $businesses: [ID]) {
+		notices(where: { title_contains: $title, businesses: $businesses }) {
 			id
 			title
 			created_at
@@ -371,8 +371,8 @@ export const systems = gql`
 	}
 `
 export const usersConnection = gql`
-	query usersConnection($teamID: String) {
-		usersConnection(where: { teamID: $teamID, role: 3 }) {
+	query usersConnection($teamID: String, $businessID: String) {
+		usersConnection(where: { teamID: $teamID, businessID: $businessID, role: 3 }) {
 			aggregate {
 				count
 				totalCount

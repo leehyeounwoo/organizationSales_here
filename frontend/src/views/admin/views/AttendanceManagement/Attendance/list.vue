@@ -112,7 +112,7 @@
 		<download-excel
 			class="btn btn-default"
 			id="clientExcel"
-			:data="table.items"
+			:data="selected"
 			style="display:none"
 			:fields="table.json_fields"
 			type="text/csv;charset=utf8"
@@ -212,6 +212,7 @@
 		</v-dialog>
 
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
+		<saveDialog :dialog="downloadDialogStatus" :activeSave="downloadActiveSave"></saveDialog>
 		<detail :setdialog="newDialog2"></detail>
 		<vacationStatus :setdialog="newDialog" @update="update"></vacationStatus>
 		<unattendedVacation :setdialog="newDialog3" @update="update"></unattendedVacation>
@@ -276,6 +277,11 @@ export default {
 				editData: {},
 				title: '미처리 연차 신청 현황',
 			},
+			downloadDialogStatus: {
+				open: false,
+				content: '저장하시겠습니까?',
+				btnTxt: '저장',
+			},
 			selected: [],
 			allCounselor: 0,
 			work: 0,
@@ -302,13 +308,12 @@ export default {
 				json_fields: {
 					직원명: 'data1',
 					연락처: 'data2',
-					지점: 'position',
-					부서: 'team',
-					직급: 'rank',
+					영업번호: 'salesPhoneNumber',
+					등록일: 'created_at',
+					팀: 'team_rank',
 					상태: 'data5',
 					출근시간: 'data3',
 					퇴근시간: 'data4',
-					'신청 연차 관리': 'vaction',
 				},
 				itemsPerPage: 10,
 				page: 1,
@@ -382,7 +387,7 @@ export default {
 			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
 			// roleName: 'Counselor',
-			userID: this.userIDArr,
+			idArr: this.userIDArr,
 		}
 		await this.gotoworksView(input2)
 		await this.unattendedVacation()
@@ -579,9 +584,7 @@ export default {
 				res.vacations.forEach(el => {
 					let workIndex = this.userLists.findIndex(item => item.id === el.userID)
 
-					// this.userLists[workIndex]['vacationStart'] = el.start
-					// this.userLists[workIndex]['vacationEnd'] = el.end
-					this.userLists[workIndex]['vacationDate'] = el.date
+					this.userLists[workIndex]['vacationDate'] = el.date ? el.date : '-'
 					this.userLists[workIndex]['vacationReason'] = el.vacationReason
 					this.userLists[workIndex]['vacation'] = el.vacationStatus
 					this.userLists[workIndex]['vacationType'] = el.vacationType
@@ -590,6 +593,31 @@ export default {
 					this.userLists[workIndex]['vacationRejectComment'] = el.rejectComment
 				})
 			})
+		},
+		clickExport() {
+			if (this.selected.length > 0) {
+				this.downloadDialogStatus = {
+					open: true,
+					content: '엑셀 다운로드를 받으시겠습니까?',
+					cancelBtnTxt: '취소',
+					cancelBtn: true,
+					btnTxt: '다운로드',
+					activeBtn: true,
+				}
+				// document.getElementById('clientExcel').click()
+			} else {
+				this.downloadDialogStatus = {
+					open: true,
+					content: '엑셀 다운로드 받을 상담사를 선택해주세요.',
+					cancelBtnTxt: '확인',
+					cancelBtn: true,
+				}
+			}
+			// document.getElementById(`clientExcel`).click()
+		},
+		downloadActiveSave() {
+			document.getElementById('clientExcel').click()
+			this.downloadDialogStatus.open = false
 		},
 
 		async pagination(item) {
@@ -661,6 +689,8 @@ export default {
 		},
 
 		async click_date_before() {
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -688,6 +718,8 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		async click_date_next() {
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -715,6 +747,8 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		async click_date_now() {
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -738,6 +772,9 @@ export default {
 			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
+			await this.getTeams()
+			await this.getRanks()
+			this.$store.state.loading = true
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -749,15 +786,16 @@ export default {
 			let input3 = {
 				start: 0,
 				limit: 10,
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
-			await this.vacationView(input3)
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
+			await this.vacationView(input3)
 			await this.dataSetting()
-			this.date = this.$moment(this.date_picker.date)
+			this.date_picker.date = this.$moment(this.date_picker.date)
+			this.$store.state.loading = false
 		},
 
 		goToWorkStatus(status) {
@@ -827,8 +865,17 @@ export default {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
 					}
+					let input3 = {
+						start: 0,
+						limit: 10,
+						date: this.$moment().format('YYYY-MM-DD'),
+						// roleName: 'Counselor',
+						idArr: this.userIDArr,
+					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.unattendedVacation()
+					await this.vacationView(input3)
 					await this.dataSetting()
 				})
 				.catch(err => {
@@ -848,8 +895,17 @@ export default {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
 					}
+					let input3 = {
+						start: 0,
+						limit: 10,
+						date: this.$moment().format('YYYY-MM-DD'),
+						// roleName: 'Counselor',
+						idArr: this.userIDArr,
+					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.unattendedVacation()
+					await this.vacationView(input3)
 					await this.dataSetting()
 				})
 				.catch(err => {
@@ -869,8 +925,17 @@ export default {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
 					}
+					let input3 = {
+						start: 0,
+						limit: 10,
+						date: this.$moment().format('YYYY-MM-DD'),
+						// roleName: 'Counselor',
+						idArr: this.userIDArr,
+					}
 					await this.viewUsers(input2)
 					await this.gotoworksView(input)
+					await this.unattendedVacation()
+					await this.vacationView(input3)
 					await this.dataSetting()
 				})
 				.catch(err => {
@@ -890,29 +955,31 @@ export default {
 			return timeData
 		},
 		async SearchBiz() {
+			this.$store.state.loading = true
 			let input = {
 				start: 0,
 				limit: 10,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
+			await this.viewUsers(input)
 			let input2 = {
 				start: 0,
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				userID: this.userIDArr,
 			}
+			await this.gotoworksView(input2)
 			let input3 = {
 				start: 0,
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
-				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
-			await this.viewUsers(input)
-			await this.gotoworksView(input2)
+
 			await this.vacationView(input3)
 			await this.dataSetting()
+			this.$store.state.loading = false
 		},
 		gotoWorkDialogOpen(item) {
 			this.editGotoworkData = {

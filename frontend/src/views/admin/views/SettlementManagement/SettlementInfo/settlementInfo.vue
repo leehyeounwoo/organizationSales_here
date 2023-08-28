@@ -610,13 +610,24 @@ export default {
 							businessID: this.$store.state.businessSelectBox.value,
 						}
 
-						this.$store.dispatch('createSystem', data).then(() => {
+						this.$store.dispatch('createSystem', data).then(async () => {
 							this.sweetDialog_info.open = false
 							this.$store.state.loading = true
 							this.saveDialogStatus.title = `저장 완료`
 							this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
 							this.saveDialogStatus.cancelBtnText = '확인'
 							this.saveDialogStatus.open = true
+							const userViewData = {
+								idArr: this.userID,
+								businessID: this.$store.state.businessSelectBox.value,
+							}
+							await this.userView(userViewData)
+							const businessData = {
+								idArr: this.businessID,
+							}
+							await this.businessView(businessData)
+							await this.messageView(businessData)
+							await this.infoView(businessData)
 							this.$store.state.loading = false
 						})
 					}

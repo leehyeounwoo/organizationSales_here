@@ -115,6 +115,25 @@
 							}}
 						</v-flex>
 						<v-flex
+							v-else-if="date.vacation.vacationStatus === 'disagree'"
+							py-1
+							my-1
+							mr-1
+							style="text-align: center; background-color:#F2A629; border-radius:5px; color:black; border:1px solid #F2A629; color:white;"
+							xs5
+							>{{
+								date.status === 'vacation'
+									? '연차거부'
+									: date.status === 'afternoonVacation'
+									? '오후반차거부'
+									: date.status === 'morningVacation'
+									? '오전반차거부'
+									: date.status === 'sick'
+									? '병가거부'
+									: '기타거부'
+							}}
+						</v-flex>
+						<v-flex
 							v-else
 							py-1
 							my-1
@@ -318,7 +337,7 @@ export default {
 			const data = {
 				date_gte: this.startPicker.date,
 				date_lte: this.endPicker.date,
-				userID: this.$store.state.meData.id,
+				userID: [this.$store.state.meData.id],
 			}
 			this.usersView(data)
 		},
@@ -339,37 +358,34 @@ export default {
 			return val
 		},
 		usersView(data) {
-			this.$store
-				.dispatch('gotoWork', data)
-				.then(res => {
-					this.$store
-						.dispatch('vacations', { date_gte: this.startPicker.date, date_lte: this.endPicker.date, userID: this.$store.state.meData.id })
-						.then(resVacations => {
-							resVacations.vacations.forEach(el => {
-								let idx = this.workDate.findIndex(x => x.date === el.date)
-								let arr = this.workDate.filter(x => x.date === el.date)
-								if (arr.length > 0) {
-									arr[0].status = el.vacationType
-									arr[0].vacation = el
-								}
-								this.workDate[idx] = arr[0]
-							})
-							res.gotoworks.forEach(element => {
-								let idx = this.workDate.findIndex(x => x.date === element.date)
-								let arr = this.workDate.filter(x => x.date === element.date)
-								if (arr.length > 0) {
-									arr[0].startWork = element.startWork
-									arr[0].endWork = element.endWork
-									arr[0].status = element.status
-									arr[0].vacation = element.vacation
-								}
-								this.workDate[idx] = arr[0]
-							})
+			this.$store.dispatch('gotoWork', data).then(res => {
+				this.$store
+					.dispatch('vacations', { date_gte: this.startPicker.date, date_lte: this.endPicker.date, idArr: [this.$store.state.meData.id] })
+					.then(resVacations => {
+						console.log(resVacations.vacations)
+						resVacations.vacations.forEach(el => {
+							let idx = this.workDate.findIndex(x => x.date === el.date)
+							let arr = this.workDate.filter(x => x.date === el.date)
+							if (arr.length > 0) {
+								arr[0].status = el.vacationType
+								arr[0].vacation = el
+								arr[0].result = el.vacationStatus
+							}
+							this.workDate[idx] = arr[0]
 						})
-				})
-				.catch(err => {
-					console.log({ err })
-				})
+						res.gotoworks.forEach(element => {
+							let idx = this.workDate.findIndex(x => x.date === element.date)
+							let arr = this.workDate.filter(x => x.date === element.date)
+							if (arr.length > 0) {
+								arr[0].startWork = element.startWork
+								arr[0].endWork = element.endWork
+								arr[0].status = element.status
+								arr[0].vacation = element.vacation
+							}
+							this.workDate[idx] = arr[0]
+						})
+					})
+			})
 		},
 	},
 	created() {

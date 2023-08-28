@@ -431,7 +431,7 @@ export default {
 					productID: this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3)[0]
 						.id,
 					orderType: 'couselor',
-					holdingTime: this.time,
+					holdingTime: this.time.replace('분', ''),
 					businessID: this.$store.state.meData.businessID,
 				}
 				this.$store.dispatch('createAssignment', data).then(() => {

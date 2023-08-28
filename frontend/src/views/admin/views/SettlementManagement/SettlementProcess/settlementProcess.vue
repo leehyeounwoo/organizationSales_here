@@ -1,20 +1,6 @@
 <template>
 	<div style="width:100%;">
 		<v-layout align-center class="header_search">
-			<v-layout align-center justify-start>
-				<v-flex class=" ml-3 mr-2 " style="max-width:125px !important; font-size:12px; font-weight:bold;">
-					{{ date_filter(date) }}
-				</v-flex>
-				<v-flex>
-					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
-						><v-icon color="#8C72F9" @click="click_date_before">mdi-menu-left</v-icon></v-btn
-					>
-					<v-btn class="search_btn_type" color="#FFFFFF" elevation="0"
-						><v-icon color="#8C72F9" @click="click_date_next">mdi-menu-right</v-icon></v-btn
-					>
-					<v-btn class="search_btn_type2" color="#FFFFFF" elevation="0" @click="click_date_now">오늘</v-btn>
-				</v-flex>
-			</v-layout>
 			<v-layout align-center justify-end>
 				<v-flex class="search_select ml-3 mr-2 " style="width: 149px !important; max-width:149px !important;">
 					<selectBox :sel="searchsel1" :class="'searchSel'" style="font-size:12px"></selectBox>
@@ -218,7 +204,10 @@
 						</v-flex>
 					</v-layout>
 					<v-layout v-for="degree of 5" :key="degree">
+						<!-- 차수 -->
 						<v-flex class="notice_right_table" xs2 style="height: auto;"> {{ degree }}차 </v-flex>
+
+						<!-- 은행 -->
 						<v-flex style="display: flex; justify-content: center; align-items: center;" xs3 class="notice_right_table2">
 							<v-text-field
 								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? false : true) : true"
@@ -235,6 +224,7 @@
 								{{ amountData[degree - 1] ? amountData[degree - 1].bank : '-' }}
 							</span>
 						</v-flex>
+
 						<v-flex style="display: flex; justify-content: center; align-items: center;" xs3 class="notice_right_table2">
 							<v-text-field
 								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? false : true) : true"
@@ -250,9 +240,11 @@
 								{{ amountData[degree - 1] ? amountData[degree - 1].bankAccount : '-' }}
 							</span>
 						</v-flex>
+						<!-- 금액 -->
 						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center;align-items: center;">
 							<span class="spanClass2"> {{ amountDataTrans(amountData[degree - 1]) }}</span>
 						</v-flex>
+						<!-- 지급일 -->
 						<v-flex style="display: flex; justify-content: center;align-items: center;" xs3 class="notice_right_table2">
 							<span
 								class="spanClass2"
@@ -265,7 +257,26 @@
 								class="d-flex align-center date_picker3"
 							></DatepickerDialog>
 						</v-flex>
-						<v-flex xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
+						<!-- 파일 -->
+						<v-flex
+							py-1
+							xs3
+							v-if="pdfLists[degree - 1] && pdfLists[degree - 1].numberList.id"
+							class="notice_right_table2"
+							style="display: flex; justify-content: center;align-items: center;"
+						>
+							<span class="spanClass2">
+								{{
+									pdfLists.length > 0 && pdfLists[degree - 1] && pdfLists[degree - 1].numberList
+										? pdfLists[degree - 1].numberList.name.length > 8
+											? pdfLists[degree - 1].numberList.name.substring(0, 15) + '...'
+											: pdfLists[degree - 1].numberList.name
+										: ''
+								}}
+							</span>
+						</v-flex>
+
+						<v-flex v-else xs3 class="notice_right_table2" style="display: flex; justify-content: center; align-items: center;">
 							<div class="pdfFileBox mt-1" @click="pdfFileUpload(degree)">
 								<label
 									style="display: flex; justify-content: center; align-items: center; overflow: hidden; font-size: 12px; color: black; cursor:pointer;"
@@ -355,7 +366,48 @@ export default {
 			processCheckBox: false,
 			paymentCheckBox: false,
 			pdfFiles: {},
-			pdfLists: [],
+			pdfLists: [
+				{
+					numberList: {
+						file: null,
+						id: '',
+						url: '',
+						name: '',
+					},
+				},
+				{
+					numberList: {
+						file: null,
+						id: '',
+						url: '',
+						name: '',
+					},
+				},
+				{
+					numberList: {
+						file: null,
+						id: '',
+						url: '',
+						name: '',
+					},
+				},
+				{
+					numberList: {
+						file: null,
+						id: '',
+						url: '',
+						name: '',
+					},
+				},
+				{
+					numberList: {
+						file: null,
+						id: '',
+						url: '',
+						name: '',
+					},
+				},
+			],
 			editGotoworkDialog: false,
 			editGotoworkData: {
 				title: '',
@@ -412,7 +464,7 @@ export default {
 					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '7%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
-					{ text: '팀', sortable: false, value: 'team_rank', align: 'center', width: '7%' },
+					{ text: '팀', sortable: false, value: 'teamText', align: 'center', width: '7%' },
 					{ text: '승인일', sortable: false, value: 'settlementUpdated_at', align: 'center', width: '7%' },
 					{ text: '상태', sortable: false, value: 'turnStatus', align: 'center', width: '8%' },
 					{ text: '지급예정일', sortable: false, value: 'paymentDate', align: 'center', width: '8%' },
@@ -898,35 +950,36 @@ export default {
 	async created() {
 		await this.me()
 		await this.searchSelect()
-		const settlementViewData = {
-			settlementStatus: 'agree',
-		}
-		await this.settlementView(settlementViewData)
-		const usersViewData = {
-			idArr: this.userArrData,
-			businessID: this.$store.state.businessSelectBox.value,
-		}
-		await this.usersView(usersViewData)
-		const productsViewData = {
-			idArr: this.productArrData,
-		}
-		await this.productsView(productsViewData)
-		const teamsViewData = {
-			idArr: this.teamArrData,
-			businessID: this.$store.state.businessSelectBox.value,
-		}
-		await this.teamsView(teamsViewData)
-		const ranksViewData = {
-			idArr: this.rankArrData,
-			businessID: this.$store.state.businessSelectBox.value,
-		}
-		await this.ranksView(ranksViewData)
-		await this.dataSetting()
+		await this.refreshData(this.$moment())
 		console.log(this.$store.state.meData)
 	},
 	mounted() {},
 
 	methods: {
+		async refreshData(date) {
+			const settlementViewData = {
+				settlementStatus: 'agree',
+				date: date,
+			}
+			await this.settlementView(settlementViewData)
+			const usersViewData = {
+				idArr: this.userArrData,
+			}
+			await this.usersView(usersViewData)
+			const productsViewData = {
+				idArr: this.productArrData,
+			}
+			await this.productsView(productsViewData)
+			const teamsViewData = {
+				idArr: this.teamArrData,
+			}
+			await this.teamsView(teamsViewData)
+			const ranksViewData = {
+				idArr: this.rankArrData,
+			}
+			await this.ranksView(ranksViewData)
+			await this.dataSetting()
+		},
 		amountDown(idx) {
 			console.log(1)
 			let sum = 0
@@ -1004,12 +1057,15 @@ export default {
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
-			console.log(this.searchsel1.value.value)
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
 				item = item.filter(el => el.teamID === this.searchsel1.value.value)
 			}
-			if (this.searchsel.value.value && this.searchsel.value.value !== 'all') {
+			if (this.searchsel.value.value && this.searchsel.value.value === 'waiting') {
+				item = item.filter(el => el.turnStatus === this.searchsel.value.value || el.turnStatus == '')
+			} else if (this.searchsel.value.value && this.searchsel.value.value === 'complete') {
 				item = item.filter(el => el.turnStatus === this.searchsel.value.value)
+			} else {
+				item = JSON.parse(JSON.stringify(this.processTable.origin_items))
 			}
 			if (this.search_project) {
 				item = item.filter(el => el.username.indexOf(this.search_project) !== -1)
@@ -1019,6 +1075,7 @@ export default {
 		async searchSelect() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
+				useYn: true,
 			}
 			await this.$store.dispatch('teams', data).then(res => {
 				let item = [{ title: '전체', value: 'all' }]
@@ -1039,31 +1096,18 @@ export default {
 			})
 		},
 		async dataSetting() {
-			for (let index = 0; index < this.list.length; index++) {
-				const element = this.list[index]
-				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
-				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
+			for (let index = 0; index < this.userData.length; index++) {
+				const element = this.userData[index]
 
-				let teamTitle = '-'
-				let rankTitle = '-'
-				if (teamData) {
-					teamTitle = teamData.id
-					element.teamTitle = teamTitle
-				}
-				if (rankData) {
-					rankTitle = rankData.id
-					element.rankTitle = rankTitle
-				}
-				if (teamData && rankData) {
-					element.team_rank = `${teamData.title} / ${rankData.rankName}`
-				} else {
-					element.team_rank = '-'
-				}
-				element.teamItems = this.teamData
-				element.rankItems = this.rankData
+				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
+
+				element.teamID = `${teamTitle} `
+				this.list.teamID = element.teamID
 			}
-			this.processTable.items = JSON.parse(JSON.stringify(this.list))
+
+			this.processTable.items = this.list
 			this.processTable.origin_items = JSON.parse(JSON.stringify(this.list))
+			console.log(this.processTable.items)
 		},
 
 		async settlementView(settlementViewData) {
@@ -1090,7 +1134,8 @@ export default {
 								listData.paymentDate = element.settlement_turn_tables[i].prePaymentDate
 								listData.turnStatus = element.settlement_turn_tables[i].turnStatus
 								listData.amount = element.settlement_turn_tables[i].amount
-								listData.turnTableDegree = element.settlement_turn_tables[i].turnTableDegree
+								listData.turnTableDegree = element.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length + 1
+								// listData.turnTableDegree = element.settlement_turn_tables[i].turnTableDegree
 								listData.prePaymentDate = element.settlement_turn_tables[i].prePaymentDate
 								break
 							} else {
@@ -1121,8 +1166,7 @@ export default {
 								items.username = element.username
 								items.phoneNumber = element.phoneNumber
 								items.settlementPhoneNumber = element.salesPhoneNumber
-								items.teamID = element.teamID ? element.teamID : ''
-								items.rankID = element.rankID ? element.rankID : ''
+								items.teamID = element.teamID
 								let teamText = this.searchsel1.items.filter(el => el.value === String(items.teamID))
 								if (items.teamID && teamText.length > 0) {
 									items.teamText = teamText[0].title
@@ -1151,7 +1195,7 @@ export default {
 					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
 					console.log(listData)
 					listData.products = element
-					listData.product = element.housingType + element.dong + '동' + element.ho + '호'
+					listData.product = `${element.housingType} ${element.dong}동 ${element.ho}호`
 				})
 			})
 		},
@@ -1241,33 +1285,31 @@ export default {
 			this.viewUsers(input)
 		},
 		async click_date_before() {
-			let input = {
-				date: this.$moment(this.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
-				settlementStatus: 'agree',
-			}
-
-			await this.settlementView(input)
+			// let input = {
+			// 	date: this.$moment(this.date)
+			// 		.subtract(1, 'd')
+			// 		.format('YYYY-MM-DD'),
+			// 	settlementStatus: 'agree',
+			// }
 
 			this.date = this.$moment(this.date).subtract(1, 'd')
+			await this.refreshData(this.$moment(this.date))
 		},
-		click_date_next() {
-			let input = {
-				date: this.$moment(this.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
-			}
+		async click_date_next() {
+			// let input = {
+			// 	date: this.$moment(this.date)
+			// 		.add(1, 'd')
+			// 		.format('YYYY-MM-DD'),
+			// }
 
-			this.viewUsers(input)
 			this.date = this.$moment(this.date).add(1, 'd')
+			await this.refreshData(this.$moment(this.date))
 		},
 		click_date_now() {
 			let input = {
 				date: this.$moment().format('YYYY-MM-DD'),
 			}
-
-			this.viewUsers(input)
+			this.usersView(input)
 			this.date = this.$moment()
 		},
 		click_date_picker() {
@@ -1285,13 +1327,13 @@ export default {
 			document.getElementById(`pdf_files${val}`).click()
 		},
 		pdfFileUploadChange(val, degree) {
-			console.log(val)
 			this.pdfFiles.file = val.target.files[0]
 			this.pdfFiles.name = val.target.files[0].name
 			this.pdfFiles.Upload = true
 			this.pdfFiles.url = URL.createObjectURL(val.target.files[0])
 			this.pdfFiles.id = ''
-			this.pdfLists.push({ numberList: this.pdfFiles })
+			this.pdfLists[degree - 1].numberList = this.pdfFiles
+			// this.pdfLists.push({ numberList: this.pdfFiles })
 			document.getElementById(`pdf_files${degree}`).value = ''
 			this.pdfFiles = {}
 		},
@@ -1424,9 +1466,17 @@ export default {
 					numberList.id = el.depositFile.id
 					numberList.url = el.depositFile.url
 					numberList.name = el.depositFile.name
+
 					this.pdfLists.push({ numberList: numberList })
 				} else {
-					return
+					this.pdfLists.push({
+						numberList: {
+							file: null,
+							id: '',
+							url: '',
+							name: '',
+						},
+					})
 				}
 			})
 
@@ -1490,20 +1540,12 @@ export default {
 				this.agreeDialogStatus.open = true
 			}
 		},
-		async click_agree2() {
-			let li = ''
-			let messages = []
-			for (let i = 0; i < this.pdfLists.length; i++) {
-				if (this.amountData[i].turnStatus === 'waiting') {
-					if (this.pdfLists[i].numberList.id === '') {
-						let file_input = {
-							file: this.pdfLists[i].numberList.file,
-						}
-						await this.$store.dispatch('upload', file_input).then(res => {
-							li = res.data[0].id
-						})
-					}
-
+		async depositSave(i) {
+			if (this.pdfLists[i].numberList.file) {
+				let file_input = {
+					file: this.pdfLists[i].numberList.file,
+				}
+				await this.$store.dispatch('upload', file_input).then(res => {
 					let input = {
 						bank: this.amountData[i].bank,
 						bankAccount: this.amountData[i].bankAccount,
@@ -1511,7 +1553,7 @@ export default {
 						adminName: this.$store.state.meData.username,
 						PaymentDate: this.paymentProcess_date_picker[i + 1].date,
 						turnStatus: 'complete',
-						depositFile: li,
+						depositFile: res.data[0].id,
 					}
 
 					this.$store.dispatch('updateSettlementTurnTable', input).then(() => {
@@ -1524,27 +1566,40 @@ export default {
 						this.agreeDialogStatus.open = true
 						this.$store.state.loading = false
 					})
+				})
+			}
+			//  else {
+			// 				alert(`${i}차 입금증을 첨부해주세요.`)
+			// 			}
+		},
+		async click_agree2() {
+			console.log(this.amountData)
+			// let li = ''
+			// let messages = []
 
-					if (this.paymentCheckBox) {
-						let message = `${i + 1}`
-						messages.push(message)
-					}
+			for (let i = 0; i < this.pdfLists.length; i++) {
+				if (this.amountData[i].turnStatus === 'waiting') {
+					await this.depositSave(i)
+					// if (this.paymentCheckBox) {
+					// 	let message = `${i + 1}`
+					// 	messages.push(message)
+					// }
 				}
 			}
 
-			if (this.paymentCheckBox) {
-				let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 \n
-				${this.finalSettlementData[0].product} 관련 \n
-				${messages.join()}차  정산금 입금이 완료되었습니다 `
-				let input = {
-					phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
-					content: finalMessage,
-				}
-				this.$store
-					.dispatch('sendSmsSettlement', input)
-					.then(() => {})
-					.catch(() => {})
-			}
+			// if (this.paymentCheckBox) {
+			// 	let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 \n
+			// 	${this.finalSettlementData[0].product} 관련 \n
+			// 	${messages.join()}차  정산금 입금이 완료되었습니다 `
+			// 	let input = {
+			// 		phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
+			// 		content: finalMessage,
+			// 	}
+			// 	this.$store
+			// 		.dispatch('sendSmsSettlement', input)
+			// 		.then(() => {})
+			// 		.catch(() => {})
+			// }
 		},
 
 		openProcessModal() {
@@ -1619,12 +1674,23 @@ export default {
 						this.saveDialogStatus.open = true
 						this.$store.state.loading = false
 					})
-					// -----------
-					// if (this.processCheckBox) {
-					// 	let message = `${i}차 정산일은 ${
-					// 		this.start_date_picker[i].date
-					// 	}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-					// 	messages.push(message)
+					if (this.processCheckBox) {
+						let messages = []
+						let message = `${index}차 정산일은 ${
+							this.start_date_picker[index].date
+						}입니다.\n정산되는 금액은 ${element.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+						messages.push(message)
+						let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
+						let input = {
+							phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
+							content: finalMessage,
+						}
+
+						this.$store
+							.dispatch('sendSmsSettlement', input)
+							.then(() => {})
+							.catch(() => {})
+					}
 				}
 			}
 
@@ -1729,12 +1795,12 @@ export default {
 			// 					useYn: true,
 			// 				}
 
-			// 				if (this.processCheckBox) {
-			// 					let message = `${i}차 정산일은 ${
-			// 						this.start_date_picker[i].date
-			// 					}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-			// 					messages.push(message)
-			// 				}
+			// if (this.processCheckBox) {
+			// 	let message = `${i}차 정산일은 ${
+			// 		this.start_date_picker[i].date
+			// 	}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+			// 	messages.push(message)
+			// }
 
 			// 				this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
 			// 			}

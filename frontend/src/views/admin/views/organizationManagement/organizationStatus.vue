@@ -21,6 +21,7 @@
 					:teamChoiceClick="teamChoiceClick"
 					:editUserData="editUserData"
 					:salesPhoneNumberSave="salesPhoneNumberSave"
+					:workingStatusSave="workingStatusSave"
 					:teamRankSave="teamRankSave"
 				/>
 			</v-flex>
@@ -35,7 +36,14 @@
 								<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
 							</v-flex>
 							<v-flex xs4>
-								<btn :btn="editBtn" btn_txt="파일 첨부" :click="clickEditBtn" />
+								<btn :btn="editBtn" btn_txt="파일 첨부" @click="clickEditBtn(edit)" />
+								<input
+									style="display:none;"
+									type="file"
+									:id="'file_upload_' + edit.title"
+									accept=".pdf, image/jpg, image/png, image/jpeg"
+									@change="fileUpload($event, index)"
+								/>
 							</v-flex>
 						</v-layout>
 						<v-layout v-if="edit.type === 2" class=" py-3 px-1">
@@ -61,8 +69,15 @@
 										<txtField :txtField="edit.txtField2" v-model="edit.txtField2.value" class="search_box_admin"></txtField>
 									</v-flex>
 									<v-flex xs4>
-										<btn :btn="editBtn" btn_txt="파일 첨부" :click="clickEditBtn" />
+										<btn :btn="editBtn" btn_txt="파일 첨부" @click="clickEditBtn(edit)" />
 									</v-flex>
+									<input
+										style="display:none;"
+										type="file"
+										:id="'file_upload_' + edit.title"
+										accept=".pdf, image/jpg, image/png, image/jpeg"
+										@change="fileUpload($event, index)"
+									/>
 								</v-layout>
 							</v-flex>
 						</v-layout>
@@ -85,8 +100,8 @@
 					엑셀 다운로드
 				</v-btn>
 			</v-flex>
-			<v-flex v-if="rightEdit" style="text-align: end;">
-				<v-btn small class="btn-style2" @click="detailSave()">
+			<v-flex v-if="editUser.btn" style="text-align: end;">
+				<v-btn small class="btn-style2" @click="saveCheck()">
 					저장
 				</v-btn>
 			</v-flex>
@@ -113,11 +128,12 @@
 			:applyRank="applyRank"
 		></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
+		<sweetAlert :dialog="sweetDialog" @click="detailSave" />
 	</div>
 </template>
 
 <script>
-import { selectBox, txtField, datatable, btn } from '@/components/index.js'
+import { selectBox, txtField, datatable, btn, sweetAlert } from '@/components/index.js'
 import { saveDialog } from '@/components'
 import downloadExcel from 'vue-json-excel'
 import teamEdit from '../../viewItem/teamEditDialog.vue'
@@ -131,10 +147,31 @@ export default {
 		btn,
 		downloadExcel,
 		teamEdit,
+		sweetAlert,
 	},
 
 	data() {
 		return {
+			sweetDialog: {
+				open: false,
+				title: '상담사 정보 저장',
+				content: '상담사 정보를 저장합니다.',
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
+			editUser: {
+				btn: false,
+				detail: [],
+			},
+			files: [
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+				{ file: null, name: '' },
+			],
 			left_data: [],
 			right_data: [],
 			ourCoords: {
@@ -492,8 +529,13 @@ export default {
 	},
 
 	async created() {
-		await this.getListAction()
-		await this.searchSelect()
+		const createInterval = setInterval(async () => {
+			if (this.$store.state.businessSelectBox.value !== '') {
+				await this.getListAction()
+				await this.searchSelect()
+				clearInterval(createInterval)
+			}
+		}, 1000)
 		// if (!navigator.geolocation) {
 		// 	return alert('위치 정보가 지원되지 않습니다.')
 		// }
@@ -507,6 +549,35 @@ export default {
 	mounted() {},
 
 	methods: {
+		saveCheck() {
+			this.sweetDialog.open = true
+		},
+		fileUpload(event, index) {
+			if (index === 5) {
+				this.rightEdit[index].txtField2.value = event.target.files[0].name
+				this.files[index - 1].name = event.target.files[0].name
+				this.files[index - 1].file = event.target.files[0]
+			} else {
+				this.rightEdit[index].txtField.value = event.target.files[0].name
+				if (index === 0) {
+					this.files[index].name = event.target.files[0].name
+					this.files[index].file = event.target.files[0]
+				} else {
+					this.files[index - 1].name = event.target.files[0].name
+					this.files[index - 1].file = event.target.files[0]
+				}
+			}
+			console.log(this.files)
+		},
+		workingStatusSave(val) {
+			const data = {
+				id: val.id,
+				username: val.username,
+				email: val.email,
+				workingStatus: val.workingStatus,
+			}
+			this.updateUserAction(data)
+		},
 		rankAdd(val) {
 			if (val === '') {
 				return alert('팀명을 입력해주세요.')
@@ -663,10 +734,43 @@ export default {
 				window.open(process.env.VUE_APP_BACKEND_URL + val.url)
 			}
 		},
-		detailSave() {},
+		async detailSave() {
+			this.$store.state.loading = true
+			let data = {
+				id: this.editUser.detail.id,
+				username: this.editUser.detail.username,
+				email: this.editUser.detail.email,
+			}
+			for (let i = 0; i < this.files.length; i++) {
+				if (this.files[i].file) {
+					let file_input = {
+						file: this.files[i].file,
+					}
+					await this.$store.dispatch('fileUpload', file_input).then(res => {
+						if (i === 0) {
+							data['profile'] = res.upload.id
+						} else if (i === 1) {
+							data['copyAccount'] = res.upload.id
+						} else if (i === 2) {
+							data['employmentContract'] = res.upload.id
+						} else if (i === 3) {
+							data['ID_Card'] = res.upload.id
+						} else if (i === 4) {
+							data['businessRegistration'] = res.upload.id
+						}
+					})
+				}
+			}
+			await this.$store.dispatch('updateUser', data).then(() => {
+				this.sweetDialog.open = false
+				this.$store.state.loading = false
+			})
+		},
 		teamRankSave(val) {
 			const data = {
 				id: val.id,
+				username: val.username,
+				email: val.email,
 				teamID: val.teamTitle,
 				rankID: val.rankTitle,
 			}
@@ -696,6 +800,8 @@ export default {
 		},
 		salesPhoneNumberSave(val) {
 			const data = {
+				username: val.username,
+				email: val.email,
 				id: val.id,
 				salesPhoneNumber: val.salesPhoneNumber,
 			}
@@ -800,7 +906,8 @@ export default {
 		},
 		async editUserData(val) {
 			this.$store.state.loading = true
-			console.log(val)
+			this.editUser.btn = true
+			this.editUser.detail = val
 			const userViewData = {
 				userID: val.id,
 			}
@@ -817,7 +924,7 @@ export default {
 			this.rightEdit[4].url = val.ID_Card ? val.ID_Card.url : ''
 			// this.rightEdit[5].txtField1.value = val.ID_Card ? val.ID_Card.name : ''
 			// this.rightEdit[5].txtField2.value = val.ID_Card ? val.ID_Card.name : ''
-			this.rightEdit[5].txtField.value = val.businessRegistration ? val.businessRegistration.name : ''
+			this.rightEdit[5].txtField2.value = val.businessRegistration ? val.businessRegistration.name : ''
 			this.$store.state.loading = false
 		},
 		async teamsView(teamsViewData) {
@@ -943,7 +1050,10 @@ export default {
 			await this.ranksDialogView(ranksViewData)
 			this.teamEditDialog.dialog = true
 		},
-		clickEditBtn() {},
+		clickEditBtn(val) {
+			console.log(val)
+			document.getElementById('file_upload_' + val.title).click()
+		},
 	},
 }
 </script>
