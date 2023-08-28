@@ -153,6 +153,7 @@ export default {
 		const connectionUser = {
 			businessID: this.$store.state.businessSelectBox.value,
 			workingStatus: true,
+			roleName: 'Counselor',
 		}
 		await this.usersConnectionView(connectionUser)
 
@@ -165,7 +166,7 @@ export default {
 			const usersConnectionTeamViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
 				teamID: element.id,
-				workStatus: true,
+				workingStatus: true,
 				roleName: 'Counselor',
 			}
 			await this.usersConnectionTeamView(usersConnectionTeamViewData)
@@ -206,6 +207,7 @@ export default {
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
+					console.log(res.users)
 					this.teamData[index].userData = res.users
 					this.teamData = JSON.parse(JSON.stringify(this.teamData))
 				})
@@ -286,9 +288,11 @@ export default {
 				await this.usersView(usersViewData, index)
 				const gotoworksView = {
 					date: this.$moment().format('YYYY-MM-DD'),
-					userID: this.teamData[index].userData.map(x => x.id),
 				}
-				console.log(this.teamData)
+				console.log(gotoworksView)
+				if (this.teamData[index].userData.map(x => x.id).length > 0) {
+					gotoworksView['userID'] = this.teamData[index].userData.map(x => x.id)
+				}
 				await this.gotoworksView(gotoworksView, index)
 				this.$store.state.loading = false
 			}
