@@ -689,6 +689,8 @@ export default {
 		},
 
 		async click_date_before() {
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -716,6 +718,8 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		async click_date_next() {
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -743,6 +747,8 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		async click_date_now() {
+			await this.getTeams()
+			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
@@ -766,6 +772,8 @@ export default {
 			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
+			await this.getTeams()
+			await this.getRanks()
 			this.$store.state.loading = true
 			let input = {
 				roleName: 'Counselor',

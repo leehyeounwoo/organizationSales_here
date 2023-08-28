@@ -353,7 +353,6 @@ export default {
 					userID: this.setdialog.editData.all.id,
 				}
 				await this.$store.dispatch('gotoWork', input).then(res => {
-					console.log(res)
 					this.leftInfoTop[6].value = res.gotoworks.length - res2.gotoworks.length + '일'
 					this.$store.state.loading = false
 				})
@@ -367,9 +366,8 @@ export default {
 				date_lte: this.end_date_picker.date,
 				status_check: ['startWork', 'endWork'],
 			}
-			console.log(input)
+
 			await this.$store.dispatch('gotoWork', input).then(res => {
-				console.log(res)
 				this.leftInfoTop[8].value = res.gotoworksConnection.aggregate.count + '일'
 				let li = []
 				let start = this.start_date_picker.date
@@ -561,7 +559,6 @@ export default {
 			async handler() {
 				if (this.setdialog.dialog) {
 					if (this.setdialog.edit) {
-						console.log(this.setdialog.editData)
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2
 						this.leftInfoTop[2].value = this.setdialog.editData.salesPhoneNumber
