@@ -680,7 +680,7 @@ export default {
 				limit: 10,
 				date: this.$moment().format('YYYY-MM-DD'),
 				// roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.gotoworksView(input2)
 			await this.unattendedVacation()
@@ -695,6 +695,7 @@ export default {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
+			await this.viewUsers(input)
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
@@ -702,6 +703,7 @@ export default {
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
+			await this.gotoworksView(input2)
 			let input3 = {
 				start: 0,
 				limit: 10,
@@ -709,10 +711,8 @@ export default {
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
-			await this.viewUsers(input)
-			await this.gotoworksView(input2)
 			await this.vacationView(input3)
 			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
@@ -738,7 +738,7 @@ export default {
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
@@ -763,7 +763,7 @@ export default {
 				limit: 10,
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
@@ -788,7 +788,7 @@ export default {
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
