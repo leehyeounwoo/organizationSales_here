@@ -742,11 +742,13 @@ export const createSettlement = gql`
 		$phone: String
 		$birth: String
 		$location: String
+		$businessID: Boolean
 		$subLocation: String
 	) {
 		createSettlement(
 			input: {
 				data: {
+					businessID: $businessID
 					ProductID: $ProductID
 					contractDate: $contractDate
 					userID: $userID
@@ -776,6 +778,8 @@ export const updateSettlement_front = gql`
 		$birth: String
 		$location: String
 		$subLocation: String
+		$paymentReject: Boolean
+		$businessID: String
 		$id: ID!
 		$settlementStatus: ENUM_SETTLEMENT_SETTLEMENTSTATUS
 	) {
@@ -783,6 +787,8 @@ export const updateSettlement_front = gql`
 			input: {
 				where: { id: $id }
 				data: {
+					businessID: $businessID
+					paymentReject: $paymentReject
 					settlementStatus: $settlementStatus
 					ProductID: $ProductID
 					contractDate: $contractDate

@@ -426,6 +426,7 @@ export default {
 							birth: this.siginup.birth,
 							location: this.siginup.location,
 							subLocation: this.siginup.subLocation,
+							businessID: this.$store.state.meData.businessID,
 						}
 						if (this.$route.name === 'editSettlement') {
 							data.id = this.settlement.id
@@ -455,6 +456,7 @@ export default {
 					birth: this.siginup.birth,
 					location: this.siginup.location,
 					subLocation: this.siginup.subLocation,
+					businessID: this.$store.state.meData.businessID,
 				}
 				if (this.$route.name === 'editSettlement') {
 					data.id = this.settlement.id
