@@ -1195,7 +1195,7 @@ export default {
 					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
 					console.log(listData)
 					listData.products = element
-					listData.product = element.housingType + element.dong + '동' + element.ho + '호'
+					listData.product = `${element.housingType} ${element.dong}동 ${element.ho}호`
 				})
 			})
 		},

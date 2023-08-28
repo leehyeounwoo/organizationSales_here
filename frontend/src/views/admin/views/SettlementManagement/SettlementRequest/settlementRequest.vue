@@ -468,7 +468,7 @@ export default {
 
 					if (productData.length > 0) {
 						element.products = productData[0]
-						element.product = productData[0].housingType + productData[0].dong + '동' + productData[0].ho + '호'
+						element.product = `${productData[0].housingType} ${productData[0].dong}동 ${productData[0].ho}호`
 					}
 				}
 			})
