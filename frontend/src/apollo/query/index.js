@@ -210,7 +210,16 @@ export const teams = gql`
 `
 
 export const products = gql`
-	query($idArr: [ID], $housingType: String, $dong: String, $ho: String, $businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
+	query(
+		$idArr: [ID]
+		$housingType: String
+		$dong: String
+		$ho: String
+		$businessID: String
+		$contractStatus: ENUM_PRODUCT_CONTRACTSTATUS
+		$start: Int
+		$limit: Int
+	) {
 		products(
 			where: {
 				id: $idArr
@@ -220,6 +229,8 @@ export const products = gql`
 				businessID: $businessID
 				contractStatus: $contractStatus
 			}
+			start: $start
+			limit: $limit
 		) {
 			id
 			housingType
@@ -229,6 +240,26 @@ export const products = gql`
 			choiceYn
 			businessID
 			editLog
+		}
+	}
+`
+export const productsCount = gql`
+	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
+		productsConnection(where: { businessID: $businessID, contractStatus: $contractStatus }) {
+			aggregate {
+				totalCount
+				count
+			}
+			values {
+				id
+				housingType
+				dong
+				ho
+				contractStatus
+				choiceYn
+				businessID
+				editLog
+			}
 		}
 	}
 `
