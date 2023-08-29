@@ -376,6 +376,7 @@ export default {
 							paymentReject: false,
 							attachment: filesId,
 							id: this.settlement.id,
+							settlementStatus: 'waiting',
 						}
 						this.$store
 							.dispatch('updateSettlement_front', data)
