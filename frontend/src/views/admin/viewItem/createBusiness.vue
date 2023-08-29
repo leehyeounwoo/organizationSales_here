@@ -18,8 +18,8 @@
 							wrap
 							style="min-height:50px;  border-left:1px solid #c8c8c8; border-right:1px solid #c8c8c8; "
 							:style="setdialog.items.length - 1 === index ? 'border-bottom: 1px solid #c8c8c8;' : ''"
-							v-if="left.title !== '상품 등록'"
 						>
+							<!-- v-if="left.title !== '상품 등록'" -->
 							<v-flex xs3 align-self-center class="table_font"><span v-if="left.must" style="color:red">* </span>{{ left.title }}</v-flex>
 
 							<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
@@ -82,7 +82,8 @@
 									</v-layout>
 								</v-flex>
 							</v-flex>
-							<v-flex xs9 v-else-if="left.type === 'product' && setdialog.type === 'create'" class="table_right_white px-2 biz_table_right">
+							<!-- && setdialog.type === 'create' -->
+							<v-flex xs9 v-else-if="left.type === 'product'" class="table_right_white px-2 biz_table_right">
 								<v-flex xs9>
 									<v-layout wrap class="pt-3">
 										<v-flex xs8>
