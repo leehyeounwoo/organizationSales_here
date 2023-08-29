@@ -37,6 +37,12 @@
 			v-model="selected"
 			item-key="id"
 			class="elevation-0 table_style_2 mt-2"
+			:footer-props="{
+				['items-per-page-text']: `• Total : ${table.total ? table.total : table.items.length}`,
+				['page-text']: ` 1 - ${table.itemsPerPage ? Math.ceil(table.total / table.itemsPerPage) : Math.ceil(table.items.length / 10)} of ${
+					table.page ? table.page : 1
+				} `,
+			}"
 			@pagination="pagination($event)"
 		>
 			<template v-slot:[`item.data3`]="{ item }">
@@ -95,10 +101,10 @@
 					<v-btn class="detail_etc_btn2" small @click="detailClick(item)" color="#9A9C9B" depressed>자세히 보기</v-btn>
 				</v-layout>
 			</template>
+			<template v-slot:footer>
+				<v-pagination v-model="table.page" :length="Math.ceil(table.total / table.itemsPerPage)"></v-pagination>
+			</template>
 		</v-data-table>
-		<div class="text-center mt-4">
-			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
-		</div>
 		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
 			<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
 		</v-btn>
@@ -221,10 +227,9 @@ import { selectBox, txtField } from '@/components/index.js'
 import { saveDialog, DatepickerDialog } from '@/components'
 import detail from './detail.vue'
 import vacationStatus from './vacationStatus.vue'
-// import moment from 'moment'
-// import 'moment/locale/ko'
 import downloadExcel from 'vue-json-excel'
 import unattendedVacation from './unattendedVacation.vue'
+
 export default {
 	components: {
 		downloadExcel,
@@ -327,6 +332,10 @@ export default {
 				itemsPerPage: 10,
 				page: 1,
 				pageCount: 0,
+				start: 0,
+				limit: 10000,
+
+				hidedefaultfooter: true,
 				total: 0,
 			},
 
@@ -377,7 +386,6 @@ export default {
 		await this.me()
 		await this.getTeams()
 		await this.getRanks()
-		await this.rowperpageChange()
 		let input = {
 			start: 0,
 			limit: 10,
@@ -413,21 +421,13 @@ export default {
 				this.$store.state.meData = res.me
 			})
 		},
-		async rowperpageChange() {
-			this.$store.state.loading = true
-			this.table.itemsPerPage = this.rowperpageSel.value
-			let data = {
-				start: 0,
-				limit: 10,
-				roleName: 'Counselor',
-				businessID: this.$store.state.businessSelectBox.value,
-			}
-			await this.first_users(data)
-		},
+
 		first_users(data) {
+			console.log(data)
 			this.$store.dispatch('users', data).then(res => {
 				this.table.items = res.users
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
+				console.log(this.table)
 			})
 		},
 		async dataSetting() {
@@ -648,6 +648,10 @@ export default {
 		},
 
 		async pagination(item) {
+			this.table.page = item.page
+			console.log(this.table, '테이블')
+			console.log(item.page, '아이템')
+
 			if (item.page > this.table.page) {
 				// 다음 페이지
 				let range = {
@@ -655,21 +659,61 @@ export default {
 					limit: item.itemsPerPage,
 					itemsPerPage: item.itemsPerPage,
 					page: item.page,
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
+					roleName: 'Counselor',
+					businessID: this.$store.state.businessSelectBox.value,
 				}
-
 				await this.viewUsers(range)
+				let input2 = {
+					start: (item.page - 1) * item.itemsPerPage,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					date: this.$moment().format('YYYY-MM-DD'),
+					roleName: 'Counselor',
+					userID: this.userIDArr,
+				}
+				await this.gotoworksView(input2)
+				let input3 = {
+					start: (item.page - 1) * item.itemsPerPage,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					date: this.$moment().format('YYYY-MM-DD'),
+					// roleName: 'Counselor',
+					idArr: this.userIDArr,
+				}
+				await this.unattendedVacation()
+				await this.vacationView(input3)
+				await this.dataSetting()
 			} else if (item.itemsPerPage !== this.table.itemsPerPage) {
 				// 한페이지에 보여줄 아이템 개수 변경
 				let range = {
 					start: 0,
 					limit: item.itemsPerPage,
 					itemsPerPage: item.itemsPerPage,
-					page: 1,
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
+					page: item.page,
+					roleName: 'Counselor',
+					businessID: this.$store.state.businessSelectBox.value,
 				}
-
 				await this.viewUsers(range)
+				let input2 = {
+					start: 0,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					date: this.$moment().format('YYYY-MM-DD'),
+					roleName: 'Counselor',
+					userID: this.userIDArr,
+				}
+				await this.gotoworksView(input2)
+				let input3 = {
+					start: 0,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					date: this.$moment().format('YYYY-MM-DD'),
+					// roleName: 'Counselor',
+					idArr: this.userIDArr,
+				}
+				await this.unattendedVacation()
+				await this.vacationView(input3)
+				await this.dataSetting()
 			} else if (item.page < this.table.page) {
 				// 이전 페이지
 				let range = {
@@ -677,10 +721,30 @@ export default {
 					limit: item.itemsPerPage,
 					itemsPerPage: item.itemsPerPage,
 					page: item.page,
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
+					roleName: 'Counselor',
+					businessID: this.$store.state.businessSelectBox.value,
 				}
-
 				await this.viewUsers(range)
+				let input2 = {
+					start: (item.page - 1) * item.itemsPerPage,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					date: this.$moment().format('YYYY-MM-DD'),
+					roleName: 'Counselor',
+					userID: this.userIDArr,
+				}
+				await this.gotoworksView(input2)
+				let input3 = {
+					start: (item.page - 1) * item.itemsPerPage,
+					limit: item.itemsPerPage,
+					itemsPerPage: item.itemsPerPage,
+					date: this.$moment().format('YYYY-MM-DD'),
+					// roleName: 'Counselor',
+					idArr: this.userIDArr,
+				}
+				await this.unattendedVacation()
+				await this.vacationView(input3)
+				await this.dataSetting()
 			}
 		},
 
@@ -1298,6 +1362,12 @@ export default {
 	padding-right: 0px;
 	.v-data-footer__select {
 		margin-left: 0px;
+	}
+	.v-data-footer__pagination {
+	}
+	.v-data-footer__icons-before {
+	}
+	.v-data-footer__icons-after {
 	}
 }
 
