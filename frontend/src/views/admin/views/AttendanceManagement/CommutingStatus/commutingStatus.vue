@@ -488,6 +488,10 @@ export default {
 				}
 				if (teamData && rankData) {
 					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else if (teamData) {
+					element.team_rank = `${teamData.title}`
+				} else if (rankData) {
+					element.team_rank = ` ${rankData.rankName}`
 				} else {
 					element.team_rank = '-'
 				}

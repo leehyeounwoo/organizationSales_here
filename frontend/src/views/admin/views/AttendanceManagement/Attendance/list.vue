@@ -36,7 +36,7 @@
 			show-select
 			v-model="selected"
 			item-key="id"
-			class="elevation-0 table_style_2 mt-2"
+			class="elevation-0 attendanceTable table_style_2 mt-2"
 			:footer-props="{
 				['items-per-page-options']: [5, 10, 30, 50],
 				['items-per-page-text']: `• Total : ${table.total ? table.total : table.items.length}`,
@@ -103,19 +103,21 @@
 			</template>
 			<template v-slot:footer>
 				<v-pagination
+					class="attendancePagination"
 					v-model="table.page"
 					:length="Math.ceil(table.total / table.pagination.itemsPerPage)"
 					@input="e => page(e)"
 				></v-pagination>
+				<v-btn small class="btn-style3" @click="createUnattendedVacation()">
+					<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
+				</v-btn>
+				<v-btn small class="btn-style2" @click="clickExport()">
+					<img src="@/assets/images/excel-img2.png" />
+					엑셀 다운로드
+				</v-btn>
 			</template>
 		</v-data-table>
-		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
-			<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
-		</v-btn>
-		<v-btn small class="btn-style2" @click="clickExport()">
-			<img src="@/assets/images/excel-img2.png" />
-			엑셀 다운로드
-		</v-btn>
+
 		<download-excel
 			class="btn btn-default"
 			id="clientExcel"
@@ -1279,8 +1281,10 @@ export default {
 	.v-data-footer__pagination {
 	}
 	.v-data-footer__icons-before {
+		display: none;
 	}
 	.v-data-footer__icons-after {
+		display: none;
 	}
 }
 
@@ -1399,5 +1403,15 @@ export default {
 	bottom: 15px;
 	height: 15px;
 	left: 130px;
+}
+
+.attendanceTable {
+	position: relative;
+}
+
+.attendancePagination {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
 }
 </style>

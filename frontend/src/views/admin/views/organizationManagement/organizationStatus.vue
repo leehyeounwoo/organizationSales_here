@@ -123,9 +123,11 @@
 			:left_data="left_data"
 			:right_data="right_data"
 			:addTeam="addTeam"
-			:rankAdd="rankAdd"
+			:addRank="addRank"
 			:applyTeam="applyTeam"
 			:applyRank="applyRank"
+			:sweetDialog2="sweetDialog2"
+			:sweetDialog3="sweetDialog3"
 		></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 		<sweetAlert :dialog="sweetDialog" @click="detailSave" />
@@ -152,6 +154,26 @@ export default {
 
 	data() {
 		return {
+			add_team_data: [],
+			add_rank_data: [],
+			sweetDialog2: {
+				open: false,
+				title: '팀 추가',
+				content: '변경사항(팀)을 저장합니다.',
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
+			sweetDialog3: {
+				open: false,
+				title: '직급 추가',
+				content: '변경사항(직급)을 저장합니다.',
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
 			sweetDialog: {
 				open: false,
 				title: '상담사 정보 저장',
@@ -173,7 +195,9 @@ export default {
 				{ file: null, name: '' },
 			],
 			left_data: [],
+			left_data_origin: [],
 			right_data: [],
+			right_data_origin: [],
 			ourCoords: {
 				//서울 시청 좌표
 				latitude: 37.5666263, //위도
@@ -578,11 +602,11 @@ export default {
 			}
 			this.updateUserAction(data)
 		},
-		rankAdd(val) {
+		addRank(val) {
 			if (val === '') {
-				return alert('팀명을 입력해주세요.')
+				return alert('직급을 입력해주세요.')
 			}
-			this.right_data.push({
+			this.add_rank_data = {
 				value: val,
 				txtfield1: {
 					maxlength: '255',
@@ -597,14 +621,15 @@ export default {
 					outlined: true,
 					class: 'small_font bizInput',
 				},
-			})
+			}
+			this.right_data.push(this.add_rank_data)
 		},
 		addTeam(val) {
 			console.log(val)
 			if (val === '') {
 				return alert('팀명을 입력해주세요.')
 			}
-			this.left_data.push({
+			this.add_team_data = {
 				value: val,
 				txtfield1: {
 					maxlength: '255',
@@ -619,83 +644,171 @@ export default {
 					outlined: true,
 					class: 'small_font bizInput',
 				},
-			})
+			}
+			this.left_data.push(this.add_team_data)
 		},
 		async applyTeam() {
-			let teamData1 = {
-				businessID: this.$store.state.businessSelectBox.value,
-			}
-
-			await this.$store
-				.dispatch('teams', teamData1)
-				.then(res => {
-					this.basicTeamData = res.teams
-				})
-				.catch(err => {
-					console.log(err)
+			this.$store.state.loading = true
+			if (this.add_team_data.length !== 0) {
+				let teamData1 = {
+					businessID: this.$store.state.businessSelectBox.value,
+					title: this.add_team_data.value,
+				}
+				if (this.add_team_data.selectBox.value && this.add_team_data.selectBox.value === '사용') {
+					teamData1['useYn'] = true
+				} else {
+					teamData1['useYn'] = false
+				}
+				await this.$store.dispatch('createTeam', teamData1).then(() => {
+					this.sweetDialog2.open = false
 					this.$store.state.loading = false
 				})
-
-			let name = this.left_data.filter(item => {
-				return !this.basicTeamData.some(team => team.title === item.value)
-			})
-			if (name.length > 0) {
-				for (let i = 0; i < name.length; i++) {
-					let teamData = {
-						businessID: this.$store.state.businessSelectBox.value,
-						title: name[i].value,
-						useYn: name[i].selectBox.value === '사용' ? true : false,
-					}
-					await this.$store.dispatch('createTeam', teamData).then(() => {})
-				}
-				await this.$store
-					.dispatch('teams', teamData1)
-					.then(() => {})
-					.catch(err => {
-						console.log(err)
-						this.$store.state.loading = false
-					})
 			} else {
-				alert('팀추가좀')
+				for (let i = 0; i < this.left_data_origin.length; i++) {
+					let teamData2 = {}
+					if (this.left_data[i].value !== this.left_data_origin[i].value) {
+						teamData2['id'] = this.left_data[i].id
+						teamData2['title'] = this.left_data[i].value
+						if (this.left_data[i].selectBox.value === '사용') {
+							teamData2['useYn'] = true
+						} else {
+							teamData2['useYn'] = false
+						}
+						this.$store.dispatch('updateTeam', teamData2).then(() => {
+							this.sweetDialog2.open = false
+							this.$store.state.loading = false
+						})
+					}
+					if (this.left_data[i].selectBox.value !== this.left_data_origin[i].selectBox.value) {
+						teamData2['id'] = this.left_data[i].id
+						teamData2['title'] = this.left_data[i].value
+						if (this.left_data[i].selectBox.value === '사용') {
+							teamData2['useYn'] = true
+						} else {
+							teamData2['useYn'] = false
+						}
+						this.$store.dispatch('updateTeam', teamData2).then(() => {
+							this.sweetDialog2.open = false
+							this.$store.state.loading = false
+						})
+					}
+				}
 			}
+
+			// await this.$store
+			// 	.dispatch('teams', teamData1)
+			// 	.then(res => {
+			// 		this.basicTeamData = res.teams
+			// 	})
+			// 	.catch(err => {
+			// 		console.log(err)
+			// 		this.$store.state.loading = false
+			// 	})
+
+			// let name = this.left_data.filter(item => {
+			// 	return !this.basicTeamData.some(team => team.title === item.value)
+			// })
+			// if (name.length > 0) {
+			// 	for (let i = 0; i < name.length; i++) {
+			// 		let teamData = {
+			// 			businessID: this.$store.state.businessSelectBox.value,
+			// 			title: name[i].value,
+			// 			useYn: name[i].selectBox.value === '사용' ? true : false,
+			// 		}
+			// 		await this.$store.dispatch('createTeam', teamData).then(() => {})
+			// 	}
+			// 	await this.$store
+			// 		.dispatch('teams', teamData1)
+			// 		.then(() => {})
+			// 		.catch(err => {
+			// 			console.log(err)
+			// 			this.$store.state.loading = false
+			// 		})
+			// } else {
+			// 	alert('팀추가좀')
+			// }
 		},
 		async applyRank() {
-			let teamData1 = {
-				businessID: this.$store.state.businessSelectBox.value,
-			}
-
-			await this.$store
-				.dispatch('ranks', teamData1)
-				.then(res => {
-					this.basicRankData = res.ranks
-				})
-				.catch(err => {
-					console.log(err)
+			this.$store.state.loading = true
+			if (this.add_rank_data.length !== 0) {
+				let rankData1 = {
+					businessID: this.$store.state.businessSelectBox.value,
+					rankName: this.add_rank_data.value,
+				}
+				if (this.add_rank_data.selectBox.value === '사용') {
+					rankData1['useYn'] = true
+				} else {
+					rankData1['useYn'] = false
+				}
+				await this.$store.dispatch('createRank', rankData1).then(() => {
+					this.sweetDialog3.open = false
 					this.$store.state.loading = false
 				})
-
-			let name = this.right_data.filter(item => {
-				return !this.basicRankData.some(team => team.rankName === item.value)
-			})
-			if (name.length > 0) {
-				for (let i = 0; i < name.length; i++) {
-					let teamData = {
-						businessID: this.$store.state.businessSelectBox.value,
-						rankName: name[i].value,
-						useYn: name[i].selectBox.value === '사용' ? true : false,
-					}
-					await this.$store.dispatch('createRank', teamData).then(() => {})
-				}
-				await this.$store
-					.dispatch('ranks', teamData1)
-					.then(() => {})
-					.catch(err => {
-						console.log(err)
-						this.$store.state.loading = false
-					})
 			} else {
-				alert('팀추가좀')
+				for (let i = 0; i < this.right_data_origin.length; i++) {
+					let rankData2 = {}
+					if (this.right_data[i].value !== this.right_data_origin[i].value) {
+						console.log(this.right_data)
+						rankData2['id'] = this.right_data[i].id
+						rankData2['rankName'] = this.right_data[i].value
+						if (this.right_data[i].selectBox.value === '사용') {
+							rankData2['useYn'] = true
+						} else {
+							rankData2['useYn'] = false
+						}
+						this.$store.dispatch('updateRank', rankData2).then(() => {
+							this.sweetDialog3.open = false
+							this.$store.state.loading = false
+						})
+					}
+					// if (this.right_data[i].selectBox.value !== this.right_data_origin[i].selectBox.value) {
+					// 	rankData2['id'] = this.right_data[i].id
+					// 	rankData2['rankName'] = this.right_data[i].value
+					// 	if (this.right_data[i].selectBox.value === '사용') {
+					// 		rankData2['useYn'] = true
+					// 	} else {
+					// 		rankData2['useYn'] = false
+					// 	}
+					// 	this.$store.dispatch('updateRank', rankData2).then(() => {
+					// 		this.sweetDialog3.open = false
+					// 		this.$store.state.loading = false
+					// 	})
+					// }
+				}
 			}
+
+			// await this.$store
+			// 	.dispatch('ranks', teamData1)
+			// 	.then(res => {
+			// 		this.basicRankData = res.ranks
+			// 	})
+			// 	.catch(err => {
+			// 		console.log(err)
+			// 		this.$store.state.loading = false
+			// 	})
+
+			// let name = this.right_data.filter(item => {
+			// 	return !this.basicRankData.some(team => team.rankName === item.value)
+			// })
+			// if (name.length > 0) {
+			// 	for (let i = 0; i < name.length; i++) {
+			// 		let teamData = {
+			// 			businessID: this.$store.state.businessSelectBox.value,
+			// 			rankName: name[i].value,
+			// 			useYn: name[i].selectBox.value === '사용' ? true : false,
+			// 		}
+			// 		await this.$store.dispatch('createRank', teamData).then(() => {})
+			// 	}
+			// 	await this.$store
+			// 		.dispatch('ranks', teamData1)
+			// 		.then(() => {})
+			// 		.catch(err => {
+			// 			console.log(err)
+			// 			this.$store.state.loading = false
+			// 		})
+			// } else {
+			// 	alert('팀추가좀')
+			// }
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.table.origin_items))
@@ -949,6 +1062,7 @@ export default {
 					for (let index = 0; index < res.teams.length; index++) {
 						const element = res.teams[index]
 						this.left_data.push({
+							id: element.id,
 							value: element.title,
 							txtfield1: {
 								maxlength: '255',
@@ -965,7 +1079,7 @@ export default {
 							},
 						})
 					}
-					console.log(this.left_data)
+					this.left_data_origin = JSON.parse(JSON.stringify(this.left_data))
 				})
 				.catch(err => {
 					console.log(err)
@@ -992,6 +1106,7 @@ export default {
 					for (let index = 0; index < res.ranks.length; index++) {
 						const element = res.ranks[index]
 						this.right_data.push({
+							id: element.id,
 							value: element.rankName,
 							txtfield1: {
 								maxlength: '255',
@@ -1008,6 +1123,7 @@ export default {
 							},
 						})
 					}
+					this.right_data_origin = JSON.parse(JSON.stringify(this.right_data))
 				})
 				.catch(err => {
 					console.log(err)

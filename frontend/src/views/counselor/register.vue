@@ -531,6 +531,7 @@ export default {
 					if (filesData.length - 1 === i) {
 						const data = {
 							username: this.siginup.email.toLowerCase(),
+							name: this.siginup.email.toLowerCase(),
 							email: this.siginup.email.toLowerCase(),
 							password: this.siginup.password,
 							bank: this.siginup.bank,

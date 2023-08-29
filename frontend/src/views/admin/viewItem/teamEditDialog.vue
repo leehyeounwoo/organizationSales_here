@@ -4,7 +4,7 @@
 			<div class="project_title px-5">
 				<span style="font-size:15px">팀/직급 관리</span>
 				<v-spacer />
-				<v-icon @click="setdialog.dialog = false" class="title-icon" color="white">mdi-close</v-icon>
+				<v-icon @click="modalClose" class="title-icon" color="white">mdi-close</v-icon>
 			</div>
 			<v-layout wrap class="pt-7 px-10" style="min-height:50vh;">
 				<v-flex xs6 pr-1>
@@ -42,7 +42,7 @@
 							<btn :btn="addBtn" :btn_txt="'추가'" @click="addTeam(addTxtfield.value)"></btn>
 						</v-flex>
 						<v-flex xs3 pr-1>
-							<btn :btn="saveBtn" :btn_txt="'적용'" @click="applyTeam()"></btn>
+							<btn :btn="saveBtn" :btn_txt="'적용'" @click="teamCheck()"></btn>
 						</v-flex>
 					</v-layout>
 				</v-flex>
@@ -78,25 +78,27 @@
 							<txtField class="bizInput px-2" v-model="addTxtfield1.value" :txtField="addTxtfield1"></txtField>
 						</v-flex>
 						<v-flex pr-1>
-							<btn :btn="addBtn" :btn_txt="'추가'" @click="rankAdd(addTxtfield1.value)"></btn>
+							<btn :btn="addBtn" :btn_txt="'추가'" @click="addRank(addTxtfield1.value)"></btn>
 						</v-flex>
 						<v-flex pr-1>
-							<btn :btn="saveBtn" :btn_txt="'적용'" @click="applyRank()"></btn>
+							<btn :btn="saveBtn" :btn_txt="'적용'" @click="rankCheck()"></btn>
 						</v-flex>
 					</v-layout>
 				</v-flex>
-				<v-layout justify-end>
+				<v-layout justify-end class="mt-2 mb-5">
 					<v-flex xs1>
-						<btn :btn="completeBtn" :btn_txt="'확인'"></btn>
+						<btn :btn="completeBtn" :btn_txt="'확인'" @click="setdialog.dialog = false"></btn>
 					</v-flex>
 				</v-layout>
 			</v-layout>
 		</div>
+		<sweetAlert :dialog="sweetDialog2" @click="applyTeam" />
+		<sweetAlert :dialog="sweetDialog3" @click="applyRank" />
 	</v-dialog>
 </template>
 
 <script>
-import { txtField, selectBox, btn } from '@/components/index.js'
+import { txtField, selectBox, btn, sweetAlert } from '@/components/index.js'
 
 export default {
 	props: {
@@ -104,14 +106,17 @@ export default {
 		left_data: Array,
 		right_data: Array,
 		addTeam: Function,
-		rankAdd: Function,
+		addRank: Function,
 		applyTeam: Function,
 		applyRank: Function,
+		sweetDialog2: Object,
+		sweetDialog3: Object,
 	},
 	components: {
 		txtField,
 		selectBox,
 		btn,
+		sweetAlert,
 	},
 	data() {
 		return {
@@ -145,7 +150,7 @@ export default {
 				width: '100%',
 				dense: true,
 				small: true,
-				color: '#c8c8c8',
+				color: '#3e7ccc',
 				tile: true,
 				dark: true,
 			},
@@ -190,6 +195,17 @@ export default {
 		}
 	},
 	methods: {
+		modalClose() {
+			this.addTxtfield.value = ''
+			this.addTxtfield1.value = ''
+			this.setdialog.dialog = false
+		},
+		rankCheck() {
+			this.sweetDialog3.open = true
+		},
+		teamCheck() {
+			this.sweetDialog2.open = true
+		},
 		edit_time() {
 			this.editTimePicker.dialog = true
 		},
@@ -208,7 +224,7 @@ export default {
 	font-weight: bold;
 }
 .table_all_gray:nth-last-child(1) {
-	margin-bottom: 50px;
+	// margin-bottom: 50px;
 }
 .table_all_gray:nth-last-child(6) {
 	border-top: 1px solid black;

@@ -18,8 +18,8 @@
 							wrap
 							style="min-height:50px;  border-left:1px solid #c8c8c8; border-right:1px solid #c8c8c8; "
 							:style="setdialog.items.length - 1 === index ? 'border-bottom: 1px solid #c8c8c8;' : ''"
-							v-if="left.title !== '상품 등록'"
 						>
+							<!-- v-if="left.title !== '상품 등록'" -->
 							<v-flex xs3 align-self-center class="table_font"><span v-if="left.must" style="color:red">* </span>{{ left.title }}</v-flex>
 
 							<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
@@ -82,7 +82,8 @@
 									</v-layout>
 								</v-flex>
 							</v-flex>
-							<v-flex xs9 v-else-if="left.type === 'product' && setdialog.type === 'create'" class="table_right_white px-2 biz_table_right">
+							<!-- && setdialog.type === 'create' -->
+							<v-flex xs9 v-else-if="left.type === 'product'" class="table_right_white px-2 biz_table_right">
 								<v-flex xs9>
 									<v-layout wrap class="pt-3">
 										<v-flex xs8>
@@ -385,8 +386,9 @@ export default {
 		saveUser() {
 			let data = {
 				username: this.right_data.detail.username,
-				phoneNumber: this.right_data.detail.phoneNumber,
 				email: this.right_data.detail.email,
+				name: this.right_data.detail.username,
+				phoneNumber: this.right_data.detail.phoneNumber,
 				password: this.right_data.detail.password,
 				confirmed: this.right_data.detail.confirmed,
 			}
@@ -443,6 +445,8 @@ export default {
 							let adduser = {
 								id: this.newUser[i].id,
 								businessID: res.createBusiness.business.id,
+								username: this.right_data.detail.username,
+								email: this.right_data.detail.email,
 							}
 							this.$store.dispatch('updateUser', adduser).then(() => {
 								this.sweetDialog.open = false
@@ -482,6 +486,7 @@ export default {
 			}
 			let data = {
 				username: item.txtfield1.value,
+				name: item.txtfield1.value,
 				phoneNumber: item.txtfield2.value,
 				email: item.txtfield3.value,
 				password: item.txtfield4.value,
@@ -523,13 +528,13 @@ export default {
 					}
 				}
 			}
-			if (this.setdialog.type === 'create') {
-				if (this.parseCsv) {
-					this.sweetInfo.title = '상품 등록'
-					this.sweetInfo.content = '상품 등록을 해주세요.'
-					return (this.sweetInfo.open = true)
-				}
-			}
+			// if (this.setdialog.type === 'create') {
+			// 	if (this.parseCsv) {
+			// 		this.sweetInfo.title = '상품 등록'
+			// 		this.sweetInfo.content = '상품 등록을 해주세요.'
+			// 		return (this.sweetInfo.open = true)
+			// 	}
+			// }
 			if (this.setdialog.type === 'create') {
 				this.sweetDialog.title = '사업지 생성'
 				this.sweetDialog.content = '사업지를 생성합니다.'

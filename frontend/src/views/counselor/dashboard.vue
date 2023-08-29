@@ -257,6 +257,7 @@ export default {
 				this.business = res.businesses[0]
 				if (this.business.splitHoldingTime && this.business.maximumHoldingTime) {
 					this.times = []
+					console.log(this.business.maximumHoldingTime === '120')
 					if (this.business.maximumHoldingTime === '60') {
 						if (this.business.maximumHoldingTime === '60') this.times.push('60분')
 						if (this.business.maximumHoldingTime === '30') {
@@ -268,11 +269,12 @@ export default {
 						this.times.push('60분')
 						this.times.push('90분')
 					} else if (this.business.maximumHoldingTime === '120') {
-						if (this.business.maximumHoldingTime === '60') {
+						console.log(this.business.splitHoldingTime)
+						if (this.business.splitHoldingTime === '60') {
 							this.times.push('60분')
 							this.times.push('120분')
 						}
-						if (this.business.maximumHoldingTime === '30') {
+						if (this.business.splitHoldingTime === '30') {
 							this.times.push('30분')
 							this.times.push('60분')
 							this.times.push('90분')

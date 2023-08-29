@@ -23,7 +23,11 @@
 			:createAssignmentAction="createAssignmentAction"
 			:updateAssignmentAction="updateAssignmentAction"
 		></datatable>
-		<v-pagination v-model="productManager.page" :length="productManager.totalpage"></v-pagination>
+		<v-layout justify-center>
+			<v-flex xs6>
+				<v-pagination v-model="productManager.page" :length="productManager.totalpage" @input="paginationClick($event)"></v-pagination>
+			</v-flex>
+		</v-layout>
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" :updateAssignmentAction="updateAssignmentAction" />
 	</div>
@@ -134,6 +138,36 @@ export default {
 		}
 	},
 	methods: {
+		async paginationClick(val) {
+			console.log(this.productManager.page)
+			console.log(val)
+			const product_tableData = {
+				businessID: this.$store.state.businessSelectBox.value,
+				start: (this.productManager.page - 1) * this.productManager.itemsPerPage,
+				limit: this.productManager.itemsPerPage,
+			}
+			console.log(product_tableData)
+			await this.product_table(product_tableData)
+			const assignmentsViewData = {
+				productArr: this.productIdArr,
+				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+				created_at_lte: this.$moment(
+					this.$moment()
+						.add(1, 'd')
+						.format('YYYY-MM-DD'),
+				),
+				status: 'assignment',
+			}
+			await this.assignmentsView(assignmentsViewData)
+			const usersViewData = {
+				idArr: this.userIdArr,
+			}
+			await this.usersView(usersViewData)
+			const teamViewData = {
+				idArr: this.teamIdArr,
+			}
+			await this.teamView(teamViewData)
+		},
 		searchProduct() {
 			let item = this.productManager.items_origin
 			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
@@ -145,18 +179,22 @@ export default {
 			if (this.productFilter3.value && this.productFilter3.value !== 'all') {
 				item = item.filter(el => el.ho === this.productFilter3.value)
 			}
+
 			this.productManager.items = item
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
-				this.productManager.total = res.productsConnection.aggregate.totalCount
-				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.totalCount / this.productManager.itemsPerPage)
+				console.log(res)
+				this.productManager.total = res.productsConnection.aggregate.count
+				console.log(res.productsConnection.aggregate.count)
+				console.log(Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage))
+				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage)
 			})
 		},
 		async productSelectData() {
 			const productsCountViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				// contractStatus: 'noContract',
 			}
 			await this.productsCountView(productsCountViewData)
 			const businessViewData = {
@@ -393,11 +431,12 @@ export default {
 					let data1 = [{ text: '전체', value: 'all' }]
 					let data2 = [{ text: '전체', value: 'all' }]
 					let data3 = [{ text: '전체', value: 'all' }]
-					this.productManager.items.forEach(el => {
-						data1.push({ text: el.housingType, value: el.housingType })
-						data2.push({ text: el.dong + '동', value: el.dong })
-						data3.push({ text: el.ho + '호', value: el.ho })
-					})
+					// this.productManager.items = []
+					// this.productManager.items.forEach(el => {
+					// 	data1.push({ text: el.housingType, value: el.housingType })
+					// 	data2.push({ text: el.dong + '동', value: el.dong })
+					// 	data3.push({ text: el.ho + '호', value: el.ho })
+					// })
 					this.productFilter1.items = data1
 					this.productFilter2.items = data2
 					this.productFilter3.items = data3
