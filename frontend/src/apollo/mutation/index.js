@@ -722,9 +722,33 @@ export const createTeam = gql`
 		}
 	}
 `
+export const updateTeam = gql`
+	mutation updateTeam($id: ID!, $businessID: String, $title: String, $useYn: Boolean) {
+		updateTeam(input: { where: { id: $id }, data: { businessID: $businessID, title: $title, useYn: $useYn } }) {
+			team {
+				id
+				title
+				useYn
+				businessID
+			}
+		}
+	}
+`
 export const createRank = gql`
 	mutation createRank($businessID: String, $rankName: String, $useYn: Boolean) {
 		createRank(input: { data: { businessID: $businessID, rankName: $rankName, useYn: $useYn } }) {
+			rank {
+				id
+				rankName
+				useYn
+				businessID
+			}
+		}
+	}
+`
+export const updateRank = gql`
+	mutation updateRank($id: ID!, $businessID: String, $rankName: String, $useYn: Boolean) {
+		updateRank(input: { where: { id: $id }, data: { businessID: $businessID, rankName: $rankName, useYn: $useYn } }) {
 			rank {
 				id
 				rankName
