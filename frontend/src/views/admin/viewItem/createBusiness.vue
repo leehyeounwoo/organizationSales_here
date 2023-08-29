@@ -528,13 +528,13 @@ export default {
 					}
 				}
 			}
-			if (this.setdialog.type === 'create') {
-				if (this.parseCsv) {
-					this.sweetInfo.title = '상품 등록'
-					this.sweetInfo.content = '상품 등록을 해주세요.'
-					return (this.sweetInfo.open = true)
-				}
-			}
+			// if (this.setdialog.type === 'create') {
+			// 	if (this.parseCsv) {
+			// 		this.sweetInfo.title = '상품 등록'
+			// 		this.sweetInfo.content = '상품 등록을 해주세요.'
+			// 		return (this.sweetInfo.open = true)
+			// 	}
+			// }
 			if (this.setdialog.type === 'create') {
 				this.sweetDialog.title = '사업지 생성'
 				this.sweetDialog.content = '사업지를 생성합니다.'
