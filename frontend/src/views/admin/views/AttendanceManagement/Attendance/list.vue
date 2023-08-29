@@ -38,12 +38,12 @@
 			item-key="id"
 			class="elevation-0 table_style_2 mt-2"
 			:footer-props="{
+				['items-per-page-options']: [5, 10, 30, 50],
 				['items-per-page-text']: `• Total : ${table.total ? table.total : table.items.length}`,
-				['page-text']: ` 1 - ${table.itemsPerPage ? Math.ceil(table.total / table.itemsPerPage) : Math.ceil(table.items.length / 10)} of ${
-					table.page ? table.page : 1
-				} `,
+				['page-text']: ``,
 			}"
 			@pagination="pagination($event)"
+			@page-count="table.pageCount = $event"
 		>
 			<template v-slot:[`item.data3`]="{ item }">
 				<v-layout align-center justify-center>
@@ -102,7 +102,11 @@
 				</v-layout>
 			</template>
 			<template v-slot:footer>
-				<v-pagination v-model="table.page" :length="Math.ceil(table.total / table.itemsPerPage)"></v-pagination>
+				<v-pagination
+					v-model="table.page"
+					:length="Math.ceil(table.total / table.pagination.itemsPerPage)"
+					@input="e => page(e)"
+				></v-pagination>
 			</template>
 		</v-data-table>
 		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
@@ -229,6 +233,7 @@ import detail from './detail.vue'
 import vacationStatus from './vacationStatus.vue'
 import downloadExcel from 'vue-json-excel'
 import unattendedVacation from './unattendedVacation.vue'
+import Axios from 'axios'
 
 export default {
 	components: {
@@ -329,6 +334,13 @@ export default {
 					출근시간: 'data3',
 					퇴근시간: 'data4',
 				},
+				pagination: {
+					itemsPerPage: 10,
+					page: 1,
+					pageCount: 0,
+					start: 0,
+					limit: 10000,
+				},
 				itemsPerPage: 10,
 				page: 1,
 				pageCount: 0,
@@ -388,28 +400,25 @@ export default {
 		await this.getRanks()
 		let input = {
 			start: 0,
-			limit: 10,
+			limit: this.table.pagination.itemsPerPage,
 			roleName: 'Counselor',
 			businessID: this.$store.state.businessSelectBox.value,
+			page: 1,
 		}
 		await this.viewUsers(input)
 		let input2 = {
-			start: 0,
-			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
 			roleName: 'Counselor',
 			userID: this.userIDArr,
 		}
 		let input3 = {
-			start: 0,
-			limit: 10,
 			date: this.$moment().format('YYYY-MM-DD'),
 			// roleName: 'Counselor',
 			idArr: this.userIDArr,
 		}
 		await this.gotoworksView(input2)
-		await this.unattendedVacation()
 		await this.vacationView(input3)
+		await this.unattendedVacation()
 		await this.dataSetting()
 		this.$store.state.loading = false
 	},
@@ -423,19 +432,16 @@ export default {
 		},
 
 		first_users(data) {
-			console.log(data)
 			this.$store.dispatch('users', data).then(res => {
 				this.table.items = res.users
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
-				console.log(this.table)
 			})
 		},
 		async dataSetting() {
 			for (let index = 0; index < this.userLists.length; index++) {
 				const element = this.userLists[index]
-				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
+				let teamData = this.teamData.filter(x => x.id === Number(element.teamID))[0]
 				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
-
 				let teamTitle = '-'
 				let rankTitle = '-'
 				if (teamData) {
@@ -470,16 +476,13 @@ export default {
 			this.table.origin_items = JSON.parse(JSON.stringify(this.userLists))
 		},
 		async getTeams() {
-			let data = {
-				businessID: this.$store.state.businessSelectBox.value,
-				useYn: true,
-			}
-
-			await this.$store.dispatch('teams', data).then(res => {
-				this.searchsel1.items = JSON.parse(JSON.stringify(res.teams))
+			Axios.get(process.env.VUE_APP_BACKEND_URL + '/team_data_api.json').then(res => {
+				console.log(res.data)
+				const filterData = res.data.filter(x => x.businessID === this.$store.state.businessSelectBox.value && x.useYn === true)
+				this.searchsel1.items = JSON.parse(JSON.stringify(filterData))
 				this.searchsel1.items.unshift('전체')
 				this.searchsel1.value = '전체'
-				this.teamData = res.teams
+				this.teamData = filterData
 			})
 		},
 		async getRanks() {
@@ -499,32 +502,19 @@ export default {
 		},
 		async viewUsers(input) {
 			this.$store.state.loading = true
-			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
-				input.team = this.searchsel1.value.id
-			}
-
 			if (this.search_project) {
 				input.username = this.search_project
-			} else {
-				input
 			}
 			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
 				input.teamID = this.searchsel1.value.id
-			}
-
-			if (this.userIDArr !== []) {
-				input.userID = this.userIDArr
 			}
 
 			await this.$store
 				.dispatch('users', input)
 				.then(async res => {
 					let list = []
-					let workCount = 0
-					let endWorkCount = 0
-					let holiDayCount = 0
 					this.userIDArr = []
-
+					this.table.total = res.usersConnection.aggregate.count
 					for (let i = 0; i < res.users.length; i++) {
 						this.userIDArr.push(res.users[i].id)
 					}
@@ -547,15 +537,10 @@ export default {
 						listData.history = element.history ? element.history : []
 						listData.data5 === '미확인' ? (listData.vacation = '-') : ''
 						list.push(listData)
-						this.table.total = res.usersConnection.aggregate.count
-						this.table.page = input.page
 					})
+					if (input.page) this.table.page = input.page
 					this.userLists = list
-
 					this.allCounselor = list.length
-					this.work = workCount
-					this.endWork = endWorkCount
-					this.holiDay = holiDayCount
 					if (this.status_Keyword.value === '전체') {
 						this.table.items = list
 						this.$store.state.loading = false
@@ -647,105 +632,34 @@ export default {
 			this.downloadDialogStatus.open = false
 		},
 
-		async pagination(item) {
-			this.table.page = item.page
-			console.log(this.table, '테이블')
-			console.log(item.page, '아이템')
-
-			if (item.page > this.table.page) {
-				// 다음 페이지
-				let range = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					page: item.page,
-					roleName: 'Counselor',
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-				await this.viewUsers(range)
-				let input2 = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					date: this.$moment().format('YYYY-MM-DD'),
-					roleName: 'Counselor',
-					userID: this.userIDArr,
-				}
-				await this.gotoworksView(input2)
-				let input3 = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					date: this.$moment().format('YYYY-MM-DD'),
-					// roleName: 'Counselor',
-					idArr: this.userIDArr,
-				}
-				await this.unattendedVacation()
-				await this.vacationView(input3)
-				await this.dataSetting()
-			} else if (item.itemsPerPage !== this.table.itemsPerPage) {
-				// 한페이지에 보여줄 아이템 개수 변경
-				let range = {
-					start: 0,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					page: item.page,
-					roleName: 'Counselor',
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-				await this.viewUsers(range)
-				let input2 = {
-					start: 0,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					date: this.$moment().format('YYYY-MM-DD'),
-					roleName: 'Counselor',
-					userID: this.userIDArr,
-				}
-				await this.gotoworksView(input2)
-				let input3 = {
-					start: 0,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					date: this.$moment().format('YYYY-MM-DD'),
-					// roleName: 'Counselor',
-					idArr: this.userIDArr,
-				}
-				await this.unattendedVacation()
-				await this.vacationView(input3)
-				await this.dataSetting()
-			} else if (item.page < this.table.page) {
-				// 이전 페이지
-				let range = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					page: item.page,
-					roleName: 'Counselor',
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-				await this.viewUsers(range)
-				let input2 = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					date: this.$moment().format('YYYY-MM-DD'),
-					roleName: 'Counselor',
-					userID: this.userIDArr,
-				}
-				await this.gotoworksView(input2)
-				let input3 = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					date: this.$moment().format('YYYY-MM-DD'),
-					// roleName: 'Counselor',
-					idArr: this.userIDArr,
-				}
-				await this.unattendedVacation()
-				await this.vacationView(input3)
-				await this.dataSetting()
+		page(val) {
+			this.table.page = val
+			this.paginAPIs()
+		},
+		async paginAPIs() {
+			let input = {
+				start: (this.table.page - 1) * this.table.pagination.itemsPerPage,
+				limit: this.table.pagination.itemsPerPage,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
+			await this.viewUsers(input)
+			let input2 = {
+				date: this.$moment().format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
+			let input3 = {
+				date: this.$moment().format('YYYY-MM-DD'),
+				idArr: this.userIDArr,
+			}
+			await this.gotoworksView(input2)
+			await this.vacationView(input3)
+		},
+		async pagination(item) {
+			this.table.pagination = item
+			if (item.itemsPerPage > this.table.total) this.table.page = 1
+			this.paginAPIs()
 		},
 
 		async update() {
@@ -754,21 +668,21 @@ export default {
 			await this.getRanks()
 			let input = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.viewUsers(input)
 			let input2 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment().format('YYYY-MM-DD'),
 				// roleName: 'Counselor',
 				idArr: this.userIDArr,
@@ -797,7 +711,7 @@ export default {
 			await this.gotoworksView(input2)
 			let input3 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
@@ -824,7 +738,7 @@ export default {
 			}
 			let input3 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment(this.date_picker.date)
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
@@ -851,7 +765,7 @@ export default {
 			}
 			let input3 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				idArr: this.userIDArr,
@@ -876,7 +790,7 @@ export default {
 			}
 			let input3 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				idArr: this.userIDArr,
@@ -958,7 +872,7 @@ export default {
 					}
 					let input3 = {
 						start: 0,
-						limit: 10,
+						limit: this.table.pagination.itemsPerPage,
 						date: this.$moment().format('YYYY-MM-DD'),
 						// roleName: 'Counselor',
 						idArr: this.userIDArr,
@@ -988,7 +902,7 @@ export default {
 					}
 					let input3 = {
 						start: 0,
-						limit: 10,
+						limit: this.table.pagination.itemsPerPage,
 						date: this.$moment().format('YYYY-MM-DD'),
 						// roleName: 'Counselor',
 						idArr: this.userIDArr,
@@ -1018,7 +932,7 @@ export default {
 					}
 					let input3 = {
 						start: 0,
-						limit: 10,
+						limit: this.table.pagination.itemsPerPage,
 						date: this.$moment().format('YYYY-MM-DD'),
 						// roleName: 'Counselor',
 						idArr: this.userIDArr,
@@ -1049,21 +963,21 @@ export default {
 			this.$store.state.loading = true
 			let input = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.viewUsers(input)
 			let input2 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				userID: this.userIDArr,
 			}
 			await this.gotoworksView(input2)
 			let input3 = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				idArr: this.userIDArr,
 			}
@@ -1174,7 +1088,7 @@ export default {
 		async unattendedVacation() {
 			let unattendedData = {
 				start: 0,
-				limit: 10,
+				limit: this.table.pagination.itemsPerPage,
 				vacationStatus: 'waiting',
 			}
 
