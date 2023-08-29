@@ -232,6 +232,8 @@
 						<v-layout class="mb-2">
 							<v-text-field
 								hideDetails
+								:class="!siginup.biz ? 'disabled_txtField' : ''"
+								:disabled="!siginup.biz"
 								:autofocus="false"
 								class="txtLogin1_border_radius mb-2 mr-2"
 								placeholder="※png, pdf, jpg"
@@ -243,7 +245,7 @@
 								autocomplete="off"
 								color="primary2"
 							></v-text-field>
-							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(4)">
+							<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage(4)" :disabled="!siginup.biz">
 								<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
 							</v-btn>
 						</v-layout>
@@ -339,7 +341,7 @@
 				@change="fileUpload($event, index)"
 				accept=".pdf, image/jpg, image/png, image/jpeg"
 			/>
-			<sweetAlert :dialog="sweetInfo" @close_active="$router.push({ name: 'counselorLogin' })" />
+			<sweetAlert :dialog="sweetInfo" @close_active="sweetInfo.title === '등록완료' ? $router.push({ name: 'counselorLogin' }) : ''" />
 			<!-- <div class="mt-8">
 					<v-btn text>
 						Privacy Policy & Terms of Service.

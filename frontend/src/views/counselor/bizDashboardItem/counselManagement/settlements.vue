@@ -253,6 +253,7 @@ export default {
 						el.product = this.productDatas.filter(x => x.id === el.ProductID)[0]
 						el.contractDate = this.$moment(el.contractDate).format('YYYY.MM.DD')
 					}
+					console.log(res.settlements)
 					this.datatable.items = res.settlements
 					this.$store.state.loading = false
 				})

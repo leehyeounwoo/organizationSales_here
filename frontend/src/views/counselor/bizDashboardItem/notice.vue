@@ -146,8 +146,7 @@ export default {
 		notices() {
 			const data = {
 				businesses: [this.$store.state.meData.businessID],
-				show: true,
-				status: true,
+				useYn: true,
 			}
 			this.$store.dispatch('notices', data).then(res => {
 				res.notices.sort((a, b) => {

@@ -42,7 +42,7 @@ module.exports = {
       profile: ID
       copyAccount: ID
       employmentContract: ID
-      iD_Card: ID
+      ID_Card: ID
       businessID: String
       company: String
       rankID: String

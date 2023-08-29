@@ -437,7 +437,14 @@ export default {
 								this.open_disable_dialog({ title: '등록완료', content: '정상적으로 등록 되었습니다.' }, 'success')
 							})
 							.catch(err => {
-								this.open_disable_dialog({ title: '오류발생', content: '수정 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' }, 'error')
+								this.open_disable_dialog(
+									{
+										title: '오류발생',
+										content:
+											this.$route.name === 'editSettlement' ? '수정' : '등록' + ' 도중 오류가 발생하였습니다. 관리자에게 문의하세요.',
+									},
+									'error',
+								)
 								console.log({ err })
 							})
 					}

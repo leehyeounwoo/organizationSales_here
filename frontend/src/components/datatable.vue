@@ -1801,7 +1801,7 @@
 			</template>
 			<!-- 프론트 계약물건 표시 -->
 			<template v-slot:[`item.product_settlements`]="{ item }">
-				<div>{{ item.product.housingType }} {{ item.product.dong }}동 {{ item.product.ho }}호</div>
+				<div v-if="item.product">{{ item.product.housingType }} {{ item.product.dong }}동 {{ item.product.ho }}호</div>
 			</template>
 			<!-- 정산관리 - 상태 -->
 			<template v-slot:[`item.settlementStatus`]="{ item }">

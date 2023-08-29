@@ -27,8 +27,8 @@ const routes = [
 		component: kioskLogin,
 		name: 'kioskLogin',
 	},
-	{ path: '*', name: 'notfound', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
-	{ path: '/', name: 'mainPage', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
+	{ path: '*', name: 'notfound', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/errorpage/NotFound.vue') },
+	{ path: '/:code', name: 'mainPage', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
 	{ path: '/block', name: 'block', component: notAuth },
 
 	{

@@ -744,7 +744,7 @@ export const createSettlement = gql`
 		$phone: String
 		$birth: String
 		$location: String
-		$businessID: Boolean
+		$businessID: String
 		$subLocation: String
 	) {
 		createSettlement(
