@@ -42,6 +42,7 @@ export default {
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
+				console.log(this.$store.state.businessSelectBox.value)
 				await this.productSelectData()
 				clearInterval(createInterval)
 			}
@@ -149,8 +150,7 @@ export default {
 			}
 			await this.businessView(businessViewData)
 			const product_tableData = {
-				// businessID: this.$store.state.businessSelectBox.value,
-				businessID: '56',
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {

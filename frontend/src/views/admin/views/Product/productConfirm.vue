@@ -51,7 +51,7 @@ export default {
 				this.teamView(teamViewData)
 				const productsViewData = {
 					idArr: this.productIDArr,
-					// businessID: this.$store.state.businessSelectBox.value,
+					businessID: this.$store.state.businessSelectBox.value,
 				}
 				await this.productsView(productsViewData)
 				this.$store.state.loading = false
