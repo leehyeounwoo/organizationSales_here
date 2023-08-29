@@ -1057,6 +1057,7 @@ export default {
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
+
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
 				item = item.filter(el => el.teamID === this.searchsel1.value.value)
 			}
@@ -1064,8 +1065,6 @@ export default {
 				item = item.filter(el => el.turnStatus === this.searchsel.value.value || el.turnStatus == '')
 			} else if (this.searchsel.value.value && this.searchsel.value.value === 'complete') {
 				item = item.filter(el => el.turnStatus === this.searchsel.value.value)
-			} else {
-				item = JSON.parse(JSON.stringify(this.processTable.origin_items))
 			}
 			if (this.search_project) {
 				item = item.filter(el => el.username.indexOf(this.search_project) !== -1)
