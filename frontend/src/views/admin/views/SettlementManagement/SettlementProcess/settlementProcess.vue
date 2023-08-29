@@ -1097,11 +1097,14 @@ export default {
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-
-				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-
-				element.teamID = `${teamTitle} `
-				this.list.teamID = element.teamID
+				let teamTitle
+				if (this.teamData.filter(x => x.id === element.teamID).length > 0) {
+					teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
+					element.teamID = `${teamTitle} `
+					this.list.teamID = element.teamID
+				} else {
+					element.teamID = `- `
+				}
 			}
 
 			this.processTable.items = this.list

@@ -14,11 +14,11 @@
 					</v-flex> -->
 					<v-flex xs3>
 						<div style="width:10px; height:10px; background-color:yellow; display: inline-flex;  border:1px solid black;"></div>
-						배정중 : 건
+						배정중 :{{ this.assignmentsData.length }} 건
 					</v-flex>
 					<v-flex xs3>
 						<div style="width:10px; height:10px; background-color:#3a258f; display: inline-flex;  border:1px solid black;"></div>
-						계약완료 : 건
+						계약완료 :{{ this.settlementsData.length }} 건
 					</v-flex>
 					<!-- <v-flex xs3>평형</v-flex> -->
 					<!-- <v-flex xs3 v-for="(area, index) in areaArr" :key="index">
@@ -120,12 +120,6 @@ export default {
 	},
 	computed: {},
 	methods: {
-		testFun(val) {
-			if (!val.color) {
-				console.log(val.color)
-			}
-		},
-
 		returnStyle(floorData, i) {
 			console.log(floorData)
 			if (floorData[i].data.filter(x => x.ho.includes('0' + i)).length !== 0) {
@@ -189,6 +183,12 @@ export default {
 				const assignmentsViewData = {
 					status: 'assignment',
 					businessID: '56',
+					created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+					created_at_lte: this.$moment(
+						this.$moment()
+							.add(1, 'd')
+							.format('YYYY-MM-DD'),
+					),
 				}
 				await this.assignmentsView(assignmentsViewData)
 				const settlementData = {
@@ -245,9 +245,9 @@ export default {
 			// 	this.chunk(arr, 5)
 			// }
 
-			// this.dashboardData = arr
+			this.dashboardData = arr
 			// console.log(this.dashboardData)
-			this.dashboardData = JSON.parse(JSON.stringify(arr.slice(0, 4)))
+			// this.dashboardData = JSON.parse(JSON.stringify(arr.slice(0, 4)))
 			this.$store.state.loading = false
 		},
 		// chunk(data = [], size = 1) {
