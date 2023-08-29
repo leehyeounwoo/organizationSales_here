@@ -247,7 +247,7 @@ export const register = gql`
 				profile: $profile
 				copyAccount: $copyAccount
 				employmentContract: $employmentContract
-				ID_Card: $ID_Card
+				iD_Card: $ID_Card
 				businessID: $businessID
 				company: $company
 				rankID: $rankID
@@ -255,6 +255,9 @@ export const register = gql`
 			}
 		) {
 			jwt
+			user {
+				id
+			}
 		}
 	}
 `
@@ -768,7 +771,7 @@ export const createSettlement = gql`
 		$phone: String
 		$birth: String
 		$location: String
-		$businessID: Boolean
+		$businessID: String
 		$subLocation: String
 	) {
 		createSettlement(

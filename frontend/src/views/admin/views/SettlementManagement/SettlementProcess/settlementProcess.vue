@@ -1656,7 +1656,7 @@ export default {
 
 				if (element.txtField.readonly === false) {
 					let data = {
-						prePaymentDate: this.start_date_picker[index].date,
+						prePaymentDate: this.$moment().format('YYYY-MM-DD'),
 						turnStatus: 'waiting',
 						amount: Number(element.txtField.value.replace(/,/g, '')),
 						settlements: this.finalSettlementData[0].id,
@@ -1678,9 +1678,9 @@ export default {
 					})
 					if (this.processCheckBox) {
 						let messages = []
-						let message = `${index}차 정산일은 ${
-							this.start_date_picker[index].date
-						}입니다.\n정산되는 금액은 ${element.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+						let message = `${index}차 정산일은 ${this.$moment().format(
+							'YYYY-MM-DD',
+						)}입니다.\n정산되는 금액은 ${element.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
 						messages.push(message)
 						let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
 						let input = {

@@ -889,11 +889,11 @@ export default new Vuex.Store({
 					.mutate({
 						mutation: register,
 						variables: input,
-						context: {
-							headers: {
-								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
-							},
-						},
+						// context: {
+						// 	headers: {
+						// 		Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+						// 	},
+						// },
 					})
 					.then(({ data }) => {
 						resolve(data)

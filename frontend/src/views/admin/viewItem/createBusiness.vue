@@ -385,8 +385,9 @@ export default {
 		saveUser() {
 			let data = {
 				username: this.right_data.detail.username,
-				phoneNumber: this.right_data.detail.phoneNumber,
 				email: this.right_data.detail.email,
+				name: this.right_data.detail.username,
+				phoneNumber: this.right_data.detail.phoneNumber,
 				password: this.right_data.detail.password,
 				confirmed: this.right_data.detail.confirmed,
 			}
@@ -443,6 +444,8 @@ export default {
 							let adduser = {
 								id: this.newUser[i].id,
 								businessID: res.createBusiness.business.id,
+								username: this.right_data.detail.username,
+								email: this.right_data.detail.email,
 							}
 							this.$store.dispatch('updateUser', adduser).then(() => {
 								this.sweetDialog.open = false
@@ -482,6 +485,7 @@ export default {
 			}
 			let data = {
 				username: item.txtfield1.value,
+				name: item.txtfield1.value,
 				phoneNumber: item.txtfield2.value,
 				email: item.txtfield3.value,
 				password: item.txtfield4.value,

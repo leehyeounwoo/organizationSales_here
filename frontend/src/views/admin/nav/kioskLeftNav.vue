@@ -83,11 +83,11 @@ export default {
 							name: 'settlementManagement',
 							click: false,
 						},
-						{
-							title: '알림톡 관리',
-							name: '',
-							click: false,
-						},
+						// {
+						// 	title: '알림톡 관리',
+						// 	name: '',
+						// 	click: false,
+						// },
 					]
 				})
 				.catch(err => {

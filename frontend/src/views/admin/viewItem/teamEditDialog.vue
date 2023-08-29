@@ -224,7 +224,7 @@ export default {
 	font-weight: bold;
 }
 .table_all_gray:nth-last-child(1) {
-	margin-bottom: 50px;
+	// margin-bottom: 50px;
 }
 .table_all_gray:nth-last-child(6) {
 	border-top: 1px solid black;

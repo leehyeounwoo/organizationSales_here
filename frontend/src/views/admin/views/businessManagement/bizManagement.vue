@@ -15,7 +15,7 @@
 		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
-		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
+		<!-- <createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" /> -->
 		<productDetail :setdialog="table_detail" :newProduct="product_detail" />
 	</div>
 </template>
