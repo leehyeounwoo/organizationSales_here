@@ -477,7 +477,6 @@ export default {
 		},
 		async getTeams() {
 			Axios.get(process.env.VUE_APP_BACKEND_URL + '/team_data_api.json').then(res => {
-				console.log(res.data)
 				const filterData = res.data.filter(x => x.businessID === this.$store.state.businessSelectBox.value && x.useYn === true)
 				this.searchsel1.items = JSON.parse(JSON.stringify(filterData))
 				this.searchsel1.items.unshift('전체')
