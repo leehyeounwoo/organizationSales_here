@@ -220,7 +220,7 @@ export default {
 			this.$store.dispatch('me').then(() => {
 				const data = {
 					userID: this.$store.state.meData.id,
-					settlementStatus: 'agree',
+					settlementStatus_Array: ['agree', 'waiting'],
 				}
 				if (type !== 'first') {
 					data.contractDate_gte =

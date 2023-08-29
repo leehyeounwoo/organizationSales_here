@@ -495,6 +495,7 @@ export const settlementsList = gql`
 	query settlementsList(
 		$id: ID
 		$settlementStatus: String
+		$settlementStatus_Array: [String]
 		$userID: String
 		$date: DateTime
 		$contractDate_lte: DateTime
@@ -508,6 +509,7 @@ export const settlementsList = gql`
 				id: $id
 				ProductID: $ProductID
 				settlementStatus: $settlementStatus
+				settlementStatus_in: $settlementStatus_Array
 				created_at_lte: $date
 				contractDate_lte: $contractDate_lte
 				contractDate_gte: $contractDate_gte

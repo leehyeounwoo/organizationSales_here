@@ -5,7 +5,7 @@
 			<div class="conunselor_login_header">
 				<!-- 버튼 -->
 				<div class="header_back_btn">
-					<v-btn large icon dark color="#333" @click="$router.push({ name: 'counselorMain' })">
+					<v-btn large icon dark color="#333" @click="$router.go(-1)">
 						<v-icon large>mdi-chevron-left</v-icon>
 					</v-btn>
 				</div>
