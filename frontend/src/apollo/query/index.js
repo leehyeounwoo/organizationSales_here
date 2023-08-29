@@ -63,7 +63,7 @@ export const users = gql`
 		$workingStatus: Boolean
 		$businessID: String
 	) {
-		usersConnection(where: { role: { name: $roleName }, businessID: $businessID }) {
+		usersConnection(where: { role: { name: $roleName }, businessID: $businessID, workingStatus: $workingStatus }) {
 			aggregate {
 				count
 			}
@@ -290,6 +290,7 @@ export const settlements = gql`
 		$contractDate_gte: DateTime
 		$name: String
 		$phone: String
+		$businessID: String
 	) {
 		settlementsConnection(
 			where: {
@@ -300,13 +301,14 @@ export const settlements = gql`
 				contractDate_gte: $contractDate_gte
 				name_contains: $name
 				phone_contains: $phone
+				businessID: $businessID
 			}
 		) {
 			aggregate {
 				count
 			}
 		}
-		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID, created_at_lte: $date }) {
+		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID, created_at_lte: $date, businessID: $businessID }) {
 			id
 			ProductID
 			userID
@@ -371,11 +373,14 @@ export const systems = gql`
 	}
 `
 export const usersConnection = gql`
-	query usersConnection($teamID: String, $businessID: String) {
-		usersConnection(where: { teamID: $teamID, businessID: $businessID, role: 3 }) {
+	query usersConnection($teamID: String, $businessID: String, $workingStatus: Boolean, $roleName: String) {
+		usersConnection(where: { role: { name: $roleName }, teamID: $teamID, businessID: $businessID, workingStatus: $workingStatus }) {
 			aggregate {
 				count
 				totalCount
+			}
+			values {
+				id
 			}
 		}
 	}

@@ -292,6 +292,7 @@ export default {
 				})
 		},
 		product1Change(val) {
+			console.log(val)
 			this.products2 = this.productDatas.filter(x => x.housingType === val).map(x => x.dong)
 			this.product2 = ''
 			this.product3 = ''

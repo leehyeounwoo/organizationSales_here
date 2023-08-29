@@ -150,7 +150,12 @@ export default {
 			useYn: true,
 		}
 		await this.teamsView(teamsViewData)
-		await this.usersConnectionView()
+		const connectionUser = {
+			businessID: this.$store.state.businessSelectBox.value,
+			workingStatus: true,
+			roleName: 'Counselor',
+		}
+		await this.usersConnectionView(connectionUser)
 
 		const ranksViewData = {
 			useYn: true,
@@ -161,6 +166,8 @@ export default {
 			const usersConnectionTeamViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
 				teamID: element.id,
+				workingStatus: true,
+				roleName: 'Counselor',
 			}
 			await this.usersConnectionTeamView(usersConnectionTeamViewData)
 		}
@@ -230,9 +237,9 @@ export default {
 					this.$store.state.loading = false
 				})
 		},
-		async usersConnectionView() {
+		async usersConnectionView(connectionUser) {
 			await this.$store
-				.dispatch('usersConnection', {})
+				.dispatch('usersConnection', connectionUser)
 				.then(async res => {
 					this.totalUserLength = res.usersConnection.aggregate.count
 				})
@@ -261,11 +268,12 @@ export default {
 			} else {
 				const usersViewData = {
 					businessID: this.$store.state.businessSelectBox.value,
-					role: 3,
+					roleName: 'Counselor',
 					teamID: team.id,
+					workingStatus: true,
 				}
-				if (this.searchsel2.value.value !== 'all') {
-					usersViewData['workingStatus'] = this.searchsel2.value.value
+				if (this.searchsel2.value && this.searchsel2.value.value === false) {
+					usersViewData.workingStatus = false
 				}
 				if (this.search_project) {
 					usersViewData['username'] = this.search_project
@@ -273,7 +281,9 @@ export default {
 				await this.usersView(usersViewData, index)
 				const gotoworksView = {
 					date: this.$moment().format('YYYY-MM-DD'),
-					userID: this.teamData[index].userData.map(x => x.id),
+				}
+				if (this.teamData[index].userData.map(x => x.id).length > 0) {
+					gotoworksView['userID'] = this.teamData[index].userData.map(x => x.id)
 				}
 				await this.gotoworksView(gotoworksView, index)
 				this.$store.state.loading = false
@@ -283,9 +293,15 @@ export default {
 			await this.$store
 				.dispatch('gotoWork', gotoworksView)
 				.then(res => {
-					this.teamData[index].workCount = res.gotoworks.filter(x => x.vacation === null).length
-					this.teamData[index].vacationCount = res.gotoworks.filter(x => x.vacation !== null).length
-					this.teamData = JSON.parse(JSON.stringify(this.teamData))
+					if (this.teamData[index].userData.length > 0) {
+						this.teamData[index].workCount = res.gotoworks.filter(x => x.vacation === null).length
+						this.teamData[index].vacationCount = res.gotoworks.filter(x => x.vacation !== null).length
+						this.teamData = JSON.parse(JSON.stringify(this.teamData))
+					} else {
+						this.teamData[index].workCount = 0
+						this.teamData[index].vacationCount = 0
+						this.teamData = JSON.parse(JSON.stringify(this.teamData))
+					}
 				})
 				.catch(err => {
 					console.log(err)

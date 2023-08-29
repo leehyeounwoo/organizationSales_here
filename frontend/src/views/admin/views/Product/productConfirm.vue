@@ -36,7 +36,7 @@ export default {
 						this.timeArr.push(res.businesses[0].splitHoldingTime * (index + 1))
 					}
 				})
-				console.log(this.timeArr)
+
 				const assignmentsViewData = {
 					status: 'waiting',
 				}

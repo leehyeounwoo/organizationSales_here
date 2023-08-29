@@ -37,12 +37,6 @@
 			v-model="selected"
 			item-key="id"
 			class="elevation-0 table_style_2 mt-2"
-			:footer-props="{
-				['items-per-page-text']: `• Total : ${table.total ? table.total : table.items.length}`,
-				['page-text']: ` 1 - ${table.itemsPerPage ? Math.ceil(table.total / table.itemsPerPage) : Math.ceil(table.items.length / 10)} of ${
-					table.page ? table.page : 1
-				} `,
-			}"
 			@pagination="pagination($event)"
 		>
 			<template v-slot:[`item.data3`]="{ item }">
@@ -102,6 +96,9 @@
 				</v-layout>
 			</template>
 		</v-data-table>
+		<div class="text-center mt-4">
+			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
+		</div>
 		<v-btn small class="btn-style3" @click="createUnattendedVacation()">
 			<span style="color: white;">{{ '연차신청 미처리 : ' + unattendedLength + '건' }}</span>
 		</v-btn>
@@ -254,6 +251,18 @@ export default {
 				counselor: '',
 				status: '',
 			},
+			rowperpageSel: {
+				value: 10,
+				errorMessage: '',
+				hideDetail: true,
+				items: [10, 20, 30],
+				fullItem: [],
+				outlined: true,
+				label: '',
+				returnObject: true,
+				itemText: 'name',
+				itemValue: 'id',
+			},
 			saveDialogStatus: {
 				open: false,
 				content: '저장하시겠습니까?',
@@ -292,11 +301,11 @@ export default {
 					{ text: '직원명', value: 'data1', align: 'center', width: '7%' },
 					{ text: '연락처', value: 'data2', align: 'center', width: '10%' },
 					{ text: '영업번호', value: 'salesPhoneNumber', align: 'center', width: '10%' },
-					{ text: '등록일', value: 'created_at', align: 'center', width: '7%' },
+					{ text: '등록일', value: 'created_at', align: 'center', width: '10%' },
 					{ text: '팀', value: 'team_rank', align: 'center', width: '7%' },
 					{ text: '상태', value: 'data5', align: 'center', width: '7%' },
-					{ text: '출근시간', value: 'data3', align: 'center', width: '10%' },
-					{ text: '퇴근시간', value: 'data4', align: 'center', width: '10%' },
+					{ text: '출근시간', value: 'data3', align: 'center', width: '7%' },
+					{ text: '퇴근시간', value: 'data4', align: 'center', width: '7%' },
 					{ text: '출근', value: 'data6', align: 'center', width: '8%' },
 					{ text: '퇴근', value: 'data7', align: 'center', width: '8%' },
 					{ text: '신청 연차 관리', value: 'vacation', align: 'center', width: '10%' },
@@ -368,6 +377,7 @@ export default {
 		await this.me()
 		await this.getTeams()
 		await this.getRanks()
+		await this.rowperpageChange()
 		let input = {
 			start: 0,
 			limit: 10,
@@ -401,6 +411,23 @@ export default {
 		async me() {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.me
+			})
+		},
+		async rowperpageChange() {
+			this.$store.state.loading = true
+			this.table.itemsPerPage = this.rowperpageSel.value
+			let data = {
+				start: 0,
+				limit: 10,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+			}
+			await this.first_users(data)
+		},
+		first_users(data) {
+			this.$store.dispatch('users', data).then(res => {
+				this.table.items = res.users
+				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 			})
 		},
 		async dataSetting() {
@@ -680,7 +707,7 @@ export default {
 				limit: 10,
 				date: this.$moment().format('YYYY-MM-DD'),
 				// roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.gotoworksView(input2)
 			await this.unattendedVacation()
@@ -695,6 +722,7 @@ export default {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 			}
+			await this.viewUsers(input)
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
 					.subtract(1, 'd')
@@ -702,6 +730,7 @@ export default {
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
+			await this.gotoworksView(input2)
 			let input3 = {
 				start: 0,
 				limit: 10,
@@ -709,10 +738,8 @@ export default {
 					.subtract(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
-			await this.viewUsers(input)
-			await this.gotoworksView(input2)
 			await this.vacationView(input3)
 			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
@@ -738,7 +765,7 @@ export default {
 					.add(1, 'd')
 					.format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
@@ -763,7 +790,7 @@ export default {
 				limit: 10,
 				date: this.$moment().format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)
@@ -788,7 +815,7 @@ export default {
 				limit: 10,
 				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
-				userID: this.userIDArr,
+				idArr: this.userIDArr,
 			}
 			await this.viewUsers(input)
 			await this.gotoworksView(input2)

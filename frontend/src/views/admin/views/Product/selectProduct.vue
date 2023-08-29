@@ -149,7 +149,8 @@ export default {
 			}
 			await this.businessView(businessViewData)
 			const product_tableData = {
-				businessID: this.$store.state.businessSelectBox.value,
+				// businessID: this.$store.state.businessSelectBox.value,
+				businessID: '56',
 			}
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {

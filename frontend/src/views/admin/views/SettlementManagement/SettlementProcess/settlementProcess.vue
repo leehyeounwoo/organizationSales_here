@@ -1057,6 +1057,7 @@ export default {
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.processTable.origin_items))
+
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
 				item = item.filter(el => el.teamID === this.searchsel1.value.value)
 			}
@@ -1064,8 +1065,6 @@ export default {
 				item = item.filter(el => el.turnStatus === this.searchsel.value.value || el.turnStatus == '')
 			} else if (this.searchsel.value.value && this.searchsel.value.value === 'complete') {
 				item = item.filter(el => el.turnStatus === this.searchsel.value.value)
-			} else {
-				item = JSON.parse(JSON.stringify(this.processTable.origin_items))
 			}
 			if (this.search_project) {
 				item = item.filter(el => el.username.indexOf(this.search_project) !== -1)
@@ -1098,11 +1097,14 @@ export default {
 		async dataSetting() {
 			for (let index = 0; index < this.userData.length; index++) {
 				const element = this.userData[index]
-
-				let teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
-
-				element.teamID = `${teamTitle} `
-				this.list.teamID = element.teamID
+				let teamTitle
+				if (this.teamData.filter(x => x.id === element.teamID).length > 0) {
+					teamTitle = this.teamData.filter(x => x.id === element.teamID)[0].title
+					element.teamID = `${teamTitle} `
+					this.list.teamID = element.teamID
+				} else {
+					element.teamID = `- `
+				}
 			}
 
 			this.processTable.items = this.list

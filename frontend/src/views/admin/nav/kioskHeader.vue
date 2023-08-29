@@ -2,7 +2,7 @@
 	<div style="width:100%; height:60px; background-color:#fff; box-shadow:0 0 5px 0">
 		<v-layout justify-end align-center>
 			<v-flex class="pl-10">
-				<v-btn class="kiosk_header_btn">현황판</v-btn>
+				<v-btn class="kiosk_header_btn" @click="statusBoardShow">현황판</v-btn>
 				<v-btn class="kiosk_header_btn ml-3" @click="productShow">물건배정</v-btn>
 			</v-flex>
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
@@ -11,7 +11,7 @@
 						<selectBoxValueItems
 							class="mr-4 mt-2"
 							:sel="$store.state.businessSelectBox"
-							v-model="$store.state.businessSelectBox.value"
+							:value="$store.state.businessSelectBox.value"
 							:items="$store.state.businessSelectBox.items"
 						></selectBoxValueItems>
 						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
@@ -120,6 +120,10 @@ export default {
 	methods: {
 		productShow() {
 			this.$router.push('/admin/productManagement')
+		},
+		statusBoardShow() {
+			console.log(this.$store.state.businessSelectBox.value)
+			this.$router.push('/admin/statusBoard')
 		},
 		businessView() {
 			this.$store.dispatch('businesses').then(res => {
