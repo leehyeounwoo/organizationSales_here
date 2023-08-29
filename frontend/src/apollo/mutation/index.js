@@ -325,6 +325,7 @@ export const updateSettlement = gql`
 		$totalPrice: Long
 		$turn: String
 		$degree: String
+		$paymentReject: Boolean
 	) {
 		updateSettlement(
 			input: {
@@ -337,6 +338,7 @@ export const updateSettlement = gql`
 					adminName: $adminName
 					rejectComment: $rejectComment
 					degree: $degree
+					paymentReject: $paymentReject
 				}
 			}
 		) {

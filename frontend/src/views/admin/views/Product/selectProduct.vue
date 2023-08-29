@@ -23,7 +23,7 @@
 			:createAssignmentAction="createAssignmentAction"
 			:updateAssignmentAction="updateAssignmentAction"
 		></datatable>
-
+		<v-pagination v-model="productManager.page" :length="productManager.totalpage"></v-pagination>
 		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" :updateAssignmentAction="updateAssignmentAction" />
 	</div>
@@ -42,6 +42,7 @@ export default {
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
+				console.log(this.$store.state.businessSelectBox.value)
 				await this.productSelectData()
 				clearInterval(createInterval)
 			}
@@ -83,6 +84,7 @@ export default {
 					noweditting: '',
 					itemsPerPage: 10,
 					page: 1,
+					totalpage: 1,
 					pageCount: 0,
 				},
 			},
@@ -125,6 +127,8 @@ export default {
 				noweditting: '',
 				itemsPerPage: 10,
 				page: 1,
+				totalpage: 1,
+				total: 0,
 				pageCount: 0,
 			},
 		}
@@ -143,14 +147,26 @@ export default {
 			}
 			this.productManager.items = item
 		},
+		async productsCountView(productsCountViewData) {
+			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
+				this.productManager.total = res.productsConnection.aggregate.totalCount
+				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.totalCount / this.productManager.itemsPerPage)
+			})
+		},
 		async productSelectData() {
+			const productsCountViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
+			}
+			await this.productsCountView(productsCountViewData)
 			const businessViewData = {
 				idArr: this.$store.state.businessSelectBox.value,
 			}
 			await this.businessView(businessViewData)
 			const product_tableData = {
-				// businessID: this.$store.state.businessSelectBox.value,
-				businessID: '56',
+				businessID: this.$store.state.businessSelectBox.value,
+				start: 0,
+				limit: 10,
 			}
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {

@@ -13,6 +13,7 @@
 							:sel="$store.state.businessSelectBox"
 							:value="$store.state.businessSelectBox.value"
 							:items="$store.state.businessSelectBox.items"
+							@change="businessValueChange"
 						></selectBoxValueItems>
 						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
 							{{ this.$store.state.meData ? this.$store.state.meData.name : '-' }}
@@ -118,16 +119,20 @@ export default {
 		// }
 	},
 	methods: {
+		businessValueChange(val) {
+			this.$store.state.businessSelectBox.value = val
+			this.$router.push('/KIOSK').catch(() => {})
+			alert('사업지 변경이 완료되었습니다.')
+		},
 		productShow() {
 			this.$router.push('/admin/productManagement')
 		},
 		statusBoardShow() {
-			console.log(this.$store.state.businessSelectBox.value)
+			// console.log(this.$store.state.businessSelectBox.value)
 			this.$router.push('/admin/statusBoard')
 		},
 		businessView() {
 			this.$store.dispatch('businesses').then(res => {
-				console.log(res)
 				this.$store.state.businessSelectBox.items = res.businesses
 				this.$store.state.businessSelectBox.value = res.businesses[0].id
 			})

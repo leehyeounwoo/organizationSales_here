@@ -182,7 +182,7 @@ export default {
 				this.productData = res.products
 				const assignmentsViewData = {
 					status: 'assignment',
-					businessID: '56',
+					businessID: this.$store.state.businessSelectBox.value,
 					created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
 					created_at_lte: this.$moment(
 						this.$moment()
@@ -193,7 +193,7 @@ export default {
 				await this.assignmentsView(assignmentsViewData)
 				const settlementData = {
 					date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
-					businessID: '56',
+					businessID: this.$store.state.businessSelectBox.value,
 				}
 				await this.settlementView(settlementData)
 				await this.dataResult()
@@ -337,7 +337,7 @@ export default {
 	},
 	async created() {
 		const productsViewData = {
-			businessID: '56',
+			businessID: this.$store.state.businessSelectBox.value,
 			// idArr: this.productArrData,
 		}
 		await this.productsView(productsViewData)
