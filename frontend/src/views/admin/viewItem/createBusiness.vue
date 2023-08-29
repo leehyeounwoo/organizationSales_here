@@ -12,122 +12,125 @@
 						<div class="slash mr-1"></div>
 						<span style="font-weight:bold">사업지 기본정보</span>
 					</v-layout>
-					<v-layout
-						class="table_all_gray"
-						wrap
-						v-for="(left, index) in setdialog.items"
-						:key="index"
-						style="min-height:50px; border-bottom:1px solid #c8c8c8; border-left:1px solid #c8c8c8; border-right:1px solid #c8c8c8"
-					>
-						<v-flex xs3 align-self-center class="table_font"><span v-if="left.must" style="color:red">* </span>{{ left.title }}</v-flex>
-						<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
-							<v-flex xs6>
-								<txtField
-									v-if="left.title === '대표번호' && left.value.substr(0, 3).includes('02')"
-									class="pt-3 bizInput"
-									v-model="left.value"
-									v-mask="'##-####-####'"
-									:txtField="left.txtfield"
-									style="height:27px; margin:auto"
-								></txtField>
-								<txtField
-									v-else-if="left.title === '대표번호' && !left.value.substr(0, 3).includes('02')"
-									class="pt-3 bizInput"
-									v-model="left.value"
-									v-mask="'###-####-####'"
-									:txtField="left.txtfield"
-									style="height:27px; margin:auto"
-								></txtField>
-								<txtField
-									v-else
-									class="pt-3 bizInput"
-									v-model="left.value"
-									:txtField="left.txtfield"
-									style="height:27px; margin:auto"
-								></txtField>
+					<div v-for="(left, index) in setdialog.items" :key="index">
+						<v-layout
+							class="table_all_gray"
+							wrap
+							style="min-height:50px;  border-left:1px solid #c8c8c8; border-right:1px solid #c8c8c8; "
+							:style="setdialog.items.length - 1 === index ? 'border-bottom: 1px solid #c8c8c8;' : ''"
+							v-if="left.title !== '상품 등록'"
+						>
+							<v-flex xs3 align-self-center class="table_font"><span v-if="left.must" style="color:red">* </span>{{ left.title }}</v-flex>
+
+							<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
+								<v-flex xs6>
+									<txtField
+										v-if="left.title === '대표번호' && left.value.substr(0, 3).includes('02')"
+										class="pt-3 bizInput"
+										v-model="left.value"
+										v-mask="'##-####-####'"
+										:txtField="left.txtfield"
+										style="height:27px; margin:auto"
+									></txtField>
+									<txtField
+										v-else-if="left.title === '대표번호' && !left.value.substr(0, 3).includes('02')"
+										class="pt-3 bizInput"
+										v-model="left.value"
+										v-mask="'###-####-####'"
+										:txtField="left.txtfield"
+										style="height:27px; margin:auto"
+									></txtField>
+									<txtField
+										v-else
+										class="pt-3 bizInput"
+										v-model="left.value"
+										:txtField="left.txtfield"
+										style="height:27px; margin:auto"
+									></txtField>
+								</v-flex>
 							</v-flex>
-						</v-flex>
-						<v-flex xs9 v-else-if="left.type === 'time'" class="table_right_white px-2 biz_table_right">
-							<v-flex xs6 class="pt-3">
-								<v-layout>
-									<v-flex xs6>
-										<TimePickerDialog :setdialog="left.worktime1" @input="save_time1" />
-									</v-flex>
-									<div class="px-1">~</div>
-									<v-flex xs6>
-										<TimePickerDialog :setdialog="left.worktime2" @input="save_time2" />
-									</v-flex>
-								</v-layout>
+							<v-flex xs9 v-else-if="left.type === 'time'" class="table_right_white px-2 biz_table_right">
+								<v-flex xs6 class="pt-3">
+									<v-layout>
+										<v-flex xs6>
+											<TimePickerDialog :setdialog="left.worktime1" @input="save_time1" />
+										</v-flex>
+										<div class="px-1">~</div>
+										<v-flex xs6>
+											<TimePickerDialog :setdialog="left.worktime2" @input="save_time2" />
+										</v-flex>
+									</v-layout>
+								</v-flex>
 							</v-flex>
-						</v-flex>
-						<v-flex xs9 v-else-if="left.type === 'selectBox'" class="table_right_white px-2 biz_table_right">
-							<v-flex class="pt-3" xs7>
-								<v-layout>
-									<v-flex xs4>
-										<selectBox :sel="left.selectBox" style="font-size:13px" @change="select2(left)"></selectBox>
-									</v-flex>
-									<div class="pt-1 mx-2" style="font-size:12px">단위 / 최대</div>
-									<v-flex xs4>
-										<selectBox :sel="left.selectBox2" style="font-size:13px"></selectBox>
-									</v-flex>
-								</v-layout>
+							<v-flex xs9 v-else-if="left.type === 'selectBox'" class="table_right_white px-2 biz_table_right">
+								<v-flex class="pt-3" xs7>
+									<v-layout>
+										<v-flex xs4>
+											<selectBox :sel="left.selectBox" style="font-size:13px" @change="select2(left)"></selectBox>
+										</v-flex>
+										<div class="pt-1 mx-2" style="font-size:12px">단위 / 최대</div>
+										<v-flex xs4>
+											<selectBox :sel="left.selectBox2" style="font-size:13px"></selectBox>
+										</v-flex>
+									</v-layout>
+								</v-flex>
 							</v-flex>
-						</v-flex>
-						<v-flex xs9 v-else-if="left.type === 'scan'" class="table_right_white px-2 biz_table_right">
-							<v-flex xs8>
-								<v-layout class="pt-3">
-									<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
-								</v-layout>
-							</v-flex>
-						</v-flex>
-						<v-flex xs9 v-else-if="left.type === 'product'" class="table_right_white px-2 biz_table_right">
-							<v-flex xs9>
-								<v-layout wrap class="pt-3">
-									<v-flex xs8>
+							<v-flex xs9 v-else-if="left.type === 'scan'" class="table_right_white px-2 biz_table_right">
+								<v-flex xs8>
+									<v-layout class="pt-3">
 										<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
-									</v-flex>
-									<v-flex xs4>
-										<v-btn elevation="0" class="ml-2 file_btn" @click="csvImportClick(index)">
-											<v-img max-width="14" class="mr-1" src="@/assets/images/input_btn.png" />파일 업로드
-										</v-btn>
-									</v-flex>
-									<v-flex xs12 align-self-center class="py-2">
-										<v-btn class="file_sample" depressed @click="csvDownloadClick()">
-											<v-img max-width="22" src="@/assets/images/excel-img2.png" />
-										</v-btn>
-										<span class="sample_span ml-2" @click="csvDownloadClick()">등록양식 다운받기</span>
-									</v-flex>
-									<VueCsvImport
-										style="display:none;"
-										v-if="parseCsvStatus"
-										id="csvimport"
-										inputClass="inputclasstest"
-										v-model="parseCsv"
-										:map-fields="mapfields"
-										:autoMatchFields="true"
-										:autoMatchIgnoreCase="true"
-									>
-									</VueCsvImport>
-								</v-layout>
+									</v-layout>
+								</v-flex>
 							</v-flex>
-						</v-flex>
-						<v-flex xs9 v-else-if="left.type === 'location'" class="table_right_white px-2 biz_table_right">
-							<v-flex xs8>
-								<v-layout class="pt-3">
-									<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
-									<v-flex>
-										<v-btn
-											@click="checkLocation"
-											elevation="0"
-											class="ml-2 new_biz_btn"
-											style="min-width:30px !important; width:30px !important"
-											><v-icon small>mdi-crosshairs</v-icon></v-btn
+							<v-flex xs9 v-else-if="left.type === 'product' && setdialog.type === 'create'" class="table_right_white px-2 biz_table_right">
+								<v-flex xs9>
+									<v-layout wrap class="pt-3">
+										<v-flex xs8>
+											<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
+										</v-flex>
+										<v-flex xs4>
+											<v-btn elevation="0" class="ml-2 file_btn" @click="csvImportClick(index)">
+												<v-img max-width="14" class="mr-1" src="@/assets/images/input_btn.png" />파일 업로드
+											</v-btn>
+										</v-flex>
+										<v-flex xs12 align-self-center class="py-2">
+											<v-btn class="file_sample" depressed @click="csvDownloadClick()">
+												<v-img max-width="22" src="@/assets/images/excel-img2.png" />
+											</v-btn>
+											<span class="sample_span ml-2" @click="csvDownloadClick()">등록양식 다운받기</span>
+										</v-flex>
+										<VueCsvImport
+											style="display:none;"
+											v-if="parseCsvStatus"
+											id="csvimport"
+											inputClass="inputclasstest"
+											v-model="parseCsv"
+											:map-fields="mapfields"
+											:autoMatchFields="true"
+											:autoMatchIgnoreCase="true"
 										>
-									</v-flex>
-								</v-layout>
+										</VueCsvImport>
+									</v-layout>
+								</v-flex>
 							</v-flex>
-						</v-flex>
-					</v-layout>
+							<v-flex xs9 v-else-if="left.type === 'location'" class="table_right_white px-2 biz_table_right">
+								<v-flex xs8>
+									<v-layout class="pt-3">
+										<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
+										<v-flex>
+											<v-btn
+												@click="checkLocation"
+												elevation="0"
+												class="ml-2 new_biz_btn"
+												style="min-width:30px !important; width:30px !important"
+												><v-icon small>mdi-crosshairs</v-icon></v-btn
+											>
+										</v-flex>
+									</v-layout>
+								</v-flex>
+							</v-flex>
+						</v-layout>
+					</div>
 				</v-flex>
 				<v-flex xs7>
 					<v-layout class="pb-3" align-center>
@@ -142,6 +145,7 @@
 						<v-flex style="max-width:136px !important">비밀번호</v-flex>
 						<v-flex>비고</v-flex>
 					</v-layout>
+
 					<div style="height:250px; overflow:auto">
 						<v-layout align-center v-for="(right, idx) in right_data" :key="idx" class="right_table_item">
 							<v-flex style="max-width:50px !important; width:50px">{{ idx + 1 }}</v-flex>
@@ -182,6 +186,7 @@
 								</v-layout>
 							</v-flex>
 						</v-layout>
+
 						<v-layout class="mt-2" justify-center>
 							<v-icon style="cursor:pointer" @click="addManager()">mdi-plus-circle-outline</v-icon>
 						</v-layout>
@@ -519,6 +524,13 @@ export default {
 				}
 			}
 			if (this.setdialog.type === 'create') {
+				if (this.parseCsv) {
+					this.sweetInfo.title = '상품 등록'
+					this.sweetInfo.content = '상품 등록을 해주세요.'
+					return (this.sweetInfo.open = true)
+				}
+			}
+			if (this.setdialog.type === 'create') {
 				this.sweetDialog.title = '사업지 생성'
 				this.sweetDialog.content = '사업지를 생성합니다.'
 				this.sweetDialog.open = true
@@ -577,7 +589,7 @@ export default {
 	font-weight: bold;
 }
 .table_all_gray:nth-last-child(1) {
-	margin-bottom: 50px;
+	border-top: 1px solid #c8c8c8;
 }
 .table_all_gray:nth-last-child(7) {
 	border-top: 1px solid black;

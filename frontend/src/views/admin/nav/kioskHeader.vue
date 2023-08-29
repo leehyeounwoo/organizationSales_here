@@ -127,7 +127,6 @@ export default {
 		},
 		businessView() {
 			this.$store.dispatch('businesses').then(res => {
-				console.log(res)
 				this.$store.state.businessSelectBox.items = res.businesses
 				this.$store.state.businessSelectBox.value = res.businesses[0].id
 			})

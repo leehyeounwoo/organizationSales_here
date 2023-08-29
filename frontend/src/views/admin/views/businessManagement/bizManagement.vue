@@ -15,6 +15,7 @@
 		</div>
 		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
+		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
 		<productDetail :setdialog="table_detail" :newProduct="product_detail" />
 	</div>
 </template>
@@ -145,6 +146,7 @@ export default {
 						must: false,
 						type: 'product',
 						value: '',
+						viewStatus: true,
 						txtfield: {
 							maxlength: '255',
 							outlined: true,
@@ -155,6 +157,111 @@ export default {
 						},
 					},
 					// 6
+					{
+						title: '사업지 위치',
+						must: false,
+						type: 'location',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							readonly: true,
+							placeholder: '위도, 경도',
+						},
+					},
+				],
+			},
+			editDialog: {
+				dialog: false,
+				type: 'create',
+				id: '',
+				manager: '',
+				items: [
+					// 0
+					{
+						title: '사업지 명',
+						must: true,
+						type: 'txtfield',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							autocomplete: 'off',
+							placeholder: '사업지명을 입력해주세요.',
+						},
+					},
+					// 1
+					{
+						title: '대표번호',
+						must: true,
+						type: 'txtfield',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							autocomplete: 'off',
+							placeholder: '##-####-####, ###-####-####',
+						},
+					},
+					// 2
+					{
+						title: '근무시간 설정',
+						must: false,
+						type: 'time',
+						worktime1: {
+							dialog: false,
+							time: '',
+						},
+						worktime2: {
+							dialog: false,
+							time: '',
+						},
+					},
+					// 3
+					{
+						title: '홀딩시간 설정',
+						must: false,
+						type: 'selectBox',
+						value: '',
+						selectBox: {
+							value: '',
+							items: [
+								{ text: '30분', value: '30' },
+								{ text: '60분', value: '60' },
+							],
+							hideDetail: true,
+							outlined: true,
+							class: 'small_font bizInput',
+						},
+						selectBox2: {
+							value: '',
+							items: [],
+							hideDetail: true,
+							outlined: true,
+							class: 'small_font bizInput',
+						},
+					},
+					// 4
+					{
+						title: '출퇴근 스캔 URL',
+						must: false,
+						type: 'scan',
+						value: '',
+						txtfield: {
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							readonly: true,
+						},
+					},
+					// 5
 					{
 						title: '사업지 위치',
 						must: false,
@@ -407,6 +514,7 @@ export default {
 		biz_detail(item) {
 			console.log(item)
 			this.createDialog.type = 'edit'
+
 			this.createDialog.id = item.id
 			this.createDialog.manager = item.manager ? item.manager.id : ''
 			this.createDialog.items[0].value = item.name

@@ -278,6 +278,7 @@ export default {
 		await this.searchSelect()
 		const settlementData = {
 			date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+			paymentReject: false,
 			// settlementStatus: 'agree',
 		}
 		await this.settlementView(settlementData)
@@ -355,6 +356,10 @@ export default {
 				}
 				if (teamData && rankData) {
 					element.team_rank = `${teamData.title} / ${rankData.rankName}`
+				} else if (teamData) {
+					element.team_rank = `${teamData.title}`
+				} else if (rankData) {
+					element.team_rank = ` ${rankData.rankName}`
 				} else {
 					element.team_rank = '-'
 				}
@@ -376,6 +381,7 @@ export default {
 				}
 			}
 			await this.$store.dispatch('settlements', settlementData).then(res => {
+				console.log(res)
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
@@ -387,6 +393,7 @@ export default {
 					listData.degree = element.degree
 					listData.userID = element.userID
 					listData.ProductID = element.ProductID
+					listData.settlement_turn_tables = element.settlement_turn_tables
 					this.list.push(listData)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
@@ -677,6 +684,7 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date)
 		},
 		editUserData(val) {
+			console.log(val)
 			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []
@@ -791,6 +799,57 @@ export default {
 				let input2 = {
 					settlementID: this.finalSettlementData.id,
 					editStatus: 'disagree',
+					editDetail: this.finalSettlementData.degree + '차 요청',
+				}
+				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
+					this.sweetDialog_info.open = false
+					this.$store.state.loading = true
+					this.saveDialogStatus.title = `반려 처리 완료`
+					this.saveDialogStatus.content = `정산 요청이 반려되었습니다.`
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					this.settlementTable.items = []
+					this.list = []
+					const settlementData = {
+						date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+					}
+					await this.settlementView(settlementData)
+					const usersViewData = {
+						idArr: this.userArrData,
+						roleName: 'Counselor',
+					}
+					await this.usersView(usersViewData)
+					const productsViewData = {
+						idArr: this.productArrData,
+					}
+					await this.productsView(productsViewData)
+					const teamsViewData = {
+						idArr: this.teamArrData,
+					}
+					await this.teamsView(teamsViewData)
+					const ranksViewData = {
+						idArr: this.rankArrData,
+					}
+					await this.ranksView(ranksViewData)
+					await this.dataSetting()
+					this.$store.state.loading = false
+				})
+			} else if (this.finalSettlementData.settlementStatus === 'complete') {
+				let input = {
+					id: this.finalSettlementData.id,
+					pageaymentReject: true,
+					adminName: this.$store.state.meData.username,
+					rejectComment: this.sweetDialog_info.rejectionReason[0].value,
+					attachID: li,
+				}
+				this.$store
+					.dispatch('updateSettlement', input)
+					.then(() => {})
+					.catch(() => {})
+				let input2 = {
+					settlementID: this.finalSettlementData.id,
+					editStatus: 'PaymentReject',
 					editDetail: this.finalSettlementData.degree + '차 요청',
 				}
 				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {

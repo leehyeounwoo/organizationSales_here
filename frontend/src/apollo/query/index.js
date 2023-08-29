@@ -291,6 +291,7 @@ export const settlements = gql`
 		$name: String
 		$phone: String
 		$businessID: String
+		$paymentReject: Boolean
 	) {
 		settlementsConnection(
 			where: {
@@ -302,13 +303,23 @@ export const settlements = gql`
 				name_contains: $name
 				phone_contains: $phone
 				businessID: $businessID
+				paymentReject: $paymentReject
 			}
 		) {
 			aggregate {
 				count
 			}
 		}
-		settlements(where: { id: $id, settlementStatus: $settlementStatus, userID: $userID, created_at_lte: $date, businessID: $businessID }) {
+		settlements(
+			where: {
+				id: $id
+				settlementStatus: $settlementStatus
+				userID: $userID
+				created_at_lte: $date
+				businessID: $businessID
+				paymentReject: $paymentReject
+			}
+		) {
 			id
 			ProductID
 			userID
