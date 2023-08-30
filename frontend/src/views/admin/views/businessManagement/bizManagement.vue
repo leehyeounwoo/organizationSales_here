@@ -29,7 +29,6 @@ export default {
 	created() {
 		this.$store.state.loading = true
 		this.rowperpageChange()
-		this.first_product()
 	},
 	components: {
 		txtField,
@@ -439,20 +438,6 @@ export default {
 		}
 	},
 	methods: {
-		first_product() {
-			this.$store.dispatch('products').then(res => {
-				console.log(res)
-				let data = [{ text: '선택', value: 'new' }]
-				let data2 = []
-				res.products.forEach(el => {
-					data.push({ text: el.housingType, value: el.housingType })
-					data2.push({ text: el.housingType, value: el.housingType })
-				})
-				this.table_detail.selectBox1.items = data
-				this.table_detail.selectBox5.items = data2
-				console.log(this.table_detail)
-			})
-		},
 		rowperpageChange() {
 			this.$store.state.loading = true
 			this.table.itemsPerPage = this.rowperpageSel.value
@@ -484,15 +469,21 @@ export default {
 			this.createDialog.type = 'create'
 			this.createDialog.dialog = true
 		},
-		product_detail(item) {
+		async product_detail(item) {
 			console.log(item)
 			this.table_detail.item = item
 			let data = {
 				businessID: this.table_detail.item.id,
 			}
-			this.$store.dispatch('products', data).then(res => {
+			await this.$store.dispatch('products', data).then(res => {
 				console.log(res.products)
+				let data = [{ text: '선택', value: 'new' }]
+				let data2 = []
 				res.products.forEach(el => {
+					data.push({ text: el.housingType, value: el.housingType })
+					data2.push({ text: el.housingType, value: el.housingType })
+					this.table_detail.selectBox1.items = data
+					this.table_detail.selectBox5.items = data2
 					if (el.contractStatus === 'contract') {
 						el.contractStatus = '계약'
 					} else if (el.contractStatus === 'noContract') {
@@ -508,9 +499,7 @@ export default {
 				let table_top2 = this.table_detail.productTable.items.filter(x => x.contractStatus === '미계약')
 				this.table_detail.noContract = table_top2.length
 			})
-			console.log(this.table_detail.productTable)
 			this.table_detail.dialog = true
-			console.log(item)
 		},
 		biz_detail(item) {
 			console.log(item)
