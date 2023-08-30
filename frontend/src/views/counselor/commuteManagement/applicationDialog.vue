@@ -55,7 +55,7 @@
 						</v-flex>
 					</v-layout>
 					<v-layout>
-						<v-textarea height="50" v-model="data.comment" :disabled="data.textAreaStatus" hide-details filled no-resize></v-textarea>
+						<v-textarea height="50" v-model="data.comment" hide-details filled no-resize></v-textarea>
 					</v-layout>
 				</v-radio-group>
 			</v-card>
@@ -105,28 +105,17 @@ export default {
 		async actionSave() {
 			for (let index = 0; index < this.checkData.length; index++) {
 				const element = this.checkData[index]
-				if (element.dialogType === 'etc') {
-					if (element.comment !== '') {
-						const data = {
-							date: this.$moment(element.date).format('YYYY-MM-DD'),
-							vacationType: element.dialogType,
-							vacationStatus: 'waiting',
-							userID: this.$store.state.meData.id,
-							vacationReason: element.comment,
-						}
-						await this.createVacationAction(data, index)
-					} else {
-						alert('사유를 입력해주세요.')
-					}
-				} else {
+				if (element.comment !== '') {
 					const data = {
 						date: this.$moment(element.date).format('YYYY-MM-DD'),
 						vacationType: element.dialogType,
 						vacationStatus: 'waiting',
-						vacationReason: '',
 						userID: this.$store.state.meData.id,
+						vacationReason: element.comment,
 					}
 					await this.createVacationAction(data, index)
+				} else {
+					alert('사유를 입력해주세요.')
 				}
 			}
 		},

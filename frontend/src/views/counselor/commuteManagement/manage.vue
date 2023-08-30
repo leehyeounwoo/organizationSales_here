@@ -119,8 +119,9 @@
 							py-1
 							my-1
 							mr-1
-							style="text-align: center; background-color:#F2A629; border-radius:5px; color:black; border:1px solid #F2A629; color:white;"
+							style="cursor: pointer; text-align: center; background-color:#F2A629; border-radius:5px; color:black; border:1px solid #F2A629; color:white;"
 							xs5
+							@click="rejectDialog(date)"
 							>{{
 								date.status === 'vacation'
 									? '연차거부'
@@ -174,15 +175,24 @@
 		</div>
 		<applicationDialogVue v-if="workDate.length > 0" :dialog="applicationDialog" :checkData="dialogData"></applicationDialogVue>
 		<disagreeDialogVue v-if="workDate.length > 0" :dialog="disagreeDialog" :checkData="disagreeArrData"></disagreeDialogVue>
+		<sweetAlert :dialog="sweetInfo" />
 	</div>
 </template>
 <script>
-import { DatepickerDialog } from '@/components'
+import { DatepickerDialog, sweetAlert } from '@/components'
 import applicationDialogVue from './applicationDialog.vue'
 import disagreeDialogVue from './disagreeDialog.vue'
 export default {
 	data() {
 		return {
+			sweetInfo: {
+				open: false,
+				title: '',
+				content: ``,
+				modalIcon: 'info',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+			},
 			disagreeArrData: [],
 			dialogData: [],
 			applicationDialog: {
@@ -228,6 +238,25 @@ export default {
 		},
 	},
 	methods: {
+		rejectDialog(date) {
+			console.log(date)
+			this.open_disable_dialog(
+				{
+					title: date.date,
+					content: date.rejectComment,
+				},
+				'warning',
+			)
+		},
+		open_disable_dialog(data, info) {
+			// 불가 팝업 열기
+
+			this.sweetInfo.title = data.title
+			this.sweetInfo.content = data.content
+			if (!info) this.sweetInfo.modalIcon = `info`
+			else this.sweetInfo.modalIcon = info
+			this.sweetInfo.open = true
+		},
 		showTiem(data) {
 			return data.split(':')[0] + ':' + data.split(':')[1]
 		},
@@ -362,7 +391,6 @@ export default {
 				this.$store
 					.dispatch('vacations', { date_gte: this.startPicker.date, date_lte: this.endPicker.date, idArr: [this.$store.state.meData.id] })
 					.then(resVacations => {
-						console.log(resVacations.vacations)
 						resVacations.vacations.forEach(el => {
 							let idx = this.workDate.findIndex(x => x.date === el.date)
 							let arr = this.workDate.filter(x => x.date === el.date)
@@ -370,6 +398,7 @@ export default {
 								arr[0].status = el.vacationType
 								arr[0].vacation = el
 								arr[0].result = el.vacationStatus
+								arr[0].rejectComment = el.rejectComment
 							}
 							this.workDate[idx] = arr[0]
 						})
@@ -404,6 +433,7 @@ export default {
 		disagreeDialogVue,
 		applicationDialogVue,
 		DatepickerDialog,
+		sweetAlert,
 		// counselorFooter,
 	},
 }
