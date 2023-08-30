@@ -394,6 +394,8 @@ export default {
 							? '오후반차'
 							: el.vacationType === 'sick'
 							? '병가'
+							: el.vacationType === 'etc'
+							? '기타'
 							: ''
 					listData.rejectComment = el.rejectComment
 					listData.gotoworksAll = []

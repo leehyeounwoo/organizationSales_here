@@ -575,6 +575,10 @@ export default {
 							? '오전반차'
 							: element2.status === 'vacation'
 							? '휴가'
+							: element2.status === 'sick'
+							? '병가'
+							: element2.status === 'etc'
+							? '기타'
 							: '출근'
 					if (element2.status === 'vacation') {
 						this.userLists[workIndex]['data6'] = true
@@ -656,6 +660,8 @@ export default {
 			}
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
+			await this.unattendedVacation()
+			await this.dataSetting()
 		},
 		async pagination(item) {
 			this.table.pagination = item
