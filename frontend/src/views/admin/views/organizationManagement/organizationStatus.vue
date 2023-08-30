@@ -128,6 +128,7 @@
 			:applyRank="applyRank"
 			:sweetDialog2="sweetDialog2"
 			:sweetDialog3="sweetDialog3"
+			@update="update"
 		></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 		<sweetAlert :dialog="sweetDialog" @click="detailSave" />
@@ -573,6 +574,17 @@ export default {
 	mounted() {},
 
 	methods: {
+		update() {
+			this.$store.state.loading = true
+			const createInterval = setInterval(async () => {
+				if (this.$store.state.businessSelectBox.value !== '') {
+					await this.getListAction()
+					await this.searchSelect()
+					clearInterval(createInterval)
+				}
+			}, 1000)
+			this.$store.state.loading = false
+		},
 		saveCheck() {
 			this.sweetDialog.open = true
 		},

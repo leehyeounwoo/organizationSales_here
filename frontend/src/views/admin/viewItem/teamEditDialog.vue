@@ -87,7 +87,7 @@
 				</v-flex>
 				<v-layout justify-end class="mt-2 mb-5">
 					<v-flex xs1>
-						<btn :btn="completeBtn" :btn_txt="'확인'" @click="setdialog.dialog = false"></btn>
+						<btn :btn="completeBtn" :btn_txt="'확인'" @click="closeTeamEdit()"></btn>
 					</v-flex>
 				</v-layout>
 			</v-layout>
@@ -212,6 +212,12 @@ export default {
 		save_time(picker) {
 			this.editTimePicker.dialog = false
 			this.setdialog.items[2].worktime.start = picker
+		},
+		closeTeamEdit() {
+			this.addTxtfield.value = ''
+			this.addTxtfield1.value = ''
+			this.setdialog.dialog = false
+			this.$emit('update')
 		},
 	},
 }
