@@ -951,7 +951,6 @@ export default {
 		await this.me()
 		await this.searchSelect()
 		await this.refreshData(this.$moment())
-		console.log(this.$store.state.meData)
 	},
 	mounted() {},
 
@@ -1117,6 +1116,7 @@ export default {
 			let completeAmount = []
 			await this.$store.dispatch('settlements', settlementViewData).then(res => {
 				console.log(res)
+				this.list = []
 				this.processTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
@@ -1151,6 +1151,7 @@ export default {
 					} else {
 						listData.turnStatus = ''
 					}
+
 					this.list.push(listData)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
@@ -1394,7 +1395,6 @@ export default {
 			}
 		},
 		async forTest(val) {
-			console.log(val)
 			if (Array.isArray(val)) {
 				this.finalSettlementData = []
 				this.finalSettlementData = val
@@ -1438,6 +1438,10 @@ export default {
 					this.paymentRate[`charge${index + 1}`].txtField.readonly = true
 					this.paymentAmount[`charge${index + 1}`].txtField.readonly = true
 					this.start_date_picker[index + 1].disable = true
+				} else {
+					this.paymentRate[`charge${index + 1}`].txtField.readonly = false
+					this.paymentAmount[`charge${index + 1}`].txtField.readonly = false
+					this.start_date_picker[index + 1].disable = false
 				}
 				this.timessel.value = index + 1 + '차'
 			}
@@ -1554,12 +1558,18 @@ export default {
 						bankAccount: this.amountData[i].bankAccount,
 						id: this.amountData[i].id,
 						adminName: this.$store.state.meData.username,
-						PaymentDate: this.paymentProcess_date_picker[i + 1].date,
+						PaymentDate: this.$moment().format('YYYY-MM-DD'),
+						// PaymentDate: this.paymentProcess_date_picker[i + 1].date,
 						turnStatus: 'complete',
 						depositFile: res.data[0].id,
 					}
 
-					this.$store.dispatch('updateSettlementTurnTable', input).then(() => {
+					this.$store.dispatch('updateSettlementTurnTable', input).then(async () => {
+						this.paymentRate[`charge${i + 1}`].txtField.readonly = true
+						this.paymentAmount[`charge${i + 1}`].txtField.readonly = true
+						this.start_date_picker[i + 1].disable = true
+						this.amountData[i].turnStatus = 'complete'
+						this.amountData[i].PaymentDate = this.paymentProcess_date_picker[i + 1].date
 						this.sweetDialog_false.open = false
 						this.$store.state.loading = true
 						this.agreeDialogStatus.title = `입금 처리 완료`
@@ -1568,6 +1578,9 @@ export default {
 						this.agreeDialogStatus.cancelBtnText = '확인'
 						this.agreeDialogStatus.open = true
 						this.$store.state.loading = false
+						await this.me()
+						await this.searchSelect()
+						await this.refreshData(this.$moment())
 					})
 				})
 			}
@@ -1576,13 +1589,13 @@ export default {
 			// 			}
 		},
 		async click_agree2() {
-			console.log(this.amountData)
 			// let li = ''
 			// let messages = []
 
 			for (let i = 0; i < this.pdfLists.length; i++) {
 				if (this.amountData[i].turnStatus === 'waiting') {
 					await this.depositSave(i)
+
 					// if (this.paymentCheckBox) {
 					// 	let message = `${i + 1}`
 					// 	messages.push(message)
@@ -1633,9 +1646,10 @@ export default {
 
 		async click_agree() {
 			// -------------------------
+			console.log(this.amountData)
 			this.$store.state.loading = true
-			let filterData = this.finalSettlementData[0].settlements.settlement_turn_tables.filter(x => x.turnStatus !== 'complete')
 
+			let filterData = this.finalSettlementData[0].settlements.settlement_turn_tables.filter(x => x.turnStatus !== 'complete')
 			for (let index = 0; index < filterData.length; index++) {
 				const element = filterData[index]
 				let updateData = {
@@ -1666,8 +1680,7 @@ export default {
 						bankAccount: this.finalSettlementData[0].accountNumber,
 						useYn: true,
 					}
-					console.log(data)
-					await this.$store.dispatch('createSettlementTurnTable', data).then(() => {
+					await this.$store.dispatch('createSettlementTurnTable', data).then(async () => {
 						this.sweetDialog_false.open = false
 						this.$store.state.loading = true
 						this.saveDialogStatus.title = `승인 처리 완료`
@@ -1676,6 +1689,21 @@ export default {
 						this.saveDialogStatus.cancelBtnText = '확인'
 						this.saveDialogStatus.open = true
 						this.$store.state.loading = false
+						await this.me()
+						await this.searchSelect()
+						await this.refreshData(this.$moment())
+					})
+					let data2 = {
+						totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
+						id: this.finalSettlementData[0].id,
+					}
+					await this.$store.dispatch('updateSettlement', data2).then(res => {
+						console.log(res.updateSettlement.settlement.id)
+						console.log(this.processTable.items)
+						let val = this.processTable.items.filter(x => x.id === res.updateSettlement.settlement.id)
+						if (val.length > 0) {
+							this.amountData = val[0].settlements.settlement_turn_tables
+						}
 					})
 					if (this.processCheckBox) {
 						let messages = []
@@ -1696,173 +1724,6 @@ export default {
 					}
 				}
 			}
-
-			// console.log(timesCheck)
-			// console.log(createData)
-			// for (let index = 0; index < createData.length; index++) {
-			// 	const element = createData[index]
-
-			// let data = {
-			// 	prePaymentDate: this.start_date_picker[i].date,
-			// 	turnStatus: 'waiting',
-			// 	amount: numericPaymentAmount,
-			// 	settlements: this.finalSettlementData[0].id,
-			// 	turnTableDegree: i + '',
-			// 	bank: this.finalSettlementData[0].bank,
-			// 	bankAccount: this.finalSettlementData[0].accountNumber,
-			// 	useYn: true,
-			// }
-
-			// 	await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
-			// 	if (this.processCheckBox) {
-			// 		let message = `${i}차 정산일은 ${
-			// 			this.start_date_picker[i].date
-			// 		}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-			// 		messages.push(message)
-			// 	}
-			// }
-
-			// this.$store.state.loading = true
-			// let start_date = []
-			// let finalPaymentAmount = []
-			// let messages = []
-
-			// let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
-			// for (let i = 1; i <= timesCheck; i++) {
-			// 	start_date.push(this.start_date_picker[i].date)
-			// 	let paymentAmountString = this.paymentAmount[`charge${i}`].txtField.value
-			// 	let numericPaymentAmount = parseFloat(paymentAmountString.replace(/,/g, ''))
-			// 	finalPaymentAmount.push(numericPaymentAmount)
-
-			// if (this.editAmountData.length === 0) {
-			// 	let data = {
-			// 		prePaymentDate: this.start_date_picker[i].date,
-			// 		turnStatus: 'waiting',
-			// 		amount: numericPaymentAmount,
-			// 		settlements: this.finalSettlementData[0].id,
-			// 		turnTableDegree: i + '',
-			// 		bank: this.finalSettlementData[0].bank,
-			// 		bankAccount: this.finalSettlementData[0].accountNumber,
-			// 		useYn: true,
-			// 	}
-
-			// 	await this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
-			// 	if (this.processCheckBox) {
-			// 		let message = `${i}차 정산일은 ${
-			// 			this.start_date_picker[i].date
-			// 		}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-			// 		messages.push(message)
-			// 	}
-
-			// 		let data2 = {
-			// 			totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-			// 			turn: this.timessel.value.replace(/차/g, ''),
-			// 			degree: this.timessel.value.replace(/차/g, ''),
-			// 			id: this.finalSettlementData[0].id,
-			// 		}
-
-			// 		await this.$store.dispatch('updateSettlement', data2).then(() => {
-			// 			this.sweetDialog_false.open = false
-			// 			this.$store.state.loading = true
-			// 			this.saveDialogStatus.title = `승인 처리 완료`
-			// 			this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-			// 			this.saveDialogStatus.buttonType = 'oneBtn'
-			// 			this.saveDialogStatus.cancelBtnText = '확인'
-			// 			this.saveDialogStatus.open = true
-			// 			this.$store.state.loading = false
-			// 		})
-			// 	} else {
-			// 		console.log(this.editAmountData)
-			// 		if (this.timessel.value.replace(/차/g, '') !== this.finalSettlementData[0].turn) {
-			// 			for (let j = 0; j < this.finalSettlementData[0].settlements.settlement_turn_tables.length; j++) {
-			// 				if (this.finalSettlementData[0].settlements.settlement_turn_tables[j].turnStatus === 'waiting') {
-			// 	let updateData = {
-			// 		id: this.finalSettlementData[0].settlements.settlement_turn_tables[j].id,
-			// 		useYn: false,
-			// 	}
-
-			// 	this.$store
-			// 		.dispatch('updateSettlementTurnTable', updateData)
-			// 		.then(() => {})
-			// 		.catch(() => {})
-			// }
-
-			// 				let data = {
-			// 					prePaymentDate: this.start_date_picker[i].date,
-			// 					turnStatus: 'waiting',
-			// 					amount: numericPaymentAmount,
-			// 					settlements: this.finalSettlementData[0].id,
-			// 					turnTableDegree: i + '',
-			// 					bank: this.finalSettlementData[0].bank,
-			// 					bankAccount: this.finalSettlementData[0].accountNumber,
-			// 					useYn: true,
-			// 				}
-
-			// if (this.processCheckBox) {
-			// 	let message = `${i}차 정산일은 ${
-			// 		this.start_date_picker[i].date
-			// 	}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-			// 	messages.push(message)
-			// }
-
-			// 				this.$store.dispatch('createSettlementTurnTable', data).then(() => {})
-			// 			}
-			// 		} else {
-			// 			let data = {
-			// 				prePaymentDate: this.start_date_picker[i].date,
-			// 				turnStatus: 'waiting',
-			// 				amount: numericPaymentAmount,
-			// 				settlements: this.finalSettlementData[0].id,
-			// 				turnTableDegree: i + '',
-			// 				bank: this.finalSettlementData[0].bank,
-			// 				bankAccount: this.finalSettlementData[0].accountNumber,
-			// 				id: this.editAmountData.settlements.settlement_turn_tables[i - 1].id,
-			// 			}
-
-			// 			this.$store
-			// 				.dispatch('updateSettlementTurnTable', data)
-			// 				.then(() => {})
-			// 				.catch(() => {})
-
-			// 			if (this.processCheckBox) {
-			// 				let message = `${i}차 정산일은 ${
-			// 					this.start_date_picker[i].date
-			// 				}입니다.\n정산되는 금액은 ${numericPaymentAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-			// 				messages.push(message)
-			// 			}
-			// 		}
-
-			// 		let data2 = {
-			// 			totalPrice: parseFloat(this.charge.txtField.value.replace(/,/g, '')),
-			// 			turn: this.timessel.value.replace(/차/g, ''),
-			// 			degree: this.timessel.value.replace(/차/g, ''),
-			// 			id: this.finalSettlementData[0].id,
-			// 		}
-
-			// 		this.$store.dispatch('updateSettlement', data2).then(() => {
-			// this.sweetDialog_false.open = false
-			// this.$store.state.loading = true
-			// this.saveDialogStatus.title = `승인 처리 완료`
-			// this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
-			// this.saveDialogStatus.buttonType = 'oneBtn'
-			// this.saveDialogStatus.cancelBtnText = '확인'
-			// this.saveDialogStatus.open = true
-			// this.$store.state.loading = false
-			// 		})
-			// 	}
-			// }
-			// if (this.processCheckBox) {
-			// 	let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
-			// 	let input = {
-			// 		phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
-			// 		content: finalMessage,
-			// 	}
-
-			// 	this.$store
-			// 		.dispatch('sendSmsSettlement', input)
-			// 		.then(() => {})
-			// 		.catch(() => {})
-			// }
 		},
 
 		calculatePaymentAmount(paymentNumber) {
