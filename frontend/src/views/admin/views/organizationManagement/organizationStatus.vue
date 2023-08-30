@@ -1018,7 +1018,10 @@ export default {
 					const productData = {
 						idArr: res.settlements.map(x => x.ProductID),
 					}
-					this.productsViewAction(productData)
+
+					if (res.settlements.length > 0) {
+						this.productsViewAction(productData)
+					}
 				})
 				.catch(err => {
 					console.log(err)
@@ -1039,6 +1042,7 @@ export default {
 				})
 		},
 		async editUserData(val) {
+			this.detailTable.items = []
 			this.$store.state.loading = true
 			this.editUser.btn = true
 			this.editUser.detail = val
