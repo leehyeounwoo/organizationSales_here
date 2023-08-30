@@ -122,8 +122,8 @@
 			:setdialog="teamEditDialog"
 			:left_data="left_data"
 			:right_data="right_data"
-			:addTeam="addTeam"
-			:addRank="addRank"
+			:addTeam="addTeamToChild"
+			:addRank="addRankToChild"
 			:applyTeam="applyTeam"
 			:applyRank="applyRank"
 			:sweetDialog2="sweetDialog2"
@@ -614,7 +614,14 @@ export default {
 			}
 			this.updateUserAction(data)
 		},
+		addRankToChild(val) {
+			if (val === '') {
+				return alert('직급을 입력해주세요.')
+			}
+			this.addRank(val)
+		},
 		addRank(val) {
+			console.log(val)
 			if (val === '') {
 				return alert('직급을 입력해주세요.')
 			}
@@ -636,8 +643,15 @@ export default {
 			}
 			this.right_data.push(this.add_rank_data)
 		},
+		addTeamToChild(val) {
+			if (val === '') {
+				return alert('팀명을 입력해주세요.')
+			}
+			this.addTeam(val)
+		},
 		addTeam(val) {
 			console.log(val)
+
 			if (val === '') {
 				return alert('팀명을 입력해주세요.')
 			}

@@ -39,7 +39,7 @@
 							<txtField class="bizInput px-2" v-model="addTxtfield.value" :txtField="addTxtfield"></txtField>
 						</v-flex>
 						<v-flex xs3 pr-1>
-							<btn :btn="addBtn" :btn_txt="'추가'" @click="addTeam(addTxtfield.value)"></btn>
+							<btn :btn="addBtn" :btn_txt="'추가'" @click="handleAddTeam"></btn>
 						</v-flex>
 						<v-flex xs3 pr-1>
 							<btn :btn="saveBtn" :btn_txt="'적용'" @click="teamCheck()"></btn>
@@ -78,7 +78,7 @@
 							<txtField class="bizInput px-2" v-model="addTxtfield1.value" :txtField="addTxtfield1"></txtField>
 						</v-flex>
 						<v-flex pr-1>
-							<btn :btn="addBtn" :btn_txt="'추가'" @click="addRank(addTxtfield1.value)"></btn>
+							<btn :btn="addBtn" :btn_txt="'추가'" @click="handleAddRank"></btn>
 						</v-flex>
 						<v-flex pr-1>
 							<btn :btn="saveBtn" :btn_txt="'적용'" @click="rankCheck()"></btn>
@@ -212,6 +212,20 @@ export default {
 		save_time(picker) {
 			this.editTimePicker.dialog = false
 			this.setdialog.items[2].worktime.start = picker
+		},
+		handleAddTeam() {
+			this.addTeam(this.addTxtfield.value)
+			this.clearAddTxtfield()
+		},
+		clearAddTxtfield() {
+			this.addTxtfield.value = ''
+		},
+		handleAddRank() {
+			this.addRank(this.addTxtfield1.value)
+			this.clearAddRankField()
+		},
+		clearAddRankField() {
+			this.addTxtfield1.value = ''
 		},
 		closeTeamEdit() {
 			this.addTxtfield.value = ''
