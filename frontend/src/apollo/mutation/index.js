@@ -247,7 +247,7 @@ export const register = gql`
 				profile: $profile
 				copyAccount: $copyAccount
 				employmentContract: $employmentContract
-				iD_Card: $ID_Card
+				ID_Card: $ID_Card
 				businessID: $businessID
 				company: $company
 				rankID: $rankID
