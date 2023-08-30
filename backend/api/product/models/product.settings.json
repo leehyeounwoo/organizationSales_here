@@ -32,7 +32,7 @@
         "contract",
         "noContract"
       ],
-      "default": "contract"
+      "default": "noContract"
     },
     "editLog": {
       "type": "json"

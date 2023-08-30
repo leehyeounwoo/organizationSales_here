@@ -539,7 +539,7 @@
           },
           "contractStatus": {
             "type": "string",
-            "default": "contract",
+            "default": "noContract",
             "enum": [
               "contract",
               "noContract"
@@ -575,7 +575,7 @@
           },
           "contractStatus": {
             "type": "string",
-            "default": "contract",
+            "default": "noContract",
             "enum": [
               "contract",
               "noContract"
