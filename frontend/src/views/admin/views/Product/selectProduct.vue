@@ -13,7 +13,9 @@
 			<v-btn class="ml-3 search_btn" color="#009dac" @click="searchProduct">적용</v-btn>
 		</v-layout>
 		<v-layout justify-end>
-			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px">상태 업데이트</v-btn>
+			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px" @click="refreshTable()"
+				>상태 업데이트</v-btn
+			>
 		</v-layout>
 		<datatable
 			:datatable="productManager"
@@ -28,7 +30,7 @@
 				<v-pagination v-model="productManager.page" :length="productManager.totalpage" @input="paginationClick($event)"></v-pagination>
 			</v-flex>
 		</v-layout>
-		<v-btn class="mt-3 new_biz" @click="holdTimeShow()">배정현황</v-btn>
+		<v-btn class="my-4 new_biz" @click="holdTimeShow()">배정현황</v-btn>
 		<holdTimeDetail :setdialog="holdingDetail" :updateAssignmentAction="updateAssignmentAction" />
 	</div>
 </template>
@@ -138,6 +140,25 @@ export default {
 		}
 	},
 	methods: {
+		async refreshTable() {
+			this.$store.state.loading = true
+			let ok = 0
+			const createInterval = setInterval(async () => {
+				if (this.$store.state.businessSelectBox.value !== '') {
+					console.log(this.$store.state.businessSelectBox.value)
+					await this.productSelectData()
+					clearInterval(createInterval)
+				}
+
+				if (ok === 10) {
+					clearInterval(createInterval)
+					alert('비즈니스 정보가 없습니다.')
+					this.$router.push({ name: 'dashBoard' })
+				}
+				ok += 1
+				this.$store.state.loading = false
+			}, 1000)
+		},
 		async paginationClick(val) {
 			console.log(this.productManager.page)
 			console.log(val)

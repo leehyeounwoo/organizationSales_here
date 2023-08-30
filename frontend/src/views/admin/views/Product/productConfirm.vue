@@ -12,6 +12,11 @@
 			</v-flex>
 			<v-btn class="ml-3 search_btn" color="#009dac" @click="searchProduct">적용</v-btn>
 		</v-layout>
+		<v-layout justify-end>
+			<v-btn elevation="0" class="mt-3" color="#f0f2f8" style="border:1px solid #cfdcdd; font-size:13px" @click="show_table()"
+				>상태 업데이트</v-btn
+			>
+		</v-layout>
 		<datatable :datatable="productTable" :editAssignmentCheck="editAssignmentCheck" class="mt-5"></datatable>
 		<sweetAlert :dialog="sweetDialog" @click="editAssignmentAction" />
 	</div>
@@ -71,6 +76,29 @@ export default {
 		}, 1000)
 	},
 	methods: {
+		async show_table() {
+			this.$store.state.loading = true
+			const assignmentsViewData = {
+				status: 'waiting',
+			}
+			await this.assignmentsView(assignmentsViewData)
+			const usersViewData = {
+				idArr: this.userIDArr,
+			}
+			await this.usersView(usersViewData)
+			const teamViewData = {
+				idArr: this.teamIdArr,
+			}
+			this.teamView(teamViewData)
+			const productsViewData = {
+				idArr: this.productIDArr,
+				businessID: this.$store.state.businessSelectBox.value,
+				start: 0,
+				end: 10,
+			}
+			await this.productsView(productsViewData)
+			this.$store.state.loading = false
+		},
 		editAssignmentCheck(item) {
 			this.sweetDialog.open = true
 			this.assignmentData = item
@@ -135,26 +163,7 @@ export default {
 						this.timeArr.push(res.businesses[0].splitHoldingTime * (index + 1))
 					}
 				})
-
-				const assignmentsViewData = {
-					status: 'waiting',
-				}
-				await this.assignmentsView(assignmentsViewData)
-				const usersViewData = {
-					idArr: this.userIDArr,
-				}
-				await this.usersView(usersViewData)
-				const teamViewData = {
-					idArr: this.teamIdArr,
-				}
-				this.teamView(teamViewData)
-				const productsViewData = {
-					idArr: this.productIDArr,
-					businessID: this.$store.state.businessSelectBox.value,
-					start: 0,
-					end: 10,
-				}
-				await this.productsView(productsViewData)
+				this.show_table()
 				this.$store.state.loading = false
 			})
 		},
