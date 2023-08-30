@@ -359,7 +359,7 @@ export default {
 		},
 		products() {
 			this.$store.dispatch('me').then(() => {
-				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
+				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID, contractStatus: 'noContract' }).then(res => {
 					this.productDatas = res.products
 					this.products1 = res.products.map(x => x.housingType)
 					this.assignments()

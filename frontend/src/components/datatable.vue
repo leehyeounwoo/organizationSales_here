@@ -55,6 +55,9 @@
 							  ].turnTableDegree + '차 지급완료'
 					}}
 				</div>
+				<div v-else>
+					미산정
+				</div>
 			</template>
 			<template v-slot:[`item.holdingDashboardUser`]="{ item }">
 				<div>

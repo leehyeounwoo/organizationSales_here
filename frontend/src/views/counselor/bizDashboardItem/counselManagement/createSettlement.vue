@@ -239,7 +239,7 @@
 					sweetInfo.title === '등록완료' || sweetInfo.title === '접근불가'
 						? $router.push({ name: 'settlements' })
 						: sweetInfo.title === '정산요청완료'
-						? this.$router.push({ name: 'settlementTruns' })
+						? $router.push({ name: 'settlementTruns' })
 						: ''
 				"
 			/>
@@ -346,7 +346,7 @@ export default {
 		},
 		products() {
 			this.$store.dispatch('me').then(() => {
-				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
+				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID, contractStatus: 'noContract' }).then(res => {
 					this.productDatas = res.products
 					if (this.$route.name === 'editSettlement') {
 						this.products1 = res.products.map(x => x.housingType)
