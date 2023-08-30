@@ -1431,9 +1431,12 @@ export default {
 				sum += element.percent
 				totalSum += element.amount
 			}
+			for (let index = 0; index < 5; index++) {
+				const element = this.start_date_picker[index + 1]
 
+				element.disable = false
+			}
 			for (let index = 0; index < Number(val.settlements.settlement_turn_tables.length); index++) {
-				console.log(index)
 				if (val.settlements.settlement_turn_tables[index].turnStatus === 'complete') {
 					this.paymentRate[`charge${index + 1}`].txtField.readonly = true
 					this.paymentAmount[`charge${index + 1}`].txtField.readonly = true
