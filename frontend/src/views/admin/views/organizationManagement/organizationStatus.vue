@@ -550,6 +550,7 @@ export default {
 			rankData: [],
 			basicTeamData: [],
 			basicRankData: [],
+			detailTableData: [],
 		}
 	},
 
@@ -1025,6 +1026,21 @@ export default {
 					}
 
 					if (res.settlements.length > 0) {
+						res.settlements.forEach(el => {
+							let listData = {}
+							listData.all = el
+							listData.result =
+								el.settlementStatus === 'created'
+									? '계약등록'
+									: el.settlementStatus === 'waiting'
+									? '정산등록'
+									: el.settlementStatus === 'agree'
+									? '지급대기'
+									: el.settlementStatus === 'disagree'
+									? '거절'
+									: '-'
+							this.detailTableData.push(listData)
+						})
 						this.productsViewAction(productData)
 					}
 				})
@@ -1038,8 +1054,16 @@ export default {
 			await this.$store
 				.dispatch('products', data)
 				.then(res => {
-					this.detailTable.items = res.products
-					console.log(res)
+					res.products.forEach(el => {
+						let workIndex = this.detailTableData.findIndex(x => x.all.ProductID === el.id)
+						this.detailTableData[workIndex]['housingType'] = el.housingType
+						this.detailTableData[workIndex]['ho'] = el.ho
+						this.detailTableData[workIndex]['dong'] = el.dong
+						if (el.contractStatus === 'contract') {
+							this.detailTableData[workIndex]['result'] = '계약완료'
+						}
+					})
+					this.detailTable.items = this.detailTableData
 				})
 				.catch(err => {
 					console.log(err)
