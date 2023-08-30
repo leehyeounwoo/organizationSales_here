@@ -29,7 +29,7 @@
 					<div style="margin: 0 auto;">
 						<!-- 이름 -->
 						<p class="input_title mb-2">
-							이름
+							이름*
 						</p>
 						<v-text-field
 							hideDetails
@@ -46,7 +46,7 @@
 
 						<!-- 전화번호 -->
 						<p class="input_title mb-2">
-							휴대전화
+							휴대전화*
 						</p>
 						<v-layout class="mb-4">
 							<v-text-field
@@ -65,7 +65,7 @@
 							></v-text-field>
 						</v-layout>
 						<p class="input_title mb-2">
-							프로필 사진
+							프로필 사진*
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -88,7 +88,7 @@
 
 						<!-- 계좌번호 -->
 						<p class="input_title mb-2">
-							계좌정보
+							계좌정보*
 						</p>
 						<v-text-field
 							hideDetails
@@ -118,7 +118,7 @@
 							color="primary2"
 						></v-text-field>
 						<p class="input_title mb-2">
-							통장사본
+							통장사본*
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -139,7 +139,7 @@
 							</v-btn>
 						</v-layout>
 						<p class="input_title mb-2">
-							근로계약서
+							근로계약서*
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -160,7 +160,7 @@
 							</v-btn>
 						</v-layout>
 						<p class="input_title mb-2">
-							신분증 사본등 기타 첨부자료
+							신분증 사본등 기타 첨부자료*
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -258,7 +258,7 @@
 					</p>
 					<!-- 이메일 -->
 					<p class="input_title mb-2">
-						이메일
+						이메일*
 					</p>
 					<div style="margin: 0 auto;">
 						<v-layout class="mb-4">
@@ -283,7 +283,7 @@
 
 						<!-- 비밀번호 -->
 						<p class="input_title mb-2">
-							비밀번호
+							비밀번호*
 						</p>
 
 						<v-text-field
@@ -306,7 +306,7 @@
 
 						<!-- 비밀번호 확인 -->
 						<p class="input_title mb-2">
-							비밀번호 확인
+							비밀번호 확인*
 						</p>
 
 						<v-text-field

@@ -49,8 +49,11 @@ export default {
 			this.$router.push({ name: 'counselorMypage' })
 		},
 		logoutClick() {
-			sessionStorage.removeItem('reserveLite-t')
-			this.$router.push('/')
+			this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
+				console.log(res)
+				sessionStorage.removeItem('reserveLite-t')
+				this.$router.push({ name: 'mainPage', params: { code: res.businesses[0].code } })
+			})
 		},
 		logo_click() {
 			if (this.$store.state.meData.businessID) {
