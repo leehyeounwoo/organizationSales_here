@@ -12,9 +12,8 @@
 						<div class="slash mr-1"></div>
 						<span style="font-weight:bold">사업지 기본정보</span>
 					</v-layout>
-					<div v-for="(left, index) in setdialog.items" :key="index">
+					<div v-for="(left, index) in setdialog.items" :key="index" class="table_all_gray" style="border-top:1px solid #c8c8c8">
 						<v-layout
-							class="table_all_gray"
 							wrap
 							style="min-height:50px;  border-left:1px solid #c8c8c8; border-right:1px solid #c8c8c8; "
 							:style="setdialog.items.length - 1 === index ? 'border-bottom: 1px solid #c8c8c8;' : ''"
@@ -25,7 +24,14 @@
 							<v-flex xs9 v-if="left.type === 'txtfield'" class="table_right_white px-2 biz_table_right">
 								<v-flex xs6>
 									<txtField
-										v-if="left.title === '대표번호' && left.value.substr(0, 3).includes('02')"
+										v-if="left.title === '대표번호' && left.value === ''"
+										class="pt-3 bizInput"
+										v-model="left.value"
+										:txtField="left.txtfield"
+										style="height:27px; margin:auto"
+									></txtField>
+									<txtField
+										v-else-if="left.title === '대표번호' && left.value.substr(0, 3).includes('02')"
 										class="pt-3 bizInput"
 										v-model="left.value"
 										v-mask="'##-####-####'"
@@ -57,7 +63,7 @@
 										</v-flex>
 										<div class="px-1">~</div>
 										<v-flex xs6>
-											<TimePickerDialog :setdialog="left.worktime2" @input="save_time2" />
+											<TimePickerDialog :setdialog="left.worktime2" :minTime="left.worktime1.time" @input="save_time2" />
 										</v-flex>
 									</v-layout>
 								</v-flex>
@@ -193,7 +199,7 @@
 						</v-layout>
 					</div>
 					<v-layout justify-end>
-						<v-btn class="mt-4 save_biz" @click="businessCheck()"><v-icon>mdi-check</v-icon>저장</v-btn>
+						<v-btn class="save_biz" @click="businessCheck()" style="margin-top:61px"><v-icon>mdi-check</v-icon>저장</v-btn>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -282,11 +288,13 @@ export default {
 			return String(startLatRads.toFixed(5)) + '_' + String(startLongRads.toFixed(5))
 		},
 		checkLocation() {
+			this.$store.state.loading = true
 			if (!navigator.geolocation) {
 				return this.open_disable_dialog({ title: '오류발생', content: '위치정보를 허용해 주세요.' }, 'error')
 			}
 			navigator.geolocation.getCurrentPosition(position => {
 				this.setdialog.items[6].value = this.computeDistance(position.coords)
+				this.$store.state.loading = false
 			})
 		},
 		select2(select) {
@@ -554,6 +562,7 @@ export default {
 			this.setdialog.items[3].selectBox2.value = '120분'
 			this.setdialog.items[4].value = ''
 			this.setdialog.items[5].value = ''
+			this.setdialog.items[6].value = ''
 			this.parseCsv = null
 			for (let i = 0; i < this.right_data.length; i++) {
 				this.right_data[i].txtfield1.value = ''
@@ -561,6 +570,8 @@ export default {
 				this.right_data[i].txtfield3.value = ''
 				this.right_data[i].txtfield4.value = ''
 			}
+			this.right_data.splice(1, this.right_data.length - 1)
+			console.log(this.setdialog)
 			this.setdialog.dialog = false
 		},
 		save_time1(picker) {
@@ -594,10 +605,10 @@ export default {
 	font-weight: bold;
 }
 .table_all_gray:nth-last-child(1) {
-	border-top: 1px solid #c8c8c8;
+	margin-bottom: 50px;
 }
 .table_all_gray:nth-last-child(7) {
-	border-top: 1px solid black;
+	border-top: 1px solid black !important;
 }
 .biz_table_right {
 	border-left: 1px solid #c8c8c8;

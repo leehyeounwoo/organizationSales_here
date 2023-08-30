@@ -223,12 +223,6 @@ export default {
 	font-size: 13px;
 	font-weight: bold;
 }
-.table_all_gray:nth-last-child(1) {
-	// margin-bottom: 50px;
-}
-.table_all_gray:nth-last-child(6) {
-	border-top: 1px solid black;
-}
 .biz_table_right {
 	border-left: 1px solid #c8c8c8;
 }
