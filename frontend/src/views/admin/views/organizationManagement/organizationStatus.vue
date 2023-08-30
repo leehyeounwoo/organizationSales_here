@@ -621,10 +621,6 @@ export default {
 			this.addRank(val)
 		},
 		addRank(val) {
-			console.log(val)
-			if (val === '') {
-				return alert('직급을 입력해주세요.')
-			}
 			this.add_rank_data = {
 				value: val,
 				txtfield1: {
@@ -650,11 +646,6 @@ export default {
 			this.addTeam(val)
 		},
 		addTeam(val) {
-			console.log(val)
-
-			if (val === '') {
-				return alert('팀명을 입력해주세요.')
-			}
 			this.add_team_data = {
 				value: val,
 				txtfield1: {
