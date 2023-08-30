@@ -623,6 +623,13 @@ module.exports = {
       const businessData = await strapi.services["business"].find({
         code: ctx.request.body.businessID,
       });
+      if(businessData.length === 0) return ctx.badRequest(
+        null,
+        formatError({
+          id: "Auth.form.error.business.code",
+          message: "not have business",
+        })
+      )
       params.businessID = businessData[0].id;
 
       const user = await strapi

@@ -27,6 +27,22 @@
 					<!-- 텍스트필드 -->
 
 					<div style="margin: 0 auto;">
+						<!-- 코드 -->
+						<p class="input_title mb-2">
+							사업지 코드*
+						</p>
+						<v-text-field
+							hideDetails
+							:autofocus="false"
+							class="txtLogin1_border_radius mb-4"
+							outlined
+							maxlength="255"
+							flat
+							dense
+							v-model="siginup.code"
+							autocomplete="off"
+							color="primary2"
+						></v-text-field>
 						<!-- 이름 -->
 						<p class="input_title mb-2">
 							이름*
@@ -518,7 +534,7 @@ export default {
 					return this.open_disable_dialog({ title: '등록안내', content: '사업자등록번호를 입력해주세요.' })
 				else if (!this.files[4].file) return this.open_disable_dialog({ title: '등록안내', content: '사업자 등록증을 업로드 해주세요.' })
 			}
-
+			this.$store.state.loading = true
 			const filesData = this.files.filter(x => x.file !== null)
 			const filesId = []
 			for (let i = 0; i < filesData.length; i++) {
@@ -537,7 +553,7 @@ export default {
 							bank: this.siginup.bank,
 							phoneNumber: this.siginup.phone,
 							accountNumber: this.siginup.account,
-							businessID: this.$route.params.code,
+							businessID: this.siginup.code,
 							company: this.siginup.companyName,
 							businessNumber: this.siginup.companyNumber,
 							profile: filesId[0],
@@ -549,6 +565,7 @@ export default {
 						this.$store
 							.dispatch('register', data)
 							.then(() => {
+								this.$store.state.loading = false
 								this.open_disable_dialog(
 									{ title: '등록완료', content: '정상적으로 등록 되었습니다. \n입력하신 정보로 로그인 하시기 바랍니다.' },
 									'success',
@@ -558,8 +575,9 @@ export default {
 								Object.assign(this.$data, this.$options.data())
 							})
 							.catch(err => {
+								this.$store.state.loading = false
 								this.open_disable_dialog(
-									{ title: '오류발생', content: '회원가입 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' },
+									{ title: '오류발생', content: '사업지 코드가 맞지 않습니다. \n관리자에게 정확한 사업지 코드를 문의해주세요.' },
 									'error',
 								)
 								console.log({ err })

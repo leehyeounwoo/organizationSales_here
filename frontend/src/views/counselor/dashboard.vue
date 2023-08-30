@@ -329,12 +329,14 @@ export default {
 				})
 		},
 		cancelHolding() {
+			this.$store.state.loading = true
 			this.$store
 				.dispatch('updateAssignment', {
 					id: this.waitingHoldingList ? this.waitingHoldingList.id : this.assignmentHoldingList.id,
 					status: 'counselorNoAssignment',
 				})
 				.then(() => {
+					this.$store.state.loading = false
 					this.sweetInfo2.open = false
 					this.products()
 				})
@@ -437,7 +439,9 @@ export default {
 					holdingTime: this.time.replace('분', ''),
 					businessID: this.$store.state.meData.businessID,
 				}
+				this.$store.state.loading = true
 				this.$store.dispatch('createAssignment', data).then(() => {
+					this.$store.state.loading = false
 					this.holdingDialog.open = false
 					this.products()
 				})

@@ -360,6 +360,7 @@ export default {
 		async createSettlement() {
 			const filesData = this.files
 			if (filesData.length > 0) {
+				this.$store.state.loading = true
 				const filesId = []
 				for (let i = 0; i < filesData.length; i++) {
 					const el = filesData[i]
@@ -381,9 +382,11 @@ export default {
 						this.$store
 							.dispatch('updateSettlement_front', data)
 							.then(() => {
+								this.$store.state.loading = false
 								this.open_disable_dialog({ title: '요청완료', content: '정산요청이 완료되었습니다.' }, 'success')
 							})
 							.catch(err => {
+								this.$store.state.loading = false
 								this.open_disable_dialog({ title: '오류발생', content: '수정 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' }, 'error')
 								console.log({ err })
 							})

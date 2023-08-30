@@ -532,9 +532,11 @@ export default {
 					if (this.siginup.password) {
 						data.password = this.siginup.password
 					}
+					this.$store.state.loading = true
 					this.$store
 						.dispatch('updateUser', data)
 						.then(() => {
+							this.$store.state.loading = false
 							this.open_disable_dialog(
 								{ title: '등록완료', content: '정상적으로 등록 되었습니다. \n입력하신 정보로 로그인 하시기 바랍니다.' },
 								'success',
@@ -542,6 +544,7 @@ export default {
 							sessionStorage.removeItem('reserveLite-t')
 						})
 						.catch(err => {
+							this.$store.state.loading = false
 							this.open_disable_dialog({ title: '오류발생', content: '수정 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' }, 'error')
 							console.log({ err })
 						})

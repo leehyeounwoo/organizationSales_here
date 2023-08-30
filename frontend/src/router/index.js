@@ -27,12 +27,12 @@ const routes = [
 		component: kioskLogin,
 		name: 'kioskLogin',
 	},
-	{ path: '*', name: 'notfound', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/errorpage/NotFound.vue') },
-	{ path: '/:code', name: 'mainPage', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
+	{ path: '*', name: 'notfound', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
+	{ path: '/', name: 'mainPage', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
 	{ path: '/block', name: 'block', component: notAuth },
 
 	{
-		path: '/counselor/main/:code',
+		path: '/counselor/main',
 		name: 'counselorMain',
 		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue'),
 	},
@@ -50,7 +50,7 @@ const routes = [
 			},
 
 			{
-				path: '/counselor/register/:code',
+				path: '/counselor/register',
 				name: 'counselorRegister',
 				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/register.vue'),
 			},

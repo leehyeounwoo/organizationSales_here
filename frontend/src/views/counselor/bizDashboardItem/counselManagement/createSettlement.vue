@@ -421,6 +421,7 @@ export default {
 			else if (!this.product1) return this.open_disable_dialog({ title: '계약등록', content: '계약물건 정보의 주택형을 입력해주세요.' })
 			else if (!this.product2) return this.open_disable_dialog({ title: '계약등록', content: '계약물건 정보의 동을 입력해주세요.' })
 			else if (!this.product3) return this.open_disable_dialog({ title: '계약등록', content: '계약물건 정보의 호수를 입력해주세요.' })
+			this.$store.state.loading = true
 			const filesData = this.files
 			if (filesData.length > 0) {
 				const filesId = []
@@ -456,9 +457,11 @@ export default {
 						this.$store
 							.dispatch(this.$route.name === 'editSettlement' ? 'updateSettlement_front' : 'createSettlement', data)
 							.then(() => {
+								this.$store.state.loading = false
 								this.open_disable_dialog({ title: '등록완료', content: '정상적으로 등록 되었습니다.' }, 'success')
 							})
 							.catch(err => {
+								this.$store.state.loading = false
 								this.open_disable_dialog(
 									{
 										title: '오류발생',
@@ -490,12 +493,15 @@ export default {
 				if (this.$route.name === 'editSettlement') {
 					data.id = this.settlement.id
 				}
+				this.$store.state.loading = true
 				this.$store
 					.dispatch(this.$route.name === 'editSettlement' ? 'updateSettlement_front' : 'createSettlement', data)
 					.then(() => {
+						this.$store.state.loading = false
 						this.open_disable_dialog({ title: '등록완료', content: '정상적으로 등록 되었습니다.' }, 'success')
 					})
 					.catch(err => {
+						this.$store.state.loading = false
 						this.open_disable_dialog({ title: '오류발생', content: '수정 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' }, 'error')
 						console.log({ err })
 					})
