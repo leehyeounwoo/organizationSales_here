@@ -229,7 +229,7 @@ export default {
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						readonly: true,
+						readonly: false,
 						placeholder: '은행명',
 					},
 					txtField2: {
@@ -238,7 +238,7 @@ export default {
 						maxlength: '255',
 						outlined: true,
 						backCol: 'white',
-						readonly: true,
+						readonly: false,
 						placeholder: '계좌번호',
 					},
 				},
@@ -853,6 +853,8 @@ export default {
 				id: this.editUser.detail.id,
 				username: this.editUser.detail.username,
 				email: this.editUser.detail.email,
+				bank: this.rightEdit[1].txtField.value,
+				accountNumber: this.rightEdit[1].txtField2.value,
 			}
 			for (let i = 0; i < this.files.length; i++) {
 				if (this.files[i].file) {
@@ -876,6 +878,13 @@ export default {
 			}
 			await this.$store.dispatch('updateUser', data).then(() => {
 				this.sweetDialog.open = false
+				const createInterval = setInterval(async () => {
+					if (this.$store.state.businessSelectBox.value !== '') {
+						await this.getListAction()
+						await this.searchSelect()
+						clearInterval(createInterval)
+					}
+				}, 1000)
 				this.$store.state.loading = false
 			})
 		},
