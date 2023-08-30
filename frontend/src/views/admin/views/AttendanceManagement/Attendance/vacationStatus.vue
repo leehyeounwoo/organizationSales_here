@@ -419,6 +419,8 @@ export default {
 								? '오전 반차'
 								: this.setdialog.editData.vacationType === 'sick'
 								? '병가'
+								: this.setdialog.editData.vacationType === 'etc'
+								? '기타'
 								: '연차'
 						this.rightInfoTop[2].value = this.setdialog.editData.vacationDate
 						this.rightInfoTop[2].value2 = this.setdialog.editData.vacationDate

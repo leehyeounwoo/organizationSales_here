@@ -110,7 +110,7 @@ export default {
 						const data = {
 							date: this.$moment(element.date).format('YYYY-MM-DD'),
 							vacationType: element.dialogType,
-							status: 'waiting',
+							vacationStatus: 'waiting',
 							userID: this.$store.state.meData.id,
 							vacationReason: element.comment,
 						}

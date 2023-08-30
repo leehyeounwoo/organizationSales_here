@@ -432,13 +432,6 @@ export default {
 				this.$store.state.meData = res.me
 			})
 		},
-
-		first_users(data) {
-			this.$store.dispatch('users', data).then(res => {
-				this.table.items = res.users
-				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
-			})
-		},
 		async dataSetting() {
 			for (let index = 0; index < this.userLists.length; index++) {
 				const element = this.userLists[index]
@@ -650,12 +643,12 @@ export default {
 			}
 			await this.viewUsers(input)
 			let input2 = {
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
 			let input3 = {
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				idArr: this.userIDArr,
 			}
 			await this.gotoworksView(input2)
@@ -701,6 +694,7 @@ export default {
 		},
 
 		async click_date_before() {
+			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
@@ -727,9 +721,9 @@ export default {
 			}
 			await this.vacationView(input3)
 			await this.dataSetting()
-			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
 		},
 		async click_date_next() {
+			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
@@ -756,9 +750,9 @@ export default {
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
 			await this.dataSetting()
-			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
 		},
 		async click_date_now() {
+			this.date_picker.date = this.$moment()
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
@@ -781,9 +775,9 @@ export default {
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
 			await this.dataSetting()
-			this.date_picker.date = this.$moment()
 		},
 		async click_date_picker() {
+			this.date_picker.date = this.$moment(this.date_picker.date)
 			await this.getTeams()
 			await this.getRanks()
 			this.$store.state.loading = true
@@ -806,7 +800,6 @@ export default {
 			await this.gotoworksView(input2)
 			await this.vacationView(input3)
 			await this.dataSetting()
-			this.date_picker.date = this.$moment(this.date_picker.date)
 			this.$store.state.loading = false
 		},
 
