@@ -404,19 +404,19 @@ export default {
 		},
 		changeSel() {
 			let date
-			if (this.$moment().format('ddd') === 'Sun') {
+			if (this.$moment().format('ddd') === '일') {
 				date = 6
-			} else if (this.$moment().format('ddd') === 'Mon') {
+			} else if (this.$moment().format('ddd') === '월') {
 				date = 0
-			} else if (this.$moment().format('ddd') === 'Tue') {
+			} else if (this.$moment().format('ddd') === '화') {
 				date = 1
-			} else if (this.$moment().format('ddd') === 'Wed') {
+			} else if (this.$moment().format('ddd') === '수') {
 				date = 2
-			} else if (this.$moment().format('ddd') === 'Thu') {
+			} else if (this.$moment().format('ddd') === '목') {
 				date = 3
-			} else if (this.$moment().format('ddd') === 'Fri') {
+			} else if (this.$moment().format('ddd') === '금') {
 				date = 4
-			} else if (this.$moment().format('ddd') === 'Sat') {
+			} else if (this.$moment().format('ddd') === '토') {
 				date = 5
 			}
 			if (this.searchsel.value === '오늘') {
