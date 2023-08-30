@@ -317,7 +317,10 @@ export default {
 						this.files.push(el)
 					}
 				}
-				this.products()
+				this.produc1 = ''
+				this.produc2 = ''
+				this.produc3 = ''
+				this.product(res.settlements[0].ProductID)
 			})
 		} else this.products()
 	},
@@ -343,6 +346,25 @@ export default {
 			this.addressCheck = true
 			this.siginup.location = val.address
 			this.openDaum = !this.openDaum
+		},
+		product(id) {
+			if (id) {
+				this.$store.dispatch('products', { idArr: [id], businessID: this.$store.state.meData.businessID }).then(res => {
+					this.productDatas = res.products
+					if (this.$route.name === 'editSettlement') {
+						this.products1 = res.products.map(x => x.housingType)
+						this.product1 = res.products.filter(x => x.id === this.settlement.ProductID)[0].housingType
+						this.products2 = res.products.filter(x => x.housingType === this.product1).map(x => x.dong)
+						this.product2 = res.products.filter(x => x.id === this.settlement.ProductID)[0].dong
+						this.products3 = res.products.filter(x => x.dong === this.product2 && x.housingType === this.product1).map(x => x.ho)
+						this.product3 = res.products.filter(x => x.id === this.settlement.ProductID)[0].ho
+					} else this.products1 = res.products.map(x => x.housingType)
+				})
+			} else
+				this.open_disable_dialog({
+					title: '오류발생',
+					content: `새로고침 후 확인해 주세요.`,
+				})
 		},
 		products() {
 			this.$store.dispatch('me').then(() => {
