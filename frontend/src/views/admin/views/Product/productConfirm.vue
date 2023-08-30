@@ -12,12 +12,13 @@
 			</v-flex>
 			<v-btn class="ml-3 search_btn" color="#009dac" @click="searchProduct">적용</v-btn>
 		</v-layout>
-		<datatable :datatable="productTable" :editAssignmentAction="editAssignmentAction" class="mt-5"></datatable>
+		<datatable :datatable="productTable" :editAssignmentCheck="editAssignmentCheck" class="mt-5"></datatable>
+		<sweetAlert :dialog="sweetDialog" @click="editAssignmentAction" />
 	</div>
 </template>
 
 <script>
-import { selectBox, datatable } from '@/components/index.js'
+import { selectBox, datatable, sweetAlert } from '@/components/index.js'
 
 export default {
 	async created() {
@@ -70,6 +71,10 @@ export default {
 		}, 1000)
 	},
 	methods: {
+		editAssignmentCheck(item) {
+			this.sweetDialog.open = true
+			this.assignmentData = item
+		},
 		searchProduct() {
 			let item = this.productTable.items_origin
 			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
@@ -101,27 +106,56 @@ export default {
 			}
 			this.productTable.items = item
 		},
-		editAssignmentAction(item) {
+		editAssignmentAction() {
+			this.$store.state.loading = true
 			const data = {
-				id: item.id,
+				id: this.assignmentData.id,
 			}
-			if (item.status === 'noAssignment') {
+			if (this.assignmentData.status === 'noAssignment') {
 				return alert('배정 상태를 선택해주세요.')
 			} else {
-				if (item.status === 'assignment') {
+				if (this.assignmentData.status === 'assignment') {
 					data.status = 'assignment'
-
+					data.holdingTime = this.assignmentData.holdingTimeSel.value.toString()
 					data.start = this.$moment().format('HH:mm') + ':00.000'
 					data.end =
 						this.$moment()
-							.add(item.holdingTimeSel.value, 'm')
+							.add(this.assignmentData.holdingTimeSel.value, 'm')
 							.format('HH:mm') + ':00.000'
 				} else {
 					data.status = 'reject'
 				}
 			}
-			this.$store.dispatch('updateAssignment', data).then(async res => {
-				console.log(res)
+			this.$store.dispatch('updateAssignment', data).then(async () => {
+				this.sweetDialog.open = false
+				await this.$store.dispatch('businesses', { idArr: [this.$store.state.businessSelectBox.value] }).then(res => {
+					let splitTime = res.businesses[0].maximumHoldingTime / res.businesses[0].splitHoldingTime
+
+					for (let index = 0; index < splitTime; index++) {
+						this.timeArr.push(res.businesses[0].splitHoldingTime * (index + 1))
+					}
+				})
+
+				const assignmentsViewData = {
+					status: 'waiting',
+				}
+				await this.assignmentsView(assignmentsViewData)
+				const usersViewData = {
+					idArr: this.userIDArr,
+				}
+				await this.usersView(usersViewData)
+				const teamViewData = {
+					idArr: this.teamIdArr,
+				}
+				this.teamView(teamViewData)
+				const productsViewData = {
+					idArr: this.productIDArr,
+					businessID: this.$store.state.businessSelectBox.value,
+					start: 0,
+					end: 10,
+				}
+				await this.productsView(productsViewData)
+				this.$store.state.loading = false
 			})
 		},
 		// async businessView(businessViewData) {
@@ -203,9 +237,20 @@ export default {
 	components: {
 		selectBox,
 		datatable,
+		sweetAlert,
 	},
 	data() {
 		return {
+			assignmentData: [],
+			sweetDialog: {
+				open: false,
+				title: '배정 요청 처리',
+				content: '배정 요청을 적용합니다.',
+				cancelBtnText: '취소',
+				buttonType: 'twoBtn',
+				saveBtnText: '저장',
+				modalIcon: 'success',
+			},
 			timeArr: [],
 			teamIdArr: [],
 			userIDArr: [],

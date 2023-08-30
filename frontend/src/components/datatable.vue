@@ -168,7 +168,7 @@
 							elevation="0"
 							color="#f0f2f8"
 							style="margin:0 !important"
-							@click="editAssignmentAction(item)"
+							@click="editAssignmentCheck(item)"
 							>적용</v-btn
 						>
 					</v-flex>
@@ -2787,7 +2787,7 @@ export default {
 		holdingTypeChoice: Function,
 		updateAssignmentAction: Function,
 		createAssignmentAction: Function,
-		editAssignmentAction: Function,
+		editAssignmentCheck: Function,
 		teamChange: Function,
 		managerChoiceStatusChange: Function,
 		teamRankSave: Function,

@@ -705,8 +705,10 @@ export const sendSmsSettlement = gql`
 	}
 `
 export const updateAssignment = gql`
-	mutation updateAssignment($id: ID!, $status: ENUM_ASSIGNMENT_STATUS, $useYn: Boolean) {
-		updateAssignment(input: { where: { id: $id }, data: { status: $status, useYn: $useYn } }) {
+	mutation updateAssignment($id: ID!, $status: ENUM_ASSIGNMENT_STATUS, $holdingTime: String, $start: Time, $end: Time, $useYn: Boolean) {
+		updateAssignment(
+			input: { where: { id: $id }, data: { status: $status, useYn: $useYn, holdingTime: $holdingTime, start: $start, end: $end } }
+		) {
 			assignment {
 				id
 			}
