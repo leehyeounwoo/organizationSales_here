@@ -105,8 +105,13 @@ export default {
 	beforeCreate() {
 		this.$store.dispatch('businesses').then(res => {
 			console.log(res)
-			this.$store.state.businessSelectBox.items = res.businesses
-			this.$store.state.businessSelectBox.value = res.businesses[0].id
+			if (res.businesses.length !== 0) {
+				this.$store.state.businessSelectBox.items = res.businesses
+				this.$store.state.businessSelectBox.value = res.businesses[0].id
+			} else {
+				this.$router.push('/KIOSK').catch(() => {})
+				return alert('등록된 사업지가 없습니다. \n등록 후 이용해주세요.')
+			}
 		})
 	},
 	async created() {

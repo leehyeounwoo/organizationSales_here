@@ -53,8 +53,8 @@ export default {
 
 			if (ok === 10) {
 				clearInterval(createInterval)
-				alert('비즈니스 정보가 없습니다.')
-				this.$router.push({ name: 'dashBoard' })
+				// alert('비즈니스 정보가 없습니다.')
+				// this.$router.push({ name: 'dashBoard' }).catch(() => {})
 			}
 			ok += 1
 		}, 1000)

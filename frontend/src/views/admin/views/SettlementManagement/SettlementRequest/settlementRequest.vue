@@ -277,8 +277,9 @@ export default {
 		await this.me()
 		await this.searchSelect()
 		const settlementData = {
-			date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
-			paymentReject: false,
+			businessID: this.$store.state.businessSelectBox.value,
+			// date: this.$moment().add(9, 'h'),
+			// paymentReject: false,
 			// settlementStatus: 'agree',
 		}
 		await this.settlementView(settlementData)
@@ -812,7 +813,7 @@ export default {
 					this.settlementTable.items = []
 					this.list = []
 					const settlementData = {
-						date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+						businessID: this.$store.state.businessSelectBox.value,
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {
@@ -863,7 +864,7 @@ export default {
 					this.settlementTable.items = []
 					this.list = []
 					const settlementData = {
-						date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+						businessID: this.$store.state.businessSelectBox.value,
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {
@@ -890,8 +891,8 @@ export default {
 			this.$store.state.loading = false
 		},
 		click_agree() {
+			console.log(1)
 			this.$store.state.loading = true
-
 			if (this.finalSettlementData.settlementStatus === 'waiting') {
 				let input = {
 					id: this.finalSettlementData.id,
@@ -919,7 +920,7 @@ export default {
 					this.settlementTable.items = []
 					this.list = []
 					const settlementData = {
-						date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+						businessID: this.$store.state.businessSelectBox.value,
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {

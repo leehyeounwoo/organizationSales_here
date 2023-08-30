@@ -956,10 +956,11 @@ export default {
 	mounted() {},
 
 	methods: {
-		async refreshData(date) {
+		async refreshData() {
+			// date
 			const settlementViewData = {
 				settlementStatus: 'agree',
-				date: date,
+				businessID: this.$store.state.businessSelectBox.value,
 			}
 			await this.settlementView(settlementViewData)
 			const usersViewData = {
@@ -1660,7 +1661,7 @@ export default {
 						turnStatus: 'waiting',
 						amount: Number(element.txtField.value.replace(/,/g, '')),
 						settlements: this.finalSettlementData[0].id,
-						turnTableDegree: index + '',
+						turnTableDegree: index + 1 + '',
 						bank: this.finalSettlementData[0].bank,
 						bankAccount: this.finalSettlementData[0].accountNumber,
 						useYn: true,
