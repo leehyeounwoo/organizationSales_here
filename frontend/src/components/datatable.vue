@@ -50,7 +50,9 @@
 					{{
 						item.settlement_turn_tables.filter(x => x.depositFile !== null && x.PaymentDate !== null).length === 0
 							? '지급대기'
-							: item.settlement_turn_tables.filter(x => x.depositFile !== null && x.PaymentDate !== null)[0].turnTableDegree + '차 지급완료'
+							: item.settlement_turn_tables.filter(x => x.depositFile !== null && x.PaymentDate !== null)[
+									item.settlement_turn_tables.filter(x => x.depositFile !== null && x.PaymentDate !== null).length - 1
+							  ].turnTableDegree + '차 지급완료'
 					}}
 				</div>
 			</template>
