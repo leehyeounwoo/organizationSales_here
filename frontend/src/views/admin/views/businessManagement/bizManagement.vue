@@ -138,6 +138,7 @@ export default {
 							hideDetail: true,
 							errorMessage: '',
 							readonly: true,
+							placeholder: '※ URL은 자동으로 생성됩니다.',
 						},
 					},
 					// 5
@@ -457,8 +458,8 @@ export default {
 			this.table.itemsPerPage = this.rowperpageSel.value
 			this.first_business()
 		},
-		first_business() {
-			this.$store.dispatch('businesses').then(async res => {
+		async first_business() {
+			await this.$store.dispatch('businesses').then(async res => {
 				res.businesses.forEach(el => {
 					if (el.workingHoursStart) {
 						el['startTime'] = el.workingHoursStart.slice(0, 5)
@@ -522,10 +523,17 @@ export default {
 			this.createDialog.items[2].worktime1.time = item.startTime
 			this.createDialog.items[2].worktime2.time = item.endTime
 			this.createDialog.items[3].selectBox.value = item.splitHoldingTime
-			if (item.splitHoldingTime === '30분') {
-				this.createDialog.items[3].selectBox2.items = ['30분', '60분', '120분']
+			if (item.splitHoldingTime === '30') {
+				this.createDialog.items[3].selectBox2.items = [
+					{ text: '60분', value: '60' },
+					{ text: '90분', value: '90' },
+					{ text: '120분', value: '120' },
+				]
 			} else {
-				this.createDialog.items[3].selectBox2.items = ['60분', '120분']
+				this.createDialog.items[3].selectBox2.items = [
+					{ text: '60분', value: '60' },
+					{ text: '90분', value: '90' },
+				]
 			}
 			this.createDialog.items[3].selectBox2.value = item.maximumHoldingTime
 			this.createDialog.items[4].value = location.protocol + '//' + location.host + '/QRenter/' + item.code
@@ -533,7 +541,7 @@ export default {
 			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
 			this.right_data[0].txtfield3.value = item.manager ? item.manager.email : ''
 			this.createDialog.items[6].value = item.location
-			console.log(this.right_data)
+			console.log(this.createDialog)
 			this.createDialog.dialog = true
 		},
 		search_biz() {
