@@ -167,6 +167,7 @@ export default {
 			date_lte: this.end_date_picker.date,
 			roleName: 'Counselor',
 			businessID: this.$store.state.businessSelectBox.value,
+			workingStatus: true,
 		}
 		await this.viewUsers(data)
 		let data2 = {
@@ -332,6 +333,7 @@ export default {
 				date_lte: this.end_date_picker.date,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
 				data.teamID = this.searchsel1.value.id
