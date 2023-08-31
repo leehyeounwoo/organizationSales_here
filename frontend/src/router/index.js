@@ -39,7 +39,7 @@ const routes = [
 
 	// 상담사 화면
 	{
-		path: '/counselors',
+		path: '/',
 		name: 'counselors',
 		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/board.vue'),
 		children: [

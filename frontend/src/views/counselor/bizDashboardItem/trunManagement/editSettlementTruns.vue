@@ -92,7 +92,23 @@
 						</v-chip-group>
 					</div>
 				</div>
-				<v-btn elevation="0" height="48" class="loginButton_small mt-10" block color="primary2" @click="createSettlement" rounded>
+				<v-btn
+					elevation="0"
+					height="48"
+					class="loginButton_small mt-10"
+					block
+					color="primary2"
+					@click="createSettlement"
+					rounded
+					v-if="
+						settlement.settlement_turn_tables.length === 0
+							? true
+							: settlement.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length ===
+							  settlement.settlement_turn_tables.length
+							? false
+							: true
+					"
+				>
 					<span style="color:white;	font-weight: bold;"> 정산요청하기 </span>
 				</v-btn>
 			</div>
@@ -239,7 +255,7 @@ export default {
 					'error',
 				)
 			this.settlement = res.settlements[0]
-
+			console.log(res.settlements[0])
 			if (res.settlements[0].attachment) {
 				for (let index = 0; index < res.settlements[0].attachment.length; index++) {
 					const el = res.settlements[0].attachment[index]
