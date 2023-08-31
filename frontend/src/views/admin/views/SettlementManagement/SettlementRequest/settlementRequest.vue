@@ -277,6 +277,7 @@ export default {
 		await this.searchSelect()
 		const settlementData = {
 			businessID: this.$store.state.businessSelectBox.value,
+			settlementStatusArr: ['agree', 'disagree', 'waiting'],
 			// date: this.$moment().add(9, 'h'),
 			// paymentReject: false,
 			// settlementStatus: 'agree',
@@ -380,7 +381,7 @@ export default {
 					settlementData.settlementStatus === 'waiting'
 				}
 			}
-			await this.$store.dispatch('settlements', settlementData).then(res => {
+			await this.$store.dispatch('settlementsStatusArr', settlementData).then(res => {
 				console.log(res)
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
@@ -394,6 +395,7 @@ export default {
 					listData.userID = element.userID
 					listData.ProductID = element.ProductID
 					listData.settlement_turn_tables = element.settlement_turn_tables
+					listData.paymentReject = element.paymentReject
 					this.list.push(listData)
 				})
 				this.userArrData = res.settlements.filter(x => x.userID).map(x => x.userID)
@@ -890,13 +892,64 @@ export default {
 			this.$store.state.loading = false
 		},
 		click_agree() {
-			console.log(1)
 			this.$store.state.loading = true
 			if (this.finalSettlementData.settlementStatus === 'waiting') {
 				let input = {
 					id: this.finalSettlementData.id,
 					settlementStatus: 'agree',
 					updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
+					adminName: this.$store.state.meData.username,
+				}
+				this.$store
+					.dispatch('updateSettlement', input)
+					.then(() => {})
+					.catch(() => {})
+				let input2 = {
+					settlementID: this.finalSettlementData.id,
+					editStatus: 'agree',
+					editDetail: this.finalSettlementData.degree + '차 요청',
+				}
+				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
+					this.sweetDialog_info.open = false
+					this.$store.state.loading = true
+					this.saveDialogStatus.title = `승인 처리 완료`
+					this.saveDialogStatus.content = `정산 요청이 승인되었습니다.`
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					this.settlementTable.items = []
+					this.list = []
+					const settlementData = {
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					await this.settlementView(settlementData)
+					const usersViewData = {
+						idArr: this.userArrData,
+						roleName: 'Counselor',
+					}
+					await this.usersView(usersViewData)
+					const productsViewData = {
+						idArr: this.productArrData,
+					}
+					await this.productsView(productsViewData)
+					const teamsViewData = {
+						idArr: this.teamArrData,
+					}
+					await this.teamsView(teamsViewData)
+					const ranksViewData = {
+						idArr: this.rankArrData,
+					}
+					await this.ranksView(ranksViewData)
+					await this.dataSetting()
+					this.$store.state.loading = false
+					this.$store.state.loading = false
+				})
+			} else {
+				let input = {
+					id: this.finalSettlementData.id,
+					// settlementStatus: 'agree',
+					// updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
+					paymentReject: true,
 					adminName: this.$store.state.meData.username,
 				}
 				this.$store

@@ -404,6 +404,88 @@ export const settlements = gql`
 		}
 	}
 `
+export const settlementsStatusArr = gql`
+	query settlementsStatusArr(
+		$id: ID
+		$settlementStatusArr: JSON
+		$userID: String
+		$date: DateTime
+		$contractDate_lte: DateTime
+		$contractDate_gte: DateTime
+		$name: String
+		$phone: String
+		$businessID: String
+		$paymentReject: Boolean
+	) {
+		settlementsConnection(
+			where: {
+				id: $id
+				settlementStatus: $settlementStatusArr
+				created_at_lte: $date
+				contractDate_lte: $contractDate_lte
+				contractDate_gte: $contractDate_gte
+				name_contains: $name
+				phone_contains: $phone
+				businessID: $businessID
+				paymentReject: $paymentReject
+			}
+		) {
+			aggregate {
+				count
+			}
+		}
+		settlements(
+			where: {
+				id: $id
+				settlementStatus: $settlementStatusArr
+				userID: $userID
+				created_at_lte: $date
+				businessID: $businessID
+				paymentReject: $paymentReject
+			}
+		) {
+			id
+			ProductID
+			userID
+			contractDate
+			settlementStatus
+			created_at
+			updated_at
+			totalPrice
+			turn
+			degree
+			attachment {
+				id
+				name
+				url
+			}
+			settlement_turn_tables(where: { useYn: true }) {
+				id
+				turnStatus
+				prePaymentDate
+				amount
+				turnTableDegree
+				bank
+				bankAccount
+				adminName
+				PaymentDate
+				depositFile {
+					id
+					url
+					name
+				}
+				useYn
+			}
+			name
+			phone
+			birth
+			location
+			subLocation
+			rejectComment
+			paymentReject
+		}
+	}
+`
 export const messages = gql`
 	query messages($businessID: ID) {
 		messages(where: { businessID: $businessID }) {
