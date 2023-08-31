@@ -377,13 +377,8 @@ export default {
 
 	async created() {
 		await this.me()
-		const userViewData = {
-			idArr: this.userID,
-			businessID: this.$store.state.businessSelectBox.value,
-		}
-		await this.userView(userViewData)
 		const businessData = {
-			idArr: this.businessID,
+			idArr: this.$store.state.businessSelectBox.value,
 		}
 		await this.businessView(businessData)
 		await this.messageView(businessData)
