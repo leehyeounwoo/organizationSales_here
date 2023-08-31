@@ -476,7 +476,6 @@ export default {
 				businessID: this.table_detail.item.id,
 			}
 			await this.$store.dispatch('products', data).then(res => {
-				console.log(res.products)
 				let data = [{ text: '선택', value: 'new' }]
 				let data2 = []
 				res.products.forEach(el => {
@@ -530,14 +529,12 @@ export default {
 			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
 			this.right_data[0].txtfield3.value = item.manager ? item.manager.email : ''
 			this.createDialog.items[6].value = item.location
-			console.log(this.createDialog)
 			this.createDialog.dialog = true
 		},
 		search_biz() {
 			let item = this.table.items_origin
 			item = item.filter(el => el.name.indexOf(this.search_business) !== -1)
 			this.table.items = item
-			console.log(this.table.items)
 			this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 		},
 	},

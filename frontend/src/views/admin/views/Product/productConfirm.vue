@@ -175,7 +175,6 @@ export default {
 		// },
 		async assignmentsView(data) {
 			await this.$store.dispatch('assignments', data).then(async res => {
-				console.log(res)
 				this.productIDArr = res.assignments.map(x => x.productID)
 				this.userIDArr = res.assignments.map(x => x.userID)
 				this.productTable.items = res.assignments
@@ -210,7 +209,6 @@ export default {
 						disabled: false,
 					}
 				}
-				console.log(this.productTable.items)
 				this.productTable.items = JSON.parse(JSON.stringify(this.productTable.items))
 				this.productTable.items_origin = JSON.parse(JSON.stringify(this.productTable.items))
 
@@ -231,7 +229,6 @@ export default {
 			await this.$store
 				.dispatch('teams', teamViewData)
 				.then(res => {
-					console.log(res.teams)
 					for (let index = 0; index < this.productTable.items.length; index++) {
 						const element = this.productTable.items[index]
 						let idx = res.teams.findIndex(x => x.id === element.user.teamID)

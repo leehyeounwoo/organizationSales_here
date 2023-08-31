@@ -145,7 +145,6 @@ export default {
 			let ok = 0
 			const createInterval = setInterval(async () => {
 				if (this.$store.state.businessSelectBox.value !== '') {
-					console.log(this.$store.state.businessSelectBox.value)
 					await this.productSelectData()
 					clearInterval(createInterval)
 				}
@@ -160,14 +159,12 @@ export default {
 			}, 1000)
 		},
 		async paginationClick(val) {
-			console.log(this.productManager.page)
 			console.log(val)
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
 				start: (this.productManager.page - 1) * this.productManager.itemsPerPage,
 				limit: this.productManager.itemsPerPage,
 			}
-			console.log(product_tableData)
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {
 				productArr: this.productIdArr,
@@ -207,8 +204,6 @@ export default {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
 				console.log(res)
 				this.productManager.total = res.productsConnection.aggregate.count
-				console.log(res.productsConnection.aggregate.count)
-				console.log(Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage))
 				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage)
 			})
 		},
@@ -265,7 +260,6 @@ export default {
 				item.holdingTime2.disabled = false
 				item.holdingTime2.minTime = this.businessData.workingHoursStart.substr(0, 5)
 				item.holdingTime2.maxTime = this.businessData.workingHoursEnd.substr(0, 5)
-				console.log(item)
 			}
 		},
 		async businessView(businessViewData) {
@@ -349,8 +343,7 @@ export default {
 					id: item.assingnmentData.id,
 					useYn: false,
 				}
-				this.$store.dispatch('updateAssignment', data).then(async res => {
-					console.log(res)
+				this.$store.dispatch('updateAssignment', data).then(async () => {
 					this.productSelectData()
 				})
 			}
@@ -391,7 +384,6 @@ export default {
 			await this.$store
 				.dispatch('assignments', assignmentsViewData)
 				.then(res => {
-					console.log(res)
 					this.userIdArr = res.assignments.map(x => x.userID)
 
 					for (let index = 0; index < res.assignments.length; index++) {
@@ -441,14 +433,12 @@ export default {
 									id: el.assingnmentData.id,
 									useYn: false,
 								}
-								this.$store.dispatch('updateAssignment', data).then(async res => {
-									console.log(res)
+								this.$store.dispatch('updateAssignment', data).then(async () => {
 									this.productSelectData()
 								})
 							}
 						}
 					})
-					console.log(this.productManager.items)
 					let data1 = [{ text: '전체', value: 'all' }]
 					let data2 = [{ text: '전체', value: 'all' }]
 					let data3 = [{ text: '전체', value: 'all' }]
@@ -545,7 +535,6 @@ export default {
 			this.holdingDetail.holdingDashboard.items = this.productManager.items.filter(x => x.assingnmentData)
 			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
 			this.holdingDetail.dialog = true
-			console.log(this.holdingDetail.holdingDashboard.items)
 		},
 	},
 }

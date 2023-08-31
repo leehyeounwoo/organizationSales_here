@@ -400,20 +400,15 @@ export default {
 				password: this.right_data.detail.password,
 				confirmed: this.right_data.detail.confirmed,
 			}
-			console.log(data)
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('register', data).then(res => {
-					console.log(res.register)
 					let id = { id: res.register.user.id }
 					this.newUser.push(id)
-					console.log(this.newUser)
 					this.sweetDialog1.open = false
 				})
 			} else if (this.setdialog.type === 'edit') {
 				data.id = this.setdialog.manager
-				console.log(data)
 				this.$store.dispatch('updateUser', data).then(res => {
-					console.log(res)
 					let id = { id: res.updateUser.user.id }
 					this.newUser.push(id)
 					this.sweetDialog1.open = false
@@ -433,8 +428,6 @@ export default {
 			}
 			if (this.setdialog.type === 'create') {
 				this.$store.dispatch('createBusiness', data).then(res => {
-					console.log(res.createBusiness)
-					console.log(data.product)
 					if (data.product) {
 						for (let i = 0; i < data.product.length; i++) {
 							let item = {
@@ -443,9 +436,7 @@ export default {
 								dong: data.product[i].dong,
 								ho: data.product[i].ho,
 							}
-							this.$store.dispatch('createProduct', item).then(res => {
-								console.log(res)
-							})
+							this.$store.dispatch('createProduct', item).then(() => {})
 						}
 					}
 					if (this.newUser) {
@@ -571,7 +562,6 @@ export default {
 				this.right_data[i].txtfield4.value = ''
 			}
 			this.right_data.splice(1, this.right_data.length - 1)
-			console.log(this.setdialog)
 			this.setdialog.dialog = false
 		},
 		save_time1(picker) {
