@@ -1100,10 +1100,23 @@ export default {
 			this.newDialog3.edit = true
 		},
 		async unattendedVacation() {
+			let vacationIDArr = []
+
+			let input = {
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
+			}
+
+			await this.$store.dispatch('users', input).then(res => {
+				for (let i = 0; i < res.users.length; i++) {
+					vacationIDArr.push(res.users[i].id)
+				}
+			})
+
 			let unattendedData = {
-				start: 0,
-				limit: this.table.pagination.itemsPerPage,
 				vacationStatus: 'waiting',
+				idArr: vacationIDArr,
 			}
 
 			await this.$store.dispatch('vacations', unattendedData).then(res => {

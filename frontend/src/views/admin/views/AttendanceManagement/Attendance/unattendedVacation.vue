@@ -438,8 +438,11 @@ export default {
 
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
+
+				if (element.businessID) {
+					this.unattendedTable.items.push(JSON.parse(JSON.stringify(element)))
+				}
 			}
-			this.unattendedTable.items = JSON.parse(JSON.stringify(this.vacationData))
 		},
 	},
 	async created() {
