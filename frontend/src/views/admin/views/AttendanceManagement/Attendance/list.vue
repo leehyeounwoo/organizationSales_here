@@ -419,6 +419,7 @@ export default {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 				page: 1,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -643,6 +644,7 @@ export default {
 				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -674,6 +676,7 @@ export default {
 				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -703,6 +706,7 @@ export default {
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -732,6 +736,7 @@ export default {
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			let input2 = {
 				date: this.$moment(this.date_picker.date)
@@ -761,6 +766,7 @@ export default {
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			let input2 = {
 				date: this.$moment().format('YYYY-MM-DD'),
@@ -786,6 +792,7 @@ export default {
 			this.$store.state.loading = true
 			let input = {
 				roleName: 'Counselor',
+				workingStatus: true,
 				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
@@ -872,6 +879,7 @@ export default {
 					let input2 = {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
+						workingStatus: true,
 					}
 					let input3 = {
 						start: 0,
@@ -902,6 +910,7 @@ export default {
 					let input2 = {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
+						workingStatus: true,
 					}
 					let input3 = {
 						start: 0,
@@ -932,6 +941,7 @@ export default {
 					let input2 = {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
+						workingStatus: true,
 					}
 					let input3 = {
 						start: 0,
@@ -969,6 +979,7 @@ export default {
 				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
