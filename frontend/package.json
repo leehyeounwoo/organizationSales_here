@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"build": "vue-cli-service build --mode production",
+		"build": "git pull && vue-cli-service build --mode production && firebase delpoy",
 		"lint": "eslint --ext .js,.vue src",
 		"dev": "vue-cli-service serve --hot --port 80 --mode development"
 	},
