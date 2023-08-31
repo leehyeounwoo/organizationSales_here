@@ -351,90 +351,7 @@ export default {
 				page: 1,
 				pageCount: 0,
 			},
-			// detailData: {
-			// 	id: '',
-			// 	name: {
-			// 		value: '',
-			// 		clearable: false,
-			// 		maxlength: '255',
-			// 		outlined: true,
-			// 		backCol: 'white',
-			// 		placeholder: '고객명',
-			// 	},
-			// 	phone: {
-			// 		value: '',
-			// 		clearable: false,
-			// 		maxlength: '255',
-			// 		outlined: true,
-			// 		backCol: 'white',
-			// 		placeholder: '연락처',
-			// 	},
-			// 	sex: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '성별',
-			// 		items: ['남자', '여자'],
-			// 		outlined: true,
-			// 	},
-			// 	age: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '연령대',
-			// 		items: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
-			// 		outlined: true,
-			// 	},
-			// 	inflow: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '유입경로',
-			// 		items: ['직접입력', '상담예약', '구독신청', '이벤트참여'],
-			// 		outlined: true,
-			// 	},
-			// 	status: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '고객상태',
-			// 		items: ['DB등록', '상담예약', '상담완료', '계약가망', '계약완료'],
-			// 		outlined: true,
-			// 	},
-			// 	counselor_business: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '지점',
-			// 		items: [],
-			// 		outlined: true,
-			// 		returnObject: true,
-			// 		itemText: 'business_title',
-			// 	},
-			// 	counselor_team: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '부서',
-			// 		items: [],
-			// 		outlined: true,
-			// 		returnObject: true,
-			// 		itemText: 'title',
-			// 	},
-			// 	counselor_name: {
-			// 		value: '',
-			// 		errorMessage: '',
-			// 		hideDetail: true,
-			// 		placeholder: '상담사명',
-			// 		items: [],
-			// 		outlined: true,
-			// 		returnObject: true,
-			// 		itemText: 'name',
-			// 	},
-			// 	origin_main_data: [],
-			// 	interest_product: [],
-			// 	contract_product: [],
-			// },
+
 			date: this.$moment(),
 			startTimeDialog: false,
 			endTimeDialog: false,
@@ -712,39 +629,6 @@ export default {
 					}
 				}
 			}
-
-			// await this.$store
-			// 	.dispatch('teams', teamData1)
-			// 	.then(res => {
-			// 		this.basicTeamData = res.teams
-			// 	})
-			// 	.catch(err => {
-			// 		console.log(err)
-			// 		this.$store.state.loading = false
-			// 	})
-
-			// let name = this.left_data.filter(item => {
-			// 	return !this.basicTeamData.some(team => team.title === item.value)
-			// })
-			// if (name.length > 0) {
-			// 	for (let i = 0; i < name.length; i++) {
-			// 		let teamData = {
-			// 			businessID: this.$store.state.businessSelectBox.value,
-			// 			title: name[i].value,
-			// 			useYn: name[i].selectBox.value === '사용' ? true : false,
-			// 		}
-			// 		await this.$store.dispatch('createTeam', teamData).then(() => {})
-			// 	}
-			// 	await this.$store
-			// 		.dispatch('teams', teamData1)
-			// 		.then(() => {})
-			// 		.catch(err => {
-			// 			console.log(err)
-			// 			this.$store.state.loading = false
-			// 		})
-			// } else {
-			// 	alert('팀추가좀')
-			// }
 		},
 		async applyRank() {
 			this.$store.state.loading = true
@@ -779,54 +663,8 @@ export default {
 							this.$store.state.loading = false
 						})
 					}
-					// if (this.right_data[i].selectBox.value !== this.right_data_origin[i].selectBox.value) {
-					// 	rankData2['id'] = this.right_data[i].id
-					// 	rankData2['rankName'] = this.right_data[i].value
-					// 	if (this.right_data[i].selectBox.value === '사용') {
-					// 		rankData2['useYn'] = true
-					// 	} else {
-					// 		rankData2['useYn'] = false
-					// 	}
-					// 	this.$store.dispatch('updateRank', rankData2).then(() => {
-					// 		this.sweetDialog3.open = false
-					// 		this.$store.state.loading = false
-					// 	})
-					// }
 				}
 			}
-
-			// await this.$store
-			// 	.dispatch('ranks', teamData1)
-			// 	.then(res => {
-			// 		this.basicRankData = res.ranks
-			// 	})
-			// 	.catch(err => {
-			// 		console.log(err)
-			// 		this.$store.state.loading = false
-			// 	})
-
-			// let name = this.right_data.filter(item => {
-			// 	return !this.basicRankData.some(team => team.rankName === item.value)
-			// })
-			// if (name.length > 0) {
-			// 	for (let i = 0; i < name.length; i++) {
-			// 		let teamData = {
-			// 			businessID: this.$store.state.businessSelectBox.value,
-			// 			rankName: name[i].value,
-			// 			useYn: name[i].selectBox.value === '사용' ? true : false,
-			// 		}
-			// 		await this.$store.dispatch('createRank', teamData).then(() => {})
-			// 	}
-			// 	await this.$store
-			// 		.dispatch('ranks', teamData1)
-			// 		.then(() => {})
-			// 		.catch(err => {
-			// 			console.log(err)
-			// 			this.$store.state.loading = false
-			// 		})
-			// } else {
-			// 	alert('팀추가좀')
-			// }
 		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.table.origin_items))

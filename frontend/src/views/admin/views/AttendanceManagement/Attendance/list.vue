@@ -398,29 +398,7 @@ export default {
 	async created() {
 		this.$store.state.loading = true
 		await this.me()
-		await this.getTeams()
-		await this.getRanks()
-		let input = {
-			start: 0,
-			limit: this.table.pagination.itemsPerPage,
-			roleName: 'Counselor',
-			businessID: this.$store.state.businessSelectBox.value,
-			page: 1,
-		}
-		await this.viewUsers(input)
-		let input2 = {
-			date: this.$moment().format('YYYY-MM-DD'),
-			roleName: 'Counselor',
-			userID: this.userIDArr,
-		}
-		let input3 = {
-			date: this.$moment().format('YYYY-MM-DD'),
-			// roleName: 'Counselor',
-			idArr: this.userIDArr,
-		}
-		await this.gotoworksView(input2)
-		await this.vacationView(input3)
-		await this.unattendedVacation()
+		await this.firstAttendanceCall()
 		await this.dataSetting()
 		this.$store.state.loading = false
 	},
@@ -431,6 +409,31 @@ export default {
 			await this.$store.dispatch('me').then(res => {
 				this.$store.state.meData = res.me
 			})
+		},
+		async firstAttendanceCall() {
+			await this.getTeams()
+			await this.getRanks()
+			let input = {
+				start: 0,
+				limit: this.table.pagination.itemsPerPage,
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+				page: 1,
+			}
+			await this.viewUsers(input)
+			let input2 = {
+				date: this.$moment().format('YYYY-MM-DD'),
+				roleName: 'Counselor',
+				userID: this.userIDArr,
+			}
+			let input3 = {
+				date: this.$moment().format('YYYY-MM-DD'),
+				// roleName: 'Counselor',
+				idArr: this.userIDArr,
+			}
+			await this.gotoworksView(input2)
+			await this.vacationView(input3)
+			await this.unattendedVacation()
 		},
 		async dataSetting() {
 			for (let index = 0; index < this.userLists.length; index++) {
