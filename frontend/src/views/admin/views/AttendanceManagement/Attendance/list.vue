@@ -701,6 +701,7 @@ export default {
 
 		async click_date_before() {
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
+
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
@@ -710,9 +711,7 @@ export default {
 			}
 			await this.viewUsers(input)
 			let input2 = {
-				date: this.$moment(this.date_picker.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
@@ -720,9 +719,7 @@ export default {
 			let input3 = {
 				start: 0,
 				limit: this.table.pagination.itemsPerPage,
-				date: this.$moment(this.date_picker.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				idArr: this.userIDArr,
 			}
@@ -731,6 +728,7 @@ export default {
 		},
 		async click_date_next() {
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
+
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
@@ -739,18 +737,14 @@ export default {
 				workingStatus: true,
 			}
 			let input2 = {
-				date: this.$moment(this.date_picker.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
 				limit: this.table.pagination.itemsPerPage,
-				date: this.$moment(this.date_picker.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				idArr: this.userIDArr,
 			}
@@ -761,6 +755,7 @@ export default {
 		},
 		async click_date_now() {
 			this.date_picker.date = this.$moment()
+
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
@@ -787,6 +782,7 @@ export default {
 		},
 		async click_date_picker() {
 			this.date_picker.date = this.$moment(this.date_picker.date)
+
 			await this.getTeams()
 			await this.getRanks()
 			this.$store.state.loading = true
