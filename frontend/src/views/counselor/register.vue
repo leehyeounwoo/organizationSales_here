@@ -499,8 +499,8 @@ export default {
 		},
 		async register() {
 			let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-			if (!this.siginup.name) return this.open_disable_dialog({ title: '등록안내', content: '이름을 입력해주세요.' })
+			if (!this.siginup.code) return this.open_disable_dialog({ title: '등록안내', content: '사업지 코드를 입력해주세요.' })
+			else if (!this.siginup.name) return this.open_disable_dialog({ title: '등록안내', content: '이름을 입력해주세요.' })
 			else if (!this.siginup.phone) return this.open_disable_dialog({ title: '등록안내', content: '휴대전화를 입력해주세요.' })
 			else if (!this.files[0].file) return this.open_disable_dialog({ title: '등록안내', content: '프로필사진을 업로드 해주세요.' })
 			else if (!this.siginup.bank) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 은행명을 입력해주세요.' })
