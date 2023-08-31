@@ -1071,8 +1071,9 @@ export default {
 				})
 		},
 		async editUserData(val) {
-			this.detailTable.items = []
 			this.$store.state.loading = true
+			this.detailTableData = []
+			this.detailTable.items = []
 			this.editUser.btn = true
 			this.editUser.detail = val
 			const userViewData = {
