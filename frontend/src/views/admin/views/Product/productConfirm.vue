@@ -78,6 +78,7 @@ export default {
 	methods: {
 		async show_table() {
 			this.$store.state.loading = true
+			this.productTable.page = 1
 			const assignmentsViewData = {
 				status: 'waiting',
 			}

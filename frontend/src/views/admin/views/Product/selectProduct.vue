@@ -145,6 +145,7 @@ export default {
 			let ok = 0
 			const createInterval = setInterval(async () => {
 				if (this.$store.state.businessSelectBox.value !== '') {
+					this.productManager.page = 1
 					await this.productSelectData()
 					clearInterval(createInterval)
 				}
