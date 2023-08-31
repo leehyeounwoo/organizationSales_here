@@ -422,7 +422,14 @@ export default {
 						}
 					}
 					this.productManager.items = JSON.parse(JSON.stringify(this.productManager.items))
+					console.log(this.productManager.items)
+					let data1 = [{ text: '전체', value: 'all' }]
+					let data2 = [{ text: '전체', value: 'all' }]
+					let data3 = [{ text: '전체', value: 'all' }]
 					this.productManager.items.forEach(el => {
+						data1.push({ text: el.housingType, value: el.housingType })
+						data2.push({ text: el.dong, value: el.dong })
+						data3.push({ text: el.ho, value: el.ho })
 						if (el.assingnmentData) {
 							el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
 								this.$moment(),
@@ -439,9 +446,6 @@ export default {
 							}
 						}
 					})
-					let data1 = [{ text: '전체', value: 'all' }]
-					let data2 = [{ text: '전체', value: 'all' }]
-					let data3 = [{ text: '전체', value: 'all' }]
 					// this.productManager.items = []
 					// this.productManager.items.forEach(el => {
 					// 	data1.push({ text: el.housingType, value: el.housingType })
