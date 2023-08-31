@@ -645,6 +645,31 @@ export const createSystem = gql`
 		}
 	}
 `
+export const updateSystem = gql`
+	mutation updateSystem($id: ID!, $content: String, $turn: String, $businessID: String) {
+		updateSystem(input: { where: { id: $id }, data: { content: $content, turn: $turn, businessID: $businessID } }) {
+			system {
+				id
+				content
+				businessID
+				turn
+			}
+		}
+	}
+`
+
+export const deleteSystem = gql`
+	mutation deleteSystem($id: ID!) {
+		deleteSystem(input: { where: { id: $id } }) {
+			system {
+				id
+				content
+				businessID
+				turn
+			}
+		}
+	}
+`
 
 export const createSettlementEditLogs = gql`
 	mutation createSettlementEditLogs($settlementID: String, $editStatus: ENUM_SETTLEMENTEDITLOG_EDITSTATUS, $editDetail: String) {

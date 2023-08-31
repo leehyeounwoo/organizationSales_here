@@ -269,73 +269,77 @@ export default {
 			})
 		},
 		createAssignmentAction(item) {
-			let nowTime = this.$moment().format('YYYY-MM-DD ')
-			let startTime = this.businessData.workingHoursStart.substr(0, 5)
-			let endTime = this.businessData.workingHoursEnd.substr(0, 5)
-
-			if (this.$moment() >= this.$moment(nowTime + startTime) && this.$moment() <= this.$moment(nowTime + endTime)) {
-				if (item.product_manager.value === '미지정') {
-					return alert('담당자를 선택해주세요.')
-				}
-				if (item.team.value === '') {
-					return alert('담당자를 선택해주세요.')
-				}
-				if (item.user.value === '') {
-					return alert('담당자를 선택해주세요.')
-				}
-				if (item.select_holding.value === '') {
-					return alert('홀딩타입을 선택해주세요.')
-				}
-				if (item.select_holding.value === '') {
-					return alert('홀딩타입을 선택해주세요.')
-				}
-				if (item.select_holding.value === '즉시 홀딩') {
-					if (item.holdingTime3.value === '') {
-						return alert('홀딩시간을 선택해주세요.')
-					}
-				} else {
-					if (item.holdingTime1.time === '') {
-						return alert('홀딩시간을 선택해주세요.')
-					}
-					if (item.holdingTime2.time === '') {
-						return alert('홀딩시간을 선택해주세요.')
-					}
-				}
-				const data = {
-					useYn: true,
-					userID: item.user.value,
-					status: 'assignment',
-					productID: item.id,
-					orderType: 'admin',
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-				if (item.select_holding.value === '종일 홀딩') {
-					data.type = 'allday'
-					data.start = item.holdingTime1.time + ':00.000'
-					data.end = item.holdingTime2.time + ':00.000'
-				} else if (item.select_holding.value === '시간 홀딩') {
-					data.type = 'time'
-					data.start = item.holdingTime1.time + ':00.000'
-					data.end = item.holdingTime2.time + ':00.000'
-				} else if (item.select_holding.value === '즉시 홀딩') {
-					data.type = 'now'
-					data.holdingTime = item.holdingTime3.value
-					data.start = this.$moment().format('HH:mm') + ':00.000'
-					data.end =
-						this.$moment()
-							.add(item.holdingTime3.value.replace(/[^0-9]/g, ''), 'm')
-							.format('HH:mm') + ':00.000'
-				}
-				this.$store
-					.dispatch('createAssignment', data)
-					.then(async () => {
-						this.productSelectData()
-					})
-					.catch(err => {
-						console.log(err)
-					})
+			if (item.assingnmentData) {
+				alert('이미 배정되어있는 물건입니다.')
 			} else {
-				alert(`근무시간이 아닙니다.\n(근무시간:${startTime}~${endTime})`)
+				let nowTime = this.$moment().format('YYYY-MM-DD ')
+				let startTime = this.businessData.workingHoursStart.substr(0, 5)
+				let endTime = this.businessData.workingHoursEnd.substr(0, 5)
+
+				if (this.$moment() >= this.$moment(nowTime + startTime) && this.$moment() <= this.$moment(nowTime + endTime)) {
+					if (item.product_manager.value === '미지정') {
+						return alert('담당자를 선택해주세요.')
+					}
+					if (item.team.value === '') {
+						return alert('담당자를 선택해주세요.')
+					}
+					if (item.user.value === '') {
+						return alert('담당자를 선택해주세요.')
+					}
+					if (item.select_holding.value === '') {
+						return alert('홀딩타입을 선택해주세요.')
+					}
+					if (item.select_holding.value === '') {
+						return alert('홀딩타입을 선택해주세요.')
+					}
+					if (item.select_holding.value === '즉시 홀딩') {
+						if (item.holdingTime3.value === '') {
+							return alert('홀딩시간을 선택해주세요.')
+						}
+					} else {
+						if (item.holdingTime1.time === '') {
+							return alert('홀딩시간을 선택해주세요.')
+						}
+						if (item.holdingTime2.time === '') {
+							return alert('홀딩시간을 선택해주세요.')
+						}
+					}
+					const data = {
+						useYn: true,
+						userID: item.user.value,
+						status: 'assignment',
+						productID: item.id,
+						orderType: 'admin',
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					if (item.select_holding.value === '종일 홀딩') {
+						data.type = 'allday'
+						data.start = item.holdingTime1.time + ':00.000'
+						data.end = item.holdingTime2.time + ':00.000'
+					} else if (item.select_holding.value === '시간 홀딩') {
+						data.type = 'time'
+						data.start = item.holdingTime1.time + ':00.000'
+						data.end = item.holdingTime2.time + ':00.000'
+					} else if (item.select_holding.value === '즉시 홀딩') {
+						data.type = 'now'
+						data.holdingTime = item.holdingTime3.value
+						data.start = this.$moment().format('HH:mm') + ':00.000'
+						data.end =
+							this.$moment()
+								.add(item.holdingTime3.value.replace(/[^0-9]/g, ''), 'm')
+								.format('HH:mm') + ':00.000'
+					}
+					this.$store
+						.dispatch('createAssignment', data)
+						.then(async () => {
+							this.productSelectData()
+						})
+						.catch(err => {
+							console.log(err)
+						})
+				} else {
+					alert(`근무시간이 아닙니다.\n(근무시간:${startTime}~${endTime})`)
+				}
 			}
 		},
 		updateAssignmentAction(item) {

@@ -36,6 +36,8 @@ import {
 	createVacation,
 	updateTeam,
 	updateRank,
+	updateSystem,
+	deleteSystem,
 } from '../apollo/mutation'
 import {
 	me,
@@ -996,6 +998,48 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.mutate({
 						mutation: createSystem,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		deleteSystem({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: deleteSystem,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		updateSystem({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.mutate({
+						mutation: updateSystem,
 						variables: input,
 						context: {
 							headers: {
