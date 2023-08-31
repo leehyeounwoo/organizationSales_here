@@ -128,16 +128,11 @@ export default {
 			// 	})
 			// 	.then(async res => {
 			// 		data.gotowork = res.createGotowork.gotowork.id
-			await this.$store
-				.dispatch('createVacation', data)
-				.then(() => {
-					if (index === this.checkData.length - 1) {
-						this.dialog.open = false
-					}
-				})
-				.catch(err => {
-					console.log({ err })
-				})
+			await this.$store.dispatch('createVacation', data).then(() => {
+				if (index === this.checkData.length - 1) {
+					this.dialog.open = false
+				}
+			})
 			// })
 		},
 		dayOfTheWeek(val) {

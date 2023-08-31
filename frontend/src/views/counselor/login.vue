@@ -147,7 +147,6 @@ export default {
 				this.$store
 					.dispatch('login', data)
 					.then(res => {
-						console.log(res)
 						if (!res.workingStatus) {
 							return this.open_disable_dialog({
 								title: '퇴사 OR 재직 미승인',

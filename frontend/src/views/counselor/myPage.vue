@@ -451,17 +451,12 @@ export default {
 				authcode: Number(this.siginup.authNumber),
 				created_at_gte: this.$moment().subtract(1, 'h')._d,
 			}
-			this.$store
-				.dispatch('sendSms', data)
-				.then(res => {
-					if (res.sendSms.length > 0) {
-						this.siginup.authNumberCheck = true
-						return alert('인증번호가 확인 되었습니다.')
-					} else return alert('인증번호가 틀렸습니다.')
-				})
-				.catch(err => {
-					console.log({ err })
-				})
+			this.$store.dispatch('sendSms', data).then(res => {
+				if (res.sendSms.length > 0) {
+					this.siginup.authNumberCheck = true
+					return alert('인증번호가 확인 되었습니다.')
+				} else return alert('인증번호가 틀렸습니다.')
+			})
 		},
 		businessNumCheck(item) {
 			//사업지 번호 체크
@@ -544,10 +539,9 @@ export default {
 							)
 							sessionStorage.removeItem('reserveLite-t')
 						})
-						.catch(err => {
+						.catch(() => {
 							this.$store.state.loading = false
 							this.open_disable_dialog({ title: '오류발생', content: '수정 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' }, 'error')
-							console.log({ err })
 						})
 				}
 			}

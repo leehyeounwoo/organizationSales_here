@@ -243,12 +243,7 @@ export default {
 				id: users.id,
 				vacationsDays: users.vacationsDays + 1,
 			}
-			this.$store
-				.dispatch('updateUser_NoAuth', data)
-				.then(() => {})
-				.catch(err => {
-					console.log({ err })
-				})
+			this.$store.dispatch('updateUser_NoAuth', data).then(() => {})
 		},
 		turnOffAlert() {
 			setTimeout(() => {

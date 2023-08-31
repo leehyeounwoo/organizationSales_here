@@ -465,33 +465,23 @@ export default {
 				authcode: Number(this.siginup.authNumber),
 				created_at_gte: this.$moment().subtract(1, 'h')._d,
 			}
-			this.$store
-				.dispatch('sendSms', data)
-				.then(res => {
-					if (res.sendSms.length > 0) {
-						this.siginup.authNumberCheck = true
-						return alert('인증번호가 확인 되었습니다.')
-					} else return alert('인증번호가 틀렸습니다.')
-				})
-				.catch(err => {
-					console.log({ err })
-				})
+			this.$store.dispatch('sendSms', data).then(res => {
+				if (res.sendSms.length > 0) {
+					this.siginup.authNumberCheck = true
+					return alert('인증번호가 확인 되었습니다.')
+				} else return alert('인증번호가 틀렸습니다.')
+			})
 		},
 		createSendMessage() {
 			if (this.siginup.phone.replace(/-/g, '').length < 10) alert('정상적인 휴대전화번호가 아닙니다.')
 			const data = {
 				receiver: this.siginup.phone.replace(/-/g, ''),
 			}
-			this.$store
-				.dispatch('createSendSm', data)
-				.then(() => {
-					this.siginup.authNumberCheck = false
-					this.authButton = false
-					this.sendActive = true
-				})
-				.catch(err => {
-					console.log({ err })
-				})
+			this.$store.dispatch('createSendSm', data).then(() => {
+				this.siginup.authNumberCheck = false
+				this.authButton = false
+				this.sendActive = true
+			})
 		},
 		businessNumCheck(item) {
 			//사업지 번호 체크
@@ -575,13 +565,12 @@ export default {
 								this.sendActive = false
 								// Object.assign(this.$data, this.$options.data())
 							})
-							.catch(err => {
+							.catch(() => {
 								this.$store.state.loading = false
 								this.open_disable_dialog(
 									{ title: '오류발생', content: '사업지 코드가 맞지 않습니다. \n관리자에게 정확한 사업지 코드를 문의해주세요.' },
 									'error',
 								)
-								console.log({ err })
 							})
 					}
 				})

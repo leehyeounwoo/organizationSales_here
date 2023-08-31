@@ -264,12 +264,9 @@ export default {
 					}
 				}
 				this.$store.dispatch('settlementsList', data).then(res => {
-					console.log(res.settlements)
 					this.total = res.settlements.length
 					for (let index = 0; index < res.settlements.length; index++) {
 						const el = res.settlements[index]
-						console.log(el.ProductID)
-						console.log(this.productDatas.filter(x => x.id === el.ProductID)[0])
 						el.product = this.productDatas.filter(x => x.id === el.ProductID)[0]
 						el.contractDate = this.$moment(el.contractDate).format('YYYY.MM.DD')
 					}

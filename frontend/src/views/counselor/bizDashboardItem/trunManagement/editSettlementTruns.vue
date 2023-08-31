@@ -255,7 +255,6 @@ export default {
 					'error',
 				)
 			this.settlement = res.settlements[0]
-			console.log(res.settlements[0])
 			if (res.settlements[0].attachment) {
 				for (let index = 0; index < res.settlements[0].attachment.length; index++) {
 					const el = res.settlements[0].attachment[index]
@@ -401,10 +400,9 @@ export default {
 								this.$store.state.loading = false
 								this.open_disable_dialog({ title: '요청완료', content: '정산요청이 완료되었습니다.' }, 'success')
 							})
-							.catch(err => {
+							.catch(() => {
 								this.$store.state.loading = false
 								this.open_disable_dialog({ title: '오류발생', content: '수정 도중 오류가 발생하였습니다. 관리자에게 문의하세요.' }, 'error')
-								console.log({ err })
 							})
 					}
 				}

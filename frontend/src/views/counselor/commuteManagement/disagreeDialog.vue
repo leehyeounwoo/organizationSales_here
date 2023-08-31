@@ -102,15 +102,10 @@ export default {
 		},
 
 		async updateVacationAction(data) {
-			await this.$store
-				.dispatch('updateVacation', data)
-				.then(() => {
-					this.$store.state.loading = false
-					this.dialog.open = false
-				})
-				.catch(err => {
-					console.log({ err })
-				})
+			await this.$store.dispatch('updateVacation', data).then(() => {
+				this.$store.state.loading = false
+				this.dialog.open = false
+			})
 		},
 		dayOfTheWeek(val) {
 			if (val === '0') {

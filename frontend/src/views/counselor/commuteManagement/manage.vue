@@ -239,7 +239,6 @@ export default {
 	},
 	methods: {
 		rejectDialog(date) {
-			console.log(date)
 			this.open_disable_dialog(
 				{
 					title: date.date,
