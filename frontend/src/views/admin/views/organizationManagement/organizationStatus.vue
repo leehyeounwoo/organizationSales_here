@@ -122,12 +122,13 @@
 			:setdialog="teamEditDialog"
 			:left_data="left_data"
 			:right_data="right_data"
-			:addTeam="addTeam"
-			:addRank="addRank"
+			:addTeam="addTeamToChild"
+			:addRank="addRankToChild"
 			:applyTeam="applyTeam"
 			:applyRank="applyRank"
 			:sweetDialog2="sweetDialog2"
 			:sweetDialog3="sweetDialog3"
+			@update="update"
 		></teamEdit>
 		<saveDialog :dialog="saveDialogStatus" :activeSave="activeSave"></saveDialog>
 		<sweetAlert :dialog="sweetDialog" @click="detailSave" />
@@ -549,6 +550,7 @@ export default {
 			rankData: [],
 			basicTeamData: [],
 			basicRankData: [],
+			detailTableData: [],
 		}
 	},
 
@@ -573,6 +575,17 @@ export default {
 	mounted() {},
 
 	methods: {
+		update() {
+			this.$store.state.loading = true
+			const createInterval = setInterval(async () => {
+				if (this.$store.state.businessSelectBox.value !== '') {
+					await this.getListAction()
+					await this.searchSelect()
+					clearInterval(createInterval)
+				}
+			}, 1000)
+			this.$store.state.loading = false
+		},
 		saveCheck() {
 			this.sweetDialog.open = true
 		},
@@ -602,10 +615,13 @@ export default {
 			}
 			this.updateUserAction(data)
 		},
-		addRank(val) {
+		addRankToChild(val) {
 			if (val === '') {
 				return alert('직급을 입력해주세요.')
 			}
+			this.addRank(val)
+		},
+		addRank(val) {
 			this.add_rank_data = {
 				value: val,
 				txtfield1: {
@@ -624,11 +640,13 @@ export default {
 			}
 			this.right_data.push(this.add_rank_data)
 		},
-		addTeam(val) {
-			console.log(val)
+		addTeamToChild(val) {
 			if (val === '') {
 				return alert('팀명을 입력해주세요.')
 			}
+			this.addTeam(val)
+		},
+		addTeam(val) {
 			this.add_team_data = {
 				value: val,
 				txtfield1: {
@@ -1006,7 +1024,25 @@ export default {
 					const productData = {
 						idArr: res.settlements.map(x => x.ProductID),
 					}
-					this.productsViewAction(productData)
+
+					if (res.settlements.length > 0) {
+						res.settlements.forEach(el => {
+							let listData = {}
+							listData.all = el
+							listData.result =
+								el.settlementStatus === 'created'
+									? '계약등록'
+									: el.settlementStatus === 'waiting'
+									? '정산등록'
+									: el.settlementStatus === 'agree'
+									? '지급대기'
+									: el.settlementStatus === 'disagree'
+									? '거절'
+									: '-'
+							this.detailTableData.push(listData)
+						})
+						this.productsViewAction(productData)
+					}
 				})
 				.catch(err => {
 					console.log(err)
@@ -1018,8 +1054,16 @@ export default {
 			await this.$store
 				.dispatch('products', data)
 				.then(res => {
-					this.detailTable.items = res.products
-					console.log(res)
+					res.products.forEach(el => {
+						let workIndex = this.detailTableData.findIndex(x => x.all.ProductID === el.id)
+						this.detailTableData[workIndex]['housingType'] = el.housingType
+						this.detailTableData[workIndex]['ho'] = el.ho
+						this.detailTableData[workIndex]['dong'] = el.dong
+						if (el.contractStatus === 'contract') {
+							this.detailTableData[workIndex]['result'] = '계약완료'
+						}
+					})
+					this.detailTable.items = this.detailTableData
 				})
 				.catch(err => {
 					console.log(err)
@@ -1028,6 +1072,8 @@ export default {
 		},
 		async editUserData(val) {
 			this.$store.state.loading = true
+			this.detailTableData = []
+			this.detailTable.items = []
 			this.editUser.btn = true
 			this.editUser.detail = val
 			const userViewData = {

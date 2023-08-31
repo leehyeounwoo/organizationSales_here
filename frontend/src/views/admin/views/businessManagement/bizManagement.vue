@@ -29,7 +29,6 @@ export default {
 	created() {
 		this.$store.state.loading = true
 		this.rowperpageChange()
-		this.first_product()
 	},
 	components: {
 		txtField,
@@ -439,20 +438,6 @@ export default {
 		}
 	},
 	methods: {
-		first_product() {
-			this.$store.dispatch('products').then(res => {
-				console.log(res)
-				let data = [{ text: '선택', value: 'new' }]
-				let data2 = []
-				res.products.forEach(el => {
-					data.push({ text: el.housingType, value: el.housingType })
-					data2.push({ text: el.housingType, value: el.housingType })
-				})
-				this.table_detail.selectBox1.items = data
-				this.table_detail.selectBox5.items = data2
-				console.log(this.table_detail)
-			})
-		},
 		rowperpageChange() {
 			this.$store.state.loading = true
 			this.table.itemsPerPage = this.rowperpageSel.value
@@ -484,15 +469,20 @@ export default {
 			this.createDialog.type = 'create'
 			this.createDialog.dialog = true
 		},
-		product_detail(item) {
+		async product_detail(item) {
 			console.log(item)
 			this.table_detail.item = item
 			let data = {
 				businessID: this.table_detail.item.id,
 			}
-			this.$store.dispatch('products', data).then(res => {
-				console.log(res.products)
+			await this.$store.dispatch('products', data).then(res => {
+				let data = [{ text: '선택', value: 'new' }]
+				let data2 = []
 				res.products.forEach(el => {
+					data.push({ text: el.housingType, value: el.housingType })
+					data2.push({ text: el.housingType, value: el.housingType })
+					this.table_detail.selectBox1.items = data
+					this.table_detail.selectBox5.items = data2
 					if (el.contractStatus === 'contract') {
 						el.contractStatus = '계약'
 					} else if (el.contractStatus === 'noContract') {
@@ -508,9 +498,7 @@ export default {
 				let table_top2 = this.table_detail.productTable.items.filter(x => x.contractStatus === '미계약')
 				this.table_detail.noContract = table_top2.length
 			})
-			console.log(this.table_detail.productTable)
 			this.table_detail.dialog = true
-			console.log(item)
 		},
 		biz_detail(item) {
 			console.log(item)
@@ -541,14 +529,12 @@ export default {
 			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
 			this.right_data[0].txtfield3.value = item.manager ? item.manager.email : ''
 			this.createDialog.items[6].value = item.location
-			console.log(this.createDialog)
 			this.createDialog.dialog = true
 		},
 		search_biz() {
 			let item = this.table.items_origin
 			item = item.filter(el => el.name.indexOf(this.search_business) !== -1)
 			this.table.items = item
-			console.log(this.table.items)
 			this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
 		},
 	},

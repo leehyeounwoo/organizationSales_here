@@ -231,7 +231,6 @@ export default {
 			})
 		},
 		async createNotice() {
-			console.log(this.show_value)
 			this.$store.state.loading = true
 			let data = {
 				businesses: [],
@@ -253,17 +252,14 @@ export default {
 					data.businesses.push(this.bizSel.name[i].value)
 				}
 			}
-			console.log(data)
 			if (this.sweetDialog.save_type === 'edit') {
 				data['id'] = this.edit_biz_id
-				this.$store.dispatch('updateNotice', data).then(res => {
-					console.log(res)
+				this.$store.dispatch('updateNotice', data).then(() => {
 					this.sweetDialog.open = false
 					this.first_notices()
 				})
 			} else {
-				this.$store.dispatch('createNotice', data).then(res => {
-					console.log(res)
+				this.$store.dispatch('createNotice', data).then(() => {
 					this.sweetDialog.open = false
 					this.first_notices()
 				})
@@ -335,7 +331,6 @@ export default {
 					})
 				})
 				this.noticeTable.items = res.notices
-				console.log(this.noticeTable.items)
 				this.$store.state.loading = false
 			})
 		},
@@ -346,7 +341,6 @@ export default {
 					businesses.push({ name: el.name, value: el.id })
 				})
 				this.bizSel.items = businesses
-				console.log(this.bizSel.items)
 			})
 		},
 	},
