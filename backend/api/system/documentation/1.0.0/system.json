@@ -522,13 +522,13 @@
           "id": {
             "type": "string"
           },
-          "inputFiles": {
-            "type": "object"
-          },
           "businessID": {
             "type": "string"
           },
           "turn": {
+            "type": "string"
+          },
+          "content": {
             "type": "string"
           },
           "published_at": {
@@ -538,13 +538,13 @@
       },
       "NewSystem": {
         "properties": {
-          "inputFiles": {
-            "type": "object"
-          },
           "businessID": {
             "type": "string"
           },
           "turn": {
+            "type": "string"
+          },
+          "content": {
             "type": "string"
           },
           "published_at": {

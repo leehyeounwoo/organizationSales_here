@@ -11,14 +11,14 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "inputFiles": {
-      "type": "json"
-    },
     "businessID": {
       "type": "string"
     },
     "turn": {
       "type": "string"
+    },
+    "content": {
+      "type": "text"
     }
   }
 }
