@@ -104,6 +104,23 @@
 					</div>
 					<div style="width:203px;">
 						<v-text-field
+							v-if="selectType === '전화번호'"
+							:autofocus="false"
+							class="search-textfiled"
+							placeholder="검색어입력"
+							hideDetails
+							maxlength="255"
+							flat
+							height="25"
+							dense
+							color="primary2"
+							v-model="search"
+							v-mask="'###-####-####'"
+							@keyup.enter="settlements('search')"
+							autocomplete="off"
+						></v-text-field>
+						<v-text-field
+							v-else
 							:autofocus="false"
 							class="search-textfiled"
 							placeholder="검색어입력"
@@ -228,7 +245,7 @@ export default {
 					data.contractDate_gte =
 						this.$moment(this.startPicker.date)
 							.subtract('h', 9)
-							.format('YYYY-MM-DD') + 'T00:00:00.000Z'
+							.format('YYYY-MM-DD') + 'T15:00:00.000Z'
 					data.contractDate_lte = this.$moment(this.endPicker.date).format('YYYY-MM-DD') + 'T15:00:00.000Z'
 					if (this.search) {
 						if (this.selectType === '이름') data.name = this.search
