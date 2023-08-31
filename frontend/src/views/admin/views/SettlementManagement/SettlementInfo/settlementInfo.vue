@@ -434,6 +434,7 @@ export default {
 						if (element.turn !== 'etc') {
 							data.degree = element.turn
 							data.evidence = element.content
+							data.id = element.id
 							this.addedItems.push(data)
 							this.originalAddedItems.push(data)
 						} else {
@@ -534,7 +535,8 @@ export default {
 					this.sweetDialog_info.modalValue = ''
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
-				} else {
+				}
+				if (this.originalAddedItems.length === 0) {
 					const newItem = {
 						degree: 'etc',
 						evidence: this.etcInfo.txtField.value,
@@ -567,6 +569,9 @@ export default {
 							this.$store.state.loading = false
 						})
 					}
+				} else {
+					console.log(this.originalAddedItems)
+					console.log(this.addedItems)
 				}
 			}
 		},
