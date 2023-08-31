@@ -127,6 +127,7 @@ export default {
 					{ text: '배정', value: 'holdTime', width: '28%' },
 					{ text: '상태', value: 'product_status', width: '35%' },
 				],
+				hidedefaultfooter: true,
 				class: 'datatablehover3',
 				items: [],
 				items_origin: [],
@@ -163,6 +164,7 @@ export default {
 			console.log(val)
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
 				start: (this.productManager.page - 1) * this.productManager.itemsPerPage,
 				limit: this.productManager.itemsPerPage,
 			}
@@ -211,7 +213,7 @@ export default {
 		async productSelectData() {
 			const productsCountViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				// contractStatus: 'noContract',
+				contractStatus: 'noContract',
 			}
 			await this.productsCountView(productsCountViewData)
 			const businessViewData = {
@@ -220,6 +222,7 @@ export default {
 			await this.businessView(businessViewData)
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
 				start: 0,
 				limit: 10,
 			}
