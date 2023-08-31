@@ -1193,13 +1193,13 @@ export default {
 
 		async productsView(productsViewData) {
 			await this.$store.dispatch('products', productsViewData).then(res => {
-				console.log(res)
 				res.products.forEach(element => {
-					console.log(this.list)
 					let listData = this.list[this.list.findIndex(item => item.ProductID === element.id)]
-					console.log(listData)
-					listData.products = element
-					listData.product = `${element.housingType} ${element.dong}동 ${element.ho}호`
+
+					if (listData) {
+						listData.products = element
+						listData.product = `${element.housingType} ${element.dong}동 ${element.ho}호`
+					}
 				})
 			})
 		},

@@ -1811,7 +1811,8 @@
 			<!-- 정산관리 - 상태 -->
 			<template v-slot:[`item.settlementStatus`]="{ item }">
 				<div>
-					{{
+					{{ settlementStatusValue(item) }}
+					<!-- {{
 						item.settlementStatus === 'waiting'
 							? '대기'
 							: item.settlementStatus === 'agree'
@@ -1819,7 +1820,7 @@
 							: item.settlementStatus === 'disagree'
 							? '반려'
 							: '-'
-					}}
+					}} -->
 				</div>
 			</template>
 			<template v-slot:[`item.paper_info`]="{ item }">
@@ -2385,6 +2386,49 @@ export default {
 		},
 	},
 	methods: {
+		settlementStatusValue(val) {
+			console.log(val)
+			console.log()
+			// item.settlementStatus === 'waiting'
+			// 							? '대기'
+			// 							: item.settlementStatus === 'agree'
+			// 							? '승인'
+			// 							: item.settlementStatus === 'disagree'
+			// 							? '반려'
+			// 							: '-'
+			if (val.settlementStatus === 'waiting') {
+				return '대기'
+			} else if (val.settlementStatus === 'agree') {
+				if (val.paymentReject) {
+					let idx = val.settlement_turn_tables.findIndex(x => x.turnStatus === 'complete')
+
+					if (idx !== -1) {
+						if (val.settlement_turn_tables.length === val.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length) {
+							return '정산 완료'
+						} else {
+							return `${val.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length + 1}차 정산 반려`
+						}
+					} else {
+						return '승인'
+					}
+				} else {
+					let idx = val.settlement_turn_tables.findIndex(x => x.turnStatus === 'complete')
+					if (idx !== -1) {
+						if (val.settlement_turn_tables.length === val.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length) {
+							return '정산 완료'
+						} else {
+							return `${val.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length + 1}차 정산 대기`
+						}
+					} else {
+						return '승인'
+					}
+				}
+			} else if (val.settlementStatus === 'disagree') {
+				return '반려'
+			} else {
+				return '-'
+			}
+		},
 		openWindow(item) {
 			window.open(location.protocol + '//' + location.host + '/QRenter/' + item.code)
 		},

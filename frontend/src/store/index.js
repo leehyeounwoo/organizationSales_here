@@ -59,6 +59,7 @@ import {
 	settlementsList,
 	productsCount,
 	usersConnectionTeamArr,
+	settlementsStatusArr,
 } from '../apollo/query'
 Vue.use(Vuex)
 const tokenName = 'reserveLite-t'
@@ -931,6 +932,28 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: usersConnectionTeamArr,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+
+		// eslint-disable-next-line no-empty-pattern
+		settlementsStatusArr({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: settlementsStatusArr,
 						variables: input,
 						context: {
 							headers: {
