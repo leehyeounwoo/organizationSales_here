@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 // 에러 화면
 // import notFound from '../views/errorpage/NotFound.vue'
 import notAuth from '../views/errorpage/NotAuthenticated.vue'
-
+import mainPage from '../views/counselor/main.vue'
 // 메인 화면
 const KIOSK = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/boardLayout/KIOSK.vue')
 const kioskLogin = () => import(/* webpackChunkName: "kioskLogin" */ '../views/admin/login/kioskLogin.vue')
@@ -27,21 +27,21 @@ const routes = [
 		component: kioskLogin,
 		name: 'kioskLogin',
 	},
-	{ path: '*', name: 'notfound', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
-	{ path: '/', name: 'mainPage', component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue') },
+	{ path: '*', name: 'notfound', component: mainPage },
+	{ path: '/', name: 'mainPage', component: mainPage },
 	{ path: '/block', name: 'block', component: notAuth },
 
 	{
 		path: '/counselor/main',
 		name: 'counselorMain',
-		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/main.vue'),
+		component: mainPage,
 	},
 
 	// 상담사 화면
 	{
 		path: '/counselors',
 		name: 'counselors',
-		component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/board.vue'),
+		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/board.vue'),
 		children: [
 			{
 				path: '/counselor/login',
@@ -58,55 +58,55 @@ const routes = [
 			{
 				path: '/counselor/dashboard',
 				name: 'counselorDashboard',
-				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/dashboard.vue'),
+				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/dashboard.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			// 상담사 - 마이페이지
 			{
 				path: '/counselor/mypage',
 				name: 'counselorMypage',
-				component: () => import(/* webpackChunkName: "counselorMyPage" */ '../views/counselor/myPage.vue'),
+				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/myPage.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{
 				path: '/counselor/settlements',
 				name: 'settlements',
 				component: () =>
-					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/settlements.vue'),
+					import(/* webpackChunkName: "counselorPage" */ '../views/counselor/bizDashboardItem/counselManagement/settlements.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{
 				path: '/counselor/settlementTruns',
 				name: 'settlementTruns',
 				component: () =>
-					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/trunManagement/settlementTruns.vue'),
+					import(/* webpackChunkName: "counselorPage" */ '../views/counselor/bizDashboardItem/trunManagement/settlementTruns.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{
 				path: '/counselor/editSettlementTruns/:id',
 				name: 'editSettlementTruns',
 				component: () =>
-					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/trunManagement/editSettlementTruns.vue'),
+					import(/* webpackChunkName: "counselorPage" */ '../views/counselor/bizDashboardItem/trunManagement/editSettlementTruns.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{
 				path: '/counselor/createSettlement',
 				name: 'createSettlement',
 				component: () =>
-					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
+					import(/* webpackChunkName: "counselorPage" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 			{
 				path: '/counselor/editSettlement/:id',
 				name: 'editSettlement',
 				component: () =>
-					import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
+					import(/* webpackChunkName: "counselorPage" */ '../views/counselor/bizDashboardItem/counselManagement/createSettlement.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 
 			{
 				path: '/counselor/commuteManagement/manage',
-				component: () => import(/* webpackChunkName: "campaign" */ '../views/counselor/commuteManagement/manage.vue'),
+				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/commuteManagement/manage.vue'),
 				name: 'counselorManage',
 				meta: { requiresAuth: true, counselor: true },
 			},
@@ -114,7 +114,7 @@ const routes = [
 			{
 				path: '/counselor/notice',
 				name: 'counselorNotice',
-				component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/bizDashboardItem/notice.vue'),
+				component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/bizDashboardItem/notice.vue'),
 				meta: { requiresAuth: true, counselor: true },
 			},
 		],
@@ -122,7 +122,7 @@ const routes = [
 	{
 		path: '/QRenter/:code',
 		name: 'QRenter',
-		component: () => import(/* webpackChunkName: "counselorBiz" */ '../views/counselor/QR/QRenter.vue'),
+		component: () => import(/* webpackChunkName: "counselorPage" */ '../views/counselor/QR/QRenter.vue'),
 		meta: { requiresAuth: true },
 	},
 	{
