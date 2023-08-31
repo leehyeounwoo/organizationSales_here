@@ -1581,6 +1581,12 @@ export default {
 						this.agreeDialogStatus.cancelBtnText = '확인'
 						this.agreeDialogStatus.open = true
 						this.$store.state.loading = false
+						let input2 = {
+							settlementID: this.finalSettlementData[0].id,
+							editStatus: 'agree',
+							editDetail: `${i + 1}차 정산 요청 승인`,
+						}
+						this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {})
 						await this.me()
 						await this.searchSelect()
 						await this.refreshData(this.$moment())
@@ -1706,6 +1712,26 @@ export default {
 						let val = this.processTable.items.filter(x => x.id === res.updateSettlement.settlement.id)
 						if (val.length > 0) {
 							this.amountData = val[0].settlements.settlement_turn_tables
+							this.amountData.forEach(el => {
+								el.turnStatus = 'waiting'
+								let numberList = {}
+								if (el.depositFile !== null) {
+									numberList.id = el.depositFile.id
+									numberList.url = el.depositFile.url
+									numberList.name = el.depositFile.name
+
+									this.pdfLists.push({ numberList: numberList })
+								} else {
+									this.pdfLists.push({
+										numberList: {
+											file: null,
+											id: '',
+											url: '',
+											name: '',
+										},
+									})
+								}
+							})
 						}
 					})
 					if (this.processCheckBox) {

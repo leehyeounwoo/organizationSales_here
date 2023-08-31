@@ -687,12 +687,13 @@ export default {
 		},
 		editUserData(val) {
 			console.log(val)
+			console.log(val.ProductID)
 			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []
 			this.finalSettlementData = val
 			let data = {
-				settlementID: this.finalSettlementData.ProductID,
+				settlementID: this.finalSettlementData.id,
 			}
 			this.$store.dispatch('settlementEditLogs', data).then(res => {
 				if (this.finalSettlementData.settlements.productID === res.settlementEditLogs.settlementID)
@@ -801,7 +802,7 @@ export default {
 				let input2 = {
 					settlementID: this.finalSettlementData.id,
 					editStatus: 'disagree',
-					editDetail: this.finalSettlementData.degree + '차 요청',
+					editDetail: '0차 요청 반려',
 				}
 				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
 					this.sweetDialog_info.open = false
@@ -815,6 +816,7 @@ export default {
 					this.list = []
 					const settlementData = {
 						businessID: this.$store.state.businessSelectBox.value,
+						settlementStatusArr: ['agree', 'disagree', 'waiting'],
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {
@@ -837,22 +839,24 @@ export default {
 					await this.dataSetting()
 					this.$store.state.loading = false
 				})
-			} else if (this.finalSettlementData.settlementStatus === 'complete') {
+			} else if (this.finalSettlementData.settlementStatus === 'agree') {
 				let input = {
 					id: this.finalSettlementData.id,
-					pageaymentReject: true,
+					paymentReject: true,
 					adminName: this.$store.state.meData.username,
 					rejectComment: this.sweetDialog_info.rejectionReason[0].value,
 					attachID: li,
 				}
+
 				this.$store
 					.dispatch('updateSettlement', input)
 					.then(() => {})
 					.catch(() => {})
 				let input2 = {
 					settlementID: this.finalSettlementData.id,
-					editStatus: 'PaymentReject',
-					editDetail: this.finalSettlementData.degree + '차 요청',
+					editStatus: 'disagree',
+					editDetail:
+						this.finalSettlementData.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length + 1 + '차 정산 요청 반려',
 				}
 				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
 					this.sweetDialog_info.open = false
@@ -866,6 +870,7 @@ export default {
 					this.list = []
 					const settlementData = {
 						businessID: this.$store.state.businessSelectBox.value,
+						settlementStatusArr: ['agree', 'disagree', 'waiting'],
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {
@@ -893,6 +898,7 @@ export default {
 		},
 		click_agree() {
 			this.$store.state.loading = true
+			console.log(this.finalSettlementData.ProductID)
 			if (this.finalSettlementData.settlementStatus === 'waiting') {
 				let input = {
 					id: this.finalSettlementData.id,
@@ -904,10 +910,15 @@ export default {
 					.dispatch('updateSettlement', input)
 					.then(() => {})
 					.catch(() => {})
+				let input3 = {
+					id: this.finalSettlementData.ProductID,
+					contractStatus: 'contract',
+				}
+				this.$store.dispatch('updateProduct', input3).then(() => {})
 				let input2 = {
 					settlementID: this.finalSettlementData.id,
 					editStatus: 'agree',
-					editDetail: this.finalSettlementData.degree + '차 요청',
+					editDetail: '0차 요청 승인',
 				}
 				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
 					this.sweetDialog_info.open = false
@@ -921,6 +932,7 @@ export default {
 					this.list = []
 					const settlementData = {
 						businessID: this.$store.state.businessSelectBox.value,
+						settlementStatusArr: ['agree', 'disagree', 'waiting'],
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {
@@ -949,7 +961,7 @@ export default {
 					id: this.finalSettlementData.id,
 					// settlementStatus: 'agree',
 					// updated_at: this.$moment().format('YYYY-MM-DD HH:mm'),
-					paymentReject: true,
+					// paymentReject: true,
 					adminName: this.$store.state.meData.username,
 				}
 				this.$store
@@ -959,7 +971,8 @@ export default {
 				let input2 = {
 					settlementID: this.finalSettlementData.id,
 					editStatus: 'agree',
-					editDetail: this.finalSettlementData.degree + '차 요청',
+					editDetail:
+						this.finalSettlementData.settlement_turn_tables.filter(x => x.turnStatus === 'complete') + length + 1 + '차 정산 요청 승인',
 				}
 				this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {
 					this.sweetDialog_info.open = false
@@ -973,6 +986,7 @@ export default {
 					this.list = []
 					const settlementData = {
 						businessID: this.$store.state.businessSelectBox.value,
+						settlementStatusArr: ['agree', 'disagree', 'waiting'],
 					}
 					await this.settlementView(settlementData)
 					const usersViewData = {
