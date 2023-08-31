@@ -439,6 +439,19 @@ export const usersConnection = gql`
 		}
 	}
 `
+export const usersConnectionTeamArr = gql`
+	query usersConnectionTeamArr($teamArrID: JSON, $businessID: String, $workingStatus: Boolean, $roleName: String) {
+		usersConnection(where: { role: { name: $roleName }, teamID: $teamArrID, businessID: $businessID, workingStatus: $workingStatus }) {
+			aggregate {
+				count
+				totalCount
+			}
+			values {
+				id
+			}
+		}
+	}
+`
 
 export const settlementEditLogs = gql`
 	query settlementEditLogs($settlementID: String) {
