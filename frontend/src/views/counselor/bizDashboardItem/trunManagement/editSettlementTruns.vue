@@ -227,24 +227,12 @@ export default {
 				subLocation: '',
 			},
 			productDatas: [],
-			settlement: {},
+			settlement: {
+				settlement_turn_tables: [],
+			},
 		}
 	},
 	created() {
-		this.sweetAlertInfo.datatable.items.push(
-			{
-				trun_info: '1차',
-				paper_info: `분양계약서(사본) \n계약금 입금증(사본) \n기타 필요서류\n`,
-			},
-			{
-				trun_info: '2차',
-				paper_info: `중도금 납부 완납증(사본) \n기타 필요서류\n`,
-			},
-			{
-				trun_info: '3차',
-				paper_info: `분양대금 잔금 납부 완납증(사본) \n기타 필요서류\n`,
-			},
-		)
 		this.$store.dispatch('settlementsList', { id: this.$route.params.id }).then(res => {
 			if (res.settlements.length === 0)
 				return this.open_disable_dialog(
@@ -261,10 +249,22 @@ export default {
 					this.files.push(el)
 				}
 			}
+			this.systems()
 			this.products()
 		})
 	},
 	methods: {
+		systems() {
+			this.$store.dispatch('systems', { idArr: [this.$store.state.meData.businessID] }).then(res => {
+				for (let index = 0; index < res.systems.length; index++) {
+					const el = res.systems[index]
+					this.sweetAlertInfo.datatable.items.push({
+						trun_info: el.trun,
+						paper_info: el.content,
+					})
+				}
+			})
+		},
 		viewAttachment(e, val) {
 			const url = process.env.VUE_APP_BACKEND_URL + val
 			const link = document.createElement('a')
