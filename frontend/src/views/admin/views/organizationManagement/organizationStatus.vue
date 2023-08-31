@@ -91,6 +91,13 @@
 						<datatable :datatable="detailTable" class="detailTable_client"> </datatable>
 					</v-flex>
 				</v-layout>
+				<v-layout>
+					<v-flex v-if="editUser.btn" style="text-align: end;">
+						<v-btn small class="btn-style2" @click="saveCheck()">
+							저장
+						</v-btn>
+					</v-flex>
+				</v-layout>
 			</v-flex>
 		</v-layout>
 		<v-layout justify-space-between mt-1>
@@ -98,11 +105,6 @@
 				<v-btn small class="btn-style2" @click="clickExport()">
 					<img src="@/assets/images/excel-img2.png" />
 					엑셀 다운로드
-				</v-btn>
-			</v-flex>
-			<v-flex v-if="editUser.btn" style="text-align: end;">
-				<v-btn small class="btn-style2" @click="saveCheck()">
-					저장
 				</v-btn>
 			</v-flex>
 		</v-layout>

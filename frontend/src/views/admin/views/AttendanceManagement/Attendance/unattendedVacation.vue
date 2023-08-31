@@ -293,10 +293,20 @@ export default {
 		},
 
 		async businessAdd() {
+			if (this.rightInfoBottom[0].radio === 'disagree' && Object.keys(this.currentVacationData).length === 0) {
+				this.sweetInfo.title = '반려 실패'
+				this.sweetInfo.content = '반려할 연차를 선택해주세요'
+				return (this.sweetInfo.open = true)
+			}
 			if (this.rightInfoBottom[0].radio === 'disagree' && this.rightInfoBottom[1].value === '') {
 				this.sweetInfo.title = '반려사유 에러'
 				this.sweetInfo.content = `반려사유를 입력해 주세요.`
 				return (this.sweetInfo.open = true)
+			}
+			if (this.rightInfoBottom[0].radio === 'disagree') {
+				this.sweetDialog.title = '미처리 연차 신청 반려'
+				this.sweetDialog.content = '해당 연차를 반려합니다'
+				return (this.sweetDialog.open = true)
 			}
 			this.sweetDialog.open = true
 		},
@@ -428,8 +438,11 @@ export default {
 
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
+
+				if (element.businessID) {
+					this.unattendedTable.items.push(JSON.parse(JSON.stringify(element)))
+				}
 			}
-			this.unattendedTable.items = JSON.parse(JSON.stringify(this.vacationData))
 		},
 	},
 	async created() {

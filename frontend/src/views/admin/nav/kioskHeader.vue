@@ -18,9 +18,6 @@
 						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
 							{{ this.$store.state.meData ? this.$store.state.meData.name : '-' }}
 						</div>
-						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
-							{{ this.$store.state.meData ? this.$store.state.meData.username : '-' }}
-						</div>
 						<!-- <v-divider inset vertical></v-divider> -->
 						<v-btn icon @click="logout()" class="ml-1">
 							<v-icon size="24" color="black">mdi-logout</v-icon>

@@ -21,7 +21,7 @@
 				<v-btn class="search_btn" color="#5d19ff" @click="SearchBiz()" elevation="0"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 			</v-flex>
 		</v-layout>
-		<v-layout>
+		<v-layout wrap>
 			<v-flex mr-1 v-for="(team, index) in teamData" :key="index" xs2 style="font-size:0.75rem;">
 				<v-layout mt-1 justify-center style="border:1px solid black; cursor:pointer;" @click="dataSetting(team, index)">
 					{{ team.title }} / {{ team.count }} 명
@@ -153,6 +153,7 @@ export default {
 		const connectionUser = {
 			businessID: this.$store.state.businessSelectBox.value,
 			workingStatus: true,
+			teamArrID: this.teamData.map(x => x.id),
 			roleName: 'Counselor',
 		}
 		await this.usersConnectionView(connectionUser)
@@ -239,8 +240,9 @@ export default {
 		},
 		async usersConnectionView(connectionUser) {
 			await this.$store
-				.dispatch('usersConnection', connectionUser)
+				.dispatch('usersConnectionTeamArr', connectionUser)
 				.then(async res => {
+					console.log(res)
 					this.totalUserLength = res.usersConnection.aggregate.count
 				})
 				.catch(err => {

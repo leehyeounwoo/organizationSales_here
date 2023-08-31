@@ -419,6 +419,7 @@ export default {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
 				page: 1,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -643,6 +644,7 @@ export default {
 				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -674,6 +676,7 @@ export default {
 				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -698,17 +701,17 @@ export default {
 
 		async click_date_before() {
 			this.date_picker.date = this.$moment(this.date_picker.date).subtract(1, 'd')
+
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
-				date: this.$moment(this.date_picker.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
@@ -716,9 +719,7 @@ export default {
 			let input3 = {
 				start: 0,
 				limit: this.table.pagination.itemsPerPage,
-				date: this.$moment(this.date_picker.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				idArr: this.userIDArr,
 			}
@@ -727,25 +728,23 @@ export default {
 		},
 		async click_date_next() {
 			this.date_picker.date = this.$moment(this.date_picker.date).add(1, 'd')
+
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			let input2 = {
-				date: this.$moment(this.date_picker.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
 				limit: this.table.pagination.itemsPerPage,
-				date: this.$moment(this.date_picker.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				idArr: this.userIDArr,
 			}
@@ -756,11 +755,13 @@ export default {
 		},
 		async click_date_now() {
 			this.date_picker.date = this.$moment()
+
 			await this.getTeams()
 			await this.getRanks()
 			let input = {
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			let input2 = {
 				date: this.$moment().format('YYYY-MM-DD'),
@@ -781,11 +782,13 @@ export default {
 		},
 		async click_date_picker() {
 			this.date_picker.date = this.$moment(this.date_picker.date)
+
 			await this.getTeams()
 			await this.getRanks()
 			this.$store.state.loading = true
 			let input = {
 				roleName: 'Counselor',
+				workingStatus: true,
 				businessID: this.$store.state.businessSelectBox.value,
 			}
 			let input2 = {
@@ -872,6 +875,7 @@ export default {
 					let input2 = {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
+						workingStatus: true,
 					}
 					let input3 = {
 						start: 0,
@@ -902,6 +906,7 @@ export default {
 					let input2 = {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
+						workingStatus: true,
 					}
 					let input3 = {
 						start: 0,
@@ -932,6 +937,7 @@ export default {
 					let input2 = {
 						roleName: 'Counselor',
 						businessID: this.$store.state.businessSelectBox.value,
+						workingStatus: true,
 					}
 					let input3 = {
 						start: 0,
@@ -969,6 +975,7 @@ export default {
 				limit: this.table.pagination.itemsPerPage,
 				roleName: 'Counselor',
 				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
 			}
 			await this.viewUsers(input)
 			let input2 = {
@@ -1089,10 +1096,23 @@ export default {
 			this.newDialog3.edit = true
 		},
 		async unattendedVacation() {
+			let vacationIDArr = []
+
+			let input = {
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
+			}
+
+			await this.$store.dispatch('users', input).then(res => {
+				for (let i = 0; i < res.users.length; i++) {
+					vacationIDArr.push(res.users[i].id)
+				}
+			})
+
 			let unattendedData = {
-				start: 0,
-				limit: this.table.pagination.itemsPerPage,
 				vacationStatus: 'waiting',
+				idArr: vacationIDArr,
 			}
 
 			await this.$store.dispatch('vacations', unattendedData).then(res => {
