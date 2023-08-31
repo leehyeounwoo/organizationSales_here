@@ -48,7 +48,6 @@ export default {
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
-				console.log(this.$store.state.businessSelectBox.value)
 				await this.productSelectData()
 				clearInterval(createInterval)
 			}
@@ -160,8 +159,7 @@ export default {
 				this.$store.state.loading = false
 			}, 1000)
 		},
-		async paginationClick(val) {
-			console.log(val)
+		async paginationClick() {
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
 				contractStatus: 'noContract',
@@ -205,7 +203,6 @@ export default {
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
-				console.log(res)
 				this.productManager.total = res.productsConnection.aggregate.count
 				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage)
 			})

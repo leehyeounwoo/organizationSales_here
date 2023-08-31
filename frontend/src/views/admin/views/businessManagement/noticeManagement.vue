@@ -306,7 +306,7 @@ export default {
 		},
 		notice_detail(item) {
 			let data = JSON.parse(JSON.stringify(item))
-			console.log(data)
+
 			if (data.businesses && data.businesses.length >= 0) {
 				this.bizSel.name = data.businesses
 			}

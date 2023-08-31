@@ -382,7 +382,6 @@ export default {
 				}
 			}
 			await this.$store.dispatch('settlementsStatusArr', settlementData).then(res => {
-				console.log(res)
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
@@ -686,8 +685,6 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date)
 		},
 		editUserData(val) {
-			console.log(val)
-			console.log(val.ProductID)
 			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []

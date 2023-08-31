@@ -121,7 +121,6 @@ export default {
 	computed: {},
 	methods: {
 		returnStyle(floorData, i) {
-			console.log(floorData)
 			if (floorData[i].data.filter(x => x.ho.includes('0' + i)).length !== 0) {
 				return 'background-color:yellow; color:white;'
 				// let idData = floorData[i].data.filter(x => x.ho.includes('0' + (i + 1)))[0].id
@@ -153,7 +152,6 @@ export default {
 		},
 		async settlementView(settlementData) {
 			await this.$store.dispatch('settlements', settlementData).then(res => {
-				console.log(res)
 				this.settlementsData = res.settlements.map(x => x.ProductID)
 				for (let index = 0; index < res.settlements.length; index++) {
 					const element = res.settlements[index]
@@ -163,11 +161,10 @@ export default {
 		},
 		async assignmentsView(data) {
 			await this.$store.dispatch('assignments', data).then(async res => {
-				console.log(res)
 				this.assignmentsData = res.assignments.map(x => x.productID)
 				for (let index = 0; index < res.assignments.length; index++) {
 					const element = res.assignments[index]
-					console.log()
+
 					this.productData.filter(x => x.id === element.productID)[0].color = 'yellow'
 				}
 			})

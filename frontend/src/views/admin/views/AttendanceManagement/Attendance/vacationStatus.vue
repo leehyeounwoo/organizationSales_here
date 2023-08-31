@@ -382,7 +382,6 @@ export default {
 				status_check: ['startWork', 'endWork'],
 			}
 			await this.$store.dispatch('gotoWork', input).then(res => {
-				console.log(res)
 				this.leftInfoTop[6].value = res.gotoworksConnection.aggregate.count + '일'
 				this.$store.state.loading = false
 			})
@@ -393,7 +392,6 @@ export default {
 			deep: true,
 			async handler() {
 				if (this.setdialog.dialog) {
-					console.log(this.setdialog.editData)
 					if (this.setdialog.edit) {
 						this.leftInfoTop[0].value = this.setdialog.editData.data1
 						this.leftInfoTop[1].value = this.setdialog.editData.data2

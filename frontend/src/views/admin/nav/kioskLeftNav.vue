@@ -52,7 +52,6 @@ export default {
 			await this.$store
 				.dispatch('me')
 				.then(async res => {
-					console.log(res)
 					this.$store.state.loading = false
 					this.$store.state.meData = res.me
 					this.$store.state.dashBoardList = [
@@ -98,7 +97,6 @@ export default {
 				})
 		},
 		listClick(list) {
-			console.log(list)
 			this.$store.state.drawer = false
 			this.$router.push({ name: list.name }).catch(() => {})
 			this.$store.state.dashBoardList.forEach(element => {

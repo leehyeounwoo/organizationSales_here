@@ -470,7 +470,6 @@ export default {
 			this.createDialog.dialog = true
 		},
 		async product_detail(item) {
-			console.log(item)
 			this.table_detail.item = item
 			let data = {
 				businessID: this.table_detail.item.id,
@@ -501,7 +500,6 @@ export default {
 			this.table_detail.dialog = true
 		},
 		biz_detail(item) {
-			console.log(item)
 			this.createDialog.type = 'edit'
 
 			this.createDialog.id = item.id

@@ -472,7 +472,6 @@ export default {
 			}
 		},
 		checkManager(item) {
-			console.log(item)
 			if (!item.txtfield3.value) {
 				this.sweetInfo.title = '아이디 입력'
 				this.sweetInfo.content = '아이디를 입력해주세요.'

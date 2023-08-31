@@ -61,7 +61,6 @@ export default {
 			this.$store.state.chatStatus = false
 		},
 		async medata() {
-			console.log(sessionStorage.getItem('reserveLite-t'))
 			await this.$store
 				.dispatch('me')
 				.then(async res => {

@@ -159,8 +159,7 @@ export default {
 				}
 				this.$store
 					.dispatch('login', data)
-					.then(res => {
-						console.log(res)
+					.then(() => {
 						if (this.rememberId) {
 							localStorage.setItem('loginId', this.userid)
 							this.$router.push({ name: 'dashBoard' }).catch(() => {})
