@@ -415,6 +415,7 @@ export default {
 			pwshow: false,
 		}
 	},
+
 	methods: {
 		open_disable_dialog(data, info) {
 			// 불가 팝업 열기
@@ -547,7 +548,7 @@ export default {
 					if (filesData.length - 1 === i) {
 						const data = {
 							username: this.siginup.email.toLowerCase(),
-							name: this.siginup.email.toLowerCase(),
+							name: this.siginup.name.toLowerCase(),
 							email: this.siginup.email.toLowerCase(),
 							password: this.siginup.password,
 							bank: this.siginup.bank,
@@ -572,7 +573,7 @@ export default {
 								)
 								this.authButton = true
 								this.sendActive = false
-								Object.assign(this.$data, this.$options.data())
+								// Object.assign(this.$data, this.$options.data())
 							})
 							.catch(err => {
 								this.$store.state.loading = false

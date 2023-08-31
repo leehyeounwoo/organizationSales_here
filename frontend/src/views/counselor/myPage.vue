@@ -518,6 +518,7 @@ export default {
 						username: this.siginup.email.toLowerCase(),
 						email: this.siginup.email.toLowerCase(),
 						bank: this.siginup.bank,
+						name: this.siginup.name,
 						phoneNumber: this.siginup.phone,
 						accountNumber: this.siginup.account,
 						businessID: this.$route.params.code,
