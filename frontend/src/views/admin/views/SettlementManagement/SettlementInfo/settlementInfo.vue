@@ -39,14 +39,12 @@
 								</div>
 								<div class="contentClass">
 									<div
-										style="background-color: orange;
-											font-family: MalgunGothic;
-											font-size: 14px;
-										width: 100%; margin: 4px ; color: white;"
-										v-for="(evi, idx) of item.evidence"
-										:key="idx"
+										style="position: relative; background-color: orange; font-family: MalgunGothic; font-size: 14px; width: 100%; margin: 4px ; color: white;"
 									>
-										{{ evi }}
+										<p v-html="item.evidence.replace(/\n/g, '<br>')"></p>
+										<v-icon class="attachmentIconClass" @click="deleteEvidence(item)" style="position: absolute; top: 0; right: 0;"
+											>mdi-alpha-x-circle-outline</v-icon
+										>
 									</div>
 								</div>
 							</v-layout>
@@ -372,6 +370,7 @@ export default {
 			businessID: [],
 			clickVariation: {},
 			addedItems: [],
+			originalAddedItems: [],
 		}
 	},
 
@@ -434,10 +433,11 @@ export default {
 
 						if (element.turn !== 'etc') {
 							data.degree = element.turn
-							data.evidence = element.inputFiles.evidence
+							data.evidence = element.content
 							this.addedItems.push(data)
+							this.originalAddedItems.push(data)
 						} else {
-							this.etcInfo.txtField.value = element.inputFiles.evidence
+							this.etcInfo.txtField.value = element.content
 						}
 					})
 				})
@@ -480,80 +480,11 @@ export default {
 				await this.viewUsers(range)
 			}
 		},
-		date_filter(val) {
-			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
-		},
-		update() {
-			let input = {
-				date: this.$moment(this.date).format('YYYY-MM-DD'),
-			}
 
-			this.viewUsers(input)
-		},
-		click_date_before() {
-			let input = {
-				date: this.$moment(this.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
-			}
-
-			this.viewUsers(input)
-
-			this.date = this.$moment(this.date).subtract(1, 'd')
-		},
-		click_date_next() {
-			let input = {
-				date: this.$moment(this.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
-			}
-
-			this.viewUsers(input)
-			this.date = this.$moment(this.date).add(1, 'd')
-		},
-		click_date_now() {
-			let input = {
-				date: this.$moment().format('YYYY-MM-DD'),
-			}
-
-			this.viewUsers(input)
-			this.date = this.$moment()
-		},
-		click_date_picker() {
-			let input = {
-				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
-			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.businessID
-			}
-			this.viewUsers(input)
-			this.date = this.$moment(this.date_picker.date)
-		},
 		addNewItem() {
 			if (this.addedItems.length < 5) {
-				let splitLine = this.EvidenceField.evidence.txtField.value.split('\n')
+				let splitLine = this.EvidenceField.evidence.txtField.value
 
-				const newItem = {
-					degree: this.EvidenceField.degree.txtField.value,
-					evidence: splitLine,
-				}
 				if (this.EvidenceField.degree.txtField.value === '') {
 					this.sweetDialog_info.title = `추가 실패`
 					this.sweetDialog_info.content = `차수가 입력되지않았습니다.`
@@ -567,6 +498,11 @@ export default {
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
 				} else {
+					const newItem = {
+						degree: this.EvidenceField.degree.txtField.value,
+						evidence: splitLine,
+					}
+
 					this.addedItems.push(newItem)
 					this.EvidenceField.degree.txtField.value = ''
 					this.EvidenceField.evidence.txtField.value = ''
@@ -578,6 +514,10 @@ export default {
 				this.sweetDialog_info.buttonType = 'oneBtn'
 				this.sweetDialog_info.open = true
 			}
+		},
+
+		deleteEvidence(itemToDelete) {
+			this.addedItems = this.addedItems.filter(item => item !== itemToDelete)
 		},
 
 		openSaveInfoModal() {
@@ -595,30 +535,31 @@ export default {
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
 				} else {
-					let addEtcLength = this.addedItems.length
-					for (let i = 0; i <= addEtcLength; i++) {
+					const newItem = {
+						degree: 'etc',
+						evidence: this.etcInfo.txtField.value,
+					}
+					this.addedItems.push(newItem)
+					for (let i = 0; i <= this.addedItems.length; i++) {
 						let data = {
-							turn: i === addEtcLength ? 'etc' : this.addedItems[i].degree,
-							inputFiles: {
-								evidence: i === addEtcLength ? this.etcInfo.txtField.value : this.addedItems[i].evidence,
-							},
+							turn: this.addedItems[i].degree,
+							content: this.addedItems[i].evidence,
 							businessID: this.$store.state.businessSelectBox.value,
 						}
 
 						this.$store.dispatch('createSystem', data).then(async () => {
+							this.addedItems = []
+							this.etcInfo.txtField.value = ''
+							this.EvidenceField.evidence.txtField.value = ''
+							this.EvidenceField.degree.txtField.value = ''
 							this.sweetDialog_info.open = false
 							this.$store.state.loading = true
 							this.saveDialogStatus.title = `저장 완료`
 							this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
 							this.saveDialogStatus.cancelBtnText = '확인'
 							this.saveDialogStatus.open = true
-							const userViewData = {
-								idArr: this.userID,
-								businessID: this.$store.state.businessSelectBox.value,
-							}
-							await this.userView(userViewData)
 							const businessData = {
-								idArr: this.businessID,
+								idArr: this.$store.state.businessSelectBox.value,
 							}
 							await this.businessView(businessData)
 							await this.messageView(businessData)
