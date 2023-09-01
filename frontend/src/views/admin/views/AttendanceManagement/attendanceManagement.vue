@@ -17,10 +17,10 @@
 		</v-tabs>
 		<v-tabs-items id="management-tab" v-model="tab" style="">
 			<v-tab-item style="padding-top:20px;">
-				<attendance></attendance>
+				<attendance v-if="tab === 0"></attendance>
 			</v-tab-item>
 			<v-tab-item style="padding-top:20px;">
-				<commutingStatus></commutingStatus>
+				<commutingStatus v-if="tab === 1"></commutingStatus>
 			</v-tab-item>
 		</v-tabs-items>
 	</div>
