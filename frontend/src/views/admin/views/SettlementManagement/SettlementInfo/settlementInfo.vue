@@ -41,7 +41,7 @@
 									<div
 										style="position: relative; background-color: orange; font-family: MalgunGothic; font-size: 14px; width: 100%; margin: 4px ; color: white;"
 									>
-										<p v-html="item.evidence.replace(/\n/g, '<br>')"></p>
+										<p style="padding: 5px 0 0 5px; margin-bottom: 1px;" v-html="item.evidence.replace(/\n/g, '<br>')"></p>
 										<v-icon class="attachmentIconClass" @click="deleteEvidence(item)" style="position: absolute; top: 0; right: 0;"
 											>mdi-alpha-x-circle-outline</v-icon
 										>
