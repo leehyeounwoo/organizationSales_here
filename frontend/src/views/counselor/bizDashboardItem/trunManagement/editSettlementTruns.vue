@@ -144,9 +144,9 @@ export default {
 				modalIcon: 'info',
 				cancelBtnText: '확인',
 				buttonType: 'oneBtn',
-				info1: '※ 증빙서류 누락시 정산 승인이 보류 될 수 있으니 확인 후',
-				info1_sub: '첨부바랍니다.',
-				info2: '※ pdf, png, jpg파일만 업로드 가능합니다.',
+				info1: '',
+				info1_sub: '',
+				info2: '',
 				datatable: {
 					headers: [
 						{ text: '차수', value: 'trun_info', align: 'center' },
@@ -258,10 +258,14 @@ export default {
 			this.$store.dispatch('systems', { idArr: [this.$store.state.meData.businessID] }).then(res => {
 				for (let index = 0; index < res.systems.length; index++) {
 					const el = res.systems[index]
-					this.sweetAlertInfo.datatable.items.push({
-						trun_info: el.trun,
-						paper_info: el.content,
-					})
+					if (el.turn !== 'etc') {
+						this.sweetAlertInfo.datatable.items.push({
+							trun_info: el.turn,
+							paper_info: el.content,
+						})
+					} else {
+						this.sweetAlertInfo.info1 = el.content
+					}
 				}
 			})
 		},

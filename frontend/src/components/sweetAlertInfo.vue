@@ -22,16 +22,6 @@
 				{{ dialog.info1 }}
 			</div>
 		</strong>
-		<strong>
-			<div class="explain-text point4--text mb-2 ml-4 text-left px-4" style="white-space: pre-line;">
-				{{ dialog.info1_sub }}
-			</div>
-		</strong>
-		<strong>
-			<div class="explain-text point4--text mb-2 text-left px-4">
-				{{ dialog.info2 }}
-			</div>
-		</strong>
 		<v-layout class="sweet_btn mt-5 mb-5" justify-center>
 			<v-btn
 				elevation="0"
