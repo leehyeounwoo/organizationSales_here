@@ -703,13 +703,8 @@ export default {
 					this.saveDialogStatus.cancelBtnText = '확인'
 					this.saveDialogStatus.open = true
 					this.$store.state.loading = false
-					const userViewData = {
-						idArr: this.userID,
-						businessID: this.$store.state.businessSelectBox.value,
-					}
-					await this.userView(userViewData)
 					const businessData = {
-						idArr: this.businessID,
+						idArr: this.$store.state.businessSelectBox.value,
 					}
 					await this.businessView(businessData)
 					await this.messageView(businessData)
@@ -743,13 +738,8 @@ export default {
 					this.saveDialogStatus.buttonType = 'oneBtn'
 					this.saveDialogStatus.cancelBtnText = '확인'
 					this.saveDialogStatus.open = true
-					const userViewData = {
-						idArr: this.userID,
-						businessID: this.$store.state.businessSelectBox.value,
-					}
-					await this.userView(userViewData)
 					const businessData = {
-						idArr: this.businessID,
+						idArr: this.$store.state.businessSelectBox.value,
 					}
 					await this.businessView(businessData)
 					await this.messageView(businessData)
