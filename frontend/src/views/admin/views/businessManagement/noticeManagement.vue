@@ -330,6 +330,7 @@ export default {
 						e['value'] = e.id
 					})
 				})
+				res.notices.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 				this.noticeTable.items = res.notices
 				this.$store.state.loading = false
 			})
