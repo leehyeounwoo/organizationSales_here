@@ -256,6 +256,7 @@ export default {
 				}
 				this.$store.dispatch('updateVacation', input2).then(async () => {
 					this.sweetDialog.open = false
+					this.unattendedTable.items = []
 					this.currentVacationData = {}
 					this.rightInfoBottom[1].value = ''
 					this.rightInfoTop[0].value = ''
