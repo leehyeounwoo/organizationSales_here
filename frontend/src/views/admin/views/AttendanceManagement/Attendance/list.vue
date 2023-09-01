@@ -520,7 +520,7 @@ export default {
 						let listData = {}
 						listData.all = element
 						listData.id = element.id
-						listData.data1 = element.username
+						listData.data1 = element.name ? element.name : '-'
 						listData.data2 = element.phoneNumber ? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) : '-'
 						listData.data3 = '-'
 						listData.data4 = '-'
@@ -639,6 +639,7 @@ export default {
 			this.paginAPIs()
 		},
 		async paginAPIs() {
+			this.$store.state.loading = true
 			let input = {
 				start: (this.table.page - 1) * this.table.pagination.itemsPerPage,
 				limit: this.table.pagination.itemsPerPage,
@@ -660,6 +661,7 @@ export default {
 			await this.vacationView(input3)
 			await this.unattendedVacation()
 			await this.dataSetting()
+			this.$store.state.loading = false
 		},
 		async pagination(item) {
 			this.table.pagination = item

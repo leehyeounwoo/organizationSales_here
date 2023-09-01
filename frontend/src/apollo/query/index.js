@@ -96,6 +96,7 @@ export const users = gql`
 			created_at
 			updated_at
 			username
+			name
 			email
 			blocked
 			role {

@@ -352,7 +352,7 @@ export default {
 				res.users.forEach(element => {
 					this.vacationData.forEach((item, index) => {
 						if (item.userID === element.id) {
-							this.vacationData[index]['username'] = element.username
+							this.vacationData[index]['username'] = element.name ? element.name : '-'
 							this.vacationData[index]['phoneNumber'] = element.phoneNumber
 								? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 								: '-'
