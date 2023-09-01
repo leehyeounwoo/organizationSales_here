@@ -850,8 +850,14 @@ export default {
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 			}
-			this.table.items = JSON.parse(JSON.stringify(this.userData))
-			this.table.origin_items = JSON.parse(JSON.stringify(this.userData))
+
+			let sortTable = this.userData.sort((a, b) => {
+				return b.workingStatus - a.workingStatus
+			})
+
+			this.table.items = JSON.parse(JSON.stringify(sortTable))
+			this.table.total = this.userData.length
+			this.table.origin_items = JSON.parse(JSON.stringify(sortTable))
 		},
 		async settlementsViewAction(data) {
 			this.$store.state.loading = true
