@@ -256,6 +256,19 @@ export const products = gql`
 		}
 	}
 `
+export const productsFilter = gql`
+	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS, $housingType: String, $dong: String, $ho: String) {
+		products(where: { businessID: $businessID, contractStatus: $contractStatus, housingType: $housingType, dong: $dong, ho: $ho }) {
+			id
+			housingType
+			dong
+			ho
+			contractStatus
+			businessID
+			choiceYn
+		}
+	}
+`
 export const productsCount = gql`
 	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
 		productsConnection(where: { businessID: $businessID, contractStatus: $contractStatus }) {

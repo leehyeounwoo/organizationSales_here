@@ -2,10 +2,10 @@
 	<div class="mt-7">
 		<v-layout align-center justify-end class="header_search">
 			<v-flex xs1 class="mr-2">
-				<selectBox :sel="productFilter1" style="font-size:13px;"></selectBox>
+				<selectBox :sel="productFilter1" style="font-size:13px;" @change="setFilter2"></selectBox>
 			</v-flex>
 			<v-flex xs1 class="mr-2">
-				<selectBox :sel="productFilter2" style="font-size:13px"></selectBox>
+				<selectBox :sel="productFilter2" style="font-size:13px" @change="setFilter3"></selectBox>
 			</v-flex>
 			<v-flex xs1 class="mr-2">
 				<selectBox :sel="productFilter3" style="font-size:13px"></selectBox>
@@ -49,6 +49,7 @@ export default {
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
 				await this.productSelectData()
+				await this.setFilter1()
 				clearInterval(createInterval)
 			}
 
@@ -140,6 +141,55 @@ export default {
 		}
 	},
 	methods: {
+		setFilter1() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
+			}
+			this.$store.dispatch('productsFilter', data).then(res => {
+				let data1 = [{ text: '전체', value: 'all' }]
+				res.products.forEach(el => {
+					data1.push({ text: el.housingType, value: el.housingType })
+				})
+				this.productFilter1.items = data1
+			})
+		},
+		setFilter2() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
+			}
+			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
+				data['housingType'] = this.productFilter1.value
+			}
+			this.$store.dispatch('productsFilter', data).then(res => {
+				let data2 = [{ text: '전체', value: 'all' }]
+				res.products.forEach(el => {
+					data2.push({ text: el.dong, value: el.dong })
+				})
+				this.productFilter2.value = ''
+				this.productFilter3.value = ''
+				this.productFilter2.items = data2
+			})
+		},
+		setFilter3() {
+			let data = {
+				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
+				housingType: this.productFilter1.value,
+			}
+			if (this.productFilter2.value && this.productFilter2.value !== 'all') {
+				data['dong'] = this.productFilter2.value
+			}
+			this.$store.dispatch('productsFilter', data).then(res => {
+				let data3 = [{ text: '전체', value: 'all' }]
+				res.products.forEach(el => {
+					data3.push({ text: el.ho, value: el.ho })
+				})
+				this.productFilter3.value = ''
+				this.productFilter3.items = data3
+			})
+		},
 		async refreshTable() {
 			this.$store.state.loading = true
 			let ok = 0
@@ -187,19 +237,36 @@ export default {
 			}
 			await this.teamView(teamViewData)
 		},
-		searchProduct() {
-			let item = this.productManager.items_origin
+		async searchProduct() {
+			// let item = this.productManager.items_origin
+			// if (this.productFilter1.value && this.productFilter1.value !== 'all') {
+			// 	item = item.filter(el => el.housingType === this.productFilter1.value)
+			// }
+			// if (this.productFilter2.value && this.productFilter2.value !== 'all') {
+			// 	item = item.filter(el => el.dong === this.productFilter2.value)
+			// }
+			// if (this.productFilter3.value && this.productFilter3.value !== 'all') {
+			// 	item = item.filter(el => el.ho === this.productFilter3.value)
+			// }
+
+			// this.productManager.items = item
+			let item = {
+				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
+				start: 0,
+				limit: 10,
+			}
 			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
-				item = item.filter(el => el.housingType === this.productFilter1.value)
+				item['housingType'] = this.productFilter1.value
 			}
 			if (this.productFilter2.value && this.productFilter2.value !== 'all') {
-				item = item.filter(el => el.dong === this.productFilter2.value)
+				item['dong'] = this.productFilter2.value
 			}
 			if (this.productFilter3.value && this.productFilter3.value !== 'all') {
-				item = item.filter(el => el.ho === this.productFilter3.value)
+				item['ho'] = this.productFilter3.value
 			}
-
-			this.productManager.items = item
+			console.log(item)
+			await this.product_table(item)
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
@@ -428,13 +495,7 @@ export default {
 					}
 					this.productManager.items = JSON.parse(JSON.stringify(this.productManager.items))
 					console.log(this.productManager.items)
-					let data1 = [{ text: '전체', value: 'all' }]
-					let data2 = [{ text: '전체', value: 'all' }]
-					let data3 = [{ text: '전체', value: 'all' }]
 					this.productManager.items.forEach(el => {
-						data1.push({ text: el.housingType, value: el.housingType })
-						data2.push({ text: el.dong, value: el.dong })
-						data3.push({ text: el.ho, value: el.ho })
 						if (el.assingnmentData) {
 							el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
 								this.$moment(),
@@ -457,9 +518,6 @@ export default {
 					// 	data2.push({ text: el.dong + '동', value: el.dong })
 					// 	data3.push({ text: el.ho + '호', value: el.ho })
 					// })
-					this.productFilter1.items = data1
-					this.productFilter2.items = data2
-					this.productFilter3.items = data3
 					// this.productManager.items.team.value= this.productManager.items.assingnmentTeamData.id
 				})
 				.catch(err => {
