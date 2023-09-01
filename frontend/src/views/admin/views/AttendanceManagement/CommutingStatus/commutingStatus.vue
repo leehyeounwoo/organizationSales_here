@@ -512,6 +512,9 @@ export default {
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 			}
+			this.userLists.sort((a, b) => {
+				return a.teamID - b.teamID
+			})
 			this.table.items = JSON.parse(JSON.stringify(this.userLists))
 			this.table.origin_items = JSON.parse(JSON.stringify(this.userLists))
 		},
