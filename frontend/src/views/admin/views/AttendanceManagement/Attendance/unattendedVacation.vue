@@ -298,6 +298,11 @@ export default {
 				this.sweetInfo.content = '반려할 연차를 선택해주세요'
 				return (this.sweetInfo.open = true)
 			}
+			if (this.rightInfoBottom[0].radio === 'agree' && this.unattendedTable.items.length === 0) {
+				this.sweetInfo.title = '반려 실패'
+				this.sweetInfo.content = '처리할 연차가 없습니다.'
+				return (this.sweetInfo.open = true)
+			}
 			if (this.rightInfoBottom[0].radio === 'disagree' && this.rightInfoBottom[1].value === '') {
 				this.sweetInfo.title = '반려사유 에러'
 				this.sweetInfo.content = `반려사유를 입력해 주세요.`
