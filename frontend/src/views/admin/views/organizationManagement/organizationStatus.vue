@@ -334,7 +334,7 @@ export default {
 				header_fixed: true,
 				height: '102px',
 				noweditting: '',
-				itemsPerPage: -1,
+				itemsPerPage: 10,
 				page: 1,
 				pageCount: 0,
 			},
@@ -421,7 +421,7 @@ export default {
 				itemsPerPage: 10,
 				page: 1,
 				pageCount: 1,
-				total: 1,
+				// total: 1,
 			},
 
 			searchsel: {
@@ -860,7 +860,7 @@ export default {
 			})
 
 			this.table.items = JSON.parse(JSON.stringify(sortTable))
-			this.table.total = this.userData.length
+			// this.table.total = this.userData.length
 			this.table.origin_items = JSON.parse(JSON.stringify(sortTable))
 		},
 		async settlementsViewAction(data) {

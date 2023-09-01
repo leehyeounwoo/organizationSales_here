@@ -23,6 +23,9 @@
 			:height="datatable.height"
 			:mobile-breakpoint="datatable.breakpoint ? '1960' : '600'"
 			:disable-sort="datatable.disableSort"
+			@pagination="pagination"
+			:no-data-text="datatable.noDataText"
+			:server-items-length="datatable.total"
 			:class="datatable.disableSort ? 'noSort' : ''"
 			:footer-props="{
 				['items-per-page-text']: `• Total : ${datatable.total ? datatable.total : datatable.items.length}`,
@@ -37,9 +40,6 @@
 				} of ${datatable.page ? datatable.page : 1} `,
 				['items-per-page-options']: datatable.itemsPerPage !== -1 ? [5, 10, 15, 20, 30, 99] : [5, 10, 15, 20, 30, 99, -1],
 			}"
-			@pagination="pagination"
-			:no-data-text="datatable.noDataText"
-			:server-items-length="datatable.total"
 		>
 			<template v-slot:[`header.team`]="{ header }">
 				{{ header.text }}
