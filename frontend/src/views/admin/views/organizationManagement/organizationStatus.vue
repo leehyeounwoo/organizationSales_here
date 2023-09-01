@@ -852,7 +852,11 @@ export default {
 			}
 
 			let sortTable = this.userData.sort((a, b) => {
-				return b.workingStatus - a.workingStatus
+				if (a.workingStatus === b.workingStatus) {
+					return a.teamID - b.teamID
+				} else {
+					return b.workingStatus - a.workingStatus
+				}
 			})
 
 			this.table.items = JSON.parse(JSON.stringify(sortTable))
