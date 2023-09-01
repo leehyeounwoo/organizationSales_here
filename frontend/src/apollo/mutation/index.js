@@ -274,6 +274,7 @@ export const updateUser = gql`
 		$businessNumber: String
 		$profile: ID
 		$copyAccount: ID
+		$name: String
 		$employmentContract: ID
 		$ID_Card: ID
 		$businessID: String
@@ -288,6 +289,7 @@ export const updateUser = gql`
 			input: {
 				where: { id: $id }
 				data: {
+					name: $name
 					username: $username
 					email: $email
 					password: $password
