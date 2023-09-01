@@ -251,11 +251,11 @@
 								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? true : false) : false"
 								>{{ amountData[degree - 1].PaymentDate }}</span
 							>
-							<DatepickerDialog
+							<!-- <DatepickerDialog
 								v-if="amountData[degree - 1] ? (amountData[degree - 1].turnStatus == 'complete' ? false : true) : true"
 								:picker="paymentProcess_date_picker[degree]"
 								class="d-flex align-center date_picker3"
-							></DatepickerDialog>
+							></DatepickerDialog> -->
 						</v-flex>
 						<!-- 파일 -->
 						<v-flex
@@ -1673,7 +1673,7 @@ export default {
 
 				if (element.txtField.readonly === false) {
 					let data = {
-						prePaymentDate: this.$moment().format('YYYY-MM-DD'),
+						prePaymentDate: this.start_date_picker[index + 1].date,
 						turnStatus: 'waiting',
 						amount: Number(element.txtField.value.replace(/,/g, '')),
 						settlements: this.finalSettlementData[0].id,

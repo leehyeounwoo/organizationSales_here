@@ -45,6 +45,7 @@ export default {
 
 				const assignmentsViewData = {
 					status: 'waiting',
+					businessID: this.$store.state.businessSelectBox.value,
 				}
 				await this.assignmentsView(assignmentsViewData)
 				const usersViewData = {

@@ -2420,7 +2420,7 @@ export default {
 							return `${val.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length + 1}차 정산 대기`
 						}
 					} else {
-						return '승인'
+						return `${val.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length + 1}차 정산 대기`
 					}
 				}
 			} else if (val.settlementStatus === 'disagree') {
