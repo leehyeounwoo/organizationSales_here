@@ -92,8 +92,8 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex v-if="editUser.btn" style="text-align: end;">
-						<v-btn small class="btn-style2" @click="saveCheck()">
+					<v-flex v-if="editUser.btn" class="mt-2 ml-auto" style="text-align: end;">
+						<v-btn small @click="saveCheck()">
 							저장
 						</v-btn>
 					</v-flex>
