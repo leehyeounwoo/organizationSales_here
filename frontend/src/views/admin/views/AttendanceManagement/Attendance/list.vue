@@ -682,20 +682,20 @@ export default {
 			let input2 = {
 				start: 0,
 				limit: this.table.pagination.itemsPerPage,
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				roleName: 'Counselor',
 				userID: this.userIDArr,
 			}
 			let input3 = {
 				start: 0,
 				limit: this.table.pagination.itemsPerPage,
-				date: this.$moment().format('YYYY-MM-DD'),
+				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
 				// roleName: 'Counselor',
 				idArr: this.userIDArr,
 			}
 			await this.gotoworksView(input2)
-			await this.unattendedVacation()
 			await this.vacationView(input3)
+			await this.unattendedVacation()
 			await this.dataSetting()
 		},
 
