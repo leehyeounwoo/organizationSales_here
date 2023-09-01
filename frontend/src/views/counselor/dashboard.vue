@@ -297,7 +297,26 @@ export default {
 			this.product3 = ''
 		},
 		product2Change(val) {
-			this.products3 = this.productDatas.filter(x => x.dong === val && x.housingType === this.product1).map(x => x.ho)
+			const datas = this.assignmentDatas.filter(x => x.product && (x.status === 'assignment' || x.status === 'waiting'))
+			const alreadyDatas = []
+			for (let index = 0; index < datas.length; index++) {
+				const el = datas[index]
+				alreadyDatas.push({
+					housingType: el.product.housingType,
+					dong: el.product.dong,
+					ho: el.product.ho,
+				})
+			}
+			this.products3 = this.productDatas
+				.filter(x => x.dong === val && x.housingType === this.product1)
+				.filter(
+					x =>
+						!alreadyDatas
+							.filter(x => x.dong === val && x.housingType === this.product1)
+							.map(x => x.ho)
+							.includes(x.ho),
+				)
+				.map(x => x.ho)
 			this.product3 = ''
 		},
 		secondChange(data) {
@@ -387,10 +406,16 @@ export default {
 					sort: 'created_at:desc',
 				})
 				.then(res => {
+					this.assignmentDatas = res.assignments
 					this.holdingList = res.assignments.filter(
 						x => x.status === 'assignment' && this.secondChange(this.$moment().format('HH:mm')) < this.secondChange(x.end),
 					)
 					let myData = res.assignments.filter(x => x.userID === this.$store.state.meData.id)
+					for (let index = 0; index < this.assignmentDatas.length; index++) {
+						const el = this.assignmentDatas[index]
+						if (this.productDatas.filter(x => x.id === el.productID).length > 0)
+							el.product = this.productDatas.filter(x => x.id === el.productID)[0]
+					}
 					for (let index = 0; index < this.holdingList.length; index++) {
 						const el = this.holdingList[index]
 						if (this.productDatas.filter(x => x.id === el.productID).length > 0)
@@ -423,25 +448,44 @@ export default {
 		},
 		createAssignment() {
 			if (this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3).length > 0) {
-				const data = {
-					userID: this.$store.state.meData.id,
-					type: 'now',
-					start: this.$moment().format('HH:mm:ss:SSS'),
-					end: this.$moment()
-						.add(Number(this.time.replace('분', '')), 'm')
-						.format('HH:mm:ss:SSS'),
-					productID: this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3)[0]
-						.id,
-					orderType: 'couselor',
-					holdingTime: this.time.replace('분', ''),
-					businessID: this.$store.state.meData.businessID,
-				}
-				this.$store.state.loading = true
-				this.$store.dispatch('createAssignment', data).then(() => {
-					this.$store.state.loading = false
-					this.holdingDialog.open = false
-					this.products()
-				})
+				this.$store
+					.dispatch('assignments', {
+						created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+						created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+						businessID: this.$store.state.meData.businessID,
+						productArr: this.productDatas.filter(
+							x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3,
+						)[0].id,
+						end_gte: this.$moment().format('HH:mm:ss:SSS'),
+					})
+					.then(ass => {
+						const assDatas = ass.assignments.filter(x => x.status === 'waiting' || x.status === 'assignment')
+						if (assDatas.length > 0) {
+							this.holdingDialog.open = false
+							this.open_disable_dialog({ title: '중복요청', content: '이미 요청된 홀딩건 입니다.' })
+						} else {
+							const data = {
+								userID: this.$store.state.meData.id,
+								type: 'now',
+								start: this.$moment().format('HH:mm:ss:SSS'),
+								end: this.$moment()
+									.add(Number(this.time.replace('분', '')), 'm')
+									.format('HH:mm:ss:SSS'),
+								productID: this.productDatas.filter(
+									x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3,
+								)[0].id,
+								orderType: 'couselor',
+								holdingTime: this.time.replace('분', ''),
+								businessID: this.$store.state.meData.businessID,
+							}
+							this.$store.state.loading = true
+							this.$store.dispatch('createAssignment', data).then(() => {
+								this.$store.state.loading = false
+								this.holdingDialog.open = false
+								this.products()
+							})
+						}
+					})
 			} else {
 				this.holdingDialog.open = false
 				this.open_disable_dialog({ title: '일시적 오류', content: '오류가 발생하였습니다. 새로고침 후 다시 신청해주세요.' }, 'error')
