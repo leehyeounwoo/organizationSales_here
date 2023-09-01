@@ -62,7 +62,7 @@
 
 								<v-layout wrap class="grayBoxCard text-center" style="border-radius: 0 0 5px 0;">
 									<v-flex xs12>계약수</v-flex>
-									<v-flex xs12>12건</v-flex>
+									<v-flex xs12>{{ user.settlementLength ? user.settlementLength + '건' : '0건' }}</v-flex>
 								</v-layout>
 							</v-flex>
 						</v-layout>
@@ -284,6 +284,11 @@ export default {
 				const gotoworksView = {
 					date: this.$moment().format('YYYY-MM-DD'),
 				}
+				const settlementsViewData = {
+					businessID: this.$store.state.businessSelectBox.value,
+				}
+
+				await this.settlementsView(settlementsViewData, index)
 				if (this.teamData[index].userData.map(x => x.id).length > 0) {
 					gotoworksView['userID'] = this.teamData[index].userData.map(x => x.id)
 				}
@@ -321,6 +326,28 @@ export default {
 					console.log(err)
 					this.$store.state.loading = false
 				})
+		},
+
+		async settlementsView(settlementsViewData, index) {
+			await this.$store.dispatch('settlements', settlementsViewData).then(res => {
+				const userIDCounts = {}
+
+				const matchingSettlements = res.settlements.filter(settlement => {
+					const matchingUser = this.teamData[index].userData.find(user => user.id === settlement.userID)
+					if (matchingUser) {
+						userIDCounts[settlement.userID] = (userIDCounts[settlement.userID] || 0) + 1
+						return true
+					}
+					return false
+				})
+
+				matchingSettlements.forEach(settlement => {
+					const matchingUser = this.teamData[index].userData.find(user => user.id === settlement.userID)
+					if (matchingUser) {
+						matchingUser.settlementLength = userIDCounts[settlement.userID]
+					}
+				})
+			})
 		},
 		userInfoClick(team, user) {
 			this.rightEdit[0].value = user.username
