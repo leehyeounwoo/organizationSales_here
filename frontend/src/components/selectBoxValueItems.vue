@@ -27,11 +27,7 @@
 
 <script>
 export default {
-	watch: {
-		value() {
-			console.log(this.value)
-		},
-	},
+	watch: {},
 	props: {
 		value: String,
 		items: Array,

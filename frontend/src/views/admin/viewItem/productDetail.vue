@@ -292,7 +292,6 @@ export default {
 				data['contractStatus'] = 'noContract'
 			}
 			this.$store.dispatch('updateProduct', data).then(res => {
-				console.log(res)
 				this.sweetDialog3.open = false
 				this.newProduct(this.setdialog.item)
 				this.productEdit = res.updateProduct.product.editLog
@@ -300,7 +299,6 @@ export default {
 			})
 		},
 		searchProduct() {
-			console.log(this.setdialog.selectBox4)
 			let data = {
 				businessID: this.setdialog.item.id,
 				ho: this.search_product,
@@ -318,7 +316,7 @@ export default {
 			if (this.setdialog.selectBox6.value) {
 				data['dong'] = this.setdialog.selectBox6.value
 			}
-			console.log(data)
+
 			this.$store.dispatch('products', data).then(res => {
 				res.products.forEach(el => {
 					if (el.contractStatus === 'contract') {
@@ -362,13 +360,12 @@ export default {
 			this.productDetail = item
 			this.right_table1[4].txtfield.value = ''
 			this.productEdit = item.editLog
-			console.log(this.productDetail)
+
 			this.right_id = item.id
 			let data = {
 				businessID: item.businessID,
 			}
 			this.$store.dispatch('products', data).then(res => {
-				console.log(res.products)
 				res.products.forEach(el => {
 					this.right_table1[1].select.items.push({ text: el.dong, value: el.dong })
 					this.right_table1[2].select.items.push({ text: el.housingType, value: el.housingType })
@@ -388,9 +385,7 @@ export default {
 				let data = {
 					businessID: this.setdialog.item.id,
 				}
-				this.$store.dispatch('products', data).then(res => {
-					console.log(res)
-				})
+				this.$store.dispatch('products', data).then(() => {})
 			}
 		},
 		resetSelect() {
@@ -410,7 +405,6 @@ export default {
 			this.right_table1[2].select.value = ''
 		},
 		selectType() {
-			console.log(this.setdialog)
 			if (this.setdialog.selectBox1.value === 'new') {
 				this.setdialog.selectBox2.items = [{ text: '선택', value: 'new' }]
 			} else {
@@ -423,7 +417,6 @@ export default {
 						item.push({ text: el.dong, value: el.dong })
 					})
 					this.setdialog.selectBox2.items = item
-					console.log(this.setdialog.selectBox2.items)
 				})
 			}
 			let data = {
@@ -439,7 +432,7 @@ export default {
 		},
 		createProduct() {
 			this.$store.state.loading = true
-			console.log(this.setdialog)
+
 			let data = {
 				businessID: this.setdialog.item.id,
 				ho: this.setdialog.select_text3.value,
@@ -459,16 +452,13 @@ export default {
 			} else {
 				data['contractStatus'] = 'noContract'
 			}
-			this.$store.dispatch('createProduct', data).then(res => {
-				console.log(res)
+			this.$store.dispatch('createProduct', data).then(() => {
 				this.sweetDialog.open = false
 				this.newProduct(this.setdialog.item)
 				this.$store.state.loading = false
 			})
-			console.log(data)
 		},
 		checkProduct() {
-			console.log(this.setdialog)
 			if (!this.setdialog.selectBox1.value && !this.setdialog.select_text1.value) {
 				this.sweetInfo.title = '주택형 선택'
 				this.sweetInfo.content = '주택형을 선택 또는 직접 입력해주세요.'

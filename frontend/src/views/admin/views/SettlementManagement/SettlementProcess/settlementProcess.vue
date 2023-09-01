@@ -981,14 +981,12 @@ export default {
 			await this.dataSetting()
 		},
 		amountDown(idx) {
-			console.log(1)
 			let sum = 0
 			let totalSum = 0
 			let status = true
 			for (let index = 0; index < 5; index++) {
 				const element = this.paymentRate[`charge${index + 1}`]
 				if (element.txtField.value) {
-					console.log(element.txtField.value)
 					sum += Number(element.txtField.value)
 					if (sum === 100 && status) {
 						this.timessel.value = `${index + 1}차`
@@ -1020,7 +1018,6 @@ export default {
 			}
 		},
 		rateDown(idx) {
-			console.log(2)
 			let sum = 0
 			let totalSum = 0
 			let status = true
@@ -1109,13 +1106,11 @@ export default {
 
 			this.processTable.items = this.list
 			this.processTable.origin_items = JSON.parse(JSON.stringify(this.list))
-			console.log(this.processTable.items)
 		},
 
 		async settlementView(settlementViewData) {
 			let completeAmount = []
 			await this.$store.dispatch('settlements', settlementViewData).then(res => {
-				console.log(res)
 				this.list = []
 				this.processTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
@@ -1581,6 +1576,12 @@ export default {
 						this.agreeDialogStatus.cancelBtnText = '확인'
 						this.agreeDialogStatus.open = true
 						this.$store.state.loading = false
+						let input2 = {
+							settlementID: this.finalSettlementData[0].id,
+							editStatus: 'agree',
+							editDetail: `${i + 1}차 정산 요청 승인`,
+						}
+						this.$store.dispatch('createSettlementEditLogs', input2).then(async () => {})
 						await this.me()
 						await this.searchSelect()
 						await this.refreshData(this.$moment())
@@ -1649,7 +1650,7 @@ export default {
 
 		async click_agree() {
 			// -------------------------
-			console.log(this.amountData)
+
 			this.$store.state.loading = true
 
 			let filterData = this.finalSettlementData[0].settlements.settlement_turn_tables.filter(x => x.turnStatus !== 'complete')
@@ -1661,9 +1662,7 @@ export default {
 				}
 				this.$store
 					.dispatch('updateSettlementTurnTable', updateData)
-					.then(res => {
-						console.log(res)
-					})
+					.then(() => {})
 					.catch(() => {})
 			}
 			// -------------------------
@@ -1701,11 +1700,29 @@ export default {
 						id: this.finalSettlementData[0].id,
 					}
 					await this.$store.dispatch('updateSettlement', data2).then(res => {
-						console.log(res.updateSettlement.settlement.id)
-						console.log(this.processTable.items)
 						let val = this.processTable.items.filter(x => x.id === res.updateSettlement.settlement.id)
 						if (val.length > 0) {
 							this.amountData = val[0].settlements.settlement_turn_tables
+							this.amountData.forEach(el => {
+								el.turnStatus = 'waiting'
+								let numberList = {}
+								if (el.depositFile !== null) {
+									numberList.id = el.depositFile.id
+									numberList.url = el.depositFile.url
+									numberList.name = el.depositFile.name
+
+									this.pdfLists.push({ numberList: numberList })
+								} else {
+									this.pdfLists.push({
+										numberList: {
+											file: null,
+											id: '',
+											url: '',
+											name: '',
+										},
+									})
+								}
+							})
 						}
 					})
 					if (this.processCheckBox) {
@@ -1756,12 +1773,7 @@ export default {
 				let paymentRate = Number(this.paymentRate[`charge${i}`].txtField.value)
 				sum += paymentRate
 			}
-			console.log(sum)
-			// console.log(Number(this.paymentRate[`charge${idx}`].txtField.value))
-			// if (!this.datatableInfoFirst) {
-			// 	sum = sum + Number(this.paymentRate[`charge${idx}`].txtField.value)
-			// }
-			// console.log(sum)
+
 			if (sum > 100) {
 				this.timessel.value = `${idx - 1}차`
 				this.paymentRate[`charge${idx}`].txtField.value = ''
@@ -1780,7 +1792,6 @@ export default {
 			})
 			if (sum === 100) {
 				for (let index = idx + 1; index < 6; index++) {
-					console.log(index)
 					this.paymentRate[`charge${index}`].txtField.readonly = true
 					this.paymentAmount[`charge${index}`].txtField.readonly = true
 				}

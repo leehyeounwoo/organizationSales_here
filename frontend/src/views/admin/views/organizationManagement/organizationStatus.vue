@@ -523,7 +523,6 @@ export default {
 					this.files[index - 1].file = event.target.files[0]
 				}
 			}
-			console.log(this.files)
 		},
 		workingStatusSave(val) {
 			const data = {
@@ -652,7 +651,6 @@ export default {
 				for (let i = 0; i < this.right_data_origin.length; i++) {
 					let rankData2 = {}
 					if (this.right_data[i].value !== this.right_data_origin[i].value) {
-						console.log(this.right_data)
 						rankData2['id'] = this.right_data[i].id
 						rankData2['rankName'] = this.right_data[i].value
 						if (this.right_data[i].selectBox.value === '사용') {
@@ -700,7 +698,6 @@ export default {
 			document.getElementById(`clientExcel`).click()
 		},
 		preview(val) {
-			console.log(val)
 			if (val.url) {
 				window.open(process.env.VUE_APP_BACKEND_URL + val.url)
 			}
@@ -1040,7 +1037,6 @@ export default {
 			await this.$store
 				.dispatch('users', usersViewData)
 				.then(res => {
-					console.log(res.users)
 					this.userData = res.users
 					// this.teamArrData = res.users.filter(x => x.teamID).map(x => x.teamID)
 					// this.rankArrData = res.users.filter(x => x.rankID).map(x => x.rankID)
@@ -1063,7 +1059,6 @@ export default {
 			this.teamEditDialog.dialog = true
 		},
 		clickEditBtn(val) {
-			console.log(val)
 			document.getElementById('file_upload_' + val.title).click()
 		},
 	},

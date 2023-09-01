@@ -636,11 +636,36 @@ export const userInfoEdit = gql`
 `
 
 export const createSystem = gql`
-	mutation systems($inputFiles: JSON, $turn: String, $businessID: String) {
-		createSystem(input: { data: { inputFiles: $inputFiles, turn: $turn, businessID: $businessID } }) {
+	mutation systems($content: String, $turn: String, $businessID: String) {
+		createSystem(input: { data: { content: $content, turn: $turn, businessID: $businessID } }) {
 			system {
 				id
-				inputFiles
+				content
+				businessID
+				turn
+			}
+		}
+	}
+`
+export const updateSystem = gql`
+	mutation updateSystem($id: ID!, $content: String, $turn: String, $businessID: String) {
+		updateSystem(input: { where: { id: $id }, data: { content: $content, turn: $turn, businessID: $businessID } }) {
+			system {
+				id
+				content
+				businessID
+				turn
+			}
+		}
+	}
+`
+
+export const deleteSystem = gql`
+	mutation deleteSystem($id: ID!) {
+		deleteSystem(input: { where: { id: $id } }) {
+			system {
+				id
+				content
 				businessID
 				turn
 			}

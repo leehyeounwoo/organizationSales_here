@@ -17,13 +17,13 @@
 		</v-tabs>
 		<v-tabs-items id="management-tab" v-model="tab" style="">
 			<v-tab-item style="padding-top:20px;">
-				<settlementRequest></settlementRequest>
+				<settlementRequest v-if="tab === 0"></settlementRequest>
 			</v-tab-item>
 			<v-tab-item style="padding-top:20px;">
-				<settlementProcessing></settlementProcessing>
+				<settlementProcessing v-if="tab === 1"></settlementProcessing>
 			</v-tab-item>
 			<v-tab-item style="padding-top:20px;">
-				<settlementInfo></settlementInfo>
+				<settlementInfo v-if="tab === 2"></settlementInfo>
 			</v-tab-item>
 		</v-tabs-items>
 	</div>

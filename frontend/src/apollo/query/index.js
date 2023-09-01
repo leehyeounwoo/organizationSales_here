@@ -487,13 +487,14 @@ export const settlementsStatusArr = gql`
 	}
 `
 export const messages = gql`
-	query messages($businessID: ID) {
-		messages(where: { businessID: $businessID }) {
+	query messages($idArr: ID) {
+		messages(where: { businessID: $idArr }) {
 			id
 			type
 			title
 			detail
 			useYn
+			businessID
 		}
 	}
 `
@@ -502,7 +503,7 @@ export const systems = gql`
 	query systems($idArr: [ID]) {
 		systems(where: { businessID: $idArr }) {
 			id
-			inputFiles
+			content
 			businessID
 			turn
 		}

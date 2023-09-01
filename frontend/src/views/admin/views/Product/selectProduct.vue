@@ -48,7 +48,6 @@ export default {
 		let ok = 0
 		const createInterval = setInterval(async () => {
 			if (this.$store.state.businessSelectBox.value !== '') {
-				console.log(this.$store.state.businessSelectBox.value)
 				await this.productSelectData()
 				clearInterval(createInterval)
 			}
@@ -127,6 +126,7 @@ export default {
 					{ text: '배정', value: 'holdTime', width: '28%' },
 					{ text: '상태', value: 'product_status', width: '35%' },
 				],
+				hidedefaultfooter: true,
 				class: 'datatablehover3',
 				items: [],
 				items_origin: [],
@@ -159,10 +159,10 @@ export default {
 				this.$store.state.loading = false
 			}, 1000)
 		},
-		async paginationClick(val) {
-			console.log(val)
+		async paginationClick() {
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
 				start: (this.productManager.page - 1) * this.productManager.itemsPerPage,
 				limit: this.productManager.itemsPerPage,
 			}
@@ -203,7 +203,6 @@ export default {
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
-				console.log(res)
 				this.productManager.total = res.productsConnection.aggregate.count
 				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage)
 			})
@@ -211,7 +210,7 @@ export default {
 		async productSelectData() {
 			const productsCountViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				// contractStatus: 'noContract',
+				contractStatus: 'noContract',
 			}
 			await this.productsCountView(productsCountViewData)
 			const businessViewData = {
@@ -220,6 +219,7 @@ export default {
 			await this.businessView(businessViewData)
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
 				start: 0,
 				limit: 10,
 			}
@@ -269,73 +269,77 @@ export default {
 			})
 		},
 		createAssignmentAction(item) {
-			let nowTime = this.$moment().format('YYYY-MM-DD ')
-			let startTime = this.businessData.workingHoursStart.substr(0, 5)
-			let endTime = this.businessData.workingHoursEnd.substr(0, 5)
-
-			if (this.$moment() >= this.$moment(nowTime + startTime) && this.$moment() <= this.$moment(nowTime + endTime)) {
-				if (item.product_manager.value === '미지정') {
-					return alert('담당자를 선택해주세요.')
-				}
-				if (item.team.value === '') {
-					return alert('담당자를 선택해주세요.')
-				}
-				if (item.user.value === '') {
-					return alert('담당자를 선택해주세요.')
-				}
-				if (item.select_holding.value === '') {
-					return alert('홀딩타입을 선택해주세요.')
-				}
-				if (item.select_holding.value === '') {
-					return alert('홀딩타입을 선택해주세요.')
-				}
-				if (item.select_holding.value === '즉시 홀딩') {
-					if (item.holdingTime3.value === '') {
-						return alert('홀딩시간을 선택해주세요.')
-					}
-				} else {
-					if (item.holdingTime1.time === '') {
-						return alert('홀딩시간을 선택해주세요.')
-					}
-					if (item.holdingTime2.time === '') {
-						return alert('홀딩시간을 선택해주세요.')
-					}
-				}
-				const data = {
-					useYn: true,
-					userID: item.user.value,
-					status: 'assignment',
-					productID: item.id,
-					orderType: 'admin',
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-				if (item.select_holding.value === '종일 홀딩') {
-					data.type = 'allday'
-					data.start = item.holdingTime1.time + ':00.000'
-					data.end = item.holdingTime2.time + ':00.000'
-				} else if (item.select_holding.value === '시간 홀딩') {
-					data.type = 'time'
-					data.start = item.holdingTime1.time + ':00.000'
-					data.end = item.holdingTime2.time + ':00.000'
-				} else if (item.select_holding.value === '즉시 홀딩') {
-					data.type = 'now'
-					data.holdingTime = item.holdingTime3.value
-					data.start = this.$moment().format('HH:mm') + ':00.000'
-					data.end =
-						this.$moment()
-							.add(item.holdingTime3.value.replace(/[^0-9]/g, ''), 'm')
-							.format('HH:mm') + ':00.000'
-				}
-				this.$store
-					.dispatch('createAssignment', data)
-					.then(async () => {
-						this.productSelectData()
-					})
-					.catch(err => {
-						console.log(err)
-					})
+			if (item.assingnmentData) {
+				alert('이미 배정되어있는 물건입니다.')
 			} else {
-				alert(`근무시간이 아닙니다.\n(근무시간:${startTime}~${endTime})`)
+				let nowTime = this.$moment().format('YYYY-MM-DD ')
+				let startTime = this.businessData.workingHoursStart.substr(0, 5)
+				let endTime = this.businessData.workingHoursEnd.substr(0, 5)
+
+				if (this.$moment() >= this.$moment(nowTime + startTime) && this.$moment() <= this.$moment(nowTime + endTime)) {
+					if (item.product_manager.value === '미지정') {
+						return alert('담당자를 선택해주세요.')
+					}
+					if (item.team.value === '') {
+						return alert('담당자를 선택해주세요.')
+					}
+					if (item.user.value === '') {
+						return alert('담당자를 선택해주세요.')
+					}
+					if (item.select_holding.value === '') {
+						return alert('홀딩타입을 선택해주세요.')
+					}
+					if (item.select_holding.value === '') {
+						return alert('홀딩타입을 선택해주세요.')
+					}
+					if (item.select_holding.value === '즉시 홀딩') {
+						if (item.holdingTime3.value === '') {
+							return alert('홀딩시간을 선택해주세요.')
+						}
+					} else {
+						if (item.holdingTime1.time === '') {
+							return alert('홀딩시간을 선택해주세요.')
+						}
+						if (item.holdingTime2.time === '') {
+							return alert('홀딩시간을 선택해주세요.')
+						}
+					}
+					const data = {
+						useYn: true,
+						userID: item.user.value,
+						status: 'assignment',
+						productID: item.id,
+						orderType: 'admin',
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+					if (item.select_holding.value === '종일 홀딩') {
+						data.type = 'allday'
+						data.start = item.holdingTime1.time + ':00.000'
+						data.end = item.holdingTime2.time + ':00.000'
+					} else if (item.select_holding.value === '시간 홀딩') {
+						data.type = 'time'
+						data.start = item.holdingTime1.time + ':00.000'
+						data.end = item.holdingTime2.time + ':00.000'
+					} else if (item.select_holding.value === '즉시 홀딩') {
+						data.type = 'now'
+						data.holdingTime = item.holdingTime3.value
+						data.start = this.$moment().format('HH:mm') + ':00.000'
+						data.end =
+							this.$moment()
+								.add(item.holdingTime3.value.replace(/[^0-9]/g, ''), 'm')
+								.format('HH:mm') + ':00.000'
+					}
+					this.$store
+						.dispatch('createAssignment', data)
+						.then(async () => {
+							this.productSelectData()
+						})
+						.catch(err => {
+							console.log(err)
+						})
+				} else {
+					alert(`근무시간이 아닙니다.\n(근무시간:${startTime}~${endTime})`)
+				}
 			}
 		},
 		updateAssignmentAction(item) {

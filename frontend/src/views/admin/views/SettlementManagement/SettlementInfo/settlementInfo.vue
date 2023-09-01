@@ -39,14 +39,12 @@
 								</div>
 								<div class="contentClass">
 									<div
-										style="background-color: orange;
-											font-family: MalgunGothic;
-											font-size: 14px;
-										width: 100%; margin: 4px ; color: white;"
-										v-for="(evi, idx) of item.evidence"
-										:key="idx"
+										style="position: relative; background-color: orange; font-family: MalgunGothic; font-size: 14px; width: 100%; margin: 4px ; color: white;"
 									>
-										{{ evi }}
+										<p style="padding: 5px 0 0 5px; margin-bottom: 1px;" v-html="item.evidence.replace(/\n/g, '<br>')"></p>
+										<v-icon class="attachmentIconClass" @click="deleteEvidence(item)" style="position: absolute; top: 0; right: 0;"
+											>mdi-alpha-x-circle-outline</v-icon
+										>
 									</div>
 								</div>
 							</v-layout>
@@ -280,12 +278,12 @@ export default {
 				degree: {
 					txtField: {
 						maxlength: '255',
-						value: '',
+						value: '1차',
 						outlined: true,
 						hideDetail: true,
 						errorMessage: '',
 						placeholder: '1차',
-						readonly: false,
+						readonly: true,
 					},
 				},
 				evidence: {
@@ -372,6 +370,7 @@ export default {
 			businessID: [],
 			clickVariation: {},
 			addedItems: [],
+			originalAddedItems: [],
 		}
 	},
 
@@ -429,15 +428,21 @@ export default {
 			this.addedItems = []
 			if (this.$store.state.businessSelectBox.value === businessData.idArr) {
 				await this.$store.dispatch('systems', businessData).then(res => {
-					res.systems.forEach(element => {
-						const data = {}
+					res.systems.sort((a, b) => {
+						return new Date(a.turn.replace(/차/g, '')) - new Date(b.turn.replace(/차/g, ''))
+					})
 
+					res.systems.forEach((element, index) => {
+						const data = {}
 						if (element.turn !== 'etc') {
 							data.degree = element.turn
-							data.evidence = element.inputFiles.evidence
+							data.evidence = element.content
+							data.id = element.id
 							this.addedItems.push(data)
+							this.originalAddedItems.push(data)
+							this.EvidenceField.degree.txtField.value = index + 1 + '차'
 						} else {
-							this.etcInfo.txtField.value = element.inputFiles.evidence
+							this.etcInfo.txtField.value = element.content
 						}
 					})
 				})
@@ -480,80 +485,11 @@ export default {
 				await this.viewUsers(range)
 			}
 		},
-		date_filter(val) {
-			let date = this.$moment(val).format('ddd')
-			let text
-			if (date === 'Sun') {
-				text = '일'
-			} else if (date === 'Mon') {
-				text = '월'
-			} else if (date === 'Tue') {
-				text = '화'
-			} else if (date === 'Wed') {
-				text = '수'
-			} else if (date === 'Thu') {
-				text = '목'
-			} else if (date === 'Fri') {
-				text = '금'
-			} else if (date === 'Sat') {
-				text = '토'
-			}
-			return this.$moment(val).format('YYYY년 MM월 DD일') + `(${text})`
-		},
-		update() {
-			let input = {
-				date: this.$moment(this.date).format('YYYY-MM-DD'),
-			}
 
-			this.viewUsers(input)
-		},
-		click_date_before() {
-			let input = {
-				date: this.$moment(this.date)
-					.subtract(1, 'd')
-					.format('YYYY-MM-DD'),
-			}
-
-			this.viewUsers(input)
-
-			this.date = this.$moment(this.date).subtract(1, 'd')
-		},
-		click_date_next() {
-			let input = {
-				date: this.$moment(this.date)
-					.add(1, 'd')
-					.format('YYYY-MM-DD'),
-			}
-
-			this.viewUsers(input)
-			this.date = this.$moment(this.date).add(1, 'd')
-		},
-		click_date_now() {
-			let input = {
-				date: this.$moment().format('YYYY-MM-DD'),
-			}
-
-			this.viewUsers(input)
-			this.date = this.$moment()
-		},
-		click_date_picker() {
-			let input = {
-				date: this.$moment(this.date_picker.date).format('YYYY-MM-DD'),
-			}
-			if (this.$store.state.meData.role.id !== '4') {
-				input.business = this.$store.state.meData.businessID
-			}
-			this.viewUsers(input)
-			this.date = this.$moment(this.date_picker.date)
-		},
 		addNewItem() {
 			if (this.addedItems.length < 5) {
-				let splitLine = this.EvidenceField.evidence.txtField.value.split('\n')
+				let splitLine = this.EvidenceField.evidence.txtField.value
 
-				const newItem = {
-					degree: this.EvidenceField.degree.txtField.value,
-					evidence: splitLine,
-				}
 				if (this.EvidenceField.degree.txtField.value === '') {
 					this.sweetDialog_info.title = `추가 실패`
 					this.sweetDialog_info.content = `차수가 입력되지않았습니다.`
@@ -567,8 +503,13 @@ export default {
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
 				} else {
+					const newItem = {
+						degree: this.EvidenceField.degree.txtField.value,
+						evidence: splitLine,
+					}
+
 					this.addedItems.push(newItem)
-					this.EvidenceField.degree.txtField.value = ''
+					this.EvidenceField.degree.txtField.value = this.addedItems.length + 1 + '차'
 					this.EvidenceField.evidence.txtField.value = ''
 				}
 			} else {
@@ -580,7 +521,12 @@ export default {
 			}
 		},
 
-		openSaveInfoModal() {
+		deleteEvidence(itemToDelete) {
+			this.addedItems = this.addedItems.filter(item => item !== itemToDelete)
+			this.EvidenceField.degree.txtField.value = this.addedItems.length + 1 + '차'
+		},
+
+		async openSaveInfoModal() {
 			if (this.addedItems.length === 0) {
 				this.sweetDialog_info.title = `저장 실패`
 				this.sweetDialog_info.content = `증빙자료, 기타 안내를 입력해주세요`
@@ -594,31 +540,33 @@ export default {
 					this.sweetDialog_info.modalValue = ''
 					this.sweetDialog_info.buttonType = 'oneBtn'
 					this.sweetDialog_info.open = true
-				} else {
-					let addEtcLength = this.addedItems.length
-					for (let i = 0; i <= addEtcLength; i++) {
+				}
+				if (this.originalAddedItems.length === 0) {
+					const newItem = {
+						degree: 'etc',
+						evidence: this.etcInfo.txtField.value,
+					}
+					this.addedItems.push(newItem)
+					for (let i = 0; i <= this.addedItems.length; i++) {
 						let data = {
-							turn: i === addEtcLength ? 'etc' : this.addedItems[i].degree,
-							inputFiles: {
-								evidence: i === addEtcLength ? this.etcInfo.txtField.value : this.addedItems[i].evidence,
-							},
+							turn: this.addedItems[i].degree,
+							content: this.addedItems[i].evidence,
 							businessID: this.$store.state.businessSelectBox.value,
 						}
 
 						this.$store.dispatch('createSystem', data).then(async () => {
+							this.addedItems = []
+							this.etcInfo.txtField.value = ''
+							this.EvidenceField.evidence.txtField.value = ''
+							this.EvidenceField.degree.txtField.value = ''
 							this.sweetDialog_info.open = false
 							this.$store.state.loading = true
 							this.saveDialogStatus.title = `저장 완료`
 							this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
 							this.saveDialogStatus.cancelBtnText = '확인'
 							this.saveDialogStatus.open = true
-							const userViewData = {
-								idArr: this.userID,
-								businessID: this.$store.state.businessSelectBox.value,
-							}
-							await this.userView(userViewData)
 							const businessData = {
-								idArr: this.businessID,
+								idArr: this.$store.state.businessSelectBox.value,
 							}
 							await this.businessView(businessData)
 							await this.messageView(businessData)
@@ -626,6 +574,63 @@ export default {
 							this.$store.state.loading = false
 						})
 					}
+				} else {
+					let originData = this.addedItems.filter(x => x.id)
+					let createData = this.addedItems.filter(x => !x.id)
+					let updateData = []
+					let deleteData = []
+					for (let index = 0; index < this.originalAddedItems.length; index++) {
+						const element = this.originalAddedItems[index]
+						let idx = originData.findIndex(x => x.id === element.id)
+						if (idx !== -1) {
+							updateData.push(element)
+						} else {
+							deleteData.push(element)
+						}
+					}
+					console.log(createData)
+					for (let i = 0; i < createData.length; i++) {
+						let data = {
+							turn: createData[i].degree,
+							content: createData[i].evidence,
+							businessID: this.$store.state.businessSelectBox.value,
+						}
+
+						await this.$store.dispatch('createSystem', data).then(async () => {})
+					}
+					for (let index = 0; index < updateData.length; index++) {
+						let data = {
+							id: updateData[index].id,
+							turn: updateData[index].degree,
+							content: updateData[index].evidence,
+							businessID: this.$store.state.businessSelectBox.value,
+						}
+
+						await this.$store.dispatch('updateSystem', data).then(async () => {})
+					}
+					for (let index = 0; index < deleteData.length; index++) {
+						let data = {
+							id: deleteData[index].id,
+						}
+						await this.$store.dispatch('deleteSystem', data).then(async () => {})
+					}
+					this.addedItems = []
+					this.etcInfo.txtField.value = ''
+					this.EvidenceField.evidence.txtField.value = ''
+					this.EvidenceField.degree.txtField.value = ''
+					this.sweetDialog_info.open = false
+					this.$store.state.loading = true
+					this.saveDialogStatus.title = `저장 완료`
+					this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					const businessData = {
+						idArr: this.$store.state.businessSelectBox.value,
+					}
+					await this.businessView(businessData)
+					await this.messageView(businessData)
+					await this.infoView(businessData)
+					this.$store.state.loading = false
 				}
 			}
 		},
@@ -667,7 +672,6 @@ export default {
 		},
 		save_confirm() {
 			this.$store.state.loading = true
-			console.log(this.clickVariation)
 
 			if (Object.keys(this.clickVariation).length !== 0) {
 				let realType
@@ -699,13 +703,8 @@ export default {
 					this.saveDialogStatus.cancelBtnText = '확인'
 					this.saveDialogStatus.open = true
 					this.$store.state.loading = false
-					const userViewData = {
-						idArr: this.userID,
-						businessID: this.$store.state.businessSelectBox.value,
-					}
-					await this.userView(userViewData)
 					const businessData = {
-						idArr: this.businessID,
+						idArr: this.$store.state.businessSelectBox.value,
 					}
 					await this.businessView(businessData)
 					await this.messageView(businessData)
@@ -739,13 +738,8 @@ export default {
 					this.saveDialogStatus.buttonType = 'oneBtn'
 					this.saveDialogStatus.cancelBtnText = '확인'
 					this.saveDialogStatus.open = true
-					const userViewData = {
-						idArr: this.userID,
-						businessID: this.$store.state.businessSelectBox.value,
-					}
-					await this.userView(userViewData)
 					const businessData = {
-						idArr: this.businessID,
+						idArr: this.$store.state.businessSelectBox.value,
 					}
 					await this.businessView(businessData)
 					await this.messageView(businessData)
@@ -757,7 +751,7 @@ export default {
 		SMSClick(val) {
 			this.clickVariation = {}
 			this.clickVariation = val
-			console.log(this.clickVariation)
+
 			this.EvidenceField.title.txtField.value = val.SMStitle
 			this.EvidenceField.sms.txtField.value = val.detail
 			this.searchsel1.value = val.type
