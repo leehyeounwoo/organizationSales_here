@@ -270,8 +270,10 @@ export const productsFilter = gql`
 	}
 `
 export const productsCount = gql`
-	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS) {
-		productsConnection(where: { businessID: $businessID, contractStatus: $contractStatus }) {
+	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS, $housingType: String, $dong: String, $ho: String) {
+		productsConnection(
+			where: { businessID: $businessID, contractStatus: $contractStatus, housingType: $housingType, dong: $dong, ho: $ho }
+		) {
 			aggregate {
 				totalCount
 				count

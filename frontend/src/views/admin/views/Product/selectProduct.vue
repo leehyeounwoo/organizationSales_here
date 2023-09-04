@@ -216,6 +216,15 @@ export default {
 				start: (this.productManager.page - 1) * this.productManager.itemsPerPage,
 				limit: this.productManager.itemsPerPage,
 			}
+			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
+				product_tableData['housingType'] = this.productFilter1.value
+			}
+			if (this.productFilter2.value && this.productFilter2.value !== 'all') {
+				product_tableData['dong'] = this.productFilter2.value
+			}
+			if (this.productFilter3.value && this.productFilter3.value !== 'all') {
+				product_tableData['ho'] = this.productFilter3.value
+			}
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {
 				productArr: this.productIdArr,
@@ -265,8 +274,8 @@ export default {
 			if (this.productFilter3.value && this.productFilter3.value !== 'all') {
 				item['ho'] = this.productFilter3.value
 			}
-			console.log(item)
 			await this.product_table(item)
+			await this.productsCountView(item)
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
@@ -494,7 +503,6 @@ export default {
 						}
 					}
 					this.productManager.items = JSON.parse(JSON.stringify(this.productManager.items))
-					console.log(this.productManager.items)
 					this.productManager.items.forEach(el => {
 						if (el.assingnmentData) {
 							el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
