@@ -1758,7 +1758,9 @@
 			<!-- 물건배정 - 상태 -->
 			<template v-slot:[`item.product_status`]="{ item }">
 				<v-layout v-if="item.assingnmentData">
-					<div class="d-flex align-center justify-center status_box mr-1 px-1">{{ item.assingnmentTeamData.title }}</div>
+					<div v-if="item.assingnmentTeamData" class="d-flex align-center justify-center status_box mr-1 px-1">
+						{{ item.assingnmentTeamData.title }}
+					</div>
 					<div
 						class="d-flex align-center justify-center status_box mr-1 px-1"
 						:alt="item.assingnmentUserData.username"

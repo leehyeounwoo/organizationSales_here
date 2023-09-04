@@ -76,10 +76,13 @@ export default {
 				dialog: false,
 				todayTime: '',
 				holdingDashboard: {
+					productIdArr: [],
+					userIdArr: [],
+					teamIdArr: [],
 					headers: [
 						{ text: '주택형', value: 'housingType' },
 						{ text: '동', value: 'dong' },
-						{ text: '층', value: '' },
+						// { text: '층', value: '' },
 						{ text: '호수', value: 'ho' },
 						{ text: '담당자', value: 'holdingDashboardUser' },
 						{ text: '배정시간', value: 'holdingDashboarduUpdated_at' },
@@ -606,8 +609,67 @@ export default {
 				this.productManager.items_origin = JSON.parse(JSON.stringify(res.products))
 			})
 		},
-		holdTimeShow() {
-			this.holdingDetail.holdingDashboard.items = this.productManager.items.filter(x => x.assingnmentData)
+		async holdTimeShow() {
+			const data1 = {
+				businessID: this.$store.state.businessSelectBox.value,
+				contractStatus: 'noContract',
+			}
+			await this.$store.dispatch('products', data1).then(res => {
+				this.holdingDetail.holdingDashboard.productIdArr = res.products.map(x => x.id)
+				this.holdingDetail.holdingDashboard.items = res.products
+			})
+			const data2 = {
+				productArr: this.holdingDetail.holdingDashboard.productIdArr,
+				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+				created_at_lte: this.$moment(
+					this.$moment()
+						.add(1, 'd')
+						.format('YYYY-MM-DD'),
+				),
+				status: 'assignment',
+			}
+			await this.$store.dispatch('assignments', data2).then(res2 => {
+				this.holdingDetail.holdingDashboard.userIdArr = res2.assignments.map(x => x.userID)
+				for (let index = 0; index < res2.assignments.length; index++) {
+					const element = res2.assignments[index]
+					this.holdingDetail.holdingDashboard.items.filter(x => x.id === element.productID)[0].assingnmentData = element
+				}
+			})
+			const data3 = {
+				idArr: this.holdingDetail.holdingDashboard.idArr,
+			}
+			await this.$store.dispatch('users', data3).then(res3 => {
+				this.holdingDetail.holdingDashboard.teamIdArr = res3.users.map(x => x.teamID)
+				for (let index = 0; index < this.holdingDetail.holdingDashboard.items.length; index++) {
+					const element = this.holdingDetail.holdingDashboard.items[index]
+					if (element.assingnmentData) {
+						element.assingnmentUserData = res3.users.filter(x => x.id === element.assingnmentData.userID)[0]
+					}
+				}
+			})
+			const data4 = {
+				idArr: this.holdingDetail.holdingDashboard.teamIdArr,
+			}
+			await this.$store.dispatch('teams', data4).then(res4 => {
+				for (let index = 0; index < this.holdingDetail.holdingDashboard.items.length; index++) {
+					const element = this.holdingDetail.holdingDashboard.items[index]
+					if (element.assingnmentData) {
+						element.assingnmentTeamData = res4.teams.filter(x => x.id === element.assingnmentUserData.teamID)[0]
+					}
+				}
+				this.holdingDetail.holdingDashboard.items = JSON.parse(JSON.stringify(this.holdingDetail.holdingDashboard.items))
+				this.holdingDetail.holdingDashboard.items.forEach(el => {
+					if (el.assingnmentData) {
+						el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
+							this.$moment(),
+							'minute',
+						)
+					}
+				})
+			})
+			this.holdingDetail.holdingDashboard.items = this.holdingDetail.holdingDashboard.items.filter(x => x.assingnmentData)
+
+			// this.holdingDetail.holdingDashboard.items = this.productManager.items.filter(x => x.assingnmentData)
 			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
 			this.holdingDetail.dialog = true
 		},
