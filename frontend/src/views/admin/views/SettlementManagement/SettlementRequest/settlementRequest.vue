@@ -382,6 +382,18 @@ export default {
 				}
 			}
 			await this.$store.dispatch('settlementsStatusArr', settlementData).then(res => {
+				console.log(res)
+				// res.settlements.sort((a, b) => {
+				// if(a.settlementStatus === 'agree'){
+				// return 0
+				// }else if(){
+				// return 1
+				// }else{
+				// return -1
+				// }
+
+				// 					}),
+				// settlementStatus
 				this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}

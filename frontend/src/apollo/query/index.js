@@ -459,6 +459,7 @@ export const settlementsStatusArr = gql`
 				businessID: $businessID
 				paymentReject: $paymentReject
 			}
+			sort: "updated_at:desc"
 		) {
 			id
 			ProductID
