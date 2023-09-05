@@ -533,14 +533,13 @@ export default {
 				this.sweetDialog_info.modalValue = ''
 				this.sweetDialog_info.buttonType = 'oneBtn'
 				this.sweetDialog_info.open = true
+			} else if (this.etcInfo.txtField.value === '') {
+				this.sweetDialog_info.title = `저장 실패`
+				this.sweetDialog_info.content = `기타 안내가 입력되지 않았습니다`
+				this.sweetDialog_info.modalValue = ''
+				this.sweetDialog_info.buttonType = 'oneBtn'
+				this.sweetDialog_info.open = true
 			} else {
-				if (this.etcInfo.txtField.value === '') {
-					this.sweetDialog_info.title = `저장 실패`
-					this.sweetDialog_info.content = `기타 안내가 입력되지 않았습니다`
-					this.sweetDialog_info.modalValue = ''
-					this.sweetDialog_info.buttonType = 'oneBtn'
-					this.sweetDialog_info.open = true
-				}
 				if (this.originalAddedItems.length === 0) {
 					const newItem = {
 						degree: 'etc',
@@ -560,7 +559,6 @@ export default {
 							this.EvidenceField.evidence.txtField.value = ''
 							this.EvidenceField.degree.txtField.value = ''
 							this.sweetDialog_info.open = false
-							this.$store.state.loading = true
 							this.saveDialogStatus.title = `저장 완료`
 							this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
 							this.saveDialogStatus.cancelBtnText = '확인'
@@ -571,7 +569,6 @@ export default {
 							await this.businessView(businessData)
 							await this.messageView(businessData)
 							await this.infoView(businessData)
-							this.$store.state.loading = false
 						})
 					}
 				} else {
@@ -619,7 +616,6 @@ export default {
 					this.EvidenceField.evidence.txtField.value = ''
 					this.EvidenceField.degree.txtField.value = ''
 					this.sweetDialog_info.open = false
-					this.$store.state.loading = true
 					this.saveDialogStatus.title = `저장 완료`
 					this.saveDialogStatus.content = `지급 안내 저장이 완료되었습니다`
 					this.saveDialogStatus.cancelBtnText = '확인'
@@ -630,7 +626,6 @@ export default {
 					await this.businessView(businessData)
 					await this.messageView(businessData)
 					await this.infoView(businessData)
-					this.$store.state.loading = false
 				}
 			}
 		},

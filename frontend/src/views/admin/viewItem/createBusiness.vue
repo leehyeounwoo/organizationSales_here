@@ -291,11 +291,12 @@ export default {
 			this.$store.state.loading = true
 			if (!navigator.geolocation) {
 				return this.open_disable_dialog({ title: '오류발생', content: '위치정보를 허용해 주세요.' }, 'error')
+			} else {
+				navigator.geolocation.getCurrentPosition(position => {
+					this.setdialog.items[6].value = this.computeDistance(position.coords)
+					this.$store.state.loading = false
+				})
 			}
-			navigator.geolocation.getCurrentPosition(position => {
-				this.setdialog.items[6].value = this.computeDistance(position.coords)
-				this.$store.state.loading = false
-			})
 		},
 		select2(select) {
 			if (select.selectBox.value === '30') {

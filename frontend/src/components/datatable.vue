@@ -2630,7 +2630,6 @@ export default {
 		nameClick(item) {
 			this.$store.state.datatableItem = item
 			this.datatable.noweditting = this.datatable.items.indexOf(item)
-			this.clickName()
 		},
 		roleTypeText(data) {
 			if (data === 'ROLE_SUPER_ADMIN') {
@@ -2849,7 +2848,6 @@ export default {
 		clickDeleteBtn: Function,
 		saveImgBtn: Function,
 		clickEditBtn: Function,
-		clickName: Function,
 		changeUser: Function,
 		clickCollectBtn: Function,
 		imgDialogShow: Function,
