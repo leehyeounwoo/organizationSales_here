@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify'
 import 'moment/locale/ko'
 import VueMoment from 'vue-moment'
 import VueMeta from 'vue-meta'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 import VueTheMask from 'vue-the-mask'
 import VueMask from 'vue-the-mask'
 import moment from 'moment'
@@ -67,11 +67,11 @@ router.beforeEach(async (to, from, next) => {
 import VueQrcodeReader from 'vue-qrcode-reader'
 Vue.use(VueQrcodeReader)
 Vue.use(VueTheMask)
-const socket = io(process.env.VUE_APP_BACKEND_SOCKET, {
-	reconnection: true,
-	transports: ['websocket'],
-})
-Vue.prototype.$socket = socket
+// const socket = io(process.env.VUE_APP_BACKEND_SOCKET, {
+// 	reconnection: true,
+// 	transports: ['websocket'],
+// })
+// Vue.prototype.$socket = socket
 
 Vue.config.productionTip = false
 

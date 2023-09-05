@@ -8,7 +8,7 @@ import notAuth from '../views/errorpage/NotAuthenticated.vue'
 import mainPage from '../views/counselor/main.vue'
 // 메인 화면
 const KIOSK = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/boardLayout/KIOSK.vue')
-const kioskLogin = () => import(/* webpackChunkName: "kioskLogin" */ '../views/admin/login/kioskLogin.vue')
+const kioskLogin = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/login/kioskLogin.vue')
 const dashBoard = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/dashboard.vue')
 const productManagement = () => import(/* webpackChunkName: "KIOSK" */ '../views/admin/views/Product/productManagement.vue')
 const attendanceManagement = () =>
@@ -26,6 +26,7 @@ const routes = [
 		path: '/admin/login',
 		component: kioskLogin,
 		name: 'kioskLogin',
+		meta: { requiresAuth: true },
 	},
 	{ path: '*', name: 'notfound', component: mainPage },
 	{ path: '/', name: 'mainPage', component: mainPage },
