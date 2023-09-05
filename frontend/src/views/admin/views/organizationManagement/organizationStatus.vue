@@ -158,7 +158,9 @@ export default {
 	data() {
 		return {
 			add_team_data: [],
+			save_add_team: [],
 			add_rank_data: [],
+			save_add_rank: [],
 			sweetDialog2: {
 				open: false,
 				title: '팀 추가',
@@ -557,6 +559,7 @@ export default {
 				},
 			}
 			this.right_data.push(this.add_rank_data)
+			this.save_add_rank.push(this.add_rank_data)
 		},
 		addTeamToChild(val) {
 			if (val === '') {
@@ -582,23 +585,27 @@ export default {
 				},
 			}
 			this.left_data.push(this.add_team_data)
+			this.save_add_team.push(this.add_team_data)
 		},
 		async applyTeam() {
 			this.$store.state.loading = true
-			if (this.add_team_data.length !== 0) {
-				let teamData1 = {
-					businessID: this.$store.state.businessSelectBox.value,
-					title: this.add_team_data.value,
+			if (this.save_add_team.length !== 0) {
+				for (let i = 0; i < this.save_add_team.length; i++) {
+					let teamData1 = {
+						businessID: this.$store.state.businessSelectBox.value,
+						title: this.save_add_team[i].value,
+					}
+					if (this.save_add_team[i].selectBox.value && this.save_add_team[i].selectBox.value === '사용') {
+						teamData1['useYn'] = true
+					} else {
+						teamData1['useYn'] = false
+					}
+					await this.$store.dispatch('createTeam', teamData1).then(() => {
+						this.sweetDialog2.open = false
+						this.$store.state.loading = false
+					})
 				}
-				if (this.add_team_data.selectBox.value && this.add_team_data.selectBox.value === '사용') {
-					teamData1['useYn'] = true
-				} else {
-					teamData1['useYn'] = false
-				}
-				await this.$store.dispatch('createTeam', teamData1).then(() => {
-					this.sweetDialog2.open = false
-					this.$store.state.loading = false
-				})
+				this.save_add_team = []
 			} else {
 				for (let i = 0; i < this.left_data_origin.length; i++) {
 					let teamData2 = {}
@@ -633,20 +640,23 @@ export default {
 		},
 		async applyRank() {
 			this.$store.state.loading = true
-			if (this.add_rank_data.length !== 0) {
-				let rankData1 = {
-					businessID: this.$store.state.businessSelectBox.value,
-					rankName: this.add_rank_data.value,
+			if (this.save_add_rank.length !== 0) {
+				for (let i = 0; i < this.save_add_rank.length; i++) {
+					let rankData1 = {
+						businessID: this.$store.state.businessSelectBox.value,
+						rankName: this.save_add_rank[i].value,
+					}
+					if (this.save_add_rank[i].selectBox.value === '사용') {
+						rankData1['useYn'] = true
+					} else {
+						rankData1['useYn'] = false
+					}
+					await this.$store.dispatch('createRank', rankData1).then(() => {
+						this.sweetDialog3.open = false
+						this.$store.state.loading = false
+					})
 				}
-				if (this.add_rank_data.selectBox.value === '사용') {
-					rankData1['useYn'] = true
-				} else {
-					rankData1['useYn'] = false
-				}
-				await this.$store.dispatch('createRank', rankData1).then(() => {
-					this.sweetDialog3.open = false
-					this.$store.state.loading = false
-				})
+				this.save_add_rank = []
 			} else {
 				for (let i = 0; i < this.right_data_origin.length; i++) {
 					let rankData2 = {}
@@ -658,6 +668,20 @@ export default {
 						} else {
 							rankData2['useYn'] = false
 						}
+						this.$store.dispatch('updateRank', rankData2).then(() => {
+							this.sweetDialog3.open = false
+							this.$store.state.loading = false
+						})
+					}
+					if (this.right_data[i].selectBox.value !== this.right_data_origin[i].selectBox.value) {
+						rankData2['id'] = this.right_data[i].id
+						rankData2['rankName'] = this.right_data[i].value
+						if (this.right_data[i].selectBox.value === '사용') {
+							rankData2['useYn'] = true
+						} else {
+							rankData2['useYn'] = false
+						}
+						console.log(rankData2)
 						this.$store.dispatch('updateRank', rankData2).then(() => {
 							this.sweetDialog3.open = false
 							this.$store.state.loading = false
