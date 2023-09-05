@@ -612,7 +612,7 @@ export default {
 		async holdTimeShow() {
 			const data1 = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: 'contract',
 			}
 			await this.$store.dispatch('products', data1).then(res => {
 				this.holdingDetail.holdingDashboard.productIdArr = res.products.map(x => x.id)

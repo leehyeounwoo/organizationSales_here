@@ -290,12 +290,25 @@ export default {
 		checkLocation() {
 			this.$store.state.loading = true
 			if (!navigator.geolocation) {
+				this.$store.state.loading = false
 				return this.open_disable_dialog({ title: '오류발생', content: '위치정보를 허용해 주세요.' }, 'error')
 			} else {
-				navigator.geolocation.getCurrentPosition(position => {
-					this.setdialog.items[6].value = this.computeDistance(position.coords)
-					this.$store.state.loading = false
-				})
+				let ok = 0
+				const geolocation = setInterval(() => {
+					ok += 1
+					if (ok === 7) {
+						if (!navigator.geolocation.coords) {
+							this.$store.state.loading = false
+							clearInterval(geolocation)
+							return this.open_disable_dialog({ title: '오류발생', content: '다시 시도 해주세요.' }, 'error')
+						}
+					}
+					navigator.geolocation.getCurrentPosition(position => {
+						this.setdialog.items[6].value = this.computeDistance(position.coords)
+						clearInterval(geolocation)
+						this.$store.state.loading = false
+					})
+				}, 1000)
 			}
 		},
 		select2(select) {

@@ -27,20 +27,20 @@
 			:no-data-text="datatable.noDataText"
 			:server-items-length="datatable.total"
 			:class="datatable.disableSort ? 'noSort' : ''"
-			:footer-props="{
+		>
+			<!-- :footer-props="{
 				['items-per-page-text']: `• Total : ${datatable.total ? datatable.total : datatable.items.length}`,
 				['page-text']: ` 1 - ${
 					datatable.itemsPerPage === -1
 						? 1
 						: datatable.total
 						? Math.ceil(datatable.total / datatable.itemsPerPage)
-						: datatable.itemsPerPage
+						: datatable.itemsPerPage > 0
 						? Math.ceil(datatable.items.length / datatable.itemsPerPage)
 						: Math.ceil(datatable.items.length / 10)
 				} of ${datatable.page ? datatable.page : 1} `,
 				['items-per-page-options']: datatable.itemsPerPage !== -1 ? [5, 10, 15, 20, 30, 99] : [5, 10, 15, 20, 30, 99, -1],
-			}"
-		>
+			}" -->
 			<template v-slot:[`header.team`]="{ header }">
 				{{ header.text }}
 				<v-icon small style="background-color:white; border: 0.1px solid gray;" @click="teamChoiceClick">mdi-format-list-group-plus</v-icon>
@@ -2389,8 +2389,6 @@ export default {
 	},
 	methods: {
 		settlementStatusValue(val) {
-			console.log(val)
-			console.log()
 			// item.settlementStatus === 'waiting'
 			// 							? '대기'
 			// 							: item.settlementStatus === 'agree'

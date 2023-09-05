@@ -26,7 +26,7 @@ const routes = [
 		path: '/admin/login',
 		component: kioskLogin,
 		name: 'kioskLogin',
-		meta: { requiresAuth: true },
+		// meta: { requiresAuth: true },
 	},
 	{ path: '*', name: 'notfound', component: mainPage },
 	{ path: '/', name: 'mainPage', component: mainPage },

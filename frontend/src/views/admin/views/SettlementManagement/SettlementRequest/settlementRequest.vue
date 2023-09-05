@@ -34,7 +34,7 @@
 		</v-layout>
 		<v-layout class="mt-4">
 			<v-flex xs8>
-				<datatable :datatable="settlementTable" class="notice_table" @pagination="pagination" @click="editUserData" />
+				<datatable :datatable="settlementTable" class="notice_table" @click="editUserData" />
 			</v-flex>
 			<v-flex xs4 class="ml-10">
 				<v-layout style="border-top:1px solid black; height: 50px">
@@ -215,7 +215,6 @@ export default {
 				pageCount: 1,
 				// total: 1,
 			},
-
 			searchsel: {
 				value: '',
 				errorMessage: '',
@@ -367,6 +366,7 @@ export default {
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 			}
+			console.log(this.list)
 			this.settlementTable.items = JSON.parse(JSON.stringify(this.list))
 			this.settlementTable.origin_items = JSON.parse(JSON.stringify(this.list))
 		},
@@ -394,7 +394,7 @@ export default {
 
 				// 					}),
 				// settlementStatus
-				this.settlementTable.total = res.settlementsConnection.aggregate.count
+				// this.settlementTable.total = res.settlementsConnection.aggregate.count
 				res.settlements.forEach(element => {
 					let listData = {}
 					listData.settlements = element
@@ -503,42 +503,6 @@ export default {
 			// )
 		},
 
-		async pagination(item) {
-			if (item.page > this.table.page) {
-				// 다음 페이지
-				let range = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					page: item.page,
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
-				}
-
-				await this.usersView(range)
-			} else if (item.itemsPerPage !== this.table.itemsPerPage) {
-				// 한페이지에 보여줄 아이템 개수 변경
-				let range = {
-					start: 0,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					page: 1,
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
-				}
-
-				await this.usersView(range)
-			} else if (item.page < this.table.page) {
-				// 이전 페이지
-				let range = {
-					start: (item.page - 1) * item.itemsPerPage,
-					limit: item.itemsPerPage,
-					itemsPerPage: item.itemsPerPage,
-					page: item.page,
-					date: this.$moment(this.date).format('YYYY-MM-DD'),
-				}
-
-				await this.usersView(range)
-			}
-		},
 		date_filter(val) {
 			let date = this.$moment(val).format('ddd')
 
