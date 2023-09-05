@@ -331,6 +331,7 @@ export default {
 					readonly: false,
 				},
 			},
+			etcInfo_data: [],
 			searchsel1: {
 				value: '',
 				errorMessage: '',
@@ -431,7 +432,6 @@ export default {
 					res.systems.sort((a, b) => {
 						return new Date(a.turn.replace(/차/g, '')) - new Date(b.turn.replace(/차/g, ''))
 					})
-
 					res.systems.forEach((element, index) => {
 						const data = {}
 						if (element.turn !== 'etc') {
@@ -442,6 +442,7 @@ export default {
 							this.originalAddedItems.push(data)
 							this.EvidenceField.degree.txtField.value = index + 1 + '차'
 						} else {
+							this.etcInfo_data = element
 							this.etcInfo.txtField.value = element.content
 						}
 					})
@@ -585,7 +586,6 @@ export default {
 							deleteData.push(element)
 						}
 					}
-					console.log(createData)
 					for (let i = 0; i < createData.length; i++) {
 						let data = {
 							turn: createData[i].degree,
@@ -602,9 +602,14 @@ export default {
 							content: updateData[index].evidence,
 							businessID: this.$store.state.businessSelectBox.value,
 						}
-
 						await this.$store.dispatch('updateSystem', data).then(async () => {})
 					}
+					let data2 = {
+						id: this.etcInfo_data.id,
+						turn: this.etcInfo_data.turn,
+						content: this.etcInfo.txtField.value,
+					}
+					await this.$store.dispatch('updateSystem', data2).then(async () => {})
 					for (let index = 0; index < deleteData.length; index++) {
 						let data = {
 							id: deleteData[index].id,
