@@ -110,7 +110,12 @@
 						<span v-if="items.disable" style="font-size:0.75rem;">
 							{{ items.date }}
 						</span>
-						<DatepickerDialog v-else :picker="items" class="d-flex align-center date_picker3"></DatepickerDialog>
+						<DatepickerDialog
+							v-else
+							:picker="items"
+							:allowed_dates="val => allowed_dates(val, idx)"
+							class="d-flex align-center date_picker3"
+						></DatepickerDialog>
 					</v-flex>
 				</v-layout>
 				<v-layout>
@@ -955,6 +960,24 @@ export default {
 	mounted() {},
 
 	methods: {
+		allowed_dates(val, idx) {
+			if (idx === '2') {
+				val = this.start_date_picker[1].date <= val
+				return val
+			}
+			if (idx === '3') {
+				val = this.start_date_picker[2].date <= val
+				return val
+			}
+			if (idx === '4') {
+				val = this.start_date_picker[3].date <= val
+				return val
+			}
+			if (idx === '5') {
+				val = this.start_date_picker[4].date <= val
+				return val
+			}
+		},
 		async refreshData() {
 			// date
 			const settlementViewData = {
