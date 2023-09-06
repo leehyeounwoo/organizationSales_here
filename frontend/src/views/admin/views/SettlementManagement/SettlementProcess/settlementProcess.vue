@@ -237,6 +237,7 @@
 								@input="updateBankAccount(degree, $event)"
 								outlined
 								dense
+								maxlength="20"
 							></v-text-field>
 							<span
 								class="spanClass2"

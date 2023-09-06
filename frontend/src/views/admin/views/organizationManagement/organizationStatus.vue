@@ -51,7 +51,7 @@
 								<txtField :txtField="edit.txtField" v-model="edit.txtField.value" class="search_box_admin"></txtField>
 							</v-flex>
 							<v-flex xs6 style="align-self: end;">
-								<txtField :txtField="edit.txtField" v-model="edit.txtField2.value" class="search_box_admin"></txtField>
+								<txtField :txtField="edit.txtField2" v-model="edit.txtField2.value" class="search_box_admin"></txtField>
 							</v-flex>
 						</v-layout>
 						<v-layout v-if="edit.type === 3" class=" py-3 px-1">
@@ -240,7 +240,7 @@ export default {
 					txtField2: {
 						value: '',
 						clearable: false,
-						maxlength: '255',
+						maxlength: '20',
 						outlined: true,
 						backCol: 'white',
 						readonly: false,
