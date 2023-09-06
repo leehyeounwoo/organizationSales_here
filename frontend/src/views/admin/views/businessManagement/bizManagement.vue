@@ -61,7 +61,7 @@ export default {
 					{
 						title: '사업지 명',
 						must: true,
-						type: 'txtfield',
+						type: 'txtfieldCheck',
 						value: '',
 						txtfield: {
 							maxlength: '255',
@@ -70,6 +70,7 @@ export default {
 							errorMessage: '',
 							autocomplete: 'off',
 							placeholder: '사업지명을 입력해주세요.',
+							readonly: false,
 						},
 					},
 					// 1

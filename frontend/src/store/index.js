@@ -50,6 +50,7 @@ import {
 	settlements,
 	notices,
 	businesses_title,
+	businessNameCheck,
 	messages,
 	businessManager,
 	systems,
@@ -464,6 +465,27 @@ export default new Vuex.Store({
 				apollo.clients['defaultClient']
 					.query({
 						query: businesses_title,
+						variables: input,
+						context: {
+							headers: {
+								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+							},
+						},
+					})
+					.then(({ data }) => {
+						resolve(data)
+					})
+					.catch(err => {
+						reject(err)
+					})
+			})
+		},
+		// eslint-disable-next-line no-empty-pattern
+		businessNameCheck({}, input) {
+			return new Promise((resolve, reject) => {
+				apollo.clients['defaultClient']
+					.query({
+						query: businessNameCheck,
 						variables: input,
 						context: {
 							headers: {

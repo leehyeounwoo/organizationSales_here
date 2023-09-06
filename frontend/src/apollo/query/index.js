@@ -291,6 +291,14 @@ export const productsCount = gql`
 		}
 	}
 `
+export const businessNameCheck = gql`
+	query businessNameCheck($name: String) {
+		businesses(where: { name: $name }) {
+			id
+			name
+		}
+	}
+`
 export const businesses = gql`
 	query($name: String, $idArr: [ID], $code: String) {
 		businesses(where: { name_contains: $name, id: $idArr, code: $code }) {

@@ -55,6 +55,26 @@
 									></txtField>
 								</v-flex>
 							</v-flex>
+							<v-flex xs9 v-else-if="left.type === 'txtfieldCheck'" class="table_right_white px-2 biz_table_right">
+								<v-layout pt-3>
+									<v-flex xs6>
+										<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
+									</v-flex>
+									<v-flex xs4 v-if="setdialog.type === 'create'">
+										<v-btn v-if="left.txtfield.readonly === false" elevation="0" class="ml-2 file_btn" @click="checkBusinessName(left)">
+											중복 체크
+										</v-btn>
+										<v-layout v-else>
+											<v-btn elevation="0" class="ml-2 file_btn">
+												중복 체크 완료
+											</v-btn>
+											<v-btn elevation="0" class="ml-2 file_btn" @click="resetName(left)">
+												다시 입력
+											</v-btn>
+										</v-layout>
+									</v-flex>
+								</v-layout>
+							</v-flex>
 							<v-flex xs9 v-else-if="left.type === 'time'" class="table_right_white px-2 biz_table_right">
 								<v-flex xs6 class="pt-3">
 									<v-layout>
@@ -95,7 +115,7 @@
 										<v-flex xs8>
 											<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 										</v-flex>
-										<v-flex xs4>
+										<v-flex xs4 v-if="setdialog.type === 'create'">
 											<v-btn elevation="0" class="ml-2 file_btn" @click="csvImportClick(index)">
 												<v-img max-width="14" class="mr-1" src="@/assets/images/input_btn.png" />파일 업로드
 											</v-btn>
@@ -230,6 +250,7 @@ export default {
 	},
 	data() {
 		return {
+			duplicateCheck: false,
 			parseCsvStatus: false,
 			mapfields: ['housingType', 'dong', 'ho'],
 			parseCsv: null,
@@ -273,6 +294,35 @@ export default {
 		},
 	},
 	methods: {
+		resetName(val) {
+			val.txtfield.readonly = false
+		},
+		checkBusinessName(val) {
+			if (val.value !== '') {
+				const data = {
+					name: val.value,
+				}
+				this.$store.dispatch('businessNameCheck', data).then(res => {
+					if (res.businesses.length === 0) {
+						this.sweetInfo.modalIcon = 'info'
+						this.sweetInfo.open = true
+						this.sweetInfo.title = '중복 체크'
+						this.sweetInfo.content = '사용가능한 사업지 명 입니다.'
+						val.txtfield.readonly = true
+					} else {
+						this.sweetInfo.open = true
+						this.sweetInfo.modalIcon = 'error'
+						this.sweetInfo.title = '중복 체크'
+						this.sweetInfo.content = '중복된 사업지 명 입니다.'
+					}
+				})
+			} else {
+				this.sweetInfo.open = true
+				this.sweetInfo.modalIcon = 'info'
+				this.sweetInfo.title = '중복 체크'
+				this.sweetInfo.content = '사업지 명을 입력해주세요.'
+			}
+		},
 		open_disable_dialog(data, info) {
 			// 불가 팝업 열기
 
@@ -487,11 +537,13 @@ export default {
 		},
 		checkManager(item) {
 			if (!item.txtfield3.value) {
+				this.sweetInfo.modalIcon = 'info'
 				this.sweetInfo.title = '아이디 입력'
 				this.sweetInfo.content = '아이디를 입력해주세요.'
 				return (this.sweetInfo.open = true)
 			}
 			if (!this.checkUrl(item.txtfield3.value)) {
+				this.sweetInfo.modalIcon = 'info'
 				this.sweetInfo.title = '이메일 형식'
 				this.sweetInfo.content = '이메일 형식이 아닙니다'
 				return (this.sweetInfo.open = true)
@@ -517,16 +569,25 @@ export default {
 		},
 		businessCheck() {
 			if (this.setdialog.items[0].value === '') {
+				this.sweetInfo.modalIcon = 'info'
 				this.sweetInfo.title = '사업지명 입력'
 				this.sweetInfo.content = '사업지명을 입력해주세요'
 				return (this.sweetInfo.open = true)
 			}
+			if (this.setdialog.items[0].txtfield.readonly === false) {
+				this.sweetInfo.modalIcon = 'info'
+				this.sweetInfo.title = '중복 체크'
+				this.sweetInfo.content = '사업지명 중복 체크를 실행해주세요.'
+				return (this.sweetInfo.open = true)
+			}
 			if (this.setdialog.items[1].value === '') {
+				this.sweetInfo.modalIcon = 'info'
 				this.sweetInfo.title = '대표번호 입력'
 				this.sweetInfo.content = '대표번호를 입력해주세요'
 				return (this.sweetInfo.open = true)
 			}
 			if (!this.checkPhone(this.setdialog.items[1].value) && !this.checkCall(this.setdialog.items[1].value)) {
+				this.sweetInfo.modalIcon = 'info'
 				this.sweetInfo.title = '대표번호 형식'
 				this.sweetInfo.content = '전화번호 형식이 아닙니다.'
 				return (this.sweetInfo.open = true)
@@ -534,6 +595,7 @@ export default {
 			for (let i = 0; i < this.right_data.length; i++) {
 				if (this.right_data[i].txtfield3.value) {
 					if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+						this.sweetInfo.modalIcon = 'info'
 						this.sweetInfo.title = '이메일 형식'
 						this.sweetInfo.content = '이메일 형식이 아닙니다.'
 						return (this.sweetInfo.open = true)
