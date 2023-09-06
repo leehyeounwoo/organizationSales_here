@@ -177,6 +177,7 @@ export default {
 		// },
 		async assignmentsView(data) {
 			await this.$store.dispatch('assignments', data).then(async res => {
+				console.log(res.assignments)
 				this.productIDArr = res.assignments.map(x => x.productID)
 				this.userIDArr = res.assignments.map(x => x.userID)
 				this.productTable.items = res.assignments

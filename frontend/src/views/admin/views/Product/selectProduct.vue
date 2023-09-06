@@ -140,6 +140,7 @@ export default {
 				totalpage: 1,
 				total: 0,
 				pageCount: 0,
+				waitingData: [],
 			},
 		}
 	},
@@ -347,9 +348,20 @@ export default {
 				this.businessData = res.businesses[0]
 			})
 		},
-		createAssignmentAction(item) {
-			if (item.assingnmentData) {
-				alert('이미 배정되어있는 물건입니다.')
+		async createAssignmentAction(item) {
+			console.log(item)
+			let select = {
+				businessID: this.$store.state.businessSelectBox.value,
+				productArr: item.id,
+				useYn: true,
+				status: 'waiting',
+			}
+			await this.$store.dispatch('assignments', select).then(res => {
+				this.productManager.waitingData = res.assignments
+			})
+			console.log(this.productManager.waitingData)
+			if (item.assingnmentData || this.productManager.waitingData.length !== 0) {
+				alert('이미 배정 또는 요청 처리중인 물건입니다.')
 			} else {
 				let nowTime = this.$moment().format('YYYY-MM-DD ')
 				let startTime = this.businessData.workingHoursStart.substr(0, 5)
