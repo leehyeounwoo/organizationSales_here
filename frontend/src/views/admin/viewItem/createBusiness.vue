@@ -60,7 +60,7 @@
 									<v-flex xs6>
 										<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 									</v-flex>
-									<v-flex xs4 v-if="setdialog.type === 'create'">
+									<v-flex xs4>
 										<v-btn v-if="left.txtfield.readonly === false" elevation="0" class="ml-2 file_btn" @click="checkBusinessName(left)">
 											중복 체크
 										</v-btn>
@@ -568,11 +568,13 @@ export default {
 			}
 		},
 		businessCheck() {
-			if (this.setdialog.items[0].value === '') {
-				this.sweetInfo.modalIcon = 'info'
-				this.sweetInfo.title = '사업지명 입력'
-				this.sweetInfo.content = '사업지명을 입력해주세요'
-				return (this.sweetInfo.open = true)
+			if (this.setdialog.type === 'create') {
+				if (this.setdialog.items[0].value === '') {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '사업지명 입력'
+					this.sweetInfo.content = '사업지명을 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
 			}
 			if (this.setdialog.items[0].txtfield.readonly === false) {
 				this.sweetInfo.modalIcon = 'info'

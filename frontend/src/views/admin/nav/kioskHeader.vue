@@ -4,6 +4,20 @@
 			<v-flex class="pl-10">
 				<v-btn class="kiosk_header_btn" @click="statusBoardShow">현황판</v-btn>
 				<v-btn class="kiosk_header_btn ml-3" @click="productShow">물건배정</v-btn>
+				<v-btn :class="settlementsCount === 0 ? 'kiosk_header_btn2 ml-3' : 'kiosk_header_btn_active ml-3'" @click="settlementShow"
+					>정산 대기
+					<span class="mr-1">
+						{{ settlementsCount }}
+					</span>
+					<v-progress-circular :rotate="-90" :size="20" :width="5" :value="settlementsValue" color="white"> </v-progress-circular>
+				</v-btn>
+				<v-btn :class="assignmentsCount === 0 ? 'kiosk_header_btn2 ml-3' : 'kiosk_header_btn_active ml-3'" @click="productShow"
+					>배정 대기
+					<span class="mr-1">
+						{{ assignmentsCount }}
+					</span>
+					<v-progress-circular :rotate="-90" :size="20" :width="5" :value="assignmentsValue" color="white"> </v-progress-circular>
+				</v-btn>
 			</v-flex>
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
 				<v-layout align-center>
@@ -36,8 +50,47 @@ export default {
 	components: {
 		selectBoxValueItems,
 	},
+	beforeDestroy() {
+		clearInterval(this.interval)
+	},
+	mounted() {
+		this.assignmentsInterval = setInterval(() => {
+			if (this.assignmentsValue === 100) {
+				const assignmentsViewData = {
+					businessID: this.$store.state.businessSelectBox.value,
+					status: 'waiting',
+					created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+					created_at_lte: this.$moment(
+						this.$moment()
+							.add(1, 'd')
+							.format('YYYY-MM-DD'),
+					),
+				}
+				this.assignmentView(assignmentsViewData)
+				return (this.assignmentsValue = 0)
+			}
+			this.assignmentsValue += 5
+		}, 500)
+		this.settlementsInterval = setInterval(() => {
+			if (this.settlementsValue === 100) {
+				const settlementsViewData = {
+					businessID: this.$store.state.businessSelectBox.value,
+					settlementStatus: 'waiting',
+				}
+				this.settlementsView(settlementsViewData)
+				return (this.settlementsValue = 0)
+			}
+			this.settlementsValue += 1
+		}, 1800)
+	},
 	data() {
 		return {
+			assignmentsInterval: {},
+			assignmentsValue: 0,
+			settlementsInterval: {},
+			settlementsValue: 0,
+			assignmentsCount: 0,
+			settlementsCount: 0,
 			holdingDetail: {
 				dialog: false,
 				todayTime: '',
@@ -120,13 +173,51 @@ export default {
 		// }
 	},
 	methods: {
+		async settlementsView(settlementsViewData) {
+			await this.$store.dispatch('settlements', settlementsViewData).then(res => {
+				this.settlementsCount = res.settlements.length
+			})
+		},
+		async assignmentView(assignmentsViewData) {
+			await this.$store
+				.dispatch('assignments', assignmentsViewData)
+				.then(res => {
+					this.assignmentsCount = res.assignments.length
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
 		businessValueChange(val) {
 			this.$store.state.businessSelectBox.value = val
 			this.$router.push('/KIOSK').catch(() => {})
+			this.assignmentsValue = 0
+			this.settlementsValue = 0
+			this.assignmentsCount = 0
+			this.settlementsCount = 0
+			const assignmentsViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+				status: 'counselorNoAssignment',
+				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+				created_at_lte: this.$moment(
+					this.$moment()
+						.add(1, 'd')
+						.format('YYYY-MM-DD'),
+				),
+			}
+			this.assignmentView(assignmentsViewData)
+			const settlementsViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+				settlementStatus: 'waiting',
+			}
+			this.settlementsView(settlementsViewData)
 			alert('사업지 변경이 완료되었습니다.')
 		},
 		productShow() {
-			this.$router.push('/admin/productManagement')
+			this.$router.push('/admin/productManagement').catch(() => {})
+		},
+		settlementShow() {
+			this.$router.push('/admin/settlementManagement').catch(() => {})
 		},
 		statusBoardShow() {
 			// console.log(this.$store.state.businessSelectBox.value)
@@ -205,6 +296,18 @@ export default {
 	width: 100px;
 	color: white !important;
 	background-color: #323153 !important;
+	font-weight: bold;
+}
+.kiosk_header_btn2 {
+	width: 150px;
+	color: white !important;
+	background-color: #323153 !important;
+	font-weight: bold;
+}
+.kiosk_header_btn_active {
+	width: 150px;
+	color: white !important;
+	background-color: #ff6600 !important;
 	font-weight: bold;
 }
 </style>

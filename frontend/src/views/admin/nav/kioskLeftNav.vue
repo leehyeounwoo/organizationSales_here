@@ -6,6 +6,20 @@
 		<v-layout class="logoLayout" style="" justify-center>
 			<span style="color:white">Members Here</span>
 		</v-layout>
+		<v-layout justify-center>
+			<span
+				style="color:#ff6600; 
+				font-size:1.25rem;
+				overflow:hidden;
+      	text-overflow:ellipsis;
+      	white-space:nowrap;
+"
+				>{{
+					this.$store.state.businessSelectBox.items &&
+						this.$store.state.businessSelectBox.items.filter(x => x.id === this.$store.state.businessSelectBox.value)[0].name
+				}}</span
+			>
+		</v-layout>
 		<div v-for="(list, index) in $store.state.dashBoardList" :key="index">
 			<v-layout
 				:class="index === 0 ? 'active' : 'listNav'"
