@@ -26,7 +26,9 @@ module.exports = {
       description: String
       type: String
     }
-
+    input businessNameCheckData {
+      name: String
+    }
     input UsersPermissionsLoginInput {
       identifier: String!
       password: String!
@@ -47,9 +49,13 @@ module.exports = {
     type UserPermissionsPasswordPayload {
       ok: Boolean!
     }
+    type businessNameCheckPayload {
+      ok: Boolean
+    }
   `,
   query: `
     me: UsersPermissionsMe
+    businessNameCheck(input:businessNameCheckData): businessNameCheckPayload
   `,
   mutation: `
     login(input: UsersPermissionsLoginInput!): UsersPermissionsLoginPayload!
@@ -60,6 +66,7 @@ module.exports = {
     emailConfirmation(confirmation: String!): UsersPermissionsLoginPayload
     sendSmsSettlement(phoneNumber: String!, content:String! ): UserPermissionsPasswordPayload
     userInfoEdit(input:userInfoEditData): UsersPermissionsPayload`,
+
   resolver: {
     Query: {
       me: {
@@ -76,6 +83,10 @@ module.exports = {
 
           return context.body.role;
         },
+      },
+      businessNameCheck: {
+        resolverOf: "application::business.business.businessNameCheck",
+        resolver: "application::business.business.businessNameCheck",
       },
       roles: {
         description: `Retrieve all the existing roles. You can't apply filters on this query.`,

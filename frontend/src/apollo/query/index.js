@@ -293,7 +293,7 @@ export const productsCount = gql`
 `
 export const businessNameCheck = gql`
 	query businessNameCheck($name: String) {
-		businesses(where: { name: $name }) {
+		businessNameCheck(input: { name: $name }) {
 			id
 			name
 		}
