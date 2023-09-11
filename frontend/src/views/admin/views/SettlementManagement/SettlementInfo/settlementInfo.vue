@@ -42,14 +42,18 @@
 										style="position: relative; background-color: orange; font-family: MalgunGothic; font-size: 14px; width: 100%; margin: 4px ; color: white;"
 									>
 										<p style="padding: 5px 0 0 5px; margin-bottom: 1px;" v-html="item.evidence.replace(/\n/g, '<br>')"></p>
-										<v-icon class="attachmentIconClass" @click="deleteEvidence(item)" style="position: absolute; top: 0; right: 0;"
+										<v-icon
+											v-if="addedItems.length - 1 === index"
+											class="attachmentIconClass"
+											@click="deleteEvidence(item)"
+											style="position: absolute; top: 0; right: 0;"
 											>mdi-alpha-x-circle-outline</v-icon
 										>
 									</div>
 								</div>
 							</v-layout>
 						</div>
-						<v-layout style="display: flex;">
+						<v-layout style="display: flex;" v-if="addedItems.length < 5">
 							<txtField
 								:txtField="EvidenceField.degree.txtField"
 								v-model="EvidenceField.degree.txtField.value"
@@ -58,7 +62,7 @@
 							></txtField>
 							<textarea v-model="EvidenceField.evidence.txtField.value" style="width: 70%;" class="search_box_modal2 mt-3"></textarea>
 						</v-layout>
-						<v-btn class="infoBtn mt-2 mb-4" color="#f0f2f8" elevation="0" @click="addNewItem"
+						<v-btn class="infoBtn mt-2 mb-4" color="#f0f2f8" elevation="0" @click="addNewItem" v-if="addedItems.length < 5"
 							><span
 								style="	font-family: MalgunGothic;
 								font-size: 14px;"
@@ -429,6 +433,7 @@ export default {
 			this.addedItems = []
 			if (this.$store.state.businessSelectBox.value === businessData.idArr) {
 				await this.$store.dispatch('systems', businessData).then(res => {
+					console.log(res)
 					res.systems.sort((a, b) => {
 						return new Date(a.turn.replace(/차/g, '')) - new Date(b.turn.replace(/차/g, ''))
 					})
@@ -508,7 +513,6 @@ export default {
 						degree: this.EvidenceField.degree.txtField.value,
 						evidence: splitLine,
 					}
-
 					this.addedItems.push(newItem)
 					this.EvidenceField.degree.txtField.value = this.addedItems.length + 1 + '차'
 					this.EvidenceField.evidence.txtField.value = ''

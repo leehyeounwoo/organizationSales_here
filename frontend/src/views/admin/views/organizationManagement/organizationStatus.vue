@@ -602,6 +602,8 @@ export default {
 					}
 					await this.$store.dispatch('createTeam', teamData1).then(() => {
 						this.sweetDialog2.open = false
+						this.teamEditDialog.dialog = false
+						this.update()
 						this.$store.state.loading = false
 					})
 				}
@@ -619,6 +621,8 @@ export default {
 						}
 						this.$store.dispatch('updateTeam', teamData2).then(() => {
 							this.sweetDialog2.open = false
+							this.teamEditDialog.dialog = false
+							this.update()
 							this.$store.state.loading = false
 						})
 					}
@@ -632,6 +636,8 @@ export default {
 						}
 						this.$store.dispatch('updateTeam', teamData2).then(() => {
 							this.sweetDialog2.open = false
+							this.teamEditDialog.dialog = false
+							this.update()
 							this.$store.state.loading = false
 						})
 					}

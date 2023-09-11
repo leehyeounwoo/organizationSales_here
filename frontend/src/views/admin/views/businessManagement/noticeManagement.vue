@@ -257,11 +257,13 @@ export default {
 				this.$store.dispatch('updateNotice', data).then(() => {
 					this.sweetDialog.open = false
 					this.first_notices()
+					this.reset_notice()
 				})
 			} else {
 				this.$store.dispatch('createNotice', data).then(() => {
 					this.sweetDialog.open = false
 					this.first_notices()
+					this.reset_notice()
 				})
 			}
 		},

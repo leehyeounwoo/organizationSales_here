@@ -303,7 +303,8 @@ export default {
 					name: val.value,
 				}
 				this.$store.dispatch('businessNameCheck', data).then(res => {
-					if (res.businesses.length === 0) {
+					console.log(res.businessNameCheck.ok)
+					if (res.businessNameCheck.ok) {
 						this.sweetInfo.modalIcon = 'info'
 						this.sweetInfo.open = true
 						this.sweetInfo.title = '중복 체크'
@@ -457,7 +458,7 @@ export default {
 		},
 		saveUser() {
 			let data = {
-				username: this.right_data.detail.username,
+				username: this.right_data.txtfield1.value,
 				email: this.right_data.detail.email,
 				name: this.right_data.detail.username,
 				phoneNumber: this.right_data.detail.phoneNumber,
@@ -515,16 +516,19 @@ export default {
 								this.sweetDialog.open = false
 								this.setdialog.dialog = false
 								this.getTable()
+								this.businessRefresh()
 							})
 						}
 					} else {
 						this.sweetDialog.open = false
 						this.modalClose()
 						this.getTable()
+						this.businessRefresh()
 					}
 					this.sweetDialog.open = false
 					this.setdialog.dialog = false
 					this.getTable()
+					this.businessRefresh()
 				})
 			} else if (this.setdialog.type === 'edit') {
 				data.id = this.setdialog.id
@@ -532,8 +536,15 @@ export default {
 					this.sweetDialog.open = false
 					this.modalClose()
 					this.getTable()
+					this.businessRefresh()
 				})
 			}
+		},
+		async businessRefresh() {
+			await this.$store.dispatch('businesses').then(async res => {
+				this.$store.state.businessSelectBox.items = res.businesses
+				this.$store.state.businessSelectBox.value = res.businesses[0].id
+			})
 		},
 		checkManager(item) {
 			if (!item.txtfield3.value) {
@@ -575,12 +586,12 @@ export default {
 					this.sweetInfo.content = '사업지명을 입력해주세요'
 					return (this.sweetInfo.open = true)
 				}
-			}
-			if (this.setdialog.items[0].txtfield.readonly === false) {
-				this.sweetInfo.modalIcon = 'info'
-				this.sweetInfo.title = '중복 체크'
-				this.sweetInfo.content = '사업지명 중복 체크를 실행해주세요.'
-				return (this.sweetInfo.open = true)
+				if (this.setdialog.items[0].txtfield.readonly === false) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '중복 체크'
+					this.sweetInfo.content = '사업지명 중복 체크를 실행해주세요.'
+					return (this.sweetInfo.open = true)
+				}
 			}
 			if (this.setdialog.items[1].value === '') {
 				this.sweetInfo.modalIcon = 'info'

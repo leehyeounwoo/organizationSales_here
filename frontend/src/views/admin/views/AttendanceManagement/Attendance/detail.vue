@@ -72,7 +72,7 @@
 								</v-flex>
 							</v-layout>
 						</v-layout>
-						<div style="height:490px;">
+						<div style="height:490px; overflow-y: auto;">
 							<datatable
 								:datatable="attendanceTable"
 								class="table_header datatablehover3"

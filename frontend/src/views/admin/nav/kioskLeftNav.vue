@@ -15,7 +15,7 @@
       	white-space:nowrap;
 "
 				>{{
-					this.$store.state.businessSelectBox.items &&
+					this.$store.state.businessSelectBox.items.length > 0 &&
 						this.$store.state.businessSelectBox.items.filter(x => x.id === this.$store.state.businessSelectBox.value)[0].name
 				}}</span
 			>

@@ -464,6 +464,7 @@ export default {
 				this.table.items = res.businesses
 				this.table.items_origin = JSON.parse(JSON.stringify(res.businesses))
 				this.table.length = Math.ceil(this.table.items.length / this.rowperpageSel.value)
+
 				this.$store.state.loading = false
 			})
 		},
