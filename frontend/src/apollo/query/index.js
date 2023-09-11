@@ -424,6 +424,8 @@ export const settlements = gql`
 			location
 			subLocation
 			rejectComment
+			paymentReject
+			settlementStatus
 		}
 	}
 `

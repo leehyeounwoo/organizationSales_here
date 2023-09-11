@@ -75,7 +75,7 @@ export default {
 			if (this.settlementsValue === 100) {
 				const settlementsViewData = {
 					businessID: this.$store.state.businessSelectBox.value,
-					settlementStatus: 'waiting',
+					// settlementStatus: 'waiting',
 				}
 				this.settlementsView(settlementsViewData)
 				return (this.settlementsValue = 0)
@@ -175,7 +175,14 @@ export default {
 	methods: {
 		async settlementsView(settlementsViewData) {
 			await this.$store.dispatch('settlements', settlementsViewData).then(res => {
-				this.settlementsCount = res.settlements.length
+				this.settlementsCount = res.settlements.filter(
+					x =>
+						(x.paymentReject === false &&
+							x.settlementStatus === 'agree' &&
+							x.settlement_turn_tables.filter(x => x.turnStatus === 'complete').length < x.settlement_turn_tables.length) ||
+						(x.paymentReject === false && x.settlementStatus === 'agree' && x.settlement_turn_tables.length === 0) ||
+						x.settlementStatus === 'waiting',
+				).length
 			})
 		},
 		async assignmentView(assignmentsViewData) {
@@ -208,7 +215,7 @@ export default {
 			this.assignmentView(assignmentsViewData)
 			const settlementsViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				settlementStatus: 'waiting',
+				// settlementStatus: 'waiting',
 			}
 			this.settlementsView(settlementsViewData)
 			alert('사업지 변경이 완료되었습니다.')
