@@ -2,8 +2,8 @@
 	<div style="width:100%; height:60px; background-color:#fff; box-shadow:0 0 5px 0">
 		<v-layout justify-end align-center>
 			<v-flex class="pl-10">
-				<v-btn class="kiosk_header_btn" @click="statusBoardShow">현황판</v-btn>
-				<v-btn class="kiosk_header_btn ml-3" @click="productShow">물건배정</v-btn>
+				<!-- <v-btn class="kiosk_header_btn" @click="statusBoardShow">현황판</v-btn> -->
+				<!-- <v-btn class="kiosk_header_btn ml-3" @click="productShow">물건배정</v-btn> -->
 				<v-btn :class="settlementsCount === 0 ? 'kiosk_header_btn2 ml-3' : 'kiosk_header_btn_active ml-3'" @click="settlementShow"
 					>정산 대기
 					<span class="mr-1">
@@ -271,10 +271,10 @@ export default {
 		settlementShow() {
 			this.$router.push('/admin/settlementManagement').catch(() => {})
 		},
-		statusBoardShow() {
-			// console.log(this.$store.state.businessSelectBox.value)
-			this.$router.push('/admin/statusBoard')
-		},
+		// statusBoardShow() {
+		// 	// console.log(this.$store.state.businessSelectBox.value)
+		// 	this.$router.push('/admin/statusBoard')
+		// },
 		businessView() {
 			this.$store.dispatch('businesses').then(res => {
 				this.$store.state.businessSelectBox.items = res.businesses

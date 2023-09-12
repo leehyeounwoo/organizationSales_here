@@ -33,6 +33,7 @@
 				</v-flex>
 			</v-layout>
 		</div>
+		{{ $route.name }}
 	</div>
 </template>
 
@@ -44,6 +45,7 @@ export default {
 
 	async created() {
 		this.$store.state.loading = true
+		console.log(this.$route.name)
 		let ok = 0
 		const meDataWaitings = setInterval(async () => {
 			ok += 1
@@ -74,7 +76,11 @@ export default {
 							name: 'dashBoard',
 							click: true,
 						},
-
+						{
+							title: '현황판',
+							name: 'statusBoard',
+							click: true,
+						},
 						{
 							title: '물건 배정',
 							name: 'productManagement',
@@ -112,6 +118,7 @@ export default {
 		},
 		listClick(list) {
 			this.$store.state.drawer = false
+			this.$store.state.productTab = 0
 			this.$router.push({ name: list.name }).catch(() => {})
 			this.$store.state.dashBoardList.forEach(element => {
 				element.click = false
