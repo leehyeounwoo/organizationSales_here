@@ -149,13 +149,14 @@ export const ranks = gql`
 	}
 `
 export const businessManager = gql`
-	query users($id: ID, $username: String, $businessID: String) {
-		users(where: { id: $id, username: $username, businessID: $businessID }) {
+	query users($id: ID, $username: String, $businessID: String, $confirmed: Boolean) {
+		users(where: { id: $id, username: $username, businessID: $businessID, confirmed: $confirmed }) {
 			id
 			businessID
 			username
 			email
 			phoneNumber
+			confirmed
 		}
 	}
 `

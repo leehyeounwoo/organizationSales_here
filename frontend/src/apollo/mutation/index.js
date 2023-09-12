@@ -284,6 +284,7 @@ export const updateUser = gql`
 		$id: ID!
 		$teamID: String
 		$workingStatus: Boolean
+		$confirmed: Boolean
 	) {
 		updateUser(
 			input: {
@@ -309,6 +310,7 @@ export const updateUser = gql`
 					editLog: $editLog
 					teamID: $teamID
 					workingStatus: $workingStatus
+					confirmed: $confirmed
 				}
 			}
 		) {

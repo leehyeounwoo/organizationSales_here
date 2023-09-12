@@ -1868,7 +1868,13 @@
 			</template>
 			<!-- 사업지관리 - 연락처 -->
 			<template v-slot:[`item.managerPhoneNumber`]="{ item }">
-				<div>{{ item.manager ? item.manager.phoneNumber : '' }}</div>
+				<div v-if="item.manager">
+					<span v-for="(phone, i) in item.manager" :key="i">
+						<span v-if="i !== 0">,</span>
+						{{ phone.phoneNumber }}
+					</span>
+				</div>
+				<div v-else>-</div>
 			</template>
 			<template v-slot:[`item.workCheckURL`]="{ item }">
 				<v-btn class="detail_etc_btn" small @click="openWindow(item)" :color="'#9A9C9B'" depressed>바로가기</v-btn>

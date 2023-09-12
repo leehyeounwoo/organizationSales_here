@@ -202,10 +202,10 @@
 										</v-radio-group>
 									</v-flex>
 									<v-flex v-if="setdialog.type === 'create'">
-										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right, idx)">생성</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">생성</v-btn>
 									</v-flex>
 									<v-flex v-else>
-										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right, idx)">적용</v-btn>
+										<v-btn elevation="0" class="etc_btn" style="width:60px" @click="checkManager(right)">적용</v-btn>
 									</v-flex>
 									<v-flex>
 										<v-btn elevation="0" class="etc_btn" style="">계정정보 발송</v-btn>
@@ -457,7 +457,6 @@ export default {
 			}, 1000)
 		},
 		saveUser() {
-			console.log(this.right_data)
 			let data = {
 				username: this.right_data.detail.username,
 				email: this.right_data.detail.email,
@@ -473,12 +472,16 @@ export default {
 					this.sweetDialog1.open = false
 				})
 			} else if (this.setdialog.type === 'edit') {
-				data.id = this.setdialog.manager
-				this.$store.dispatch('updateUser', data).then(res => {
-					let id = { id: res.updateUser.user.id }
-					this.newUser.push(id)
-					this.sweetDialog1.open = false
-				})
+				data['id'] = this.right_data.detail.id
+				delete data.password
+				this.$store
+					.dispatch('updateUser', data)
+					.then(() => {
+						this.sweetDialog1.open = false
+					})
+					.catch(err => {
+						console.log(err)
+					})
 			}
 		},
 		async saveBusiness() {
@@ -505,7 +508,6 @@ export default {
 							this.$store.dispatch('createProduct', item).then(() => {})
 						}
 					}
-					console.log(this.newUser)
 					if (this.newUser) {
 						for (let i = 0; i < this.newUser.length; i++) {
 							let adduser = {
@@ -514,7 +516,6 @@ export default {
 								username: this.right_data[i].txtfield1.value,
 								email: this.right_data[i].txtfield3.value,
 							}
-							console.log(adduser)
 							await this.forUpdateUser(adduser)
 						}
 
@@ -551,9 +552,7 @@ export default {
 				this.$store.state.businessSelectBox.value = res.businesses[0].id
 			})
 		},
-		checkManager(item, index) {
-			console.log(this.right_data)
-			console.log(index)
+		checkManager(item) {
 			if (!item.txtfield3.value) {
 				this.sweetInfo.modalIcon = 'info'
 				this.sweetInfo.title = '아이디 입력'
@@ -567,6 +566,7 @@ export default {
 				return (this.sweetInfo.open = true)
 			}
 			let data = {
+				id: item.user_id,
 				username: item.txtfield1.value,
 				name: item.txtfield1.value,
 				phoneNumber: item.txtfield2.value,

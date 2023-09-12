@@ -13,7 +13,7 @@
 		<div class="text-center mt-4">
 			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
 		</div>
-		<v-btn class="mt-3 new_biz" @click="createBiz()">신규생성</v-btn>
+		<v-btn class="my-3 new_biz" @click="createBiz()">신규생성</v-btn>
 		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
 		<!-- <createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" /> -->
 		<productDetail :setdialog="table_detail" :newProduct="product_detail" />
@@ -454,11 +454,12 @@ export default {
 						el['endTime'] = el.workingHoursEnd.slice(0, 5)
 					}
 				})
-				await this.$store.dispatch('businessManager').then(res_user => {
-					console.log(res_user)
+				let data = {
+					confirmed: true,
+				}
+				await this.$store.dispatch('businessManager', data).then(res_user => {
 					res.businesses.forEach(e => {
 						let manager = res_user.users.filter(user => e.id === user.businessID)
-						console.log(manager)
 						e['manager'] = manager.length > 0 ? manager : null
 					})
 				})
@@ -528,9 +529,54 @@ export default {
 			}
 			this.createDialog.items[3].selectBox2.value = item.maximumHoldingTime
 			this.createDialog.items[4].value = location.protocol + '//' + location.host + '/QRenter/' + item.code
-			this.right_data[0].txtfield1.value = item.manager ? item.manager.username : ''
-			this.right_data[0].txtfield2.value = item.manager ? item.manager.phoneNumber : ''
-			this.right_data[0].txtfield3.value = item.manager ? item.manager.email : ''
+			if (item.manager) {
+				for (let i = 0; i < item.manager.length; i++) {
+					if (i > 0) {
+						this.right_data.push({
+							detail: [],
+							user_confirmed: true,
+							txtfield1: {
+								value: '',
+								maxlength: '255',
+								outlined: true,
+								hideDetail: true,
+								errorMessage: '',
+							},
+							txtfield2: {
+								value: '',
+								maxlength: '255',
+								outlined: true,
+								hideDetail: true,
+								errorMessage: '',
+							},
+							txtfield3: {
+								value: '',
+								maxlength: '255',
+								outlined: true,
+								hideDetail: true,
+								errorMessage: '',
+								placeholder: '이메일 형식',
+							},
+							txtfield4: {
+								value: '',
+								maxlength: '255',
+								outlined: true,
+								hideDetail: true,
+								errorMessage: '',
+								type: 'password',
+							},
+						})
+						this.right_data[i]['user_id'] = item.manager[i].id
+						this.right_data[i].txtfield1.value = item.manager[i].username
+						this.right_data[i].txtfield2.value = item.manager[i].phoneNumber
+						this.right_data[i].txtfield3.value = item.manager[i].email
+					}
+					this.right_data[i]['user_id'] = item.manager[i].id
+					this.right_data[i].txtfield1.value = item.manager[i].username
+					this.right_data[i].txtfield2.value = item.manager[i].phoneNumber
+					this.right_data[i].txtfield3.value = item.manager[i].email
+				}
+			}
 			this.createDialog.items[6].value = item.location
 			this.createDialog.dialog = true
 		},
