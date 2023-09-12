@@ -5,10 +5,10 @@
 				<div class="slash mr-1"></div>
 				<span style="font-weight:bold">물건 배정</span>
 			</v-layout>
-			<v-tabs v-model="tab" :color="'#0ca2b0'" class="pt-8 reservationTab">
+			<v-tabs v-model="$store.state.productTab" :color="'#0ca2b0'" class="pt-8 reservationTab">
 				<v-tab v-for="(tab, i) in tabs" :ripple="false" :key="i"> {{ tab }}</v-tab>
 			</v-tabs>
-			<v-tabs-items v-model="tab">
+			<v-tabs-items v-model="$store.state.productTab">
 				<v-tab-item>
 					<selectProduct />
 				</v-tab-item>
@@ -31,7 +31,7 @@ export default {
 	},
 	data() {
 		return {
-			tab: 0,
+			// tab: 0,
 			tabs: ['물건 배정', '배정 요청 처리'],
 		}
 	},

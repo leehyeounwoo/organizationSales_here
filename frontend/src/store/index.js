@@ -104,6 +104,7 @@ export default new Vuex.Store({
 			itemText: 'name',
 			itemValue: 'id',
 		},
+		productTab: 0,
 		meData: { role: { name: '' }, name: '', team: { title: '' }, rank: { rankName: '' } },
 		dashBoardList: [],
 		loading: false,

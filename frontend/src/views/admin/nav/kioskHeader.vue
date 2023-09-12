@@ -18,6 +18,13 @@
 					</span>
 					<v-progress-circular :rotate="-90" :size="20" :width="5" :value="assignmentsValue" color="white"> </v-progress-circular>
 				</v-btn>
+				<v-btn :class="assignmentsCount === 0 ? 'kiosk_header_btn2 ml-3' : 'kiosk_header_btn_active ml-3'" @click="vacationShow"
+					>연차 대기
+					<span class="mr-1">
+						{{ unattendedLength }}
+					</span>
+					<v-progress-circular :rotate="-90" :size="20" :width="5" :value="vacationsValue" color="white"> </v-progress-circular>
+				</v-btn>
 			</v-flex>
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
 				<v-layout align-center>
@@ -82,6 +89,13 @@ export default {
 			}
 			this.settlementsValue += 1
 		}, 1800)
+		this.vacationsInterval = setInterval(() => {
+			if (this.vacationsValue === 100) {
+				this.unattendedVacation()
+				return (this.vacationsValue = 0)
+			}
+			this.vacationsValue += 5
+		}, 500)
 	},
 	data() {
 		return {
@@ -89,8 +103,11 @@ export default {
 			assignmentsValue: 0,
 			settlementsInterval: {},
 			settlementsValue: 0,
+			vacationsInterval: {},
+			vacationsValue: 0,
 			assignmentsCount: 0,
 			settlementsCount: 0,
+			unattendedLength: 0,
 			holdingDetail: {
 				dialog: false,
 				todayTime: '',
@@ -173,6 +190,30 @@ export default {
 		// }
 	},
 	methods: {
+		async unattendedVacation() {
+			let vacationIDArr = []
+
+			let input = {
+				roleName: 'Counselor',
+				businessID: this.$store.state.businessSelectBox.value,
+				workingStatus: true,
+			}
+
+			await this.$store.dispatch('users', input).then(res => {
+				for (let i = 0; i < res.users.length; i++) {
+					vacationIDArr.push(res.users[i].id)
+				}
+			})
+
+			let unattendedData = {
+				vacationStatus: 'waiting',
+				idArr: vacationIDArr,
+			}
+
+			await this.$store.dispatch('vacations', unattendedData).then(res => {
+				this.unattendedLength = res.vacations.length
+			})
+		},
 		async settlementsView(settlementsViewData) {
 			await this.$store.dispatch('settlements', settlementsViewData).then(res => {
 				this.settlementsCount = res.settlements.filter(
@@ -220,7 +261,11 @@ export default {
 			this.settlementsView(settlementsViewData)
 			alert('사업지 변경이 완료되었습니다.')
 		},
+		vacationShow() {
+			this.$router.push('/admin/attendanceManagement').catch(() => {})
+		},
 		productShow() {
+			this.$store.state.productTab = 1
 			this.$router.push('/admin/productManagement').catch(() => {})
 		},
 		settlementShow() {
