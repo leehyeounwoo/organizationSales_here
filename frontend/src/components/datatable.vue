@@ -1858,7 +1858,13 @@
 			</template>
 			<!-- 사업지관리 - 담당자 -->
 			<template v-slot:[`item.businessManager`]="{ item }">
-				<div>{{ item.manager ? item.manager.username : '' }}</div>
+				<div v-if="item.manager">
+					<span v-for="(name, i) in item.manager" :key="i">
+						<span v-if="i !== 0">,</span>
+						{{ name.username }}
+					</span>
+				</div>
+				<div v-else>-</div>
 			</template>
 			<!-- 사업지관리 - 연락처 -->
 			<template v-slot:[`item.managerPhoneNumber`]="{ item }">

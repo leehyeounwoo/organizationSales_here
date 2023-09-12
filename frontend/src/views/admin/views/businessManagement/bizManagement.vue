@@ -439,10 +439,10 @@ export default {
 		}
 	},
 	methods: {
-		rowperpageChange() {
+		async rowperpageChange() {
 			this.$store.state.loading = true
 			this.table.itemsPerPage = this.rowperpageSel.value
-			this.first_business()
+			await this.first_business()
 		},
 		async first_business() {
 			await this.$store.dispatch('businesses').then(async res => {
@@ -455,9 +455,11 @@ export default {
 					}
 				})
 				await this.$store.dispatch('businessManager').then(res_user => {
+					console.log(res_user)
 					res.businesses.forEach(e => {
 						let manager = res_user.users.filter(user => e.id === user.businessID)
-						e['manager'] = manager.length > 0 ? manager[0] : null
+						console.log(manager)
+						e['manager'] = manager.length > 0 ? manager : null
 					})
 				})
 				res.businesses.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
