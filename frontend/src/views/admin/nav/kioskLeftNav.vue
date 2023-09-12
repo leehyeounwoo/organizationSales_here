@@ -21,11 +21,12 @@
 			>
 		</v-layout>
 		<div v-for="(list, index) in $store.state.dashBoardList" :key="index">
+			<!-- index === 0 ? 'active' : -->
 			<v-layout
-				:class="index === 0 ? 'active' : 'listNav'"
+				:class="'listNav'"
 				justify-center
 				align-center
-				:style="list.click ? `background-color:#3e7ccc; border-radius:1vh; color:white` : `border-radius:1vh;`"
+				:style="routeName === list.name ? `background-color:#3e7ccc; border-radius:1vh; color:white` : `border-radius:1vh;`"
 				@click.stop="listClick(list)"
 			>
 				<v-flex style="text-align:center;">
@@ -40,12 +41,14 @@
 <script>
 export default {
 	data() {
-		return {}
+		return {
+			routeName: '',
+		}
 	},
 
 	async created() {
 		this.$store.state.loading = true
-		console.log(this.$route.name)
+		this.routeName = this.$route.name
 		let ok = 0
 		const meDataWaitings = setInterval(async () => {
 			ok += 1
@@ -119,6 +122,7 @@ export default {
 		listClick(list) {
 			this.$store.state.drawer = false
 			this.$store.state.productTab = 0
+			this.routeName = list.name
 			this.$router.push({ name: list.name }).catch(() => {})
 			this.$store.state.dashBoardList.forEach(element => {
 				element.click = false
