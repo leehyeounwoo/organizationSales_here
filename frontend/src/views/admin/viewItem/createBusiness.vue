@@ -507,13 +507,23 @@ export default {
 					}
 					console.log(this.newUser)
 					if (this.newUser) {
-						await this.forUpdateUser(res)
+						for (let i = 0; i < this.newUser.length; i++) {
+							let adduser = {
+								id: this.newUser[i].id,
+								businessID: res.createBusiness.business.id,
+								username: this.right_data[i].txtfield1.value,
+								email: this.right_data[i].txtfield3.value,
+							}
+							console.log(adduser)
+							await this.forUpdateUser(adduser)
+						}
+
+						// setTimeout(() => {
+						await this.getTable()
+						// }, 2000)
+						// await this.getTable()
 						this.sweetDialog.open = false
 						this.modalClose()
-						setTimeout(() => {
-							this.getTable()
-						}, 1000)
-						// await this.getTable()
 						this.businessRefresh()
 					} else {
 						this.sweetDialog.open = false
@@ -532,17 +542,8 @@ export default {
 				})
 			}
 		},
-		async forUpdateUser(res) {
-			for (let i = 0; i < this.newUser.length; i++) {
-				let adduser = {
-					id: this.newUser[i].id,
-					businessID: res.createBusiness.business.id,
-					username: this.right_data[i].txtfield1.value,
-					email: this.right_data[i].txtfield3.value,
-				}
-				console.log(adduser)
-				this.$store.dispatch('updateUser', adduser).then(() => {})
-			}
+		async forUpdateUser(adduser) {
+			await this.$store.dispatch('updateUser', adduser).then(() => {})
 		},
 		async businessRefresh() {
 			await this.$store.dispatch('businesses').then(async res => {
