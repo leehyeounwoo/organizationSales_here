@@ -81,6 +81,7 @@ export default {
 			this.$store.state.loading = true
 			this.productTable.page = 1
 			const assignmentsViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
 				status: 'waiting',
 			}
 			await this.assignmentsView(assignmentsViewData)

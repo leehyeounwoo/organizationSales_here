@@ -349,7 +349,6 @@ export default {
 			})
 		},
 		async createAssignmentAction(item) {
-			console.log(item)
 			let select = {
 				businessID: this.$store.state.businessSelectBox.value,
 				productArr: item.id,
@@ -359,7 +358,6 @@ export default {
 			await this.$store.dispatch('assignments', select).then(res => {
 				this.productManager.waitingData = res.assignments
 			})
-			console.log(this.productManager.waitingData)
 			if (item.assingnmentData || this.productManager.waitingData.length !== 0) {
 				alert('이미 배정 또는 요청 처리중인 물건입니다.')
 			} else {
@@ -622,9 +620,10 @@ export default {
 			})
 		},
 		async holdTimeShow() {
+			this.$store.state.loading = true
 			const data1 = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'contract',
+				contractStatus: 'noContract',
 			}
 			await this.$store.dispatch('products', data1).then(res => {
 				this.holdingDetail.holdingDashboard.productIdArr = res.products.map(x => x.id)
@@ -643,8 +642,10 @@ export default {
 			await this.$store.dispatch('assignments', data2).then(res2 => {
 				this.holdingDetail.holdingDashboard.userIdArr = res2.assignments.map(x => x.userID)
 				for (let index = 0; index < res2.assignments.length; index++) {
-					const element = res2.assignments[index]
-					this.holdingDetail.holdingDashboard.items.filter(x => x.id === element.productID)[0].assingnmentData = element
+					if (this.holdingDetail.holdingDashboard.items.length !== 0) {
+						const element = res2.assignments[index]
+						this.holdingDetail.holdingDashboard.items.filter(x => x.id === element.productID)[0].assingnmentData = element
+					}
 				}
 			})
 			const data3 = {
@@ -684,6 +685,7 @@ export default {
 			// this.holdingDetail.holdingDashboard.items = this.productManager.items.filter(x => x.assingnmentData)
 			this.holdingDetail.todayTime = this.$moment().format('YYYY-MM-DD HH:mm')
 			this.holdingDetail.dialog = true
+			this.$store.state.loading = false
 		},
 	},
 }
