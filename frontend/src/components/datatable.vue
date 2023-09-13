@@ -21,7 +21,7 @@
 			@click:row="$emit('click', $event)"
 			@input="$emit('input', $event)"
 			:height="datatable.height"
-			:mobile-breakpoint="datatable.breakpoint ? '1960' : '600'"
+			:mobile-breakpoint="datatable.breakpoint ? '1960' : '320'"
 			:disable-sort="datatable.disableSort"
 			@pagination="pagination"
 			:no-data-text="datatable.noDataText"
