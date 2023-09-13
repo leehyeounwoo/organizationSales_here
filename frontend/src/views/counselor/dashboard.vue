@@ -107,7 +107,7 @@
 						color="primary2"
 					></v-select>
 				</v-flex>
-				<v-btn block color="primary2" @click="holding" class="mt-4" rounded dark>
+				<v-btn block :color="holdingText !== '홀딩 요청' ? 'red' : 'primary2'" @click="holding" class="mt-4" rounded dark>
 					{{ holdingText }}
 				</v-btn>
 				<strong>
