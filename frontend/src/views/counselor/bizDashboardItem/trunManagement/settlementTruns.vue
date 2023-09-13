@@ -189,6 +189,7 @@ export default {
 				itemsPerPage: 99,
 				page: 1,
 				pageCount: 0,
+				disableSort: true,
 			},
 
 			search: '',

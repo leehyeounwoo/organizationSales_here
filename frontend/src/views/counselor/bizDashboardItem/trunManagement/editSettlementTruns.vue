@@ -3,7 +3,7 @@
 	<v-layout style="margin: 0 auto; width:100vw;" wrap justify-center>
 		<v-dialog :value="openDaum" width="500"> <VueDaumPostcode @complete="onComplete"/></v-dialog>
 		<!-- 회웡가입 영역 -->
-		<div class="mx-5" style="width:100%">
+		<div style="width:100%">
 			<div class="top_sticky_header">
 				<v-layout justify-center class="tab_name_bar">
 					<div class="header_left_btn">
@@ -199,6 +199,7 @@ export default {
 				itemsPerPage: 99,
 				page: 1,
 				pageCount: 0,
+				disableSort: true,
 			},
 			options: {},
 			openDaum: false,
