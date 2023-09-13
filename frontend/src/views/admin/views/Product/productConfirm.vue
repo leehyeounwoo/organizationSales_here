@@ -238,6 +238,20 @@ export default {
 						let idx = res.teams.findIndex(x => x.id === element.user.teamID)
 						element.team = res.teams[idx]
 					}
+					this.productTable.items.forEach(el => {
+						if (el.useYn) {
+							el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.end.substr(0, 5)).diff(this.$moment(), 'minute')
+							if (el.leaveTime < 0) {
+								const data = {
+									id: el.id,
+									useYn: false,
+								}
+								this.$store.dispatch('updateAssignment', data).then(() => {
+									this.show_table()
+								})
+							}
+						}
+					})
 				})
 				.catch(err => {
 					console.log(err)
