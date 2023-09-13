@@ -18,7 +18,7 @@
 				</div>
 			</div>
 			<!-- 정보 입력 -->
-			<div class="mt-4 mb-12">
+			<div class="mt-4 mb-12 pb-4">
 				<!-- 개인정보 입력 -->
 				<div class="px-4 pt-8 pb-4 input_field_white">
 					<p class="input_main_title">

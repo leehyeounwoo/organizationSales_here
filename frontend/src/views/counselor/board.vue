@@ -5,7 +5,7 @@
 		</div>
 		<div
 			class="board_layout"
-			style="margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#F3F3F3; margin-left: auto; margin-right: auto; overflow-x: hidden;"
+			style="position:fixed; margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#F3F3F3; margin-left: auto; margin-right: auto; overflow-x: hidden;"
 			:style="'height:' + calc_height() + 'px;'"
 		>
 			<router-view></router-view>

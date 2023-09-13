@@ -12,7 +12,7 @@
 body {
 	font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
 }
-html{
+html {
 	overflow: hidden !important;
 }
 /************* Font *************/
@@ -1065,6 +1065,7 @@ input[type='number']::-webkit-inner-spin-button {
 .counselor_container {
 	overflow-y: scroll;
 	.counselor_content_wrap {
+		width: 100vw;
 		position: relative;
 		background-color: #f3f3f3;
 	}
@@ -1595,7 +1596,7 @@ input[type='number']::-webkit-inner-spin-button {
 .sticky_wrap {
 	padding-top: 98px;
 	&.small_sticky_header {
-		padding-top: 50px !important;
+		// padding-top: 50px !important;
 	}
 }
 .sticky_wrap_type {
