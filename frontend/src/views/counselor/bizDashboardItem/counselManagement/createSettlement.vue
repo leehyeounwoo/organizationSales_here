@@ -3,7 +3,7 @@
 	<v-layout style="margin: 0 auto; width:100vw;" wrap justify-center>
 		<v-dialog :value="openDaum" width="500"> <VueDaumPostcode @complete="onComplete"/></v-dialog>
 		<!-- 회웡가입 영역 -->
-		<div class="mx-5" style="width:100%">
+		<div style="width:100%">
 			<div class="top_sticky_header">
 				<v-layout justify-center class="tab_name_bar">
 					<div class="header_left_btn">
@@ -43,6 +43,7 @@
 							v-model="siginup.name"
 							autocomplete="off"
 							color="primary2"
+							:readonly="settlement.settlementStatus === 'agree'"
 						></v-text-field>
 
 						<!-- 전화번호 -->
@@ -62,6 +63,7 @@
 								v-model="siginup.phone"
 								autocomplete="off"
 								color="primary2"
+								:readonly="settlement.settlementStatus === 'agree'"
 							></v-text-field>
 						</v-layout>
 						<p class="input_title mb-2">
@@ -80,6 +82,7 @@
 							autocomplete="off"
 							color="primary2"
 							placeholder="1999-01-01"
+							:readonly="settlement.settlementStatus === 'agree'"
 						></v-text-field>
 						<p class="input_title mb-2">
 							거주지
@@ -95,11 +98,19 @@
 								dense
 								v-model="siginup.location"
 								autocomplete="off"
-								:readonly="addressCheck === true"
+								:readonly="settlement.settlementStatus === 'agree'"
 								placeholder="주소찾기 or 직접입력"
 								color="primary2"
 							></v-text-field>
-							<v-btn color="primary2" class="ml-2" dark elevation="0" @click="openDaum = !openDaum">주소찾기</v-btn>
+							<v-btn
+								:disabled="settlement.settlementStatus === 'agree'"
+								color="primary2"
+								class="ml-2"
+								dark
+								elevation="0"
+								@click="openDaum = !openDaum"
+								>주소찾기</v-btn
+							>
 						</v-layout>
 						<v-text-field
 							hideDetails
@@ -113,6 +124,7 @@
 							autocomplete="off"
 							placeholder="나머지 주소"
 							color="primary2"
+							:readonly="settlement.settlementStatus === 'agree'"
 						></v-text-field>
 					</div>
 				</div>
@@ -122,11 +134,12 @@
 					</p>
 					<v-layout align-center wrap>
 						<v-flex xs4 class="pr-2">
-							<v-select
+							<v-text-field
+								v-if="settlement.settlementStatus === 'agree'"
 								placeholder="주택형"
 								:items="products1"
 								v-model="product1"
-								:readonly="settlement.settlementStatus === 'agree'"
+								readonly
 								solo
 								dense
 								outlined
@@ -135,16 +148,47 @@
 								@change="product1Change"
 								flat
 								color="primary2"
+							></v-text-field>
+							<v-select
+								v-else
+								placeholder="주택형"
+								:items="products1"
+								v-model="product1"
+								solo
+								dense
+								outlined
+								class="nomal-select"
+								hideDetails
+								@change="product1Change"
+								flat
+								color="primary2"
+								style="font-size:12px"
 							></v-select>
 						</v-flex>
 						<v-flex xs4>
-							<v-select
+							<v-text-field
+								v-if="settlement.settlementStatus === 'agree'"
 								placeholder="동"
 								:items="products2"
 								v-model="product2"
 								solo
 								:disabled="!product1"
-								:readonly="settlement.settlementStatus === 'agree'"
+								dense
+								outlined
+								class="nomal-select"
+								hideDetails
+								@change="product2Change"
+								flat
+								readonly
+								color="primary2"
+							></v-text-field>
+							<v-select
+								v-else
+								placeholder="동"
+								:items="products2"
+								v-model="product2"
+								solo
+								:disabled="!product1"
 								dense
 								outlined
 								class="nomal-select"
@@ -152,15 +196,17 @@
 								@change="product2Change"
 								flat
 								color="primary2"
+								style="font-size:12px"
 							></v-select>
 						</v-flex>
 						<v-flex xs4 class="pl-2">
-							<v-select
+							<v-text-field
+								v-if="settlement.settlementStatus === 'agree'"
 								flat
 								placeholder="호수"
 								:items="products3"
 								v-model="product3"
-								:readonly="settlement.settlementStatus === 'agree'"
+								readonly
 								solo
 								:disabled="!product2"
 								dense
@@ -168,6 +214,21 @@
 								class="nomal-select"
 								hideDetails
 								color="primary2"
+							></v-text-field>
+							<v-select
+								v-else
+								flat
+								placeholder="호수"
+								:items="products3"
+								v-model="product3"
+								solo
+								:disabled="!product2"
+								dense
+								outlined
+								class="nomal-select"
+								hideDetails
+								color="primary2"
+								style="font-size:12px"
 							></v-select>
 						</v-flex>
 					</v-layout>
@@ -196,19 +257,36 @@
 							autocomplete="off"
 							color="primary2"
 						></v-text-field>
-						<v-btn class="input_btn px-2" depressed @click="clickFileUploadImage()">
+						<v-btn :disabled="settlement.settlementStatus === 'agree'" class="input_btn px-2" depressed @click="clickFileUploadImage()">
 							<v-img max-width="14" class="mr-2" src="@/assets/images/input_btn.png" />파일첨부
 						</v-btn>
 					</v-layout>
 					<div>
 						<v-chip-group class="white--text">
-							<v-chip v-for="(file, i) in files" :key="i" color="point6" close dark @click:close="deleteFiles(i)">
+							<v-chip
+								v-for="(file, i) in files"
+								:key="i"
+								color="point6"
+								close
+								dark
+								:disabled="settlement.settlementStatus === 'agree'"
+								@click:close="deleteFiles(i)"
+							>
 								{{ file.name }}
 							</v-chip>
 						</v-chip-group>
 					</div>
 				</div>
-				<v-btn elevation="0" height="48" class="loginButton_small mt-10" block color="primary2" @click="createSettlement" rounded>
+				<v-btn
+					:disabled="settlement.settlementStatus === 'agree'"
+					elevation="0"
+					height="48"
+					class="loginButton_small mt-10"
+					block
+					color="primary2"
+					@click="createSettlement"
+					rounded
+				>
 					<span style="color:white;	font-weight: bold;"> {{ $route.name === 'editSettlement' ? '수정하기' : '등록하기' }} </span>
 				</v-btn>
 				<v-btn
@@ -281,6 +359,7 @@ export default {
 				birth: '',
 				location: '',
 				subLocation: '',
+				editData: false,
 			},
 			productDatas: [],
 			settlement: {},

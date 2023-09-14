@@ -10,10 +10,10 @@
 							</v-icon>
 						</v-btn>
 					</div>
-					<span class="ml-auto">
+					<span class="ml-auto pl-8">
 						계약관리
 					</span>
-					<v-btn color="primary2" class="ml-auto" small rounded dark @click="$router.push({ name: 'createSettlement' })">
+					<v-btn class="ml-auto" color="primary2" small rounded dark @click="$router.push({ name: 'createSettlement' })">
 						계약등록
 					</v-btn>
 				</v-layout>
@@ -180,7 +180,7 @@ export default {
 						align: 'center',
 						value: 'product_settlements',
 					},
-					{ text: '계약일', value: 'contractDate', align: 'center' },
+					{ text: '계약일', value: 'contractDate', align: 'center', height: '50px' },
 					{ text: '계약자', value: 'name', align: 'center' },
 					{ text: '상태', value: 'settlementStatus', align: 'center' },
 				],
@@ -191,6 +191,7 @@ export default {
 				itemsPerPage: 99,
 				page: 1,
 				pageCount: 0,
+				disableSort: true,
 			},
 
 			search: '',
@@ -358,3 +359,8 @@ export default {
 	},
 }
 </script>
+<style lang="scss">
+.datatablehover > .v-data-table > .v-data-table__wrapper > table thead {
+	height: 30px;
+}
+</style>
