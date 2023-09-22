@@ -79,6 +79,9 @@ export default {
 			this.assignmentsValue += 5
 		}, 500)
 		this.settlementsInterval = setInterval(() => {
+			if (this.$store.state.headerRefresh) {
+				this.settlementsValue = 100
+			}
 			if (this.settlementsValue === 100) {
 				const settlementsViewData = {
 					businessID: this.$store.state.businessSelectBox.value,
@@ -224,6 +227,7 @@ export default {
 						(x.paymentReject === false && x.settlementStatus === 'agree' && x.settlement_turn_tables.length === 0) ||
 						x.settlementStatus === 'waiting',
 				).length
+				this.$store.state.headerRefresh = false
 			})
 		},
 		async assignmentView(assignmentsViewData) {

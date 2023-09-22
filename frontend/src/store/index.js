@@ -110,6 +110,7 @@ export default new Vuex.Store({
 		loading: false,
 		primary: '#3A258F',
 		primary2: '#633efd',
+		headerRefresh: false,
 	},
 	mutations: {
 		meData(state, payload) {

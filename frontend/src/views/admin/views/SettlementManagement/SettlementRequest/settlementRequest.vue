@@ -810,6 +810,7 @@ export default {
 					}
 					await this.ranksView(ranksViewData)
 					await this.dataSetting()
+					this.$store.state.headerRefresh = true
 					this.$store.state.loading = false
 				})
 			} else if (this.finalSettlementData.settlementStatus === 'agree') {
@@ -866,6 +867,7 @@ export default {
 					await this.dataSetting()
 					this.$store.state.loading = false
 				})
+				this.$store.state.headerRefresh = true
 			}
 			this.$store.state.loading = false
 		},
