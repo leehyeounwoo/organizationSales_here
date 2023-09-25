@@ -323,7 +323,7 @@ export default {
 				selectBox1: {
 					placeholder: '주택형',
 					value: '',
-					items: [],
+					items: [{ text: '선택', value: 'new' }],
 					hideDetail: true,
 					outlined: true,
 					class: 'small_font searchSel',
@@ -337,7 +337,7 @@ export default {
 				selectBox2: {
 					placeholder: '동',
 					value: '',
-					items: [],
+					items: [{ text: '선택', value: 'new' }],
 					hideDetail: true,
 					outlined: true,
 					class: 'small_font searchSel',
