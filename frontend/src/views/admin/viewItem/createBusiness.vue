@@ -508,6 +508,25 @@ export default {
 							this.$store.dispatch('createProduct', item).then(() => {})
 						}
 					}
+					for (let idx = 0; idx < this.right_data.length; idx++) {
+						if (this.right_data[idx].detail) {
+							let user = {
+								username: this.right_data[idx].detail.username,
+								email: this.right_data[idx].detail.email,
+								name: this.right_data[idx].detail.username,
+								phoneNumber: this.right_data[idx].detail.phoneNumber,
+								password: this.right_data[idx].detail.password,
+								confirmed: this.right_data[idx].detail.confirmed,
+							}
+							if (this.setdialog.type === 'create') {
+								await this.$store.dispatch('register', user).then(res => {
+									let id = { id: res.register.user.id }
+									this.newUser.push(id)
+									this.sweetDialog1.open = false
+								})
+							}
+						}
+					}
 					if (this.newUser) {
 						for (let i = 0; i < this.newUser.length; i++) {
 							let adduser = {
@@ -622,13 +641,33 @@ export default {
 					}
 				}
 			}
-			// if (this.setdialog.type === 'create') {
-			// 	if (this.parseCsv) {
-			// 		this.sweetInfo.title = '상품 등록'
-			// 		this.sweetInfo.content = '상품 등록을 해주세요.'
-			// 		return (this.sweetInfo.open = true)
-			// 	}
-			// }
+			for (let i = 0; i < this.right_data.length; i++) {
+				if (this.right_data[i].txtfield1.value) {
+					if (!this.right_data[i].txtfield3.value) {
+						this.sweetInfo.modalIcon = 'info'
+						this.sweetInfo.title = '아이디 입력'
+						this.sweetInfo.content = '아이디를 입력해주세요.'
+						return (this.sweetInfo.open = true)
+					}
+					if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+						this.sweetInfo.modalIcon = 'info'
+						this.sweetInfo.title = '이메일 형식'
+						this.sweetInfo.content = '이메일 형식이 아닙니다'
+						return (this.sweetInfo.open = true)
+					}
+					let data = {
+						id: this.right_data[i].user_id,
+						username: this.right_data[i].txtfield1.value,
+						name: this.right_data[i].txtfield1.value,
+						phoneNumber: this.right_data[i].txtfield2.value,
+						email: this.right_data[i].txtfield3.value,
+						password: this.right_data[i].txtfield4.value,
+						confirmed: this.right_data[i].user_confirmed,
+					}
+					this.right_data[i].detail = data
+				}
+			}
+			console.log(this.right_data)
 			if (this.setdialog.type === 'create') {
 				this.sweetDialog.title = '사업지 생성'
 				this.sweetDialog.content = '사업지를 생성합니다.'
