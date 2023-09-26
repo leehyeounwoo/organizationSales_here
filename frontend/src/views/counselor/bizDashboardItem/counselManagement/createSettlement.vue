@@ -404,10 +404,27 @@ export default {
 		} else this.products()
 	},
 	methods: {
-		updateSettlement_front() {
-			this.$store.dispatch('updateSettlement_front', { id: this.settlement.id, settlementStatus: 'waiting' }).then(() => {
-				this.open_disable_dialog({ title: '정산요청완료', content: '정상적으로 요청 되었습니다.' }, 'success')
-			})
+		async updateSettlement_front() {
+			const attData = this.files
+			if (attData.length > 0) {
+				const attDataId = []
+				for (let i = 0; i < attData.length; i++) {
+					const att = attData[i]
+					if (!att.id) {
+						let input = {
+							file: att,
+						}
+						await this.$store.dispatch('upload', input).then(res => {
+							attDataId.push(res.data[0].id)
+						})
+					} else attDataId.push(att.id)
+				}
+				this.$store
+					.dispatch('updateSettlement_front', { id: this.settlement.id, settlementStatus: 'waiting', attachment: attDataId })
+					.then(() => {
+						this.open_disable_dialog({ title: '정산요청완료', content: '정상적으로 요청 되었습니다.' }, 'success')
+					})
+			}
 		},
 		product1Change(val) {
 			this.products2 = this.productDatas.filter(x => x.housingType === val).map(x => x.dong)
