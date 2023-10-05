@@ -647,6 +647,7 @@ export default {
 			this.EvidenceField.title.txtField.value = ''
 		},
 		saveEvedenceSMS() {
+			this.$store.state.loading = true
 			if (this.EvidenceField.sms.txtField.value === '') {
 				this.sweetDialog_info.title = `저장 실패`
 				this.sweetDialog_info.content = `내용을 입력해주세요`
@@ -674,83 +675,105 @@ export default {
 					(this.saveDialogStatus.open = true)
 			}
 		},
-		save_confirm() {
-			this.$store.state.loading = true
-
-			if (Object.keys(this.clickVariation).length !== 0) {
-				let realType
-				if (this.searchsel1.value === '일정 안내') {
-					realType = 'scheduleGuide'
-				} else if (this.searchsel1.value === '지급 일정 정보') {
-					realType = 'paymentScheduleInformation'
-				} else if (this.searchsel1.value === '지급 결과 안내') {
-					realType = 'paymentNotification'
-				} else {
-					realType = 'paymentResultGuide'
-				}
-
-				let input2 = {
-					id: this.clickVariation.id,
-					title: this.EvidenceField.title.txtField.value,
-					detail: this.EvidenceField.sms.txtField.value,
-					useYn: this.useType === 'use' ? true : false,
-					type: realType,
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-
-				this.$store.dispatch('updateMessage', input2).then(async () => {
-					this.sweetDialog_info.open = false
-					this.$store.state.loading = true
-					this.saveDialogStatus.title = `수정 완료`
-					this.saveDialogStatus.content = `수정이 완료되었습니다`
-					this.saveDialogStatus.buttonType = 'oneBtn'
-					this.saveDialogStatus.cancelBtnText = '확인'
-					this.saveDialogStatus.open = true
-					this.$store.state.loading = false
-					const businessData = {
-						idArr: this.$store.state.businessSelectBox.value,
-					}
-					await this.businessView(businessData)
-					await this.messageView(businessData)
-					await this.infoView(businessData)
-				})
+		async save_confirm() {
+			let statusValue
+			if (this.searchsel1.value === '일정 안내') {
+				statusValue = 'scheduleGuide'
+			} else if (this.searchsel1.value === '지급 일정 정보') {
+				statusValue = 'paymentScheduleInformation'
+			} else if (this.searchsel1.value === '지급 결과 안내') {
+				statusValue = 'paymentNotification'
 			} else {
-				let realType
-				if (this.searchsel1.value === '일정 안내') {
-					realType = 'scheduleGuide'
-				} else if (this.searchsel1.value === '지급 일정 정보') {
-					realType = 'paymentScheduleInformation'
-				} else if (this.searchsel1.value === '지급 결과 안내') {
-					realType = 'paymentNotification'
-				} else {
-					realType = 'paymentResultGuide'
-				}
-
-				let input = {
-					title: this.EvidenceField.title.txtField.value,
-					detail: this.EvidenceField.sms.txtField.value,
-					useYn: this.useType === 'use' ? true : false,
-					type: realType,
-					businessID: this.$store.state.businessSelectBox.value,
-				}
-
-				this.$store.dispatch('createMessage', input).then(async () => {
-					this.sweetDialog_info.open = false
-					this.$store.state.loading = true
-					this.saveDialogStatus.title = `저장 완료`
-					this.saveDialogStatus.content = `저장이 완료되었습니다`
-					this.saveDialogStatus.buttonType = 'oneBtn'
-					this.saveDialogStatus.cancelBtnText = '확인'
-					this.saveDialogStatus.open = true
-					const businessData = {
-						idArr: this.$store.state.businessSelectBox.value,
-					}
-					await this.businessView(businessData)
-					await this.messageView(businessData)
-					await this.infoView(businessData)
-					this.$store.state.loading = false
-				})
+				statusValue = 'paymentResultGuide'
 			}
+			const data = {
+				idArr: this.$store.state.businessSelectBox.value,
+				type: statusValue,
+				useYn: true,
+			}
+			await this.$store.dispatch('messages', data).then(res => {
+				if (res.messages.length !== 0) {
+					this.saveDialogStatus.title = `중복 추가 오류`
+					this.saveDialogStatus.content = `${this.searchsel1.value}는 현재 등록되어있는 유형입니다.`
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					return (this.saveDialogStatus.open = true)
+				}
+				if (Object.keys(this.clickVariation).length !== 0) {
+					let realType
+					if (this.searchsel1.value === '일정 안내') {
+						realType = 'scheduleGuide'
+					} else if (this.searchsel1.value === '지급 일정 정보') {
+						realType = 'paymentScheduleInformation'
+					} else if (this.searchsel1.value === '지급 결과 안내') {
+						realType = 'paymentNotification'
+					} else {
+						realType = 'paymentResultGuide'
+					}
+
+					let input2 = {
+						id: this.clickVariation.id,
+						title: this.EvidenceField.title.txtField.value,
+						detail: this.EvidenceField.sms.txtField.value,
+						useYn: this.useType === 'use' ? true : false,
+						type: realType,
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+
+					this.$store.dispatch('updateMessage', input2).then(async () => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `수정 완료`
+						this.saveDialogStatus.content = `수정이 완료되었습니다`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						this.$store.state.loading = false
+						const businessData = {
+							idArr: this.$store.state.businessSelectBox.value,
+						}
+						await this.businessView(businessData)
+						await this.messageView(businessData)
+						await this.infoView(businessData)
+					})
+				} else {
+					let realType
+					if (this.searchsel1.value === '일정 안내') {
+						realType = 'scheduleGuide'
+					} else if (this.searchsel1.value === '지급 일정 정보') {
+						realType = 'paymentScheduleInformation'
+					} else if (this.searchsel1.value === '지급 결과 안내') {
+						realType = 'paymentNotification'
+					} else {
+						realType = 'paymentResultGuide'
+					}
+
+					let input = {
+						title: this.EvidenceField.title.txtField.value,
+						detail: this.EvidenceField.sms.txtField.value,
+						useYn: this.useType === 'use' ? true : false,
+						type: realType,
+						businessID: this.$store.state.businessSelectBox.value,
+					}
+
+					this.$store.dispatch('createMessage', input).then(async () => {
+						this.sweetDialog_info.open = false
+						this.$store.state.loading = true
+						this.saveDialogStatus.title = `저장 완료`
+						this.saveDialogStatus.content = `저장이 완료되었습니다`
+						this.saveDialogStatus.buttonType = 'oneBtn'
+						this.saveDialogStatus.cancelBtnText = '확인'
+						this.saveDialogStatus.open = true
+						const businessData = {
+							idArr: this.$store.state.businessSelectBox.value,
+						}
+						await this.businessView(businessData)
+						await this.messageView(businessData)
+						await this.infoView(businessData)
+						this.$store.state.loading = false
+					})
+				}
+			})
 		},
 		SMSClick(val) {
 			this.clickVariation = {}

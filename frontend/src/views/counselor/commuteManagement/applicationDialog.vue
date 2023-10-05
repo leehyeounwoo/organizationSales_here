@@ -8,7 +8,7 @@
 				<v-icon>mdi-close</v-icon>
 			</v-btn>
 		</v-layout>
-		<div class="qr-layout px-6" wrap>
+		<div class="qr-layout px-6" wrap style="height:80vh; overflow: auto;">
 			<!-- <div class="qr_name mt-12">{{ dialog.meData.name }} 상담사</div>
 			<div class="qr_date mt-1">등 록 일 자 {{ dialog.meData.created_at | moment('YYYY. MM. DD') }}</div> -->
 

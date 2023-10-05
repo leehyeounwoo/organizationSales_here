@@ -5,7 +5,7 @@
 				<v-img src="/image/counselor_logo_0.png"></v-img>
 			</div>
 			<v-spacer></v-spacer>
-			<div class="mr-4" v-if="auth">
+			<!-- <div class="mr-4" v-if="auth">
 				<v-avatar size="32px" v-if="$store.state.meData.profile">
 					<img :src="$store.state.backServer + $store.state.meData.profile.url" alt="John" />
 				</v-avatar>
@@ -17,7 +17,7 @@
 				<div class="white--text" v-if="$store.state.meData.team && auth">
 					{{ $store.state.meData.team.title }}
 				</div>
-			</div>
+			</div> -->
 			<div class="py-4" v-if="auth">
 				<v-divider dark vertical style="height: 40px;"></v-divider>
 			</div>
@@ -43,6 +43,12 @@ export default {
 			if (sessionStorage.getItem('reserveLite-t')) this.auth = true
 			else this.auth = false
 		},
+	},
+	created() {
+		this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
+			console.log(res)
+			this.$store.state.businessName = res.businesses[0].name
+		})
 	},
 	methods: {
 		setting() {

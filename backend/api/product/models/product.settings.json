@@ -36,7 +36,7 @@
         "toBeRented",
         "existing"
       ],
-      "default": "noContract"
+      "default": "lease"
     },
     "editLog": {
       "type": "json"

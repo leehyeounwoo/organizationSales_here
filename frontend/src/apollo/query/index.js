@@ -111,6 +111,7 @@ export const users = gql`
 			teamID
 			rankID
 			workingStatus
+			name
 			copyAccount {
 				id
 				url
@@ -514,8 +515,8 @@ export const settlementsStatusArr = gql`
 	}
 `
 export const messages = gql`
-	query messages($idArr: ID) {
-		messages(where: { businessID: $idArr }) {
+	query messages($idArr: ID, $type: ENUM_MESSAGE_TYPE, $useYn: Boolean) {
+		messages(where: { businessID: $idArr, type: $type, useYn: $useYn }) {
 			id
 			type
 			title

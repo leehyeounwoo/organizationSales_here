@@ -61,7 +61,7 @@
 										</v-checkbox>
 									</td>
 									<td>
-										{{ d.username }}
+										{{ d.name }}
 									</td>
 									<td style="border-right:1px solid #d1d1d1; ">{{ d.team_rank }}</td>
 									<td style="border-right:1px solid #d1d1d1; ">

@@ -18,8 +18,9 @@
 					</span>
 					<v-progress-circular :rotate="-90" :size="20" :width="5" :value="assignmentsValue" color="white"> </v-progress-circular>
 				</v-btn>
-				<v-btn :class="assignmentsCount === 0 ? 'kiosk_header_btn2 ml-3' : 'kiosk_header_btn_active ml-3'" @click="vacationShow"
+				<v-btn :class="unattendedLength === 0 ? 'kiosk_header_btn2 ml-3' : 'kiosk_header_btn_active ml-3'" @click="vacationShow"
 					>연차 대기
+
 					<span class="mr-1">
 						{{ unattendedLength }}
 					</span>

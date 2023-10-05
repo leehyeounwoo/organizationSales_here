@@ -4,24 +4,27 @@
 			<counselorHeader :logout="session" />
 		</div>
 		<div
+			id="handleScroll"
 			class="board_layout"
-			style="position:fixed; margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#F3F3F3; margin-left: auto; margin-right: auto; overflow-x: hidden;"
+			style="position:fixed; width:100%; margin-top: 60px; margin-bottom: 60px; overflow-y:auto; background-color:#F3F3F3; margin-left: auto; margin-right: auto; overflow-x: hidden;"
 			:style="'height:' + calc_height() + 'px;'"
+			@scroll="handleScroll()"
 		>
 			<router-view></router-view>
 		</div>
-		<div v-if="$store.state.headerMobileStatus" style="position:fixed; width:100%; bottom:0">
+		<!-- <div v-if="$store.state.headerMobileStatus" style="position:fixed; width:100%; bottom:0">
 			<counselorFooter v-if="$store.state.footerMobileStatus" />
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script>
-import { counselorHeader, counselorFooter } from '@/components'
+import { counselorHeader } from '@/components'
+// counselorFooter
 export default {
 	components: {
 		counselorHeader,
-		counselorFooter,
+		// counselorFooter,
 	},
 	data() {
 		return {
@@ -38,9 +41,19 @@ export default {
 		}
 	},
 	methods: {
+		handleScroll() {
+			this.mobileHeight = window.innerHeight || document.body.clientHeight
+			if (this.$store.state.headerMobileStatus && this.$store.state.footerMobileStatus) {
+				document.getElementById('handleScroll').style.height = this.mobileHeight - 60 + 'px'
+			} else if (this.$store.state.headerMobileStatus || this.$store.state.footerMobileStatus) {
+				document.getElementById('handleScroll').style.height = this.mobileHeight - 60 + 'px'
+			} else {
+				document.getElementById('handleScroll').style.height = this.mobileHeight + 'px'
+			}
+		},
 		calc_height() {
 			if (this.$store.state.headerMobileStatus && this.$store.state.footerMobileStatus) {
-				return this.mobileHeight - 120
+				return this.mobileHeight - 60
 			} else if (this.$store.state.headerMobileStatus || this.$store.state.footerMobileStatus) {
 				return this.mobileHeight - 60
 			} else {

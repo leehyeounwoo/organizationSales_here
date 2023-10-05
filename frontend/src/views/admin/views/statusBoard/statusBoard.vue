@@ -2,7 +2,7 @@
 	<!-- <div>
 		ss
 	</div> -->
-	<div style="height:100vh; width:85vw" class="mt-4">
+	<div class="mt-4">
 		<v-layout wrap mb-4 style="font-size: 0.75rem;" align-center>
 			<v-flex xs4>
 				<v-layout>
@@ -28,16 +28,17 @@
 				</v-layout>
 			</v-flex>
 		</v-layout>
-		<v-layout>
-			<v-flex>
-				<v-layout mb-10 justify-center>
-					<div style="margin-right:40px; width:300px;" v-for="(d, index) in dashboardData" :key="index" mr-2 mb-4>
-						<v-layout wrap style="background-color:black; place-content: center;">
-							<span style="color:white; font-size:0.5rem; font-weight:bold;"> {{ d.dong }} 동 </span>
-						</v-layout>
-					</div>
-				</v-layout>
-				<!-- <v-layout style="margin-top:auto;">
+		<div style="height:100vh; width:85vw; overflow:auto;" class="mt-4">
+			<v-layout>
+				<v-flex>
+					<v-layout mb-10 justify-center style="padding-left: 94vw;">
+						<div style="margin-right:40px; width:300px; min-width:200px; " v-for="(d, index) in dashboardData" :key="index" mr-2 mb-4>
+							<v-layout wrap style="background-color:black; place-content: center;">
+								<span style="color:white; font-size:0.5rem; font-weight:bold;"> {{ d.dong }} 동 </span>
+							</v-layout>
+						</div>
+					</v-layout>
+					<!-- <v-layout style="margin-top:auto;">
 
 					<v-layout>
 						<v-flex v-for="(te, idx) in testData" :key="idx" :style="true ? 'border-bottom:1px solid black;' : ''">
@@ -50,57 +51,58 @@
 						</v-flex>
 					</v-layout>
 				</v-layout> -->
-			</v-flex>
-		</v-layout>
-		<v-layout justify-center v-if="dashboardData.length > 0">
-			<div v-for="(d, index) in dashboardData" :key="index" style="margin-top:auto; margin-right:40px; width:300px;">
-				<v-layout v-for="(f, idx) in d.floor" :key="idx" wrap :style="idx === d.floor.length - 1 ? 'border-bottom:1px solid black;' : ''">
-					<v-flex v-for="(d1, i) in d.floor[d.floor.length - 1].data.length" :key="i">
-						<!-- :style="reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료' ? 'background-color:red;' : ''" -->
-						<v-layout justify-center>
-							<v-flex
-								v-if="f.data.filter(x => x.ho.includes('0' + (i + 1)))[0]"
-								xs12
-								style="text-align: center; width:10px; font-size:0.75rem; border:1px solid black;"
-								:style="
-									reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료'
-										? 'background-color:yellow;'
-										: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '계약 완료'
-										? 'background-color:#3a258f; color:white;'
-										: ''
-								"
-							>
-								<!-- :style="areaStyle(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0])" -->
-								{{ f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].ho }}
-								<!-- {{ f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].color }} -->
-							</v-flex>
-							<v-flex v-else xs12 style="text-align: center; width:10px; font-size:0.75rem; height:19px;"> </v-flex>
-						</v-layout>
-						<v-layout justify-center>
-							<v-flex
-								v-if="f.data.filter(x => x.ho.includes('0' + (i + 1)))[0]"
-								xs12
-								:style="
-									reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료'
-										? 'background-color:yellow;'
-										: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '계약 완료'
-										? 'background-color:#3a258f; color:white;'
-										: ''
-								"
-								style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px;"
-							>
-								{{ reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) }}
-							</v-flex>
+				</v-flex>
+			</v-layout>
+			<v-layout justify-center v-if="dashboardData.length > 0" style="padding-left: 94vw; padding-bottom: 6vw;">
+				<div v-for="(d, index) in dashboardData" :key="index" style="margin-top:auto; margin-right:40px; width:300px; min-width:200px; ">
+					<v-layout v-for="(f, idx) in d.floor" :key="idx" wrap :style="idx === d.floor.length - 1 ? 'border-bottom:1px solid black;' : ''">
+						<v-flex v-for="(d1, i) in d.floor[d.floor.length - 1].data.length" :key="i">
+							<!-- :style="reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료' ? 'background-color:red;' : ''" -->
+							<v-layout justify-center>
+								<v-flex
+									v-if="f.data.filter(x => x.ho.includes('0' + (i + 1)))[0]"
+									xs12
+									style="text-align: center; width:10px; font-size:0.75rem; border:1px solid black;"
+									:style="
+										reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료'
+											? 'background-color:yellow;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '계약 완료'
+											? 'background-color:#3a258f; color:white;'
+											: ''
+									"
+								>
+									<!-- :style="areaStyle(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0])" -->
+									{{ f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].ho }}
+									<!-- {{ f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].color }} -->
+								</v-flex>
+								<v-flex v-else xs12 style="text-align: center; width:10px; font-size:0.75rem; height:19px;"> </v-flex>
+							</v-layout>
+							<v-layout justify-center>
+								<v-flex
+									v-if="f.data.filter(x => x.ho.includes('0' + (i + 1)))[0]"
+									xs12
+									:style="
+										reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료'
+											? 'background-color:yellow;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '계약 완료'
+											? 'background-color:#3a258f; color:white;'
+											: ''
+									"
+									style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px;"
+								>
+									{{ reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) }}
+								</v-flex>
 
-							<v-flex
-								v-else
-								style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px;"
-							></v-flex>
-						</v-layout>
-					</v-flex>
-				</v-layout>
-			</div>
-		</v-layout>
+								<v-flex
+									v-else
+									style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px;"
+								></v-flex>
+							</v-layout>
+						</v-flex>
+					</v-layout>
+				</div>
+			</v-layout>
+		</div>
 	</div>
 </template>
 
@@ -171,6 +173,7 @@ export default {
 		},
 		async productsView(productsViewData) {
 			await this.$store.dispatch('products', productsViewData).then(async res => {
+				console.log(res)
 				this.productData = []
 				for (let index = 0; index < res.products.length; index++) {
 					const element = res.products[index]
@@ -209,10 +212,12 @@ export default {
 					element.floor = element.ho.substr(0, 2)
 				}
 			}
+			console.log(dong)
 			for (let idx = 0; idx < dong.length; idx++) {
 				const el = dong[idx]
 				let data = {}
 				let dongData = this.productData.filter(x => x.dong === el)
+				console.log(dongData)
 				let floorData = Array.from(new Set(dongData.map(x => x.floor)))
 				floorData = floorData.sort(function(b, a) {
 					if (Number(a) > Number(b)) return 1
@@ -223,6 +228,7 @@ export default {
 				for (let i = 0; i < floorData.length; i++) {
 					const e = floorData[i]
 					let hosuData = this.productData.filter(x => x.dong === el && x.floor === e)
+
 					data.dong = el
 					data.floor.push({
 						floor: e,
@@ -232,6 +238,10 @@ export default {
 							if (a.data4 < b.data4) return -1
 						}),
 					})
+					if (i === 0) {
+						// console.log(el)
+						// console.log(data.floor)
+					}
 				}
 				arr.push(data)
 			}
@@ -239,21 +249,23 @@ export default {
 			// if (this.$route.path === '/fullScreen') {
 			// 	this.chunk(arr, 6)
 			// } else {
-			// 	this.chunk(arr, 5)
+			// this.chunk(arr, 5)
 			// }
-
-			this.dashboardData = arr
-			// console.log(this.dashboardData)
-			// this.dashboardData = JSON.parse(JSON.stringify(arr.slice(0, 4)))
+			console.log(arr)
+			this.dashboardData = arr.sort(function(a, b) {
+				if (Number(a.dong) > Number(b.dong)) return 1
+				if (Number(a.dong) === Number(b.dong)) return 0
+				if (Number(a.dong) < Number(b.dong)) return -1
+			})
 			this.$store.state.loading = false
 		},
-		// chunk(data = [], size = 1) {
-		// const arr = []
-		// 	for (let i = 0; i < data.length; i += size) {
-		// 	arr.push(data.slice(i, i + size))
-		// }
-		// this.dashboardData = arr
-		// },
+		chunk(data = [], size = 1) {
+			const arr = []
+			for (let i = 0; i < data.length; i += size) {
+				arr.push(data.slice(i, i + size))
+			}
+			this.dashboardData = arr
+		},
 		areaStyle(val) {
 			if (val) {
 				if (this.reserveStatus(val) === 'ㅤ') {

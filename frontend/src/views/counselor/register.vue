@@ -552,6 +552,7 @@ export default {
 							employmentContract: filesId[2],
 							ID_Card: filesId[3],
 							businessRegistration: this.siginup.biz ? filesId[4] : null,
+							role: 3,
 						}
 						this.$store
 							.dispatch('register', data)

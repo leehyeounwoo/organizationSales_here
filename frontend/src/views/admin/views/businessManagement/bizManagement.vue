@@ -320,6 +320,10 @@ export default {
 				item: [],
 				contract: '',
 				noContract: '',
+				lease: '',
+				vacancy: '',
+				toBeRented: '',
+				existing: '',
 				selectBox1: {
 					placeholder: '주택형',
 					value: '',
@@ -492,6 +496,14 @@ export default {
 						el.contractStatus = '계약'
 					} else if (el.contractStatus === 'noContract') {
 						el.contractStatus = '미계약'
+					} else if (el.contractStatus === 'lease') {
+						el.contractStatus = '임대'
+					} else if (el.contractStatus === 'vacancy') {
+						el.contractStatus = '공실'
+					} else if (el.contractStatus === 'toBeRented') {
+						el.contractStatus = '예정'
+					} else if (el.contractStatus === 'existing') {
+						el.contractStatus = '기존'
 					} else if (!el.contractStatus) {
 						el.contractStatus = '-'
 					}
@@ -502,6 +514,14 @@ export default {
 				this.table_detail.contract = table_top.length
 				let table_top2 = this.table_detail.productTable.items.filter(x => x.contractStatus === '미계약')
 				this.table_detail.noContract = table_top2.length
+				let table_top3 = this.table_detail.productTable.items.filter(x => x.contractStatus === '임대')
+				this.table_detail.lease = table_top3.length
+				let table_top4 = this.table_detail.productTable.items.filter(x => x.contractStatus === '공실')
+				this.table_detail.vacancy = table_top4.length
+				let table_top5 = this.table_detail.productTable.items.filter(x => x.contractStatus === '예정')
+				this.table_detail.toBeRented = table_top5.length
+				let table_top6 = this.table_detail.productTable.items.filter(x => x.contractStatus === '기존')
+				this.table_detail.existing = table_top6.length
 			})
 			this.table_detail.dialog = true
 		},

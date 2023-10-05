@@ -3,13 +3,16 @@
 	<v-layout style="max-width:450px; margin: 0 auto;" wrap justify-center>
 		<div class="work-header">
 			<v-card class="ma-4 pa-4 header-card">
+				<v-layout>
+					<h3>사업지명 : {{ $store.state.businessName }}</h3>
+				</v-layout>
 				<v-layout align-center>
-					<div class="title">
+					<div class="point">
 						{{ $store.state.meData.name }}
 					</div>
 					<div class="ml-2">
-						<span class="point">{{ rank.rankName }}</span
-						>님, 오늘도 즐거운 하루 되세요.
+						<span class="point">[{{ rank.rankName }}]</span>
+						<!-- 님, 오늘도 즐거운 하루 되세요. -->
 					</div>
 				</v-layout>
 				<v-btn block color="point4" dark elevation="0" class="mt-2" @click="openQr">
@@ -121,7 +124,8 @@
 			<v-flex xs6 :class="i % 2 !== 0 ? 'pl-2 pb-4' : 'pr-2 pb-4'" v-for="(icon, i) in iconList" :key="i">
 				<v-card class="dashboard-icons pa-4" elevation="0" @click="$router.push({ name: icon.route })">
 					<div class="icon">
-						<v-img class="mx-auto" :src="`${require(`@/assets/images/ico/${icon.icon}.png`)}`" width="35" height="35"></v-img>
+						<v-icon large color="#633efd">{{ icon.icon }}</v-icon>
+						<!-- <v-img class="mx-auto" :src="`${require(`@/assets/images/ico/${icon.icon}.png`)}`" width="35" height="35"></v-img> -->
 					</div>
 					<div class="text primary2--text">
 						{{ icon.title }}
@@ -204,22 +208,22 @@ export default {
 			},
 			iconList: [
 				{
-					icon: 'footer_공지사항',
+					icon: 'mdi-bullhorn-variant-outline',
 					title: '공지사항',
 					route: 'counselorNotice',
 				},
 				{
-					icon: 'footer_출퇴근관리',
+					icon: 'mdi-subway-variant',
 					title: '근태관리',
 					route: 'counselorManage',
 				},
 				{
-					icon: 'footer_고객관리',
+					icon: 'mdi-account-check',
 					title: '계약관리',
 					route: 'settlements',
 				},
 				{
-					icon: 'footer_상담관리',
+					icon: 'mdi-calendar-clock-outline',
 					title: '정산관리',
 					route: 'settlementTruns',
 				},
@@ -244,12 +248,28 @@ export default {
 			assignmentHoldingList: {},
 		}
 	},
-	created() {
+	async created() {
 		for (let index = 1; index < 2; index++) {
 			const el = index * 30
 			this.times.push(String(el) + '분')
 		}
-		this.products()
+		await this.$store
+			.dispatch('me')
+			.then(async res => {
+				this.$store.state.meData = res.me
+			})
+			.catch(err => {
+				console.log(err)
+				this.$store.state.loading = false
+				// sessionStorage.removeItem('reserveLite-t')
+				this.$router.push('/').catch(() => {})
+			})
+		await this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
+			console.log(res)
+			this.$store.state.businessName = res.businesses[0].name
+			this.$store.state.meData.businessID = res.businesses[0].id
+		})
+		await this.products()
 	},
 	methods: {
 		businesses() {
@@ -375,15 +395,17 @@ export default {
 			else this.sweetInfo.modalIcon = info
 			this.sweetInfo.open = true
 		},
-		products() {
-			this.$store.dispatch('me').then(() => {
-				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID, contractStatus: 'noContract' }).then(res => {
-					this.productDatas = res.products
-					this.products1 = res.products.map(x => x.housingType)
-					this.assignments()
-					this.ranks()
-					this.businesses()
-				})
+		async products() {
+			await this.$store.dispatch('me').then(() => {
+				this.$store
+					.dispatch('products', { businessID: this.$store.state.meData.businessID, contractStatus: 'noContract' })
+					.then(async res => {
+						this.productDatas = res.products
+						this.products1 = res.products.map(x => x.housingType)
+						await this.assignments()
+						await this.ranks()
+						await this.businesses()
+					})
 			})
 		},
 		refresh() {

@@ -231,6 +231,7 @@ export const register = gql`
 		$company: String
 		$rankID: String
 		$editLog: JSON
+		$role: ID
 	) {
 		register(
 			input: {
@@ -252,6 +253,7 @@ export const register = gql`
 				company: $company
 				rankID: $rankID
 				editLog: $editLog
+				role: $role
 			}
 		) {
 			jwt

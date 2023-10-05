@@ -1703,7 +1703,7 @@
 <script>
 import TimepickerDialog from '../views/admin/viewItem/timePickerDialog.vue'
 import btn from './button'
-import { selectBoxValueItems, selectBoxValue, selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
+import { selectBoxValueItems, selectBoxValue, selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle ,sweetAlert} from '@/components/index'
 // import { sweetAlert } from '@/components/index'
 
 import downloadExcel from 'vue-json-excel'
@@ -1713,7 +1713,7 @@ export default {
 		selectBox3,
 		downloadExcel,
 		selectBox,
-		sweetAlert: () => import('@/components/sweetAlert.vue'),
+		sweetAlert,
 		txtField,
 		txtFieldStyle,
 		selectBoxStyle,

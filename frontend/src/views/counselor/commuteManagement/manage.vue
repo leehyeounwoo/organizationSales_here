@@ -15,7 +15,7 @@
 					</span>
 				</v-layout>
 			</div>
-			<div class="px-2 pb-10" style="width:100vw;">
+			<div class="px-2 pb-12 mb-2" style="width:100vw;">
 				<v-layout align-center class="date_filter_holyday mt-1 mx-1">
 					<div>
 						<DatepickerDialog
@@ -165,8 +165,18 @@
 					</v-layout>
 				</div>
 			</div>
-			<div style="width:100%; position: fixed; bottom: 60px;">
-				<v-btn v-if="reservationStatus" class="bottom_fix" color="primary2" block tile dark depressed @click="holyDayAction()">
+			<div style="width:100%; position: fixed; bottom:0;">
+				<v-btn
+					v-if="reservationStatus"
+					class="bottom_fix"
+					style="height:7vh;"
+					color="primary2"
+					block
+					tile
+					dark
+					depressed
+					@click="holyDayAction()"
+				>
 					신청하기
 				</v-btn>
 			</div>

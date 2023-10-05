@@ -1,9 +1,13 @@
 <template>
 	<v-dialog v-model="setdialog.open" persistent content-class="qr-modal" max-width="400">
-		<v-layout align-center class="px-10" :style="`background-color:${$store.state.primary2}; height:60px;`">
-			<div class="white--text body">물건 홀딩 현황</div>
-			<v-spacer></v-spacer>
-			<div class="white--text body">{{ $moment().format('YYYY.MM.DD HH:mm') }} 현재</div>
+		<v-layout align-center class="px-10" :style="`background-color:${$store.state.primary2}; height:60px;`" wrap>
+			<v-flex xs12>
+				<div class="white--text body">물건 홀딩 현황</div>
+			</v-flex>
+			<!-- <v-spacer></v-spacer> -->
+			<v-flex xs12>
+				<div class="white--text body">{{ $moment().format('YYYY.MM.DD HH:mm') }} 현재</div>
+			</v-flex>
 		</v-layout>
 		<div class="qr-layout px-10" wrap>
 			<strong>

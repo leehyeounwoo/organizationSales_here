@@ -844,7 +844,18 @@
       						text-overflow:ellipsis;
       						white-space:nowrap;"
 				>
-					{{ item.username }}
+					{{ item.name }}
+				</div>
+			</template>
+			<!-- username -->
+			<template v-slot:[`item.usernameSettlement`]="{ item }">
+				<div
+					style="width:60px;
+										overflow:hidden;
+      						text-overflow:ellipsis;
+      						white-space:nowrap;"
+				>
+					{{ item.settlements.name }}
 				</div>
 			</template>
 			<!-- workingStatus -->
@@ -1763,12 +1774,12 @@
 					</div>
 					<div
 						class="d-flex align-center justify-center status_box mr-1 px-1"
-						:alt="item.assingnmentUserData.username"
+						:alt="item.assingnmentUserData.name"
 						style="white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;"
 					>
-						{{ item.assingnmentUserData.username }}
+						{{ item.assingnmentUserData.name }}
 					</div>
 					<div class="d-flex align-center justify-center status_box mr-1 px-1">
 						{{ item.assingnmentData.type === 'allday' ? '종일' : item.assingnmentData.type === 'time' ? '시간' : '즉시' }}
@@ -1952,7 +1963,17 @@
 <script>
 import TimepickerDialog from '../views/admin/viewItem/timePickerDialog.vue'
 import btn from './button'
-import { selectBoxValueItems, selectBoxValue, selectBox3, selectBox, txtField, txtFieldStyle, selectBoxStyle } from '@/components/index'
+
+import {
+	sweetAlert,
+	selectBoxValueItems,
+	selectBoxValue,
+	selectBox3,
+	selectBox,
+	txtField,
+	txtFieldStyle,
+	selectBoxStyle,
+} from '@/components/index'
 // import { sweetAlert } from '@/components/index'
 
 import downloadExcel from 'vue-json-excel'
@@ -1962,7 +1983,7 @@ export default {
 		selectBox3,
 		downloadExcel,
 		selectBox,
-		sweetAlert: () => import('@/components/sweetAlert.vue'),
+		sweetAlert,
 		txtField,
 		txtFieldStyle,
 		selectBoxStyle,

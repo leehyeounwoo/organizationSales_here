@@ -103,8 +103,34 @@
 							</v-flex>
 							<v-icon class="attachmentIconClass" @click="deleteAttachment(filename.id)">mdi-alpha-x-circle-outline</v-icon>
 						</v-layout>
+						<v-layout v-if="attachmentNameList.length !== 0">
+							<v-flex xs4>
+								<!-- <btn :btn="editBtn" btn_txt="파일 첨부" @click="clickEditBtn(edit)" /> -->
+								<v-btn @click="clickEditBtn" class="ml-2 search_btn2" style="width: 100%; " color="#3e7ccc">파일 첨부</v-btn>
+							</v-flex>
+							<input
+								style="display:none;"
+								type="file"
+								:id="'file_upload'"
+								accept=".pdf, image/jpg, image/png, image/jpeg"
+								@change="fileUploadDataSave($event, attachmentNameList)"
+							/>
+						</v-layout>
 					</v-flex>
 				</v-layout>
+				<!-- <v-layout>
+					<v-flex class="notice_right_table" xs3>
+						파일 업로드
+					</v-flex>
+					<v-flex xs10 class="notice_right_table2" style="height:163px; overflow-y: scroll;">
+						<v-layout class="attachmentClass" v-for="(filename, index) in attachmentNameList" :key="index" style="">
+							<v-flex style="width: 100%; height: 100%;" @click="e => viewAttachment(e, filename.url)">
+								<span class="attachmentSpanClass">{{ filename.name }}</span>
+							</v-flex>
+							<v-icon class="attachmentIconClass" @click="deleteAttachment(filename.id)">mdi-alpha-x-circle-outline</v-icon>
+						</v-layout>
+					</v-flex>
+				</v-layout> -->
 				<v-layout>
 					<v-flex class="notice_right_table" xs3 style="height: 40px;">
 						처리
@@ -135,6 +161,7 @@ export default {
 
 	data() {
 		return {
+			file_input: null,
 			date: this.$moment(),
 			agreeType: false,
 			startTimeDialog: false,
@@ -184,7 +211,7 @@ export default {
 			holiDay: 0,
 			settlementTable: {
 				headers: [
-					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '10%' },
+					{ text: '직원명', sortable: false, value: 'usernameSettlement', align: 'center', width: '10%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
 					{ text: '팀', sortable: false, value: 'team_rank', align: 'center', width: '10%' },
@@ -307,6 +334,62 @@ export default {
 	mounted() {},
 
 	methods: {
+		async fileUploadDataSave(val, attachmentNameList) {
+			await this.$store
+				.dispatch('upload', { file: val.target.files[0] })
+				.then(async res => {
+					let attachList = res.data.map(x => x.id).concat(attachmentNameList.map(x => x.id))
+					const updateData = { id: this.finalSettlementData.id, attachID: attachList }
+					await this.$store
+						.dispatch('updateSettlement', updateData)
+						.then(async res => {
+							console.log(res)
+
+							this.saveDialogStatus.title = `파일 첨부 완료`
+							this.saveDialogStatus.content = `파일 첨부가 완료되었습니다.`
+							this.saveDialogStatus.buttonType = 'oneBtn'
+							this.saveDialogStatus.cancelBtnText = '확인'
+							this.saveDialogStatus.open = true
+							this.settlementTable.items = []
+							this.list = []
+							this.finalSettlementData = []
+							const settlementData = {
+								businessID: this.$store.state.businessSelectBox.value,
+								settlementStatusArr: ['agree', 'disagree', 'waiting'],
+							}
+							await this.settlementView(settlementData)
+							const usersViewData = {
+								idArr: this.userArrData,
+								roleName: 'Counselor',
+							}
+							await this.usersView(usersViewData)
+							const productsViewData = {
+								idArr: this.productArrData,
+							}
+							await this.productsView(productsViewData)
+							const teamsViewData = {
+								idArr: this.teamArrData,
+							}
+							await this.teamsView(teamsViewData)
+							const ranksViewData = {
+								idArr: this.rankArrData,
+							}
+							await this.ranksView(ranksViewData)
+							await this.dataSetting()
+							await this.editUserData(this.settlementTable.items.filter(x => x.id === updateData.id)[0])
+							this.$store.state.loading = false
+						})
+						.catch(() => {})
+				})
+				.catch(err => {
+					console.log(err)
+				})
+			this.$store.state.loading = false
+		},
+		clickEditBtn() {
+			this.$store.state.loading = true
+			document.getElementById('file_upload').click()
+		},
 		SearchBiz() {
 			let item = JSON.parse(JSON.stringify(this.settlementTable.origin_items))
 			if (this.searchsel1.value.value && this.searchsel1.value.value !== 'all') {
@@ -660,7 +743,8 @@ export default {
 			await this.dataSetting()
 			this.date_picker.date = this.$moment(this.date_picker.date)
 		},
-		editUserData(val) {
+		async editUserData(val) {
+			console.log(val)
 			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []
@@ -674,7 +758,7 @@ export default {
 			})
 			const usernameSpan = document.getElementById('usernameSpan')
 			if (usernameSpan) {
-				usernameSpan.textContent = `${val.username}`
+				usernameSpan.textContent = `${val.settlements.name}`
 			}
 
 			const phoneNumberSpan = document.getElementById('phoneNumberSpan')
@@ -748,8 +832,50 @@ export default {
 				}
 			}
 		},
-		deleteAttachment(val) {
+		async deleteAttachment(val) {
 			this.attachmentNameList = this.attachmentNameList.filter(item => item.id !== val)
+			const updateData = {
+				id: this.finalSettlementData.id,
+				attachID: this.attachmentNameList.map(x => x.id),
+			}
+			await this.$store
+				.dispatch('updateSettlement', updateData)
+				.then(async res => {
+					console.log(res)
+					this.saveDialogStatus.title = `파일 삭제 완료`
+					this.saveDialogStatus.content = `파일 삭제가 완료되었습니다.`
+					this.saveDialogStatus.buttonType = 'oneBtn'
+					this.saveDialogStatus.cancelBtnText = '확인'
+					this.saveDialogStatus.open = true
+					this.settlementTable.items = []
+					this.list = []
+					this.finalSettlementData = []
+					const settlementData = {
+						businessID: this.$store.state.businessSelectBox.value,
+						settlementStatusArr: ['agree', 'disagree', 'waiting'],
+					}
+					await this.settlementView(settlementData)
+					const usersViewData = {
+						idArr: this.userArrData,
+						roleName: 'Counselor',
+					}
+					await this.usersView(usersViewData)
+					const productsViewData = {
+						idArr: this.productArrData,
+					}
+					await this.productsView(productsViewData)
+					const teamsViewData = {
+						idArr: this.teamArrData,
+					}
+					await this.teamsView(teamsViewData)
+					const ranksViewData = {
+						idArr: this.rankArrData,
+					}
+					await this.ranksView(ranksViewData)
+					await this.editUserData(this.settlementTable.items.filter(x => x.id === updateData.id)[0])
+					this.$store.state.loading = false
+				})
+				.catch(() => {})
 		},
 
 		click_confirm() {

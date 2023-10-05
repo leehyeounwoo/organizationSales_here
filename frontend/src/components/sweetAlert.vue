@@ -34,7 +34,7 @@
 import { SweetModal } from 'sweet-modal-vue'
 
 export default {
-	name: 'text_field_name',
+	name: 'sweetmodal',
 	components: {
 		SweetModal,
 	},

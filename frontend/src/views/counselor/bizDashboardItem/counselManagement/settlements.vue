@@ -208,9 +208,9 @@ export default {
 			productDatas: [],
 		}
 	},
-	created() {
-		this.products()
-		this.settlements('first')
+	async created() {
+		await this.products()
+		await this.settlements('first')
 	},
 	methods: {
 		editSettlement(val) {
@@ -225,9 +225,10 @@ export default {
 			this.products3 = this.productDatas.filter(x => x.dong === val && x.housingType === this.product1).map(x => x.ho)
 			this.product3 = ''
 		},
-		products() {
-			this.$store.dispatch('me').then(() => {
-				this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
+		async products() {
+			await this.$store.dispatch('me').then(async () => {
+				await this.$store.dispatch('products', { businessID: this.$store.state.meData.businessID }).then(res => {
+					console.log(res)
 					this.productDatas = res.products
 					this.products1 = res.products.map(x => x.housingType)
 				})
@@ -236,9 +237,9 @@ export default {
 		allowedDates(val) {
 			if (this.able_date.start <= val && this.able_date.end >= val && this.$moment().format('YYYY-MM-DD') <= val) return val
 		},
-		settlements(type) {
+		async settlements(type) {
 			this.$store.state.loading = true
-			this.$store.dispatch('me').then(() => {
+			await this.$store.dispatch('me').then(async () => {
 				const data = {
 					userID: this.$store.state.meData.id,
 				}
@@ -264,13 +265,17 @@ export default {
 						}
 					}
 				}
-				this.$store.dispatch('settlementsList', data).then(res => {
+				await this.$store.dispatch('settlementsList', data).then(res => {
+					console.log(res)
 					this.total = res.settlements.length
 					for (let index = 0; index < res.settlements.length; index++) {
 						const el = res.settlements[index]
+						console.log(this.productDatas)
+						console.log(el.ProductID)
 						el.product = this.productDatas.filter(x => x.id === el.ProductID)[0]
 						el.contractDate = this.$moment(el.contractDate).format('YYYY.MM.DD')
 					}
+					console.log(res.settlements)
 					this.datatable.items = res.settlements
 					this.$store.state.loading = false
 				})

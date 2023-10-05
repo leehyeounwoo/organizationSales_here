@@ -50,13 +50,13 @@
 								</div>
 							</v-flex>
 							<v-flex xs7 style="border-left:0.5px solid white; height:100%;">
-								<v-layout class="blueBoxCard" justify-center :alt="user.username">
+								<v-layout class="blueBoxCard" justify-center :alt="user.name">
 									<span
 										style="overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;"
 									>
-										{{ user.username }}
+										{{ user.name }}
 									</span>
 								</v-layout>
 
@@ -350,7 +350,7 @@ export default {
 			})
 		},
 		userInfoClick(team, user) {
-			this.rightEdit[0].value = user.username
+			this.rightEdit[0].value = user.name
 			this.rightEdit[1].value = user.phoneNumber
 			this.rightEdit[2].value = user.salesPhoneNumber
 			// this.rightEdit[3].value = user.salesPhoneNumber

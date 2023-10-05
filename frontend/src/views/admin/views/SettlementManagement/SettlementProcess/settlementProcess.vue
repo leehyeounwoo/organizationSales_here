@@ -467,7 +467,7 @@ export default {
 			holiDay: 0,
 			processTable: {
 				headers: [
-					{ text: '직원명', sortable: false, value: 'username', align: 'center', width: '7%' },
+					{ text: '직원명', sortable: false, value: 'usernameSettlement', align: 'center', width: '7%' },
 					{ text: '연락처', sortable: false, value: 'phoneNumber', align: 'center', width: '10%' },
 					{ text: '영업번호', sortable: false, value: 'settlementPhoneNumber', align: 'center', width: '10%' },
 					{ text: '팀', sortable: false, value: 'teamText', align: 'center', width: '7%' },
@@ -1511,7 +1511,7 @@ export default {
 
 			const usernameSpan = document.getElementById('spanUsername')
 			if (usernameSpan) {
-				usernameSpan.textContent = `${val.username}`
+				usernameSpan.textContent = `${val.settlements.name}`
 			}
 			const spanPhoneNumber = document.getElementById('spanPhoneNumber')
 			if (spanPhoneNumber) {
@@ -1673,6 +1673,35 @@ export default {
 		},
 
 		async click_agree() {
+			// if (this.processCheckBox) {
+			// 	const data = {
+			// 		idArr: this.$store.state.businessSelectBox.value,
+			// 		type: 'scheduleGuide',
+			// 		useYn: true,
+			// 	}
+			// 	await this.$store.dispatch('messages', data).then(res => {
+			// 		console.log(res)
+			// 		let timesCheck = Number(this.timessel.value.replace(/차/g, ''))
+			// 		let messageData = res.messages[0].detail
+			// 		let messageDetail = []
+			// 		for (let index = 0; index < timesCheck; index++) {
+			// 			const element = this.paymentAmount[`charge${index + 1}`]
+			// 			messageDetail.push(`지급일: ${this.start_date_picker[index + 1].date}, 지급액: ${element.txtField.value}`)
+			// 		}
+			// 		messageData = messageData.replace('${trun}', String(timesCheck))
+			// 		// messageData = messageData.replace('${turnTable}', messageDetail.join())
+			// 		console.log(messageData)
+			// 		// let input = {
+			// 		// 	phoneNumber: '01030916479',
+			// 		// 	content: messageData,
+			// 		// }
+
+			// 		// this.$store
+			// 		// 	.dispatch('sendSmsSettlement', input)
+			// 		// 	.then(() => {})
+			// 		// 	.catch(() => {})
+			// 	})
+			// }
 			// -------------------------
 
 			this.$store.state.loading = true
@@ -1749,23 +1778,31 @@ export default {
 							})
 						}
 					})
-					if (this.processCheckBox) {
-						let messages = []
-						let message = `${index}차 정산일은 ${this.$moment().format(
-							'YYYY-MM-DD',
-						)}입니다.\n정산되는 금액은 ${element.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
-						messages.push(message)
-						let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
-						let input = {
-							phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
-							content: finalMessage,
-						}
+					// if (this.processCheckBox) {
+					// 	const data = {
+					// 		idArr: this.$store.state.businessSelectBox.value,
+					// 		type: 'scheduleGuide',
+					// 		useYn: true,
+					// 	}
+					// 	await this.$store.dispatch('messages', data).then(res => {
+					// 		console.log(res.messages[0].detail)
+					// 	})
+					// 	// 	let messages = []
+					// 	// 	let message = `${index}차 정산일은 ${this.$moment().format(
+					// 	// 		'YYYY-MM-DD',
+					// 	// 	)}입니다.\n정산되는 금액은 ${element.txtField.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원입니다`
+					// 	// 	messages.push(message)
+					// 	// 	let finalMessage = `[테스트] ${this.finalSettlementData[0].username}님 정산일정 안내문자입니다.\n${messages.join('\n\n')}`
+					// 	// 	let input = {
+					// 	// 		phoneNumber: this.finalSettlementData[0].users.phoneNumber.replace(/-/g, ''),
+					// 	// 		content: finalMessage,
+					// 	// 	}
 
-						this.$store
-							.dispatch('sendSmsSettlement', input)
-							.then(() => {})
-							.catch(() => {})
-					}
+					// 	// 	this.$store
+					// 	// 		.dispatch('sendSmsSettlement', input)
+					// 	// 		.then(() => {})
+					// 	// 		.catch(() => {})
+					// }
 				}
 			}
 		},

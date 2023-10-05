@@ -198,9 +198,10 @@ export default {
 			await this.$store.dispatch('products', productsViewData).then(async res => {
 				for (let index = 0; index < this.productTable.items.length; index++) {
 					const element = this.productTable.items[index]
+					console.log(element)
 					let idx = res.products.findIndex(x => x.id === element.productID)
 					element.product = res.products[idx]
-					element.product_counselor = element.team.title + ' ' + element.user.username
+					element.product_counselor = element.team.title + ' ' + element.user.name
 					element.holding_product = element.product.housingType + ' ' + element.product.dong + '동 ' + element.product.ho + '호'
 					// element.holdingTime = element.holdingTime
 					element.holdingTimeSel = {

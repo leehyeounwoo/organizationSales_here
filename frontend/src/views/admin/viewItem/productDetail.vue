@@ -58,6 +58,10 @@
 				<v-flex xs8>
 					<v-layout justify-end class="table_info mr-7">
 						<div class="ml-3">전체 상품 : {{ setdialog.productTable.items.length }} 건,</div>
+						<div class="ml-3">임대 : {{ setdialog.lease }} 건</div>
+						<div class="ml-3">공실 : {{ setdialog.vacancy }} 건</div>
+						<div class="ml-3">예정 : {{ setdialog.toBeRented }} 건</div>
+						<div class="ml-3">기존 : {{ setdialog.existing }} 건</div>
 						<div class="ml-3">계약 : {{ setdialog.contract }} 건,</div>
 						<div class="ml-3">미계약 : {{ setdialog.noContract }} 건</div>
 					</v-layout>
@@ -81,8 +85,12 @@
 						</v-flex>
 						<v-flex class="d-flex align-center" xs9 v-else-if="right.type === 'radio'" style="height:50px;">
 							<v-radio-group v-model="right.value" row class="system-radio-label" style="margin-left:10px">
-								<v-radio color="#009dac" label="계약" :value="true"></v-radio>
-								<v-radio color="#009dac" label="미계약" :value="false"></v-radio>
+								<v-radio color="#009dac" label="임대" value="lease" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="공실" value="vacancy" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="예정" value="toBeRented" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="기존" value="existing" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="계약" value="contract" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="가계약" value="noContract" style="width:30%;"></v-radio>
 							</v-radio-group>
 						</v-flex>
 					</v-layout>
@@ -287,10 +295,11 @@ export default {
 				data.editLog = log
 			}
 			if (this.right_table1[3].value) {
-				data['contractStatus'] = 'contract'
-			} else {
-				data['contractStatus'] = 'noContract'
+				data['contractStatus'] = this.right_table1[3].value
 			}
+			//  else {
+			// 				data['contractStatus'] = 'noContract'
+			// 			}
 			this.$store.dispatch('updateProduct', data).then(res => {
 				this.sweetDialog3.open = false
 				this.newProduct(this.setdialog.item)
@@ -308,6 +317,14 @@ export default {
 					data['contractStatus'] = 'contract'
 				} else if (this.setdialog.selectBox4.value === '미계약') {
 					data['contractStatus'] = 'noContract'
+				} else if (this.setdialog.selectBox4.value === '임대') {
+					data['contractStatus'] = 'lease'
+				} else if (this.setdialog.selectBox4.value === '공실') {
+					data['contractStatus'] = 'vacancy'
+				} else if (this.setdialog.selectBox4.value === '예정') {
+					data['contractStatus'] = 'toBeRented'
+				} else if (this.setdialog.selectBox4.value === '기존') {
+					data['contractStatus'] = 'existing'
 				}
 			}
 			if (this.setdialog.selectBox5.value) {
@@ -323,6 +340,14 @@ export default {
 						el.contractStatus = '계약'
 					} else if (el.contractStatus === 'noContract') {
 						el.contractStatus = '미계약'
+					} else if (el.contractStatus === 'lease') {
+						el.contractStatus = '임대'
+					} else if (el.contractStatus === 'vacancy') {
+						el.contractStatus = '공실'
+					} else if (el.contractStatus === 'toBeRented') {
+						el.contractStatus = '예정'
+					} else if (el.contractStatus === 'existing') {
+						el.contractStatus = '기존'
 					} else if (!el.contractStatus) {
 						el.contractStatus = '-'
 					}
@@ -333,6 +358,14 @@ export default {
 				this.setdialog.contract = table_top.length
 				let table_top2 = this.setdialog.productTable.items.filter(x => x.contractStatus === '미계약')
 				this.setdialog.noContract = table_top2.length
+				let table_top3 = this.setdialog.productTable.items.filter(x => x.contractStatus === '임대')
+				this.setdialog.lease = table_top3.length
+				let table_top4 = this.setdialog.productTable.items.filter(x => x.contractStatus === '공실')
+				this.setdialog.vacancy = table_top4.length
+				let table_top5 = this.setdialog.productTable.items.filter(x => x.contractStatus === '예정')
+				this.setdialog.toBeRented = table_top5.length
+				let table_top6 = this.setdialog.productTable.items.filter(x => x.contractStatus === '기존')
+				this.setdialog.existing = table_top6.length
 			})
 		},
 		deleteProduct() {
@@ -356,7 +389,8 @@ export default {
 			}
 			this.sweetDialog2.open = true
 		},
-		editProduct(item) {
+		async editProduct(item) {
+			this.$store.state.loading = true
 			this.productDetail = item
 			this.right_table1[4].txtfield.value = ''
 			this.productEdit = item.editLog
@@ -365,7 +399,7 @@ export default {
 			let data = {
 				businessID: item.businessID,
 			}
-			this.$store.dispatch('products', data).then(res => {
+			await this.$store.dispatch('products', data).then(res => {
 				res.products.forEach(el => {
 					this.right_table1[1].select.items.push({ text: el.dong, value: el.dong })
 					this.right_table1[2].select.items.push({ text: el.housingType, value: el.housingType })
@@ -374,11 +408,20 @@ export default {
 				this.right_table1[1].select.value = item.dong
 				this.right_table1[2].select.value = item.housingType
 				if (item.contractStatus === '계약') {
-					this.right_table1[3].value = true
+					this.right_table1[3].value = 'contract'
 				} else if (item.contractStatus === '미계약') {
-					this.right_table1[3].value = false
+					this.right_table1[3].value = 'noContract'
+				} else if (item.contractStatus === '임대') {
+					this.right_table1[3].value = 'lease'
+				} else if (item.contractStatus === '공실') {
+					this.right_table1[3].value = 'vacancy'
+				} else if (item.contractStatus === '예정') {
+					this.right_table1[3].value = 'toBeRented'
+				} else if (item.contractStatus === '기존') {
+					this.right_table1[3].value = 'existing'
 				}
 			})
+			this.$store.state.loading = false
 		},
 		first_productTable() {
 			if (this.setdialog.dialog) {
@@ -447,11 +490,12 @@ export default {
 			} else {
 				data['dong'] = this.setdialog.selectBox2.value
 			}
-			if (this.setdialog.selectBox3.value === '계약') {
-				data['contractStatus'] = 'contract'
-			} else {
-				data['contractStatus'] = 'noContract'
+			if (this.setdialog.selectBox3.value) {
+				data['contractStatus'] = this.setdialog.selectBox3.value
 			}
+			// else {
+			// 				data['contractStatus'] = 'noContract'
+			// 			}
 			this.$store.dispatch('createProduct', data).then(() => {
 				this.sweetDialog.open = false
 				this.newProduct(this.setdialog.item)
