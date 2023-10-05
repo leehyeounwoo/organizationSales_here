@@ -30,7 +30,11 @@
       "type": "enumeration",
       "enum": [
         "contract",
-        "noContract"
+        "noContract",
+        "lease",
+        "vacancy",
+        "toBeRented",
+        "existing"
       ],
       "default": "noContract"
     },
