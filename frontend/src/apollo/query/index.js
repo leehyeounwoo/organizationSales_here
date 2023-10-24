@@ -231,19 +231,12 @@ export const products = gql`
 		$dong: String
 		$ho: String
 		$businessID: String
-		$contractStatus: ENUM_PRODUCT_CONTRACTSTATUS
+		$contractStatus: [ENUM_PRODUCT_CONTRACTSTATUS]
 		$start: Int
 		$limit: Int
 	) {
 		products(
-			where: {
-				id: $idArr
-				housingType: $housingType
-				dong: $dong
-				ho_contains: $ho
-				businessID: $businessID
-				contractStatus: $contractStatus
-			}
+			where: { id: $idArr, housingType: $housingType, dong: $dong, ho: $ho, businessID: $businessID, contractStatus: $contractStatus }
 			start: $start
 			limit: $limit
 		) {
@@ -259,7 +252,7 @@ export const products = gql`
 	}
 `
 export const productsFilter = gql`
-	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS, $housingType: String, $dong: String, $ho: String) {
+	query($businessID: String, $contractStatus: [ENUM_PRODUCT_CONTRACTSTATUS], $housingType: String, $dong: String, $ho: String) {
 		products(where: { businessID: $businessID, contractStatus: $contractStatus, housingType: $housingType, dong: $dong, ho: $ho }) {
 			id
 			housingType
@@ -272,7 +265,7 @@ export const productsFilter = gql`
 	}
 `
 export const productsCount = gql`
-	query($businessID: String, $contractStatus: ENUM_PRODUCT_CONTRACTSTATUS, $housingType: String, $dong: String, $ho: String) {
+	query($businessID: String, $contractStatus: [ENUM_PRODUCT_CONTRACTSTATUS], $housingType: String, $dong: String, $ho: String) {
 		productsConnection(
 			where: { businessID: $businessID, contractStatus: $contractStatus, housingType: $housingType, dong: $dong, ho: $ho }
 		) {

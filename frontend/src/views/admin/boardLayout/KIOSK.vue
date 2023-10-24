@@ -111,7 +111,7 @@ export default {
 	.mainboard_lay {
 		background-color: #fff;
 		height: 100vh;
-		overflow: auto;
+		overflow: hidden;
 	}
 }
 .mobile_dashboard_lay {

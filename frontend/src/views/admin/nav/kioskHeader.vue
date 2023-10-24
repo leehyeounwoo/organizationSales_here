@@ -26,6 +26,7 @@
 					</span>
 					<v-progress-circular :rotate="-90" :size="20" :width="5" :value="vacationsValue" color="white"> </v-progress-circular>
 				</v-btn>
+				<!-- <span @click="foreachUpdate">foreach</span> -->
 			</v-flex>
 			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
 				<v-layout align-center>
@@ -194,6 +195,23 @@ export default {
 		// }
 	},
 	methods: {
+		// async foreachUpdate() {
+		// 	this.$store.state.loading = true
+		// 	const data = {}
+		// 	await this.$store.dispatch('products', data).then(async res => {
+		// 		// console.log(res.products)
+		// 		for (let index = 0; index < res.products.length; index++) {
+		// 			const element = res.products[index]
+		// 			console.log(element.id)
+		// 			const data1 = {
+		// 				id: element.id,
+		// 				contractStatus: 'lease',
+		// 			}
+		// 			await this.$store.dispatch('updateProduct', data1).then(() => {})
+		// 		}
+		// 	})
+		// 	this.$store.state.loading = false
+		// },
 		async unattendedVacation() {
 			let vacationIDArr = []
 

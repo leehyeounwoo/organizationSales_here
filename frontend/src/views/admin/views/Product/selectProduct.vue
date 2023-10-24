@@ -148,7 +148,7 @@ export default {
 		setFilter1() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 			}
 			this.$store.dispatch('productsFilter', data).then(res => {
 				let data1 = [{ text: '전체', value: 'all' }]
@@ -161,7 +161,7 @@ export default {
 		setFilter2() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 			}
 			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
 				data['housingType'] = this.productFilter1.value
@@ -179,8 +179,10 @@ export default {
 		setFilter3() {
 			let data = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
-				housingType: this.productFilter1.value,
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
+			}
+			if (this.productFilter1.value && this.productFilter1.value !== 'all') {
+				data['housingType'] = this.productFilter1.value
 			}
 			if (this.productFilter2.value && this.productFilter2.value !== 'all') {
 				data['dong'] = this.productFilter2.value
@@ -216,7 +218,7 @@ export default {
 		async paginationClick() {
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 				start: (this.productManager.page - 1) * this.productManager.itemsPerPage,
 				limit: this.productManager.itemsPerPage,
 			}
@@ -265,7 +267,7 @@ export default {
 			// this.productManager.items = item
 			let item = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 				start: 0,
 				limit: 10,
 			}
@@ -283,6 +285,7 @@ export default {
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
+				console.log(res)
 				this.productManager.total = res.productsConnection.aggregate.count
 				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage)
 			})
@@ -290,7 +293,7 @@ export default {
 		async productSelectData() {
 			const productsCountViewData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 			}
 			await this.productsCountView(productsCountViewData)
 			const businessViewData = {
@@ -299,7 +302,7 @@ export default {
 			await this.businessView(businessViewData)
 			const product_tableData = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 				start: 0,
 				limit: 10,
 			}
@@ -583,7 +586,7 @@ export default {
 					element.select_holding = {
 						placeholder: '시간 선택',
 						value: '',
-						items: ['종일 홀딩', '시간 홀딩', '즉시 홀딩'],
+						items: ['종일 홀딩', '시간 홀딩', '즉시 홀딩', '기간 홀딩'],
 						hideDetail: true,
 						outlined: true,
 						class: 'searchSel',
@@ -614,6 +617,12 @@ export default {
 						outlined: true,
 						class: 'searchSel',
 					}
+					element.holdingDay1 = {
+						date: this.$moment().format('YYYY-MM-DD'),
+					}
+					element.holdingDay2 = {
+						date: this.$moment().format('YYYY-MM-DD'),
+					}
 				}
 				this.productManager.items = res.products
 				this.productManager.items_origin = JSON.parse(JSON.stringify(res.products))
@@ -623,7 +632,7 @@ export default {
 			this.$store.state.loading = true
 			const data1 = {
 				businessID: this.$store.state.businessSelectBox.value,
-				contractStatus: 'noContract',
+				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 			}
 			await this.$store.dispatch('products', data1).then(res => {
 				this.holdingDetail.holdingDashboard.productIdArr = res.products.map(x => x.id)

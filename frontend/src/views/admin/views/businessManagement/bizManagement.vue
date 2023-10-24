@@ -368,8 +368,8 @@ export default {
 				},
 				selectBox4: {
 					placeholder: '상태',
-					value: '',
-					items: ['전체', '계약', '미계약'],
+					value: '전체',
+					items: ['전체', '계약', '가계약', '임대', '공실', '예정', '기존'],
 					hideDetail: true,
 					outlined: true,
 					class: 'small_font searchSel',
@@ -443,6 +443,7 @@ export default {
 		}
 	},
 	methods: {
+		/**ㄴㄴ */
 		async rowperpageChange() {
 			this.$store.state.loading = true
 			this.table.itemsPerPage = this.rowperpageSel.value
@@ -485,13 +486,18 @@ export default {
 				businessID: this.table_detail.item.id,
 			}
 			await this.$store.dispatch('products', data).then(res => {
-				let data = [{ text: '선택', value: 'new' }]
-				let data2 = []
+				let data = [{ text: '선택', value: '' }]
+				let data2 = [{ text: '전체', value: '' }]
+				let data3 = [{ text: '전체', value: '' }]
 				res.products.forEach(el => {
 					data.push({ text: el.housingType, value: el.housingType })
 					data2.push({ text: el.housingType, value: el.housingType })
+					data3.push({ text: el.dong, value: el.dong })
+
 					this.table_detail.selectBox1.items = data
 					this.table_detail.selectBox5.items = data2
+					this.table_detail.selectBox6.items = data3
+
 					if (el.contractStatus === 'contract') {
 						el.contractStatus = '계약'
 					} else if (el.contractStatus === 'noContract') {

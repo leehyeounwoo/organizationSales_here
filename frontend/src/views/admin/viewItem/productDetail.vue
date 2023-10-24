@@ -51,7 +51,13 @@
 				<selectBox :sel="setdialog.selectBox4" style="max-width:85px; font-weight:normal"></selectBox>
 				<selectBox class="mx-2" :sel="setdialog.selectBox5" style="max-width:80px; font-weight:normal" @change="selectType"></selectBox>
 				<selectBox :sel="setdialog.selectBox6" style="max-width:80px; font-weight:normal"></selectBox>
-				<txtField class="search_box_type" v-model="search_product" :txtField="search" style="width:80px !important"></txtField>
+				<txtField
+					class="search_box_type"
+					v-model="search_product"
+					:txtField="search"
+					style="width:80px !important"
+					@enter="searchProduct"
+				></txtField>
 				<v-btn elevation="0" class="ml-3 search_btn" color="#009dac" @click="searchProduct"><v-icon>mdi-magnify</v-icon>조회</v-btn>
 			</v-layout>
 			<v-layout align-center class="mx-10 mt-2">
@@ -63,7 +69,7 @@
 						<div class="ml-3">예정 : {{ setdialog.toBeRented }} 건</div>
 						<div class="ml-3">기존 : {{ setdialog.existing }} 건</div>
 						<div class="ml-3">계약 : {{ setdialog.contract }} 건,</div>
-						<div class="ml-3">미계약 : {{ setdialog.noContract }} 건</div>
+						<div class="ml-3">가계약 : {{ setdialog.noContract }} 건</div>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -310,12 +316,11 @@ export default {
 		searchProduct() {
 			let data = {
 				businessID: this.setdialog.item.id,
-				ho: this.search_product,
 			}
-			if (this.setdialog.selectBox4.value !== '') {
+			if (this.setdialog.selectBox4.value !== '전체') {
 				if (this.setdialog.selectBox4.value === '계약') {
 					data['contractStatus'] = 'contract'
-				} else if (this.setdialog.selectBox4.value === '미계약') {
+				} else if (this.setdialog.selectBox4.value === '가계약') {
 					data['contractStatus'] = 'noContract'
 				} else if (this.setdialog.selectBox4.value === '임대') {
 					data['contractStatus'] = 'lease'
@@ -327,13 +332,15 @@ export default {
 					data['contractStatus'] = 'existing'
 				}
 			}
-			if (this.setdialog.selectBox5.value) {
+			if (this.setdialog.selectBox5.value !== '') {
 				data['housingType'] = this.setdialog.selectBox5.value
 			}
-			if (this.setdialog.selectBox6.value) {
+			if (this.setdialog.selectBox6.value !== '') {
 				data['dong'] = this.setdialog.selectBox6.value
 			}
-
+			if (this.search_product !== '') {
+				data.ho = this.search_product
+			}
 			this.$store.dispatch('products', data).then(res => {
 				res.products.forEach(el => {
 					if (el.contractStatus === 'contract') {
@@ -459,17 +466,20 @@ export default {
 					res.products.forEach(el => {
 						item.push({ text: el.dong, value: el.dong })
 					})
+
 					this.setdialog.selectBox2.items = item
 				})
 			}
-			let data = {
-				housingType: this.setdialog.selectBox5.value,
+			let data = {}
+			if (this.setdialog.selectBox5.value !== '') {
+				data.housingType = this.setdialog.selectBox5.value
 			}
 			this.$store.dispatch('products', data).then(res => {
 				let item = []
 				res.products.forEach(el => {
 					item.push({ text: el.dong, value: el.dong })
 				})
+				item.unshift({ text: '전체', value: '' })
 				this.setdialog.selectBox6.items = item
 			})
 		},
