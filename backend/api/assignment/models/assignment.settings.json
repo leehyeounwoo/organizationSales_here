@@ -34,7 +34,8 @@
       "enum": [
         "time",
         "allday",
-        "now"
+        "now",
+        "date"
       ],
       "default": "time"
     },
