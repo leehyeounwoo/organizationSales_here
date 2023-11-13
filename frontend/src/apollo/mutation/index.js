@@ -265,8 +265,8 @@ export const register = gql`
 `
 export const updateUser = gql`
 	mutation updateUser(
-		$username: String!
-		$email: String!
+		$username: String
+		$email: String
 		$password: String
 		$bank: String
 		$phoneNumber: String
@@ -412,6 +412,7 @@ export const createBusiness = gql`
 		) {
 			business {
 				id
+				code
 				product
 			}
 		}
@@ -704,6 +705,8 @@ export const createAssignment = gql`
 		$orderType: ENUM_ASSIGNMENT_ORDERTYPE
 		$holdingTime: String
 		$businessID: String
+		$startDate: Date
+		$endDate: Date
 	) {
 		createAssignment(
 			input: {
@@ -718,6 +721,8 @@ export const createAssignment = gql`
 					orderType: $orderType
 					holdingTime: $holdingTime
 					businessID: $businessID
+					startDate: $startDate
+					endDate: $endDate
 				}
 			}
 		) {
@@ -736,9 +741,29 @@ export const sendSmsSettlement = gql`
 	}
 `
 export const updateAssignment = gql`
-	mutation updateAssignment($id: ID!, $status: ENUM_ASSIGNMENT_STATUS, $holdingTime: String, $start: Time, $end: Time, $useYn: Boolean) {
+	mutation updateAssignment(
+		$id: ID!
+		$status: ENUM_ASSIGNMENT_STATUS
+		$holdingTime: String
+		$start: Time
+		$end: Time
+		$useYn: Boolean
+		$startDate: Date
+		$endDate: Date
+	) {
 		updateAssignment(
-			input: { where: { id: $id }, data: { status: $status, useYn: $useYn, holdingTime: $holdingTime, start: $start, end: $end } }
+			input: {
+				where: { id: $id }
+				data: {
+					status: $status
+					useYn: $useYn
+					holdingTime: $holdingTime
+					start: $start
+					end: $end
+					startDate: $startDate
+					endDate: $endDate
+				}
+			}
 		) {
 			assignment {
 				id

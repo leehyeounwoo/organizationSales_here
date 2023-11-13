@@ -156,6 +156,7 @@ export const businessManager = gql`
 			businessID
 			username
 			email
+			name
 			phoneNumber
 			confirmed
 		}
@@ -531,14 +532,25 @@ export const systems = gql`
 	}
 `
 export const usersConnection = gql`
-	query usersConnection($teamID: String, $businessID: String, $workingStatus: Boolean, $roleName: String) {
-		usersConnection(where: { role: { name: $roleName }, teamID: $teamID, businessID: $businessID, workingStatus: $workingStatus }) {
+	query usersConnection($teamID: String, $businessID: String, $workingStatus: Boolean, $roleName: String, $phoneNumber: String) {
+		usersConnection(
+			where: {
+				role: { name: $roleName }
+				teamID: $teamID
+				businessID: $businessID
+				workingStatus: $workingStatus
+				phoneNumber: $phoneNumber
+			}
+		) {
 			aggregate {
 				count
 				totalCount
 			}
 			values {
 				id
+				name
+				username
+				email
 			}
 		}
 	}
@@ -580,6 +592,8 @@ export const assignments = gql`
 		$sort: String
 		$end_gte: Time
 		$end_lte: Time
+		$startDate_lte: Date
+		$endDate_gte: Date
 	) {
 		assignments(
 			where: {
@@ -592,6 +606,8 @@ export const assignments = gql`
 				status: $status
 				businessID: $businessID
 				userID: $userID
+				startDate_lte: $startDate_lte
+				endDate_gte: $endDate_gte
 			}
 			sort: $sort
 		) {
@@ -607,6 +623,8 @@ export const assignments = gql`
 			productID
 			status
 			holdingTime
+			startDate
+			endDate
 		}
 	}
 `

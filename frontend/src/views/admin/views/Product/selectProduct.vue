@@ -50,6 +50,7 @@ export default {
 			if (this.$store.state.businessSelectBox.value !== '') {
 				await this.productSelectData()
 				await this.setFilter1()
+				console.log(this.$store.state.meData)
 				clearInterval(createInterval)
 			}
 
@@ -234,12 +235,9 @@ export default {
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {
 				productArr: this.productIdArr,
-				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
-				created_at_lte: this.$moment(
-					this.$moment()
-						.add(1, 'd')
-						.format('YYYY-MM-DD'),
-				),
+				startDate_lte: this.$moment().format('YYYY-MM-DD'),
+				endDate_gte: this.$moment().format('YYYY-MM-DD'),
+
 				status: 'assignment',
 			}
 			await this.assignmentsView(assignmentsViewData)
@@ -309,12 +307,11 @@ export default {
 			await this.product_table(product_tableData)
 			const assignmentsViewData = {
 				productArr: this.productIdArr,
-				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
-				created_at_lte: this.$moment(
-					this.$moment()
-						.add(1, 'd')
-						.format('YYYY-MM-DD'),
-				),
+				// created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+				// created_at_lte:
+				startDate_lte: this.$moment().format('YYYY-MM-DD'),
+				endDate_gte: this.$moment().format('YYYY-MM-DD'),
+
 				status: 'assignment',
 			}
 			await this.assignmentsView(assignmentsViewData)
@@ -388,7 +385,7 @@ export default {
 						if (item.holdingTime3.value === '') {
 							return alert('홀딩시간을 선택해주세요.')
 						}
-					} else {
+					} else if (item.select_holding.value === '시간 홀딩' || item.select_holding.value === '종일 홀딩') {
 						if (item.holdingTime1.time === '') {
 							return alert('홀딩시간을 선택해주세요.')
 						}
@@ -408,10 +405,14 @@ export default {
 						data.type = 'allday'
 						data.start = item.holdingTime1.time + ':00.000'
 						data.end = item.holdingTime2.time + ':00.000'
+						data.startDate = this.$moment().format('YYYY-MM-DD')
+						data.endDate = this.$moment().format('YYYY-MM-DD')
 					} else if (item.select_holding.value === '시간 홀딩') {
 						data.type = 'time'
 						data.start = item.holdingTime1.time + ':00.000'
 						data.end = item.holdingTime2.time + ':00.000'
+						data.startDate = this.$moment().format('YYYY-MM-DD')
+						data.endDate = this.$moment().format('YYYY-MM-DD')
 					} else if (item.select_holding.value === '즉시 홀딩') {
 						data.type = 'now'
 						data.holdingTime = item.holdingTime3.value
@@ -420,7 +421,19 @@ export default {
 							this.$moment()
 								.add(item.holdingTime3.value.replace(/[^0-9]/g, ''), 'm')
 								.format('HH:mm') + ':00.000'
+						data.startDate = this.$moment().format('YYYY-MM-DD')
+						data.endDate = this.$moment().format('YYYY-MM-DD')
+					} else if (item.select_holding.value === '기간 홀딩') {
+						data.type = 'date'
+						data.holdingTime = item.holdingTime3.value
+						data.start = this.$store.state.businessStartTime
+						data.end = this.$store.state.businessEndTime
+						data.startDate = this.$moment(item.holdingDay1.date).format('YYYY-MM-DD')
+						data.endDate = this.$moment(item.holdingDay2.date).format('YYYY-MM-DD')
 					}
+					console.log(this.$store.state.businessStartTime)
+					console.log(this.$store.state.businessEndTime)
+					console.log(data)
 					this.$store
 						.dispatch('createAssignment', data)
 						.then(async () => {
@@ -486,6 +499,10 @@ export default {
 					for (let index = 0; index < res.assignments.length; index++) {
 						const element = res.assignments[index]
 						this.productManager.items.filter(x => x.id === element.productID)[0].assingnmentData = element
+						// if (index < 2) {
+						// 	console.log(this.productManager.items.filter(x => x.id === element.productID)[0])
+						// 	console.log(element)
+						// }
 					}
 				})
 				.catch(err => {
@@ -521,11 +538,13 @@ export default {
 					this.productManager.items = JSON.parse(JSON.stringify(this.productManager.items))
 					this.productManager.items.forEach(el => {
 						if (el.assingnmentData) {
-							el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
+							el['leaveHour'] = this.$moment(el.assingnmentData.endDate + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
 								this.$moment(),
-								'minute',
+								'hour',
 							)
-							if (el.leaveTime < 0) {
+							el['leaveMinute'] =
+								this.$moment(el.assingnmentData.endDate + ' ' + el.assingnmentData.end.substr(0, 5)).diff(this.$moment(), 'minute') % 60
+							if (el.leaveHour < 0 && el.leaveHour < 0) {
 								const data = {
 									id: el.assingnmentData.id,
 									useYn: false,
@@ -581,7 +600,7 @@ export default {
 						outlined: true,
 						class: 'searchSel',
 						itemValue: 'id',
-						itemText: 'username',
+						itemText: 'name',
 					}
 					element.select_holding = {
 						placeholder: '시간 선택',
@@ -635,11 +654,12 @@ export default {
 				contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
 			}
 			await this.$store.dispatch('products', data1).then(res => {
-				this.holdingDetail.holdingDashboard.productIdArr = res.products.map(x => x.id)
+				// this.holdingDetail.holdingDashboard.productIdArr = res.products.map(x => x.id)
 				this.holdingDetail.holdingDashboard.items = res.products
 			})
 			const data2 = {
-				productArr: this.holdingDetail.holdingDashboard.productIdArr,
+				// productArr: this.holdingDetail.holdingDashboard.productIdArr,
+				businessID: this.$store.state.businessSelectBox.value,
 				created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
 				created_at_lte: this.$moment(
 					this.$moment()
@@ -682,10 +702,12 @@ export default {
 				this.holdingDetail.holdingDashboard.items = JSON.parse(JSON.stringify(this.holdingDetail.holdingDashboard.items))
 				this.holdingDetail.holdingDashboard.items.forEach(el => {
 					if (el.assingnmentData) {
-						el['leaveTime'] = this.$moment(this.$moment().format(`YYYY-MM-DD`) + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
+						el['leaveHour'] = this.$moment(el.assingnmentData.endDate + ' ' + el.assingnmentData.end.substr(0, 5)).diff(
 							this.$moment(),
-							'minute',
+							'hour',
 						)
+						el['leaveMinute'] =
+							this.$moment(el.assingnmentData.endDate + ' ' + el.assingnmentData.end.substr(0, 5)).diff(this.$moment(), 'minute') % 60
 					}
 				})
 			})

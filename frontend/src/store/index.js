@@ -107,6 +107,8 @@ export default new Vuex.Store({
 		productTab: 0,
 		meData: { role: { name: '' }, name: '', team: { title: '' }, rank: { rankName: '' } },
 		dashBoardList: [],
+		businessStartTime: '',
+		businessEndTime: '',
 		loading: false,
 		primary: '#3A258F',
 		primary2: '#633efd',
@@ -960,11 +962,11 @@ export default new Vuex.Store({
 					.query({
 						query: usersConnectionTeamArr,
 						variables: input,
-						context: {
-							headers: {
-								Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
-							},
-						},
+						// context: {
+						// 	headers: {
+						// 		Authorization: 'Bearer ' + sessionStorage.getItem(tokenName),
+						// 	},
+						// },
 					})
 					.then(({ data }) => {
 						resolve(data)

@@ -14,7 +14,7 @@
 			<v-pagination v-model="table.page" :length="table.length" :total-visible="7" circle></v-pagination>
 		</div>
 		<v-btn class="my-3 new_biz" @click="createBiz()">신규생성</v-btn>
-		<createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
+		<createBusiness v-if="createDialog.dialog" :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" />
 		<!-- <createBusiness :setdialog="createDialog" :getTable="rowperpageChange" :right_data="right_data" /> -->
 		<productDetail :setdialog="table_detail" :newProduct="product_detail" />
 	</div>
@@ -91,7 +91,7 @@ export default {
 					// 2
 					{
 						title: '근무시간 설정',
-						must: false,
+						must: true,
 						type: 'time',
 						worktime1: {
 							dialog: false,
@@ -105,7 +105,7 @@ export default {
 					// 3
 					{
 						title: '홀딩시간 설정',
-						must: false,
+						must: true,
 						type: 'selectBox',
 						value: '',
 						selectBox: {
@@ -279,42 +279,7 @@ export default {
 					},
 				],
 			},
-			right_data: [
-				{
-					detail: [],
-					user_confirmed: true,
-					txtfield1: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield2: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-					},
-					txtfield3: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						placeholder: '이메일 형식',
-					},
-					txtfield4: {
-						value: '',
-						maxlength: '255',
-						outlined: true,
-						hideDetail: true,
-						errorMessage: '',
-						type: 'password',
-					},
-				},
-			],
+			right_data: [],
 			table_detail: {
 				dialog: false,
 				item: [],
@@ -369,11 +334,12 @@ export default {
 				selectBox4: {
 					placeholder: '상태',
 					value: '전체',
-					items: ['전체', '계약', '가계약', '임대', '공실', '예정', '기존'],
+					items: ['전체', '계약', '가계약', '임대', '공실', '예정', '기존', '1차매각', '2차매각'],
 					hideDetail: true,
 					outlined: true,
 					class: 'small_font searchSel',
 				},
+
 				selectBox5: {
 					placeholder: '주택형',
 					value: '',
@@ -464,7 +430,8 @@ export default {
 				}
 				await this.$store.dispatch('businessManager', data).then(res_user => {
 					res.businesses.forEach(e => {
-						let manager = res_user.users.filter(user => e.id === user.businessID)
+						let manager = res_user.users.filter(user => user.businessID === e.id)
+						console.log(manager)
 						e['manager'] = manager.length > 0 ? manager : null
 					})
 				})
@@ -478,6 +445,7 @@ export default {
 		},
 		createBiz() {
 			this.createDialog.type = 'create'
+			this.createDialog.product = []
 			this.createDialog.dialog = true
 		},
 		async product_detail(item) {
@@ -510,6 +478,10 @@ export default {
 						el.contractStatus = '예정'
 					} else if (el.contractStatus === 'existing') {
 						el.contractStatus = '기존'
+					} else if (el.contractStatus === 'firstContract') {
+						el.contractStatus = '1차매각'
+					} else if (el.contractStatus === 'secondContract') {
+						el.contractStatus = '2차매각'
 					} else if (!el.contractStatus) {
 						el.contractStatus = '-'
 					}
@@ -528,19 +500,24 @@ export default {
 				this.table_detail.toBeRented = table_top5.length
 				let table_top6 = this.table_detail.productTable.items.filter(x => x.contractStatus === '기존')
 				this.table_detail.existing = table_top6.length
+				let table_top7 = this.table_detail.productTable.items.filter(x => x.contractStatus === '1차매각')
+				this.table_detail.existing = table_top7.length
+				let table_top8 = this.table_detail.productTable.items.filter(x => x.contractStatus === '2차매각')
+				this.table_detail.existing = table_top8.length
 			})
 			this.table_detail.dialog = true
 		},
 		biz_detail(item) {
 			this.createDialog.type = 'edit'
-
 			this.createDialog.id = item.id
+			this.createDialog.code = item.code
 			this.createDialog.manager = item.manager ? item.manager.id : ''
 			this.createDialog.items[0].value = item.name
 			this.createDialog.items[1].value = item.phoneNumber
 			this.createDialog.items[2].worktime1.time = item.startTime
 			this.createDialog.items[2].worktime2.time = item.endTime
 			this.createDialog.items[3].selectBox.value = item.splitHoldingTime
+			this.createDialog.product = item.product
 			if (item.splitHoldingTime === '30') {
 				this.createDialog.items[3].selectBox2.items = [
 					{ text: '60분', value: '60' },
@@ -555,53 +532,49 @@ export default {
 			}
 			this.createDialog.items[3].selectBox2.value = item.maximumHoldingTime
 			this.createDialog.items[4].value = location.protocol + '//' + location.host + '/QRenter/' + item.code
+			this.right_data = []
 			if (item.manager) {
 				for (let i = 0; i < item.manager.length; i++) {
-					if (i > 0) {
-						this.right_data.push({
-							detail: [],
-							user_confirmed: true,
-							txtfield1: {
-								value: '',
-								maxlength: '255',
-								outlined: true,
-								hideDetail: true,
-								errorMessage: '',
-							},
-							txtfield2: {
-								value: '',
-								maxlength: '255',
-								outlined: true,
-								hideDetail: true,
-								errorMessage: '',
-							},
-							txtfield3: {
-								value: '',
-								maxlength: '255',
-								outlined: true,
-								hideDetail: true,
-								errorMessage: '',
-								placeholder: '이메일 형식',
-							},
-							txtfield4: {
-								value: '',
-								maxlength: '255',
-								outlined: true,
-								hideDetail: true,
-								errorMessage: '',
-								type: 'password',
-							},
-						})
-						this.right_data[i]['user_id'] = item.manager[i].id
-						this.right_data[i].txtfield1.value = item.manager[i].username
-						this.right_data[i].txtfield2.value = item.manager[i].phoneNumber
-						this.right_data[i].txtfield3.value = item.manager[i].email
-					}
-					this.right_data[i]['user_id'] = item.manager[i].id
-					this.right_data[i].txtfield1.value = item.manager[i].username
+					this.right_data.push({
+						detail: [],
+						user_confirmed: true,
+						txtfield1: {
+							value: '',
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+						},
+						txtfield2: {
+							value: '',
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+						},
+						txtfield3: {
+							value: '',
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							placeholder: '이메일 형식',
+						},
+						txtfield4: {
+							value: '',
+							maxlength: '255',
+							outlined: true,
+							hideDetail: true,
+							errorMessage: '',
+							type: 'password',
+						},
+					})
+					this.right_data[i]['id'] = item.manager[i].id
+					this.right_data[i].txtfield1.value = item.manager[i].name
 					this.right_data[i].txtfield2.value = item.manager[i].phoneNumber
 					this.right_data[i].txtfield3.value = item.manager[i].email
 				}
+				console.log(this.right_data)
 			}
 			this.createDialog.items[6].value = item.location
 			this.createDialog.dialog = true

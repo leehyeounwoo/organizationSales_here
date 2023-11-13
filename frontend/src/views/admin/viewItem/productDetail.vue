@@ -70,6 +70,8 @@
 						<div class="ml-3">기존 : {{ setdialog.existing }} 건</div>
 						<div class="ml-3">계약 : {{ setdialog.contract }} 건,</div>
 						<div class="ml-3">가계약 : {{ setdialog.noContract }} 건</div>
+						<div class="ml-3">가계약 : {{ setdialog.firstContract }} 건</div>
+						<div class="ml-3">가계약 : {{ setdialog.secondContract }} 건</div>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -97,6 +99,8 @@
 								<v-radio color="#009dac" label="기존" value="existing" style="width:30%;"></v-radio>
 								<v-radio color="#009dac" label="계약" value="contract" style="width:30%;"></v-radio>
 								<v-radio color="#009dac" label="가계약" value="noContract" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="1차매각" value="firstContract" style="width:30%;"></v-radio>
+								<v-radio color="#009dac" label="2차매각" value="secondContract" style="width:30%;"></v-radio>
 							</v-radio-group>
 						</v-flex>
 					</v-layout>
@@ -330,6 +334,10 @@ export default {
 					data['contractStatus'] = 'toBeRented'
 				} else if (this.setdialog.selectBox4.value === '기존') {
 					data['contractStatus'] = 'existing'
+				} else if (this.setdialog.selectBox4.value === '1차매각') {
+					data['contractStatus'] = 'firstContract'
+				} else if (this.setdialog.selectBox4.value === '2차매각') {
+					data['contractStatus'] = 'secondContract'
 				}
 			}
 			if (this.setdialog.selectBox5.value !== '') {
@@ -355,9 +363,14 @@ export default {
 						el.contractStatus = '예정'
 					} else if (el.contractStatus === 'existing') {
 						el.contractStatus = '기존'
+					} else if (el.contractStatus === 'firstContract') {
+						el.contractStatus = '1차매각'
+					} else if (el.contractStatus === 'secondContract') {
+						el.contractStatus = '2차매각'
 					} else if (!el.contractStatus) {
 						el.contractStatus = '-'
 					}
+
 					el['product_number'] = res.products.indexOf(el) + 1
 				})
 				this.setdialog.productTable.items = res.products
@@ -373,6 +386,10 @@ export default {
 				this.setdialog.toBeRented = table_top5.length
 				let table_top6 = this.setdialog.productTable.items.filter(x => x.contractStatus === '기존')
 				this.setdialog.existing = table_top6.length
+				let table_top7 = this.setdialog.productTable.items.filter(x => x.contractStatus === '1차매각')
+				this.setdialog.firstContract = table_top7.length
+				let table_top8 = this.setdialog.productTable.items.filter(x => x.contractStatus === '2차매각')
+				this.setdialog.secondContract = table_top8.length
 			})
 		},
 		deleteProduct() {
@@ -426,6 +443,10 @@ export default {
 					this.right_table1[3].value = 'toBeRented'
 				} else if (item.contractStatus === '기존') {
 					this.right_table1[3].value = 'existing'
+				} else if (item.contractStatus === '1차매각') {
+					this.right_table1[3].value = 'firstContract'
+				} else if (item.contractStatus === '2차매각') {
+					this.right_table1[3].value = 'secondContract'
 				}
 			})
 			this.$store.state.loading = false

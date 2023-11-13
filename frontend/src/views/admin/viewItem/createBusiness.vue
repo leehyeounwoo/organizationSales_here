@@ -115,7 +115,7 @@
 										<v-flex xs8>
 											<txtField class="bizInput" v-model="left.value" :txtField="left.txtfield" style="height:27px; margin:auto"></txtField>
 										</v-flex>
-										<v-flex xs4 v-if="setdialog.type === 'create'">
+										<v-flex xs4 v-if="setdialog.product.length === 0">
 											<v-btn elevation="0" class="ml-2 file_btn" @click="csvImportClick(index)">
 												<v-img max-width="14" class="mr-1" src="@/assets/images/input_btn.png" />파일 업로드
 											</v-btn>
@@ -126,9 +126,10 @@
 											</v-btn>
 											<span class="sample_span ml-2" @click="csvDownloadClick()">등록양식 다운받기</span>
 										</v-flex>
+
 										<VueCsvImport
-											style="display:none;"
 											v-if="parseCsvStatus"
+											style="display:none;"
 											id="csvimport"
 											inputClass="inputclasstest"
 											v-model="parseCsv"
@@ -168,7 +169,7 @@
 						<v-flex style="max-width:50px !important">No.</v-flex>
 						<v-flex style="max-width:126px !important">이름</v-flex>
 						<v-flex style="max-width:136px !important">연락처</v-flex>
-						<v-flex style="max-width:136px !important">아이디</v-flex>
+						<v-flex style="max-width:250px !important">아이디</v-flex>
 						<v-flex style="max-width:136px !important">비밀번호</v-flex>
 						<v-flex>비고</v-flex>
 					</v-layout>
@@ -187,7 +188,7 @@
 									:txtField="right.txtfield2"
 								></txtField>
 							</v-flex>
-							<v-flex align-self-center style="max-width:136px !important">
+							<v-flex align-self-center style="max-width:250px !important">
 								<txtField class="bizInput px-2" v-model="right.txtfield3.value" :txtField="right.txtfield3"></txtField>
 							</v-flex>
 							<v-flex align-self-center style="max-width:136px !important">
@@ -195,7 +196,7 @@
 							</v-flex>
 							<v-flex>
 								<v-layout align-center>
-									<v-flex class="pl-3" style="max-width:150px">
+									<!-- <v-flex class="pl-3" style="max-width:150px">
 										<v-radio-group v-model="right.user_confirmed" row class="system-radio-label">
 											<v-radio color="#009dac" label="지정" :value="true"></v-radio>
 											<v-radio color="#009dac" label="해제" :value="false"></v-radio>
@@ -209,6 +210,9 @@
 									</v-flex>
 									<v-flex>
 										<v-btn elevation="0" class="etc_btn" style="">계정정보 발송</v-btn>
+									</v-flex> -->
+									<v-flex>
+										<v-btn elevation="0" class="etc_btn" style="" @click="deleteRightData(idx)">삭제</v-btn>
 									</v-flex>
 								</v-layout>
 							</v-flex>
@@ -252,8 +256,9 @@ export default {
 		return {
 			duplicateCheck: false,
 			parseCsvStatus: false,
-			mapfields: ['housingType', 'dong', 'ho'],
+			mapfields: ['housingType', 'dong', 'ho', 'status'],
 			parseCsv: null,
+			deleteUserArr: [],
 			sweetDialog: {
 				open: false,
 				title: '',
@@ -293,7 +298,14 @@ export default {
 			},
 		},
 	},
+	created() {},
 	methods: {
+		deleteRightData(idx) {
+			if (this.right_data[idx].id) {
+				this.deleteUserArr.push(this.right_data[idx])
+			}
+			this.right_data.splice(idx, 1)
+		},
 		resetName(val) {
 			val.txtfield.readonly = false
 		},
@@ -303,7 +315,6 @@ export default {
 					name: val.value,
 				}
 				this.$store.dispatch('businessNameCheck', data).then(res => {
-					console.log(res.businessNameCheck.ok)
 					if (res.businessNameCheck.ok) {
 						this.sweetInfo.modalIcon = 'info'
 						this.sweetInfo.open = true
@@ -421,34 +432,41 @@ export default {
 			a.click()
 		},
 		csvImportClick(index) {
-			setTimeout(() => {
-				var theFile = document.getElementsByClassName('inputclasstest')[0]
+			// setTimeout(() => {
+			// 	var theFile = document.getElementsByClassName('inputclasstest')[0]
 
-				theFile.value = []
+			// 	theFile.value = []
 
-				document.body.onfocus = () => {
-					if (!theFile.value.length) {
-						this.$store.state.loading = false
-					}
+			// 	document.body.onfocus = () => {
+			// 		if (!theFile.value.length) {
+			// 			this.$store.state.loading = false
+			// 		}
 
-					document.body.onfocus = null
-				}
-			}, 1000)
+			// 		document.body.onfocus = null
+			// 	}
+			// }, 1000)
+
+			document.getElementsByClassName('inputclasstest')[0]
 
 			this.parseCsvStatus = true
 			this.parseCsv = null
-			this.$store.state.loading = true
 			const statusInterval = setInterval(() => {
 				if (this.parseCsvStatus) {
 					clearInterval(statusInterval)
 					document.getElementsByClassName('form-check-input')[0].click()
 					document.getElementsByClassName('inputclasstest')[0].click()
-					var interval = setInterval(() => {
+					var interval = setInterval(async () => {
 						document.getElementsByClassName('btn-primary')[0].click()
 						if (this.parseCsv !== null) {
+							this.$store.state.loading = true
 							clearInterval(interval)
-							this.setdialog.items[index].value = this.parseCsv.map(x => x.housingType).toString()
-							this.setdialog.items[index].csvImport = true
+
+							await this.forValue()
+
+							if (this.parseCsv !== null) {
+								this.setdialog.items[index].value = this.parseCsv.map(x => x.housingType).toString()
+								this.setdialog.items[index].csvImport = true
+							}
 							this.parseCsvStatus = false
 							this.$store.state.loading = false
 						}
@@ -456,7 +474,25 @@ export default {
 				}
 			}, 1000)
 		},
-		saveUser() {
+
+		async forValue() {
+			for (let index = 0; index < this.parseCsv.length; index++) {
+				const element = this.parseCsv[index]
+				if (element.status === '임대') element.statusValue = 'lease'
+				else if (element.status === '계약') element.statusValue = 'contract'
+				else if (element.status === '가계약') element.statusValue = 'noContract'
+				else if (element.status === '공실') element.statusValue = 'vacancy'
+				else if (element.status === '예정') element.statusValue = 'toBeRented'
+				else if (element.status === '기존') element.statusValue = 'existing'
+				else if (element.status === '1차매각') element.statusValue = 'firstContract'
+				else if (element.status === '2차매각') element.statusValue = 'secondContract'
+				else {
+					this.parseCsv = null
+					return alert(`${index + 2}열에 잘못된 정보가 있습니다.`)
+				}
+			}
+		},
+		async saveUser() {
 			let data = {
 				username: this.right_data.detail.username,
 				email: this.right_data.detail.email,
@@ -466,7 +502,7 @@ export default {
 				confirmed: this.right_data.detail.confirmed,
 			}
 			if (this.setdialog.type === 'create') {
-				this.$store.dispatch('register', data).then(res => {
+				await this.$store.dispatch('register', data).then(res => {
 					let id = { id: res.register.user.id }
 					this.newUser.push(id)
 					this.sweetDialog1.open = false
@@ -474,7 +510,7 @@ export default {
 			} else if (this.setdialog.type === 'edit') {
 				data['id'] = this.right_data.detail.id
 				delete data.password
-				this.$store
+				await this.$store
 					.dispatch('updateUser', data)
 					.then(() => {
 						this.sweetDialog1.open = false
@@ -482,6 +518,131 @@ export default {
 					.catch(err => {
 						console.log(err)
 					})
+			}
+		},
+		async forUserCreate(val) {
+			let createUser = this.right_data.filter(x => !x.id)
+
+			if (createUser.length > 0) {
+				for (let index = 0; index < createUser.length; index++) {
+					const element = createUser[index]
+
+					let data = {
+						businessID: this.setdialog.code,
+						username: element.txtfield3.value,
+						email: element.txtfield3.value,
+						name: element.txtfield1.value,
+						phoneNumber: element.txtfield2.value,
+						password: element.txtfield4.value,
+						confirmed: true,
+					}
+					if (this.setdialog.type === 'create') {
+						data.businessID = val.code
+					}
+					await this.$store
+						.dispatch('register', data)
+						.then(() => {})
+						.catch(err => {
+							console.log(err)
+						})
+				}
+				return
+			} else {
+				return
+			}
+		},
+		async forUserUpdate() {
+			let updateUser = this.right_data.filter(x => x.id)
+			if (updateUser.length > 0) {
+				for (let index = 0; index < updateUser.length; index++) {
+					const element = updateUser[index]
+
+					let data = {
+						id: element.id,
+						username: element.txtfield3.value,
+						email: element.txtfield3.value,
+						name: element.txtfield1.value,
+						phoneNumber: element.txtfield2.value,
+						password: element.txtfield4.value,
+						confirmed: true,
+					}
+					if (element.txtfield4.value === '') {
+						delete data.password
+					}
+					await this.$store
+						.dispatch('updateUser', data)
+						.then(() => {})
+						.catch(err => {
+							console.log(err)
+						})
+				}
+			}
+		},
+		async forUserDelete() {
+			if (this.deleteUserArr.length > 0) {
+				for (let index = 0; index < this.deleteUserArr.length; index++) {
+					const element = this.deleteUserArr[index]
+					let data = {
+						id: element.id,
+						username: element.txtfield3.value,
+						email: element.txtfield3.value,
+						name: element.txtfield1.value,
+						phoneNumber: element.txtfield2.value,
+						// password: element.txtfield4.value,
+						confirmed: false,
+					}
+
+					await this.$store
+						.dispatch('updateUser', data)
+						.then(() => {})
+						.catch(err => {
+							console.log(err)
+						})
+				}
+			}
+		},
+		async userCheck() {
+			for (let i = 0; i < this.right_data.length; i++) {
+				if (!this.right_data[i].txtfield1.value) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '이름 입력'
+					this.sweetInfo.content = '이름을 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				if (this.right_data[i].txtfield2.value.length < 12) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '연락처 형식'
+					this.sweetInfo.content = '연락처를 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				if (this.right_data[i].txtfield3.value === '') {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '이메일 형식'
+					this.sweetInfo.content = '이메일을 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '이메일 형식'
+					this.sweetInfo.content = '이메일 형식이 아닙니다'
+					return (this.sweetInfo.open = true)
+				}
+				if (!this.checkUrl(this.right_data[i].txtfield4.value === '')) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '비밀번로 입력'
+					this.sweetInfo.content = '비밀번호를 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				// let data = {
+				// 	id: this.right_data[i].user_id,
+				// 	username: this.right_data[i].txtfield1.value,
+				// 	name: this.right_data[i].txtfield1.value,
+				// 	phoneNumber: this.right_data[i].txtfield2.value,
+				// 	email: this.right_data[i].txtfield3.value,
+				// 	password: this.right_data[i].txtfield4.value,
+				// 	confirmed: this.right_data[i].user_confirmed,
+				// }
+				// this.right_data[i].detail = data
 			}
 		},
 		async saveBusiness() {
@@ -497,6 +658,9 @@ export default {
 			}
 			if (this.setdialog.type === 'create') {
 				await this.$store.dispatch('createBusiness', data).then(async res => {
+					await this.forUserCreate(res.createBusiness.business)
+					await this.forUserUpdate()
+					await this.forUserDelete()
 					if (data.product) {
 						for (let i = 0; i < data.product.length; i++) {
 							let item = {
@@ -504,63 +668,83 @@ export default {
 								housingType: data.product[i].housingType,
 								dong: data.product[i].dong,
 								ho: data.product[i].ho,
+								contractStatus: data.product[i].statusValue,
 							}
 							this.$store.dispatch('createProduct', item).then(() => {})
 						}
 					}
-					for (let idx = 0; idx < this.right_data.length; idx++) {
-						if (this.right_data[idx].detail) {
-							let user = {
-								username: this.right_data[idx].detail.username,
-								email: this.right_data[idx].detail.email,
-								name: this.right_data[idx].detail.username,
-								phoneNumber: this.right_data[idx].detail.phoneNumber,
-								password: this.right_data[idx].detail.password,
-								confirmed: this.right_data[idx].detail.confirmed,
-							}
-							if (this.setdialog.type === 'create') {
-								await this.$store.dispatch('register', user).then(res => {
-									let id = { id: res.register.user.id }
-									this.newUser.push(id)
-									this.sweetDialog1.open = false
-								})
-							}
-						}
-					}
-					if (this.newUser) {
-						for (let i = 0; i < this.newUser.length; i++) {
-							let adduser = {
-								id: this.newUser[i].id,
-								businessID: res.createBusiness.business.id,
-								username: this.right_data[i].txtfield1.value,
-								email: this.right_data[i].txtfield3.value,
-							}
-							await this.forUpdateUser(adduser)
-						}
-
-						// setTimeout(() => {
-						await this.getTable()
-						// }, 2000)
-						// await this.getTable()
-						this.sweetDialog.open = false
-						this.modalClose()
-						this.businessRefresh()
-					} else {
-						this.sweetDialog.open = false
-						this.modalClose()
-						this.getTable()
-						this.businessRefresh()
-					}
 				})
+				// 	console.log(this.right_data)
+				// 	for (let idx = 0; idx < this.right_data.length; idx++) {
+				// 		if (this.right_data[idx].detail) {
+				// 			// let user = {
+				// 			// 	username: this.right_data[idx].detail.username,
+				// 			// 	email: this.right_data[idx].detail.email,
+				// 			// 	name: this.right_data[idx].detail.username,
+				// 			// 	phoneNumber: this.right_data[idx].detail.phoneNumber,
+				// 			// 	password: this.right_data[idx].detail.password,
+				// 			// 	confirmed: this.right_data[idx].detail.confirmed,
+				// 			// }
+				// 			if (this.setdialog.type === 'create') {
+				// 				// await this.$store.dispatch('register', user).then(res => {
+				// 				// 	let id = { id: res.register.user.id }
+				// 				// 	this.newUser.push(id)
+				// 				// 	this.sweetDialog1.open = false
+				// 				// })
+				// 			}
+				// 		}
+				// 	}
+				// 	if (this.newUser) {
+				// 		for (let i = 0; i < this.newUser.length; i++) {
+				// 			let adduser = {
+				// 				id: this.newUser[i].id,
+				// 				businessID: res.createBusiness.business.id,
+				// 				username: this.right_data[i].txtfield1.value,
+				// 				email: this.right_data[i].txtfield3.value,
+				// 			}
+				// 			await this.forUpdateUser(adduser)
+				// 		}
+				// 		// setTimeout(() => {
+				// 		await this.getTable()
+				// 		// }, 2000)
+				// 		// await this.getTable()
+				// 		this.sweetDialog.open = false
+				// 		this.modalClose()
+				// 		this.businessRefresh()
+				// 	} else {
+				// 		this.sweetDialog.open = false
+				// 		this.modalClose()
+				// 		this.getTable()
+				// 		this.businessRefresh()
+				// 	}
+				// })
 			} else if (this.setdialog.type === 'edit') {
 				data.id = this.setdialog.id
-				this.$store.dispatch('updateBusiness', data).then(() => {
-					this.sweetDialog.open = false
-					this.modalClose()
-					this.getTable()
-					this.businessRefresh()
+				await this.$store.dispatch('updateBusiness', data).then(async res => {
+					await this.forUserCreate()
+					await this.forUserUpdate()
+					await this.forUserDelete()
+					if (data.product) {
+						for (let i = 0; i < data.product.length; i++) {
+							let item = {
+								businessID: res.updateBusiness.business.id,
+								housingType: data.product[i].housingType,
+								dong: data.product[i].dong,
+								ho: data.product[i].ho,
+								contractStatus: data.product[i].statusValue,
+							}
+
+							await this.$store.dispatch('createProduct', item).then(() => {})
+						}
+					}
 				})
 			}
+			// await this.userCheck
+
+			await this.businessRefresh()
+			await this.getTable()
+			this.modalClose()
+			this.sweetDialog.open = false
 		},
 		async forUpdateUser(adduser) {
 			await this.$store.dispatch('updateUser', adduser).then(() => {})
@@ -584,16 +768,16 @@ export default {
 				this.sweetInfo.content = '이메일 형식이 아닙니다'
 				return (this.sweetInfo.open = true)
 			}
-			let data = {
-				id: item.user_id,
-				username: item.txtfield1.value,
-				name: item.txtfield1.value,
-				phoneNumber: item.txtfield2.value,
-				email: item.txtfield3.value,
-				password: item.txtfield4.value,
-				confirmed: item.user_confirmed,
-			}
-			this.right_data.detail = data
+			// let data = {
+			// 	id: item.user_id,
+			// 	username: item.txtfield1.value,
+			// 	name: item.txtfield1.value,
+			// 	phoneNumber: item.txtfield2.value,
+			// 	email: item.txtfield3.value,
+			// 	password: item.txtfield4.value,
+			// 	confirmed: item.user_confirmed,
+			// }
+			// this.right_data.detail = data
 			if (this.setdialog.type === 'create') {
 				this.sweetDialog1.title = '관리자 생성'
 				this.sweetDialog1.content = '관리자를 생성합니다.'
@@ -642,32 +826,39 @@ export default {
 				}
 			}
 			for (let i = 0; i < this.right_data.length; i++) {
-				if (this.right_data[i].txtfield1.value) {
-					if (!this.right_data[i].txtfield3.value) {
+				if (!this.right_data[i].txtfield1.value) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '이름 입력'
+					this.sweetInfo.content = '이름을 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				if (this.right_data[i].txtfield2.value.length < 12) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '연락처 형식'
+					this.sweetInfo.content = '연락처를 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				if (this.right_data[i].txtfield3.value === '') {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '이메일 형식'
+					this.sweetInfo.content = '이메일을 입력해주세요'
+					return (this.sweetInfo.open = true)
+				}
+				if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
+					this.sweetInfo.modalIcon = 'info'
+					this.sweetInfo.title = '이메일 형식'
+					this.sweetInfo.content = '이메일 형식이 아닙니다'
+					return (this.sweetInfo.open = true)
+				}
+				if (!this.right_data[i].id) {
+					if (this.right_data[i].txtfield4.value === '') {
 						this.sweetInfo.modalIcon = 'info'
-						this.sweetInfo.title = '아이디 입력'
-						this.sweetInfo.content = '아이디를 입력해주세요.'
+						this.sweetInfo.title = '비밀번로 입력'
+						this.sweetInfo.content = '비밀번호를 입력해주세요'
 						return (this.sweetInfo.open = true)
 					}
-					if (!this.checkUrl(this.right_data[i].txtfield3.value)) {
-						this.sweetInfo.modalIcon = 'info'
-						this.sweetInfo.title = '이메일 형식'
-						this.sweetInfo.content = '이메일 형식이 아닙니다'
-						return (this.sweetInfo.open = true)
-					}
-					let data = {
-						id: this.right_data[i].user_id,
-						username: this.right_data[i].txtfield1.value,
-						name: this.right_data[i].txtfield1.value,
-						phoneNumber: this.right_data[i].txtfield2.value,
-						email: this.right_data[i].txtfield3.value,
-						password: this.right_data[i].txtfield4.value,
-						confirmed: this.right_data[i].user_confirmed,
-					}
-					this.right_data[i].detail = data
 				}
 			}
-			console.log(this.right_data)
 			if (this.setdialog.type === 'create') {
 				this.sweetDialog.title = '사업지 생성'
 				this.sweetDialog.content = '사업지를 생성합니다.'

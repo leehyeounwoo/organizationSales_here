@@ -49,7 +49,7 @@
 						></v-text-field>
 						<!-- 비밀번호 -->
 
-						<p class="input_title mb-2">
+						<p class="input_title">
 							비밀번호
 						</p>
 						<v-text-field
@@ -70,6 +70,14 @@
 							@click:append="pwshow = !pwshow"
 							color="primary2"
 						></v-text-field>
+						<v-layout class="input_title">
+							<span
+								style="color:gray; font-size:0.5rem; text-decoration:underline; cursor:pointer;"
+								@click="find_user_dialog.dialog = true"
+							>
+								아이디/비밀번호 찾기
+							</span>
+						</v-layout>
 					</div>
 					<!-- 로그인 버튼 -->
 					<v-btn elevation="0" height="40" class="loginButton_small mt-10" block color="primary2" @click="login()" rounded>
@@ -85,6 +93,60 @@
 			</div>
 		</div>
 		<sweetAlert :dialog="sweetInfo" />
+		<v-dialog v-model="find_user_dialog.dialog" max-width="50vw">
+			<v-card class="pa-2">
+				<v-layout>
+					<div style="margin: 0 auto;">
+						<p class="input_title mb-2 mt-2" style="width:100%;">
+							휴대폰 번호*
+						</p>
+						<v-text-field
+							v-mask="'###-####-####'"
+							:autofocus="false"
+							class="txtLogin1_border_radius mb-4"
+							outlined
+							maxlength="255"
+							flat
+							dense
+							:error-messages="find_user_dialog.errmessage"
+							v-model="find_user_dialog.findUser"
+							autocomplete="off"
+							color="primary2"
+						></v-text-field>
+					</div>
+
+					<!-- <div style="margin: 0 auto;">
+						<p class="input_title mb-2">
+							사업지 코드*
+						</p>
+						<v-text-field
+							hideDetails
+							:autofocus="false"
+							class="txtLogin1_border_radius mb-4"
+							outlined
+							maxlength="255"
+							flat
+							dense
+							v-model="findUser"
+							autocomplete="off"
+							color="primary2"
+						></v-text-field>
+					</div> -->
+				</v-layout>
+				<v-layout justify-center wrap>
+					<v-flex xs12>
+						<v-btn height="40" class="findButton_small" block color="primary2" @click="findUser()">
+							<span style="color:white;	font-weight: bold;">아이디/비밀번호 찾기 </span>
+						</v-btn>
+					</v-flex>
+					<v-flex xs12>
+						<v-btn height="40" class="findButton_small" dark block color="" @click="find_user_dialog.dialog = false">
+							<span style="color:white;	font-weight: bold;"> 취소 </span>
+						</v-btn>
+					</v-flex>
+				</v-layout>
+			</v-card>
+		</v-dialog>
 	</v-layout>
 </template>
 
@@ -98,6 +160,11 @@ export default {
 	},
 	data() {
 		return {
+			find_user_dialog: {
+				dialog: false,
+				findUser: '',
+				errmessage: '',
+			},
 			sweetInfo: {
 				open: false,
 				title: '',
@@ -118,6 +185,59 @@ export default {
 		}
 	},
 	methods: {
+		generateRandomCodeStr(n) {
+			let str = ''
+			for (let i = 0; i < n; i++) {
+				str += Math.floor(Math.random() * 10)
+			}
+			return str
+		},
+
+		findUser() {
+			if (this.find_user_dialog.findUser !== '') {
+				this.find_user_dialog.errmessage = ''
+				const data = {
+					phoneNumber: this.find_user_dialog.findUser,
+				}
+				this.$store
+					.dispatch('usersConnection', data)
+					.then(res => {
+						console.log(res.usersConnection.values.length)
+						if (res.usersConnection.values.length !== 0) {
+							let password = this.generateRandomCodeStr(6)
+							const updateUserData = {
+								id: res.usersConnection.values[0].id,
+								password: password,
+							}
+							this.$store.dispatch('updateUser', updateUserData).then(res1 => {
+								console.log(res1)
+								if (this.find_user_dialog.findUser.replace(/-/g, '').length < 10) alert('정상적인 휴대전화번호가 아닙니다.')
+								let input = {
+									phoneNumber: this.find_user_dialog.findUser.replace(/-/g, ''),
+									content: `아이디 : ${res.usersConnection.values[0].username} \n 패스워드 : ${password} \n 마이페이지에서 사용하실 비밀번호로 변경하시기 바랍니다.`,
+								}
+								this.$store
+									.dispatch('sendSmsSettlement', input)
+									.then(() => {})
+									.catch(() => {})
+								alert('휴대폰으로 정보가 전송되었습니다.')
+								this.find_user_dialog.dialog = false
+							})
+						} else {
+							if (this.find_user_dialog.findUser.replace(/-/g, '').length < 10) {
+								alert('정상적인 휴대전화번호가 아닙니다.')
+							} else {
+								alert('계정이 존재하지 않습니다.')
+							}
+						}
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			} else {
+				this.find_user_dialog.errmessage = '휴대폰 번호를 입력해주세요.'
+			}
+		},
 		open_disable_dialog(data, info) {
 			// 불가 팝업 열기
 

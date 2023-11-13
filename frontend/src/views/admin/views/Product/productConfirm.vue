@@ -153,6 +153,8 @@ export default {
 						this.$moment()
 							.add(this.assignmentData.holdingTimeSel.value, 'm')
 							.format('HH:mm') + ':00.000'
+					data.startDate = this.$moment().format('YYYY-MM-DD')
+					data.endDate = this.$moment().format('YYYY-MM-DD')
 				} else {
 					data.status = 'reject'
 				}

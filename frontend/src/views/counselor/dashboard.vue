@@ -110,9 +110,14 @@
 						color="primary2"
 					></v-select>
 				</v-flex>
-				<v-btn block :color="holdingText !== '홀딩 요청' ? 'red' : 'primary2'" @click="holding" class="mt-4" rounded dark>
-					{{ holdingText }}
+				<v-btn block :color="'primary2'" @click="holding" class="mt-4" rounded dark>
+					홀딩 요청
 				</v-btn>
+				<v-flex xs12 v-for="(assignment, index) in assignmentHoldingDatas" :key="index">
+					<v-btn block :color="'red'" @click="cancelHoldingAction(assignment.id)" class="mt-4" rounded dark>
+						{{ holdingStatus(assignment) }}
+					</v-btn>
+				</v-flex>
 				<strong>
 					<div class="explain-text point4--text mt-2">
 						상담 물건 홀딩은 최대 60분까지 가능합니다.
@@ -153,6 +158,8 @@ export default {
 	data() {
 		return {
 			countDown: 0,
+			assignmentHoldingDatas: [],
+			cancel_assignment_id: '',
 			holdingListDialog: {
 				open: false,
 				datatable: {
@@ -266,7 +273,9 @@ export default {
 			})
 		await this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
 			console.log(res)
-			this.$store.state.businessName = res.businesses[0].name
+			if (res.businesses.length !== 0) {
+				this.$store.state.businessName = res.businesses[0].name
+			}
 			this.$store.state.meData.businessID = res.businesses[0].id
 		})
 		await this.products()
@@ -342,14 +351,23 @@ export default {
 		secondChange(data) {
 			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
 		},
+		rangeChange(holdingData) {
+			console.log(holdingData)
+			let leaveHour = this.$moment(holdingData.endDate + ' ' + holdingData.end.substr(0, 5)).diff(this.$moment(), 'hour')
+			let leaveMinute = this.$moment(holdingData.endDate + ' ' + holdingData.end.substr(0, 5)).diff(this.$moment(), 'minute') % 60
+			return `${leaveHour}시간 ${leaveMinute}분`
+		},
 		holdingListOpen() {
 			this.holdingListDialog.open = true
 			this.$store
 				.dispatch('assignments', {
-					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
-					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					// created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+					// created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					startDate_lte: this.$moment().format('YYYY-MM-DD'),
+					endDate_gte: this.$moment().format('YYYY-MM-DD'),
 					businessID: this.$store.state.meData.businessID,
 					status: 'assignment',
+					userID: this.$store.state.meData.name.id,
 					sort: 'created_at:desc',
 				})
 				.then(res => {
@@ -368,7 +386,8 @@ export default {
 			this.$store.state.loading = true
 			this.$store
 				.dispatch('updateAssignment', {
-					id: this.waitingHoldingList ? this.waitingHoldingList.id : this.assignmentHoldingList.id,
+					// id: this.waitingHoldingList ? this.waitingHoldingList.id : this.assignmentHoldingList.id,
+					id: this.cancel_assignment_id,
 					status: 'counselorNoAssignment',
 				})
 				.then(() => {
@@ -398,7 +417,11 @@ export default {
 		async products() {
 			await this.$store.dispatch('me').then(() => {
 				this.$store
-					.dispatch('products', { businessID: this.$store.state.meData.businessID, contractStatus: 'noContract' })
+					.dispatch('products', {
+						businessID: this.$store.state.meData.businessID,
+
+						contractStatus: ['noContract', 'existing', 'toBeRented', 'vacancy'],
+					})
 					.then(async res => {
 						this.productDatas = res.products
 						this.products1 = res.products.map(x => x.housingType)
@@ -418,17 +441,22 @@ export default {
 			}, 1000)
 			this.assignments()
 		},
-		assignments() {
+		async assignments() {
 			this.$store
 				.dispatch('assignments', {
-					created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
-					created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					// created_at_gte: this.$moment().format('YYYY-MM-DD') + 'T00:00:00.000Z',
+					// created_at_lte: this.$moment().format('YYYY-MM-DD') + 'T23:59:00.000Z',
+					startDate_lte: this.$moment().format('YYYY-MM-DD'),
+					endDate_gte: this.$moment().format('YYYY-MM-DD'),
 
 					businessID: this.$store.state.meData.businessID,
+					userID: this.$store.state.meData.name.id,
 					sort: 'created_at:desc',
 				})
 				.then(res => {
+					console.log(res)
 					this.assignmentDatas = res.assignments
+					this.assignmentHoldingDatas = res.assignments.filter(x => x.status === 'assignment')
 					this.holdingList = res.assignments.filter(
 						x => x.status === 'assignment' && this.secondChange(this.$moment().format('HH:mm')) < this.secondChange(x.end),
 					)
@@ -450,12 +478,14 @@ export default {
 						const holdingData = myData.filter(x => x.status === 'assignment')[0]
 						const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
 						if (holdingData.type === 'allday') this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] All Day`
-						else
+						else if (holdingData.type === 'time' || holdingData.type === 'now')
 							this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] 남은시간:${(this.secondChange(
 								myData.filter(x => x.status === 'assignment')[0].end,
 							) -
 								this.secondChange(this.$moment().format('HH:mm'))) /
 								60}분`
+						else
+							this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] 남은시간:${this.rangeChange(holdingData)}`
 					} else if (myData.length > 0 ? myData[0].status === 'reject' : false) this.holdingText = '미승인 [다시 홀딩 요청하기]'
 					else if (myData.filter(x => x.status === 'waiting').length === 0) this.holdingText = '홀딩 요청'
 					else if (myData.filter(x => x.status === 'waiting').length > 0) {
@@ -467,6 +497,35 @@ export default {
 					this.waitingHoldingList = myData.filter(x => x.status === 'waiting')[0]
 					this.rejectHoldingList = myData.filter(x => x.status === 'reject')[0]
 				})
+		},
+		holdingStatus(myData) {
+			console.log(myData)
+			console.log(myData.id)
+			return `홀딩중 [${myData.product.housingType} ${myData.product.dong} ${myData.product.ho}] 남은시간:${(this.secondChange(myData.end) -
+				this.secondChange(this.$moment().format('HH:mm'))) /
+				60}분`
+
+			// if (
+			// 	myData.filter(x => x.status === 'assignment').length > 0 &&
+			// 	this.secondChange(myData.filter(x => x.status === 'assignment')[0].end) - this.secondChange(this.$moment().format('HH:mm')) > 0
+			// ) {
+			// 	const holdingData = myData.filter(x => x.status === 'assignment')[0]
+			// 	const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
+			// 	if (holdingData.type === 'allday') this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] All Day`
+			// 	else if (holdingData.type === 'time' || holdingData.type === 'now')
+			// 		this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] 남은시간:${(this.secondChange(
+			// 			myData.filter(x => x.status === 'assignment')[0].end,
+			// 		) -
+			// 			this.secondChange(this.$moment().format('HH:mm'))) /
+			// 			60}분`
+			// 	else this.holdingText = `홀딩중 [${product.housingType} ${product.dong} ${product.ho}] 남은시간:${this.rangeChange(holdingData)}`
+			// } else if (myData.length > 0 ? myData[0].status === 'reject' : false) this.holdingText = '미승인 [다시 홀딩 요청하기]'
+			// else if (myData.filter(x => x.status === 'waiting').length === 0) this.holdingText = '홀딩 요청'
+			// else if (myData.filter(x => x.status === 'waiting').length > 0) {
+			// 	const holdingData = myData.filter(x => x.status === 'waiting')[0]
+			// 	const product = this.productDatas.filter(x => x.id === holdingData.productID)[0]
+			// 	this.holdingText = `홀딩 요청중 [${product.housingType} ${product.dong} ${product.ho}]`
+			// }
 		},
 		createAssignment() {
 			if (this.productDatas.filter(x => x.housingType === this.product1 && x.dong === this.product2 && x.ho === this.product3).length > 0) {
@@ -514,16 +573,7 @@ export default {
 			}
 		},
 		holding() {
-			if (this.holdingText.indexOf('홀딩중') > -1)
-				this.open_twobtn_dialog(
-					{
-						title: '물건 홀딩 취소',
-
-						content: `홀딩중인 물건을 취소하시겠습니까?`,
-					},
-					'error',
-				)
-			else if (this.holdingText.indexOf('홀딩 요청중') === -1) {
+			if (this.holdingText.indexOf('홀딩 요청중') === -1) {
 				if (this.secondChange(this.business.workingHoursStart) > this.secondChange(this.$moment().format('HH:mm')))
 					return this.open_disable_dialog({
 						title: '홀딩 시작전',
@@ -545,15 +595,58 @@ export default {
 					protect3: this.product3,
 					time: this.time,
 				})
-			} else
-				this.open_twobtn_dialog(
-					{
-						title: '물건 홀딩 취소',
+			}
+			// if (this.holdingText.indexOf('홀딩중') > -1)
+			// 	this.open_twobtn_dialog(
+			// 		{
+			// 			title: '물건 홀딩 취소',
 
-						content: `${this.holdingText.replace('홀딩 취소 ', '')} 물건을 취소하시겠습니까?`,
-					},
-					'error',
-				)
+			// 			content: `홀딩중인 물건을 취소하시겠습니까?`,
+			// 		},
+			// 		'error',
+			// 	)
+			// else if (this.holdingText.indexOf('홀딩 요청중') === -1) {
+			// 	if (this.secondChange(this.business.workingHoursStart) > this.secondChange(this.$moment().format('HH:mm')))
+			// 		return this.open_disable_dialog({
+			// 			title: '홀딩 시작전',
+			// 			content: `금일 홀딩요청은 [${this.business.workingHoursStart.substr(0, 5)}] 부터 입니다.`,
+			// 		})
+			// 	else if (this.secondChange(this.business.workingHoursEnd) < this.secondChange(this.$moment().format('HH:mm')))
+			// 		return this.open_disable_dialog({
+			// 			title: '홀딩종료',
+			// 			content: `금일 홀딩요청은 [${this.business.workingHoursEnd.substr(0, 5)}] 까지입니다.`,
+			// 		})
+			// 	else if (!this.product1) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '주택형을 선택해주세요.' })
+			// 	else if (!this.product2) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '동을 선택해주세요.' })
+			// 	else if (!this.product3) return this.open_disable_dialog({ title: '물건 홀딩 요청', content: '호수를 선택해주세요.' })
+			// 	this.holdingDialog.open = true
+			// 	this.holdingDialog.datatable.items = []
+			// 	this.holdingDialog.datatable.items.push({
+			// 		protect1: this.product1,
+			// 		protect2: this.product2,
+			// 		protect3: this.product3,
+			// 		time: this.time,
+			// 	})
+			// } else
+			// 	this.open_twobtn_dialog(
+			// 		{
+			// 			title: '물건 홀딩 취소',
+
+			// 			content: `${this.holdingText.replace('홀딩 취소 ', '')} 물건을 취소하시겠습니까?`,
+			// 		},
+			// 		'error',
+			// 	)
+		},
+		cancelHoldingAction(id) {
+			this.cancel_assignment_id = id
+			this.open_twobtn_dialog(
+				{
+					title: '물건 홀딩 취소',
+
+					content: `홀딩중인 물건을 취소하시겠습니까?`,
+				},
+				'error',
+			)
 		},
 		openQr() {
 			this.dialogQr.open = true

@@ -16,6 +16,12 @@ Vue.use(VueMoment, { moment })
 Vue.use(VueMask)
 
 // vue 가드설정
+router.onError(error => {
+	console.log(error.name)
+	// if (error.name === 'ChunkLoadError') {
+	// 	window.location.href = '/'
+	// }
+})
 router.beforeEach(async (to, from, next) => {
 	if (to.matched.some(record => record.meta.requiresAuth)) {
 		if (sessionStorage.getItem('reserveLite-t') === null) {

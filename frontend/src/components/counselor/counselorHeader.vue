@@ -47,7 +47,9 @@ export default {
 	created() {
 		this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
 			console.log(res)
-			this.$store.state.businessName = res.businesses[0].name
+			if (res.businesses.length !== 0) {
+				this.$store.state.businessName = res.businesses[0].name
+			}
 		})
 	},
 	methods: {

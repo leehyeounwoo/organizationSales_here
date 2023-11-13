@@ -267,6 +267,13 @@ input[type='number']::-webkit-inner-spin-button {
 		font-weight: 500 !important;
 	}
 }
+.findButton_small {
+	font-size: 14px !important;
+	margin-top: 10px;
+	.v-btn__content span {
+		font-weight: 500 !important;
+	}
+}
 
 .findPassword {
 	color: #f1c40f;

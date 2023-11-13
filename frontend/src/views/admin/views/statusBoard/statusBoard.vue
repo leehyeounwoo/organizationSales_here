@@ -54,20 +54,24 @@
 								<v-flex
 									v-if="f.data.filter(x => x.ho.includes('0' + (i + 1)))[0]"
 									xs12
-									style="text-align: center; width:10px; font-size:0.75rem; border:1px solid black;"
+									style="text-align: center; width:10px; font-size:0.75rem; border:1px solid black; "
 									:style="
 										reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '계약'
 											? 'background-color:red; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '가계약'
 											? 'background-color:#7761A6; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '임대'
-											? 'background-color:#95918B; color:white;'
+											? 'background-color:#DBDBDB; color:black;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '예정'
 											? 'background-color:#87AE32; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '공실'
 											? 'background-color:#63B4EE; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '기존'
 											? 'background-color:#EFAB01; color:white;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '1차매각'
+											? 'background-color:#AAAAAA; color:black;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '2차매각'
+											? 'background-color:#656565; color:white;'
 											: ''
 									"
 								>
@@ -86,16 +90,20 @@
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '가계약'
 											? 'background-color:#7761A6; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '임대'
-											? 'background-color:#95918B; color:white;'
+											? 'background-color:#DBDBDB; color:black;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '예정'
 											? 'background-color:#87AE32; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '공실'
 											? 'background-color:#63B4EE; color:white;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '기존'
 											? 'background-color:#EFAB01; color:white;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '1차매각'
+											? 'background-color:#AAAAAA; color:black;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '2차매각'
+											? 'background-color:#656565; color:white;'
 											: ''
 									"
-									style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px;"
+									style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px; height: 15px;"
 								>
 									{{ reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) }}
 								</v-flex>
@@ -103,7 +111,25 @@
 								<v-flex v-else style="text-align: center; width:10px; font-size:0.5rem; height:15px;"> </v-flex>
 							</v-layout>
 							<v-layout v-if="d.floor.length - 1 === idx">
-								<v-flex style="text-align: center; font-size:0.75rem; border:1px solid black;" xs12>
+								<v-flex
+									style="text-align: center; font-size:0.75rem; border:1px solid black;"
+									:style="
+										`background-color:${
+											d.housingType[i] === '61A'
+												? '#ABAE77'
+												: d.housingType[i] === '61B'
+												? '#C6502A'
+												: d.housingType[i] === '61C'
+												? '#C6502A'
+												: d.housingType[i] === '78A'
+												? '#018F9E'
+												: d.housingType[i] === '78B'
+												? '#F05040'
+												: '#FCB328'
+										};`
+									"
+									xs12
+								>
 									{{ d.housingType[i] }}
 								</v-flex>
 							</v-layout>
@@ -415,6 +441,10 @@ export default {
 				return '계약'
 			} else if (this.statusValue['noContract'].indexOf(val) !== -1) {
 				return '가계약'
+			} else if (this.statusValue['firstContract'].indexOf(val) !== -1) {
+				return '1차매각'
+			} else if (this.statusValue['secondContract'].indexOf(val) !== -1) {
+				return '2차매각'
 			} else if (this.assignmentsData.indexOf(val) !== -1) {
 				return '배정 완료'
 			} else if (this.settlementsData.indexOf(val) !== -1) {
@@ -455,20 +485,29 @@ export default {
 		},
 	},
 	async created() {
-		await this.$store.dispatch('businesses').then(res => {
-			if (res.businesses.length !== 0) {
-				this.$store.state.businessSelectBox.items = res.businesses
-				this.$store.state.businessSelectBox.value = res.businesses[0].id
-			} else {
-				this.$router.push('/KIOSK').catch(() => {})
-				return alert('등록된 사업지가 없습니다. \n등록 후 이용해주세요.')
+		console.log(this.$store.state.businessSelectBox.value)
+		if (this.$store.state.businessSelectBox.value === '') {
+			await this.$store.dispatch('businesses').then(res => {
+				if (res.businesses.length !== 0) {
+					this.$store.state.businessSelectBox.items = res.businesses
+					this.$store.state.businessSelectBox.value = res.businesses[0].id
+				} else {
+					this.$router.push('/KIOSK').catch(() => {})
+					return alert('등록된 사업지가 없습니다. \n등록 후 이용해주세요.')
+				}
+			})
+			const productsViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+				// idArr: this.productArrData,
 			}
-		})
-		const productsViewData = {
-			businessID: this.$store.state.businessSelectBox.value,
-			// idArr: this.productArrData,
+			await this.productsView(productsViewData)
+		} else {
+			const productsViewData = {
+				businessID: this.$store.state.businessSelectBox.value,
+				// idArr: this.productArrData,
+			}
+			await this.productsView(productsViewData)
 		}
-		await this.productsView(productsViewData)
 	},
 }
 </script>

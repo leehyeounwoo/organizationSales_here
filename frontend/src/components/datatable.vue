@@ -60,8 +60,10 @@
 				</div>
 			</template>
 			<template v-slot:[`item.holdingDashboardUser`]="{ item }">
-				<div v-if="item.assingnmentTeamData">
-					{{ `${item.assingnmentTeamData.title} / ${item.assingnmentUserData.username}` }}
+				<div>
+					<div v-if="item.assingnmentTeamData">
+						{{ `${item.assingnmentTeamData.title} / ${item.assingnmentUserData.username}` }}
+					</div>
 				</div>
 			</template>
 			<template v-slot:[`item.holdingDashboarduUpdated_at`]="{ item }">
@@ -1676,9 +1678,30 @@
 			</template>
 			<!-- 물건배정 담당자 -->
 			<template v-slot:[`item.manager`]="{ item }">
-				<v-layout>
-					<v-flex xs5 class="mr-1">
-						<!-- <selectBoxValueItems
+				<div v-if="item.assingnmentData">
+					<v-layout>
+						<v-flex>
+							<div class="d-flex align-center justify-center status_box mr-1 px-1">
+								{{ item.assingnmentTeamData.title }}
+							</div>
+						</v-flex>
+						<v-flex>
+							<div
+								class="d-flex align-center justify-center status_box mr-1 px-1"
+								:alt="item.assingnmentUserData.name"
+								style="white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;"
+							>
+								{{ item.assingnmentUserData.name }}
+							</div>
+						</v-flex>
+					</v-layout>
+				</div>
+				<div v-else>
+					<v-layout>
+						<v-flex xs5 class="mr-1">
+							<!-- <selectBoxValueItems
 							style="font-size:12px"
 							:items="datatable.product_manager.items"
 							:sel="datatable.product_manager"
@@ -1686,16 +1709,16 @@
 							class="table_small_sel"
 							@change="managerChoiceStatusChange($event, item)"
 						></selectBoxValueItems> -->
-						<selectBox
-							:sel="item.product_manager"
-							:disable="item.product_manager.disabled"
-							style="font-size:12px"
-							@change="managerChoiceStatusChange($event, item)"
-						></selectBox>
-					</v-flex>
+							<selectBox
+								:sel="item.product_manager"
+								:disable="item.product_manager.disabled"
+								style="font-size:12px"
+								@change="managerChoiceStatusChange($event, item)"
+							></selectBox>
+						</v-flex>
 
-					<v-flex xs3 class="mr-1">
-						<!-- <selectBoxValueItems
+						<v-flex xs3 class="mr-1">
+							<!-- <selectBoxValueItems
 							style="font-size:12px"
 							:items="item.team.items"
 							:sel="item.team"
@@ -1704,23 +1727,61 @@
 							@change="teamChange($event, item)"
 						></selectBoxValueItems> -->
 
-						<selectBox :sel="item.team" style="font-size:12px" :disable="item.team.disabled" @change="teamChange($event, item)"></selectBox>
-					</v-flex>
-					<v-flex xs4>
-						<!-- <selectBoxValueItems
+							<selectBox
+								:sel="item.team"
+								style="font-size:12px"
+								:disable="item.team.disabled"
+								@change="teamChange($event, item)"
+							></selectBox>
+						</v-flex>
+						<v-flex xs4>
+							<!-- <selectBoxValueItems
 							style="font-size:12px"
 							:items="item.user.items"
 							:sel="item.user"
 							v-model="item.managerUser"
 							class="table_small_sel"
 						></selectBoxValueItems> -->
-						<selectBox :sel="item.user" :disable="item.user.disabled" style="font-size:12px"></selectBox>
-					</v-flex>
-				</v-layout>
+							<selectBox :sel="item.user" :disable="item.user.disabled" style="font-size:12px"></selectBox>
+						</v-flex>
+					</v-layout>
+				</div>
 			</template>
 			<!-- 물건배정 - 배정 -->
 			<template v-slot:[`item.holdTime`]="{ item }">
-				<div>
+				<div v-if="item.assingnmentData">
+					<v-layout>
+						<v-flex xs3>
+							<div class="d-flex align-center justify-center status_box mr-1 px-1">
+								{{
+									item.assingnmentData.type === 'allday'
+										? '종일'
+										: item.assingnmentData.type === 'time'
+										? '시간'
+										: item.assingnmentData.type === 'date'
+										? '기간'
+										: '즉시'
+								}}
+							</div>
+						</v-flex>
+						<v-flex>
+							<div class="d-flex align-center justify-center status_box mr-1 px-1">
+								{{
+									item.assingnmentData.startDate +
+										' ' +
+										item.assingnmentData.start.split(':')[0] +
+										':' +
+										item.assingnmentData.start.split(':')[1]
+								}}
+								~
+								{{
+									item.assingnmentData.endDate + ' ' + item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1]
+								}}
+							</div>
+						</v-flex>
+					</v-layout>
+				</div>
+				<div v-else>
 					<v-layout>
 						<v-flex xs4>
 							<v-layout>
@@ -1749,9 +1810,28 @@
 									></TimepickerDialog>
 								</v-flex>
 							</v-layout>
-							<v-layout v-else>
+							<v-layout v-else-if="item.select_holding.value === '즉시 홀딩'">
 								<v-flex xs12 class="mx-1">
 									<selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox>
+								</v-flex>
+							</v-layout>
+							<v-layout v-else>
+								<v-flex xs6 class="mx-1">
+									<div class="d-flex align-center date_picker2 ml-3 mr-2" style="width:120px;">
+										<DatepickerDialog :picker="item.holdingDay1" :allowed_dates="allowedDatesStart"></DatepickerDialog>
+									</div>
+									<!-- <selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox> -->
+								</v-flex>
+								<v-flex xs6 class="mx-1">
+									<div class="d-flex align-center date_picker2 ml-3 mr-2" style="width:120px;">
+										<DatepickerDialog
+											:picker="item.holdingDay2"
+											:allowed_dates="allowedDatesEnd"
+											@change="changDatePicker"
+										></DatepickerDialog>
+										<!-- <DatepickerDialog :picker="item.holdingDay2" @change=""></DatepickerDialog> -->
+									</div>
+									<!-- <selectBox :sel="item.holdingTime3" style="font-size:12px"></selectBox> -->
 								</v-flex>
 							</v-layout>
 						</v-flex>
@@ -1769,7 +1849,7 @@
 			<!-- 물건배정 - 상태 -->
 			<template v-slot:[`item.product_status`]="{ item }">
 				<v-layout v-if="item.assingnmentData">
-					<div class="d-flex align-center justify-center status_box mr-1 px-1">
+					<!-- <div class="d-flex align-center justify-center status_box mr-1 px-1">
 						{{ item.assingnmentTeamData.title }}
 					</div>
 					<div
@@ -1782,14 +1862,23 @@
 						{{ item.assingnmentUserData.name }}
 					</div>
 					<div class="d-flex align-center justify-center status_box mr-1 px-1">
-						{{ item.assingnmentData.type === 'allday' ? '종일' : item.assingnmentData.type === 'time' ? '시간' : '즉시' }}
+						{{
+							item.assingnmentData.type === 'allday'
+								? '종일'
+								: item.assingnmentData.type === 'time'
+								? '시간'
+								: item.assingnmentData.type === 'date'
+								? '기간'
+								: '즉시'
+						}}
 					</div>
 					<div class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
-						{{ item.assingnmentData.start.split(':')[0] + ':' + item.assingnmentData.start.split(':')[1] }} ~
-						{{ item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1] }}
-					</div>
+						{{ item.assingnmentData.startDate + item.assingnmentData.start.split(':')[0] + ':' + item.assingnmentData.start.split(':')[1] }}
+						~
+						{{ item.assingnmentData.endDate + item.assingnmentData.end.split(':')[0] + ':' + item.assingnmentData.end.split(':')[1] }}
+					</div> -->
 					<!-- <div class="d-flex align-center justify-center status_box mr-1" style="width:110px">잔여시간 : 10분</div> -->
-					<div v-if="item.leaveTime !== null" class="d-flex align-center justify-center status_box mr-1 px-1" style="width:110px">
+					<div v-if="item.leaveTime !== null" class="d-flex align-center justify-center status_box mr-1 px-1" style="width:200px">
 						잔여시간 :
 						<!-- {{
 							$moment().diff(
@@ -1799,7 +1888,7 @@
 								'hours',
 							)
 						}} -->
-						{{ item.leaveTime }} 분
+						{{ item.leaveHour }} 시간 {{ item.leaveMinute }} 분
 					</div>
 					<v-spacer></v-spacer>
 					<v-btn
@@ -1973,6 +2062,7 @@ import {
 	txtField,
 	txtFieldStyle,
 	selectBoxStyle,
+	DatepickerDialog,
 } from '@/components/index'
 // import { sweetAlert } from '@/components/index'
 
@@ -1990,6 +2080,7 @@ export default {
 		TimepickerDialog,
 		selectBoxValue,
 		selectBoxValueItems,
+		DatepickerDialog,
 	},
 	data() {
 		return {
@@ -2421,6 +2512,34 @@ export default {
 		},
 	},
 	methods: {
+		allowedDatesStart(val) {
+			if (this.$moment(val) > this.$moment()) {
+				return true
+			} else {
+				return false
+			}
+		},
+		allowedDatesEnd(val) {
+			if (this.$moment(val) > this.$moment()) {
+				return true
+			} else {
+				return false
+			}
+			// if (item.holdingDay1.date) {
+			// 	if (this.$moment(item.holdingDay1.date) > this.$moment()) {
+			// 		return true
+			// 	} else {
+			// 		return false
+			// 	}
+			// } else {
+			// 	if (this.$moment(val) > this.$moment()) {
+			// 		return true
+			// 	} else {
+			// 		return false
+			// 	}
+			// }
+		},
+		changDatePicker() {},
 		settlementStatusValue(val) {
 			// item.settlementStatus === 'waiting'
 			// 							? '대기'
@@ -3159,6 +3278,25 @@ td:has(.leave-color) {
 	.v-input--selection-controls {
 		margin-top: 0px !important;
 		padding-top: 0px !important;
+	}
+}
+.date_picker2 {
+	background-color: #fff !important;
+	div {
+		div {
+			.v-input__slot {
+				min-height: 27px !important;
+				height: 27px !important;
+				div {
+					div {
+						button {
+							margin-bottom: 10px;
+							font-size: 20px;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 </style>

@@ -28,19 +28,23 @@
 				</v-btn>
 				<!-- <span @click="foreachUpdate">foreach</span> -->
 			</v-flex>
-			<v-flex lg2 md3 sm5 xs12 style="max-width:none">
+			<v-flex lg3 md3 sm5 xs12 style="max-width:none">
 				<v-layout align-center>
 					<v-layout align-center justify-end style="height:60px">
-						<selectBoxValueItems
-							class="mr-4 mt-2"
-							:sel="$store.state.businessSelectBox"
-							:value="$store.state.businessSelectBox.value"
-							:items="$store.state.businessSelectBox.items"
-							@change="businessValueChange"
-						></selectBoxValueItems>
-						<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
-							{{ this.$store.state.meData ? this.$store.state.meData.name : '-' }}
-						</div>
+						<v-flex xs5>
+							<selectBoxValueItems
+								class="mr-4 mt-2"
+								:sel="$store.state.businessSelectBox"
+								:value="$store.state.businessSelectBox.value"
+								:items="$store.state.businessSelectBox.items"
+								@change="businessValueChange"
+							></selectBoxValueItems>
+						</v-flex>
+						<v-flex xs4 ml-2>
+							<div style="fontSize:14px; fontWeight:bold; color:#0168B2; margin-right:16px;">
+								{{ this.$store.state.meData ? this.$store.state.meData.name : '-' }}
+							</div>
+						</v-flex>
 						<!-- <v-divider inset vertical></v-divider> -->
 						<v-btn icon @click="logout()" class="ml-1">
 							<v-icon size="24" color="black">mdi-logout</v-icon>
@@ -176,9 +180,12 @@ export default {
 	},
 	beforeCreate() {
 		this.$store.dispatch('businesses').then(res => {
+			console.log(res)
 			if (res.businesses.length !== 0) {
 				this.$store.state.businessSelectBox.items = res.businesses
 				this.$store.state.businessSelectBox.value = res.businesses[0].id
+				this.$store.state.businessStartTime = res.businesses[0].workingHoursStart
+				this.$store.state.businessEndTime = res.businesses[0].workingHoursEnd
 			} else {
 				this.$router.push('/KIOSK').catch(() => {})
 				return alert('등록된 사업지가 없습니다. \n등록 후 이용해주세요.')
@@ -261,6 +268,8 @@ export default {
 		},
 		businessValueChange(val) {
 			this.$store.state.businessSelectBox.value = val
+			this.$store.state.businessStartTime = this.$store.state.businessSelectBox.items.filter(x => x.id === val)[0].workingHoursStart
+			this.$store.state.businessEndTime = this.$store.state.businessSelectBox.items.filter(x => x.id === val)[0].workingHoursEnd
 			this.$router.push('/KIOSK').catch(() => {})
 			this.assignmentsValue = 0
 			this.settlementsValue = 0
@@ -300,8 +309,12 @@ export default {
 		// },
 		businessView() {
 			this.$store.dispatch('businesses').then(res => {
+				console.log(res)
+				console.log(res.businesses[0].workingHoursStart)
 				this.$store.state.businessSelectBox.items = res.businesses
 				this.$store.state.businessSelectBox.value = res.businesses[0].id
+				this.$store.state.businessStartTime = res.businesses[0].workingHoursStart
+				this.$store.state.businessEndTime = res.businesses[0].workingHoursEnd
 			})
 		},
 		// async meData() {
