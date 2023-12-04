@@ -80,7 +80,8 @@
 								</v-layout>
 							</v-flex>
 							<v-flex class="nomal-input-type px-2" xs9 v-if="index === 0">
-								<v-radio-group v-model="right.radio" :disabled="setdialog.editData.vacation !== 'waiting'" row class="project_message">
+								<!-- res.data.updateVacation.vacation.gotowork.id -->
+								<v-radio-group v-model="right.radio" row class="project_message">
 									<v-radio label="승인" value="agree" color="#2699FB" @click="click_radio()"></v-radio>
 									<v-radio label="반려" value="disagree" color="#2699FB" @click="click_radio()"></v-radio>
 								</v-radio-group>
@@ -92,9 +93,13 @@
 					</div>
 					<v-layout wrap class="pt-10">
 						<v-flex xs12 class="ml-auto mb-8">
-							<v-layout justify-end v-if="setdialog.editData.vacation === 'waiting'">
+							<v-layout justify-end v-if="setdialog.editData.vacation === 'waiting' || setdialog.editData.vacation === 'disagree'">
 								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#5B5B5B" class="mr-3">취소</v-btn>
 								<v-btn @click="businessAdd" dense width="100" height="26" dark color="#0500B7">저장</v-btn>
+							</v-layout>
+							<v-layout justify-end v-else-if="setdialog.editData.vacation === 'agree'">
+								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#5B5B5B" class="mr-3">취소</v-btn>
+								<v-btn @click="businessEdit" dense width="100" height="26" dark color="#0500B7">수정</v-btn>
 							</v-layout>
 							<v-layout justify-end v-else>
 								<v-btn @click="setdialog.dialog = false" dense width="100" height="26" dark color="#0500B7" class="mr-3">확인</v-btn>
@@ -318,6 +323,8 @@ export default {
 				this.rightInfoBottom[1].value = ''
 			} else {
 				this.rightInfoBottom[1].txtfield.disable = false
+				this.rightInfoBottom[1].txtfield.readonly = false
+				this.rightInfoBottom[1].value = ''
 			}
 		},
 		reset() {
@@ -350,14 +357,29 @@ export default {
 						this.$store.state.loading = false
 					})
 				})
-			} else {
-				let input2 = {
+			} else if (this.setdialog.editData.vacation === 'agree') {
+				let input = {
 					id: this.setdialog.editData.vacationID,
 					rejectComment: this.rightInfoBottom[1].value,
 					adminInfo: this.$store.state.meData,
 					vacationStatus: 'disagree',
 				}
-				this.$store.dispatch('updateVacation', input2).then(() => {
+				this.$store.dispatch('updateVacation', input).then(res => {
+					this.$store.dispatch('deleteGotowork', { id: res.updateVacation.vacation.gotowork.id }).then(() => {
+						this.sweetDialog.open = false
+						this.setdialog.dialog = false
+						this.$emit('update')
+						this.$store.state.loading = false
+					})
+				})
+			} else {
+				let input = {
+					id: this.setdialog.editData.vacationID,
+					rejectComment: this.rightInfoBottom[1].value,
+					adminInfo: this.$store.state.meData,
+					vacationStatus: 'disagree',
+				}
+				this.$store.dispatch('updateVacation', input).then(() => {
 					this.sweetDialog.open = false
 					this.setdialog.dialog = false
 					this.$emit('update')
@@ -368,6 +390,14 @@ export default {
 
 		async businessAdd() {
 			if (this.rightInfoBottom[0].radio === 'disagree' && this.rightInfoBottom[1].value === '') {
+				this.sweetInfo.title = '반려사유 에러'
+				this.sweetInfo.content = `반려사유를 입력해 주세요.`
+				return (this.sweetInfo.open = true)
+			}
+			this.sweetDialog.open = true
+		},
+		async businessEdit() {
+			if (this.rightInfoBottom[1].value === '') {
 				this.sweetInfo.title = '반려사유 에러'
 				this.sweetInfo.content = `반려사유를 입력해 주세요.`
 				return (this.sweetInfo.open = true)

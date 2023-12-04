@@ -180,7 +180,6 @@ export default {
 	},
 	beforeCreate() {
 		this.$store.dispatch('businesses').then(res => {
-			console.log(res)
 			if (res.businesses.length !== 0) {
 				this.$store.state.businessSelectBox.items = res.businesses
 				this.$store.state.businessSelectBox.value = res.businesses[0].id

@@ -449,7 +449,7 @@ export default {
 				element.teamItems = this.teamData
 				element.rankItems = this.rankData
 			}
-			console.log(this.list)
+
 			this.settlementTable.items = JSON.parse(JSON.stringify(this.list))
 			this.settlementTable.origin_items = JSON.parse(JSON.stringify(this.list))
 		},
@@ -465,7 +465,6 @@ export default {
 				}
 			}
 			await this.$store.dispatch('settlementsStatusArr', settlementData).then(res => {
-				console.log(res)
 				// res.settlements.sort((a, b) => {
 				// if(a.settlementStatus === 'agree'){
 				// return 0
@@ -506,7 +505,7 @@ export default {
 			if (this.searchsel1.value !== '전체' && this.searchsel1.value !== '') {
 				usersViewData.teamID = this.searchsel1.value.id
 			}
-			if (this.userIDArr !== []) {
+			if (!this.userIDArr.isArray) {
 				usersViewData.userID = this.userIDArr
 			}
 			await this.$store
@@ -744,7 +743,6 @@ export default {
 			this.date_picker.date = this.$moment(this.date_picker.date)
 		},
 		async editUserData(val) {
-			console.log(val)
 			this.editLogsVariable = []
 			this.attachmentNameList = []
 			this.finalSettlementData = []
@@ -840,8 +838,7 @@ export default {
 			}
 			await this.$store
 				.dispatch('updateSettlement', updateData)
-				.then(async res => {
-					console.log(res)
+				.then(async () => {
 					this.saveDialogStatus.title = `파일 삭제 완료`
 					this.saveDialogStatus.content = `파일 삭제가 완료되었습니다.`
 					this.saveDialogStatus.buttonType = 'oneBtn'
@@ -999,7 +996,7 @@ export default {
 		},
 		click_agree() {
 			this.$store.state.loading = true
-			console.log(this.finalSettlementData.ProductID)
+
 			if (this.finalSettlementData.settlementStatus === 'waiting') {
 				let input = {
 					id: this.finalSettlementData.id,

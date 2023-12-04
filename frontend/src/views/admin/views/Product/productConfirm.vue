@@ -180,7 +180,6 @@ export default {
 		// },
 		async assignmentsView(data) {
 			await this.$store.dispatch('assignments', data).then(async res => {
-				console.log(res.assignments)
 				this.productIDArr = res.assignments.map(x => x.productID)
 				this.userIDArr = res.assignments.map(x => x.userID)
 				this.productTable.items = res.assignments
@@ -200,7 +199,7 @@ export default {
 			await this.$store.dispatch('products', productsViewData).then(async res => {
 				for (let index = 0; index < this.productTable.items.length; index++) {
 					const element = this.productTable.items[index]
-					console.log(element)
+
 					let idx = res.products.findIndex(x => x.id === element.productID)
 					element.product = res.products[idx]
 					element.product_counselor = element.team.title + ' ' + element.user.name

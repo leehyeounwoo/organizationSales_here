@@ -67,7 +67,7 @@
 				<v-layout justify-center align-center>
 					<v-switch
 						class="switch_style"
-						color="#5A18F7"
+						:color="item.vacation !== '-' ? 'red' : '#5A18F7'"
 						:disabled="item.data7"
 						value
 						:input-value="item.data6"
@@ -80,7 +80,7 @@
 					<v-switch
 						class="switch_style"
 						style="margin-top:0px;"
-						color="#5A18F7"
+						:color="item.vacation !== '-' ? 'red' : '#5A18F7'"
 						:disabled="!item.data6 || item.data5.includes('휴가') || item.data5.includes('반차')"
 						value
 						:input-value="item.data7"

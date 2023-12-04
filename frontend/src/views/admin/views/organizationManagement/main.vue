@@ -22,6 +22,9 @@
 			<v-tab-item style="padding-top:20px;">
 				<agentManagement></agentManagement>
 			</v-tab-item>
+			<v-tab-item style="padding-top:20px;">
+				<vacationStatus></vacationStatus>
+			</v-tab-item>
 		</v-tabs-items>
 	</div>
 </template>
@@ -29,17 +32,19 @@
 <script>
 import agentManagement from './agentManagement'
 import organizationStatus from './organizationStatus'
+import vacationStatus from './vacationStatus'
 
 export default {
 	components: {
 		organizationStatus,
 		agentManagement,
+		vacationStatus,
 	},
 
 	data() {
 		return {
 			tab: 0,
-			tabs: ['상담사 관리', '조직 현황'],
+			tabs: ['상담사 관리', '조직 현황', '휴가현황'],
 		}
 	},
 }

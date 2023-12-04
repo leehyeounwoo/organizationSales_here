@@ -70,8 +70,8 @@
 						<div class="ml-3">기존 : {{ setdialog.existing }} 건</div>
 						<div class="ml-3">계약 : {{ setdialog.contract }} 건,</div>
 						<div class="ml-3">가계약 : {{ setdialog.noContract }} 건</div>
-						<div class="ml-3">가계약 : {{ setdialog.firstContract }} 건</div>
-						<div class="ml-3">가계약 : {{ setdialog.secondContract }} 건</div>
+						<div class="ml-3">1차매각 : {{ setdialog.firstContract }} 건</div>
+						<div class="ml-3">2차매각 : {{ setdialog.secondContract }} 건</div>
 					</v-layout>
 				</v-flex>
 			</v-layout>
@@ -93,14 +93,16 @@
 						</v-flex>
 						<v-flex class="d-flex align-center" xs9 v-else-if="right.type === 'radio'" style="height:50px;">
 							<v-radio-group v-model="right.value" row class="system-radio-label" style="margin-left:10px">
-								<v-radio color="#009dac" label="임대" value="lease" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="공실" value="vacancy" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="예정" value="toBeRented" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="기존" value="existing" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="계약" value="contract" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="가계약" value="noContract" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="1차매각" value="firstContract" style="width:30%;"></v-radio>
-								<v-radio color="#009dac" label="2차매각" value="secondContract" style="width:30%;"></v-radio>
+								<v-layout wrap>
+									<v-radio color="#009dac" label="임대" value="lease" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="공실" value="vacancy" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="예정" value="toBeRented" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="기존" value="existing" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="계약" value="contract" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="가계약" value="noContract" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="1차매각" value="firstContract" style="width:22%;"></v-radio>
+									<v-radio color="#009dac" label="2차매각" value="secondContract" style="width:22%;"></v-radio>
+								</v-layout>
 							</v-radio-group>
 						</v-flex>
 					</v-layout>

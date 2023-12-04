@@ -72,6 +72,8 @@
 											? 'background-color:#AAAAAA; color:black;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '2차매각'
 											? 'background-color:#656565; color:white;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료'
+											? 'background-color:#F6B5FB; color:white;'
 											: ''
 									"
 								>
@@ -101,6 +103,8 @@
 											? 'background-color:#AAAAAA; color:black;'
 											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '2차매각'
 											? 'background-color:#656565; color:white;'
+											: reserveStatus(f.data.filter(x => x.ho.includes('0' + (i + 1)))[0].id) === '배정 완료'
+											? 'background-color:#F6B5FB; color:white;'
 											: ''
 									"
 									style="text-align: center; width:10px; font-size:0.5rem; border:1px solid black; border-top:0px; border-bottom:0px; height: 15px;"
@@ -299,22 +303,22 @@ export default {
 				// 	element.color = ''
 				// }
 				this.productData = res.products
-				// const assignmentsViewData = {
-				// 	status: 'assignment',
-				// 	businessID: this.$store.state.businessSelectBox.value,
-				// 	created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
-				// 	created_at_lte: this.$moment(
-				// 		this.$moment()
-				// 			.add(1, 'd')
-				// 			.format('YYYY-MM-DD'),
-				// 	),
-				// }
-				// await this.assignmentsView(assignmentsViewData)
-				// const settlementData = {
-				// 	date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
-				// 	businessID: this.$store.state.businessSelectBox.value,
-				// }
-				// await this.settlementView(settlementData)
+				const assignmentsViewData = {
+					status: 'assignment',
+					businessID: this.$store.state.businessSelectBox.value,
+					created_at_gte: this.$moment(this.$moment().format('YYYY-MM-DD')),
+					created_at_lte: this.$moment(
+						this.$moment()
+							.add(1, 'd')
+							.format('YYYY-MM-DD'),
+					),
+				}
+				await this.assignmentsView(assignmentsViewData)
+				const settlementData = {
+					date: this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+					businessID: this.$store.state.businessSelectBox.value,
+				}
+				await this.settlementView(settlementData)
 				await this.dataResult()
 			})
 		},
@@ -429,7 +433,9 @@ export default {
 		},
 		/** 11 11 */
 		reserveStatus(val) {
-			if (this.statusValue['lease'].indexOf(val) !== -1) {
+			if (this.assignmentsData.indexOf(val) !== -1) {
+				return '배정 완료'
+			} else if (this.statusValue['lease'].indexOf(val) !== -1) {
 				return '임대'
 			} else if (this.statusValue['vacancy'].indexOf(val) !== -1) {
 				return '공실'
@@ -485,7 +491,6 @@ export default {
 		},
 	},
 	async created() {
-		console.log(this.$store.state.businessSelectBox.value)
 		if (this.$store.state.businessSelectBox.value === '') {
 			await this.$store.dispatch('businesses').then(res => {
 				if (res.businesses.length !== 0) {

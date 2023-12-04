@@ -272,7 +272,6 @@ export default {
 				this.$router.push('/').catch(() => {})
 			})
 		await this.$store.dispatch('businesses', { idArr: [this.$store.state.meData.businessID] }).then(res => {
-			console.log(res)
 			if (res.businesses.length !== 0) {
 				this.$store.state.businessName = res.businesses[0].name
 			}
@@ -352,7 +351,6 @@ export default {
 			return Number(data.split(':')[0]) * 3600 + Number(data.split(':')[1]) * 60
 		},
 		rangeChange(holdingData) {
-			console.log(holdingData)
 			let leaveHour = this.$moment(holdingData.endDate + ' ' + holdingData.end.substr(0, 5)).diff(this.$moment(), 'hour')
 			let leaveMinute = this.$moment(holdingData.endDate + ' ' + holdingData.end.substr(0, 5)).diff(this.$moment(), 'minute') % 60
 			return `${leaveHour}시간 ${leaveMinute}분`
@@ -454,7 +452,6 @@ export default {
 					sort: 'created_at:desc',
 				})
 				.then(res => {
-					console.log(res)
 					this.assignmentDatas = res.assignments
 					this.assignmentHoldingDatas = res.assignments.filter(x => x.status === 'assignment')
 					this.holdingList = res.assignments.filter(
@@ -499,8 +496,6 @@ export default {
 				})
 		},
 		holdingStatus(myData) {
-			console.log(myData)
-			console.log(myData.id)
 			return `홀딩중 [${myData.product.housingType} ${myData.product.dong} ${myData.product.ho}] 남은시간:${(this.secondChange(myData.end) -
 				this.secondChange(this.$moment().format('HH:mm'))) /
 				60}분`

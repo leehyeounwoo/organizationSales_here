@@ -242,7 +242,6 @@ export default {
 			await this.$store
 				.dispatch('usersConnectionTeamArr', connectionUser)
 				.then(async res => {
-					console.log(res)
 					this.totalUserLength = res.usersConnection.aggregate.count
 				})
 				.catch(err => {

@@ -50,7 +50,7 @@ export default {
 			if (this.$store.state.businessSelectBox.value !== '') {
 				await this.productSelectData()
 				await this.setFilter1()
-				console.log(this.$store.state.meData)
+
 				clearInterval(createInterval)
 			}
 
@@ -283,7 +283,6 @@ export default {
 		},
 		async productsCountView(productsCountViewData) {
 			await this.$store.dispatch('productsCount', productsCountViewData).then(async res => {
-				console.log(res)
 				this.productManager.total = res.productsConnection.aggregate.count
 				this.productManager.totalpage = Math.ceil(res.productsConnection.aggregate.count / this.productManager.itemsPerPage)
 			})
@@ -431,9 +430,7 @@ export default {
 						data.startDate = this.$moment(item.holdingDay1.date).format('YYYY-MM-DD')
 						data.endDate = this.$moment(item.holdingDay2.date).format('YYYY-MM-DD')
 					}
-					console.log(this.$store.state.businessStartTime)
-					console.log(this.$store.state.businessEndTime)
-					console.log(data)
+
 					this.$store
 						.dispatch('createAssignment', data)
 						.then(async () => {

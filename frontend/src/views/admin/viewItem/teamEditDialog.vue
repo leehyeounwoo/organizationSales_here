@@ -94,6 +94,7 @@
 		</div>
 		<sweetAlert :dialog="sweetDialog2" @click="applyTeam" />
 		<sweetAlert :dialog="sweetDialog3" @click="applyRank" />
+		<sweetAlert :dialog="alertDialog" @click="applyRank" />
 	</v-dialog>
 </template>
 
@@ -120,6 +121,14 @@ export default {
 	},
 	data() {
 		return {
+			alertDialog: {
+				open: false,
+				title: '직급 추가',
+				content: '직급을 추가해주세요.',
+				cancelBtnText: '확인',
+				buttonType: 'oneBtn',
+				modalIcon: 'error',
+			},
 			addBtn: {
 				class: '',
 				classtxt: '',
@@ -201,10 +210,22 @@ export default {
 			this.setdialog.dialog = false
 		},
 		rankCheck() {
-			this.sweetDialog3.open = true
+			if (this.right_data.length !== 0) {
+				this.sweetDialog3.open = true
+			} else {
+				this.alertDialog.title = '직급 추가'
+				this.alertDialog.content = '직급을 추가해주세요.'
+				this.alertDialog.open = true
+			}
 		},
 		teamCheck() {
-			this.sweetDialog2.open = true
+			if (this.left_data.length !== 0) {
+				this.sweetDialog2.open = true
+			} else {
+				this.alertDialog.title = '팀 추가'
+				this.alertDialog.content = '팀을 추가해주세요.'
+				this.alertDialog.open = true
+			}
 		},
 		edit_time() {
 			this.editTimePicker.dialog = true

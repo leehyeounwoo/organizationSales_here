@@ -611,7 +611,10 @@ export default {
 			} else {
 				for (let i = 0; i < this.left_data_origin.length; i++) {
 					let teamData2 = {}
-					if (this.left_data[i].value !== this.left_data_origin[i].value) {
+					if (
+						this.left_data[i].value !== this.left_data_origin[i].value ||
+						this.left_data[i].selectBox.value !== this.left_data_origin[i].selectBox.value
+					) {
 						teamData2['id'] = this.left_data[i].id
 						teamData2['title'] = this.left_data[i].value
 						if (this.left_data[i].selectBox.value === '사용') {
@@ -625,22 +628,27 @@ export default {
 							this.update()
 							this.$store.state.loading = false
 						})
+					} else {
+						this.sweetDialog2.open = false
+						this.teamEditDialog.dialog = false
+						this.update()
+						this.$store.state.loading = false
 					}
-					if (this.left_data[i].selectBox.value !== this.left_data_origin[i].selectBox.value) {
-						teamData2['id'] = this.left_data[i].id
-						teamData2['title'] = this.left_data[i].value
-						if (this.left_data[i].selectBox.value === '사용') {
-							teamData2['useYn'] = true
-						} else {
-							teamData2['useYn'] = false
-						}
-						this.$store.dispatch('updateTeam', teamData2).then(() => {
-							this.sweetDialog2.open = false
-							this.teamEditDialog.dialog = false
-							this.update()
-							this.$store.state.loading = false
-						})
-					}
+					// if (this.left_data[i].selectBox.value !== this.left_data_origin[i].selectBox.value) {
+					// teamData2['id'] = this.left_data[i].id
+					// teamData2['title'] = this.left_data[i].value
+					// if (this.left_data[i].selectBox.value === '사용') {
+					// 	teamData2['useYn'] = true
+					// } else {
+					// 	teamData2['useYn'] = false
+					// }
+					// this.$store.dispatch('updateTeam', teamData2).then(() => {
+					// 	this.sweetDialog2.open = false
+					// 	this.teamEditDialog.dialog = false
+					// 	this.update()
+					// 	this.$store.state.loading = false
+					// })
+					// }
 				}
 			}
 		},
@@ -659,6 +667,8 @@ export default {
 					}
 					await this.$store.dispatch('createRank', rankData1).then(() => {
 						this.sweetDialog3.open = false
+						this.teamEditDialog.dialog = false
+						this.update()
 						this.$store.state.loading = false
 					})
 				}
@@ -666,7 +676,10 @@ export default {
 			} else {
 				for (let i = 0; i < this.right_data_origin.length; i++) {
 					let rankData2 = {}
-					if (this.right_data[i].value !== this.right_data_origin[i].value) {
+					if (
+						this.right_data[i].value !== this.right_data_origin[i].value ||
+						this.right_data[i].selectBox.value !== this.right_data_origin[i].selectBox.value
+					) {
 						rankData2['id'] = this.right_data[i].id
 						rankData2['rankName'] = this.right_data[i].value
 						if (this.right_data[i].selectBox.value === '사용') {
@@ -676,23 +689,30 @@ export default {
 						}
 						this.$store.dispatch('updateRank', rankData2).then(() => {
 							this.sweetDialog3.open = false
+							this.teamEditDialog.dialog = false
+							this.update()
 							this.$store.state.loading = false
 						})
+					} else {
+						this.sweetDialog3.open = false
+						this.teamEditDialog.dialog = false
+						this.update()
+						this.$store.state.loading = false
 					}
-					if (this.right_data[i].selectBox.value !== this.right_data_origin[i].selectBox.value) {
-						rankData2['id'] = this.right_data[i].id
-						rankData2['rankName'] = this.right_data[i].value
-						if (this.right_data[i].selectBox.value === '사용') {
-							rankData2['useYn'] = true
-						} else {
-							rankData2['useYn'] = false
-						}
-						console.log(rankData2)
-						this.$store.dispatch('updateRank', rankData2).then(() => {
-							this.sweetDialog3.open = false
-							this.$store.state.loading = false
-						})
-					}
+					// if (this.right_data[i].selectBox.value !== this.right_data_origin[i].selectBox.value) {
+					// 	rankData2['id'] = this.right_data[i].id
+					// 	rankData2['rankName'] = this.right_data[i].value
+					// 	if (this.right_data[i].selectBox.value === '사용') {
+					// 		rankData2['useYn'] = true
+					// 	} else {
+					// 		rankData2['useYn'] = false
+					// 	}
+					// 	console.log(rankData2)
+					// 	this.$store.dispatch('updateRank', rankData2).then(() => {
+					// 		this.sweetDialog3.open = false
+					// 		this.$store.state.loading = false
+					// 	})
+					// }
 				}
 			}
 		},
@@ -976,7 +996,6 @@ export default {
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(res => {
-					console.log(res.teams)
 					this.teamData = res.teams
 					// this.searchsel1.items = res.teams
 				})
@@ -990,7 +1009,6 @@ export default {
 			await this.$store
 				.dispatch('teams', teamsViewData)
 				.then(res => {
-					console.log(res)
 					for (let index = 0; index < res.teams.length; index++) {
 						const element = res.teams[index]
 						this.left_data.push({

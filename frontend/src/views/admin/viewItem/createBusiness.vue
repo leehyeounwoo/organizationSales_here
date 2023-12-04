@@ -432,18 +432,17 @@ export default {
 			a.click()
 		},
 		csvImportClick(index) {
+			this.$store.state.loading = true
 			// setTimeout(() => {
-			// 	var theFile = document.getElementsByClassName('inputclasstest')[0]
+			// var theFile = document.getElementsByClassName('inputclasstest')[0]
 
 			// 	theFile.value = []
 
-			// 	document.body.onfocus = () => {
-			// 		if (!theFile.value.length) {
-			// 			this.$store.state.loading = false
-			// 		}
+			document.body.onfocus = () => {
+				this.$store.state.loading = false
 
-			// 		document.body.onfocus = null
-			// 	}
+				// 		document.body.onfocus = null
+			}
 			// }, 1000)
 
 			document.getElementsByClassName('inputclasstest')[0]
@@ -461,8 +460,7 @@ export default {
 							this.$store.state.loading = true
 							clearInterval(interval)
 
-							await this.forValue()
-
+							await this.forValue(interval)
 							if (this.parseCsv !== null) {
 								this.setdialog.items[index].value = this.parseCsv.map(x => x.housingType).toString()
 								this.setdialog.items[index].csvImport = true
@@ -475,7 +473,7 @@ export default {
 			}, 1000)
 		},
 
-		async forValue() {
+		async forValue(interval) {
 			for (let index = 0; index < this.parseCsv.length; index++) {
 				const element = this.parseCsv[index]
 				if (element.status === '임대') element.statusValue = 'lease'
@@ -488,8 +486,13 @@ export default {
 				else if (element.status === '2차매각') element.statusValue = 'secondContract'
 				else {
 					this.parseCsv = null
+					clearInterval(interval)
 					return alert(`${index + 2}열에 잘못된 정보가 있습니다.`)
 				}
+				if (index === this.parseCsv.length - 1) {
+					return
+				}
+				// if (index === this.parseCsv.length - 1) return '1'
 			}
 		},
 		async saveUser() {
@@ -500,6 +503,7 @@ export default {
 				phoneNumber: this.right_data.detail.phoneNumber,
 				password: this.right_data.detail.password,
 				confirmed: this.right_data.detail.confirmed,
+				role: 1,
 			}
 			if (this.setdialog.type === 'create') {
 				await this.$store.dispatch('register', data).then(res => {
@@ -657,6 +661,7 @@ export default {
 				location: this.setdialog.items[6].value ? this.setdialog.items[6].value : null,
 			}
 			if (this.setdialog.type === 'create') {
+				this.$store.state.loading = true
 				await this.$store.dispatch('createBusiness', data).then(async res => {
 					await this.forUserCreate(res.createBusiness.business)
 					await this.forUserUpdate()
@@ -719,6 +724,7 @@ export default {
 				// 	}
 				// })
 			} else if (this.setdialog.type === 'edit') {
+				this.$store.state.loading = true
 				data.id = this.setdialog.id
 				await this.$store.dispatch('updateBusiness', data).then(async res => {
 					await this.forUserCreate()

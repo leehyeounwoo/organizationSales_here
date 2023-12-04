@@ -156,6 +156,7 @@ const routes = [
 				name: 'organizationManagement',
 				component: organizationManagement,
 			},
+
 			{
 				path: '/admin/agentManagement',
 				name: 'agentManagement',

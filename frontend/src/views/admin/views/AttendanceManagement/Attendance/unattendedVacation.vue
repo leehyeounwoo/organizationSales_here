@@ -353,6 +353,7 @@ export default {
 					this.vacationData.forEach((item, index) => {
 						if (item.userID === element.id) {
 							this.vacationData[index]['username'] = element.name ? element.name : '-'
+							this.vacationData[index]['name'] = element.name ? element.name : '-'
 							this.vacationData[index]['phoneNumber'] = element.phoneNumber
 								? element.phoneNumber.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
 								: '-'
@@ -388,6 +389,7 @@ export default {
 		async vacationView(item) {
 			await this.$store.dispatch('vacations', item).then(res => {
 				this.unattendedTable.total = res.vacations.length
+
 				let list = []
 				for (let i = 0; i < res.vacations.length; i++) {
 					this.userIDArr.push(res.vacations[i].userID)
@@ -423,6 +425,7 @@ export default {
 		async dataSetting() {
 			for (let index = 0; index < this.vacationData.length; index++) {
 				const element = this.vacationData[index]
+
 				let teamData = this.teamData.filter(x => x.id === element.teamID)[0]
 				let rankData = this.rankData.filter(x => x.id === element.rankID)[0]
 

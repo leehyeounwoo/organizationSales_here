@@ -36,7 +36,7 @@
 							:autofocus="false"
 							class="txtLogin1_border_radius mb-4"
 							outlined
-							maxlength="255"
+							maxlength="20"
 							flat
 							dense
 							v-model="siginup.code"
@@ -52,7 +52,7 @@
 							:autofocus="false"
 							class="txtLogin1_border_radius mb-4"
 							outlined
-							maxlength="255"
+							maxlength="20"
 							flat
 							dense
 							v-model="siginup.name"
@@ -67,18 +67,19 @@
 						<v-layout class="mb-4">
 							<v-text-field
 								:readonly="sendActive"
+								v-mask="'###-####-####'"
 								hideDetails
 								:autofocus="false"
 								class="txtLogin1_border_radius"
 								outlined
 								type="text"
-								maxlength="13"
 								dense
 								@keyup="phoneCheck(siginup.phone)"
 								v-model="siginup.phone"
 								autocomplete="off"
 								color="primary2"
 							></v-text-field>
+							<!-- maxlength="13" -->
 						</v-layout>
 						<p class="input_title mb-2">
 							프로필 사진*
@@ -112,7 +113,7 @@
 							class="txtLogin1_border_radius mb-2"
 							placeholder="은행명"
 							outlined
-							maxlength="255"
+							maxlength="20"
 							flat
 							dense
 							v-model="siginup.bank"
@@ -121,12 +122,11 @@
 						></v-text-field>
 						<v-text-field
 							hideDetails
+							v-mask="'#########################'"
 							:autofocus="false"
 							class="txtLogin1_border_radius mb-2"
 							placeholder="계좌번호 (숫자만 입력하세요)"
 							outlined
-							type="number"
-							maxlength="255"
 							flat
 							dense
 							v-model="siginup.account"
@@ -134,7 +134,7 @@
 							color="primary2"
 						></v-text-field>
 						<p class="input_title mb-2">
-							통장사본*
+							통장사본
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -155,7 +155,7 @@
 							</v-btn>
 						</v-layout>
 						<p class="input_title mb-2">
-							근로계약서*
+							근로계약서
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -176,7 +176,7 @@
 							</v-btn>
 						</v-layout>
 						<p class="input_title mb-2">
-							신분증 사본등 기타 첨부자료*
+							신분증 사본등 기타 첨부자료
 						</p>
 						<v-layout class="mb-2">
 							<v-text-field
@@ -216,7 +216,7 @@
 							class="txtLogin1_border_radius mb-4"
 							:class="!siginup.biz ? 'disabled_txtField' : ''"
 							outlined
-							maxlength="255"
+							maxlength="25"
 							flat
 							dense
 							v-model="siginup.companyName"
@@ -234,7 +234,7 @@
 							class="txtLogin1_border_radius mb-2"
 							:class="!siginup.biz ? 'disabled_txtField' : ''"
 							outlined
-							maxlength="255"
+							maxlength="20"
 							flat
 							dense
 							@keyup="businessNumCheck(siginup.companyNumber)"
@@ -286,7 +286,7 @@
 								placeholder="로그인시 사용할 이메일 입력"
 								outlined
 								type="text"
-								maxlength="255"
+								maxlength="30"
 								dense
 								v-model="siginup.email"
 								autocomplete="off"
@@ -311,7 +311,7 @@
 							placeholder="Password"
 							:type="siginup.pwshow1 ? 'text' : 'password'"
 							outlined
-							maxlength="255"
+							maxlength="30"
 							flat
 							dense
 							v-model="siginup.password"
@@ -334,7 +334,7 @@
 							placeholder="Confirm Password"
 							:type="siginup.pwshow2 ? 'text' : 'password'"
 							outlined
-							maxlength="255"
+							maxlength="30"
 							flat
 							dense
 							v-model="siginup.password_re"
@@ -429,16 +429,16 @@ export default {
 		// 단일 파일 업로드
 		fileUpload(event, index) {
 			// - 파일형식 및 크기 : jpg, png / 최대 500KB
-			if (event.target.files[0].size / 1024 > 500) {
-				this.files[index] = { file: null, name: '' }
-				return this.open_disable_dialog({
-					title: '용량초과',
-					content: `500kb 이하의 파일을 업로드해주세요.`,
-				})
-			} else {
-				this.files[index].name = event.target.files[0].name
-				this.files[index].file = event.target.files[0]
-			}
+			// if (event.target.files[0].size / 1024 > 500) {
+			// 	this.files[index] = { file: null, name: '' }
+			// 	return this.open_disable_dialog({
+			// 		title: '용량초과',
+			// 		content: `500kb 이하의 파일을 업로드해주세요.`,
+			// 	})
+			// } else {
+			this.files[index].name = event.target.files[0].name
+			this.files[index].file = event.target.files[0]
+			// }
 		},
 		clickFileUploadImage(index) {
 			document.getElementById('file_upload_' + index).click()
@@ -505,10 +505,10 @@ export default {
 			else if (!this.files[0].file) return this.open_disable_dialog({ title: '등록안내', content: '프로필사진을 업로드 해주세요.' })
 			else if (!this.siginup.bank) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 은행명을 입력해주세요.' })
 			else if (!this.siginup.account) return this.open_disable_dialog({ title: '등록안내', content: '계좌정보의 계좌번호를 입력해주세요.' })
-			else if (!this.files[1].file) return this.open_disable_dialog({ title: '등록안내', content: '통장사본을 업로드 해주세요.' })
-			else if (!this.files[2].file) return this.open_disable_dialog({ title: '등록안내', content: '근로계약서를 업로드 해주세요.' })
-			else if (!this.files[3].file)
-				return this.open_disable_dialog({ title: '등록안내', content: '신분증 사본등 기타 첨부자료를 업로드 해주세요.' })
+			// else if (!this.files[1].file) return this.open_disable_dialog({ title: '등록안내', content: '통장사본을 업로드 해주세요.' })
+			// else if (!this.files[2].file) return this.open_disable_dialog({ title: '등록안내', content: '근로계약서를 업로드 해주세요.' })
+			// else if (!this.files[3].file)
+			// 	return this.open_disable_dialog({ title: '등록안내', content: '신분증 사본등 기타 첨부자료를 업로드 해주세요.' })
 			else if (!this.siginup.email) return this.open_disable_dialog({ title: '등록안내', content: '이메일을 입력해주세요.' })
 			else if (!this.siginup.password) return this.open_disable_dialog({ title: '등록안내', content: '비밀번호를 입력해주세요.' })
 			else if (!this.siginup.password_re) return this.open_disable_dialog({ title: '등록안내', content: '비밀번호 확인을 입력해주세요.' })

@@ -409,14 +409,14 @@ export default {
 		}
 	},
 	methods: {
-		/**ㄴㄴ */
 		async rowperpageChange() {
 			this.$store.state.loading = true
 			this.table.itemsPerPage = this.rowperpageSel.value
+			// console.log(this.$store.state.meData)
 			await this.first_business()
 		},
 		async first_business() {
-			await this.$store.dispatch('businesses').then(async res => {
+			await this.$store.dispatch('businesses', { idArr: [43] }).then(async res => {
 				res.businesses.forEach(el => {
 					if (el.workingHoursStart) {
 						el['startTime'] = el.workingHoursStart.slice(0, 5)
@@ -427,11 +427,12 @@ export default {
 				})
 				let data = {
 					confirmed: true,
+					role: 1,
 				}
 				await this.$store.dispatch('businessManager', data).then(res_user => {
 					res.businesses.forEach(e => {
 						let manager = res_user.users.filter(user => user.businessID === e.id)
-						console.log(manager)
+
 						e['manager'] = manager.length > 0 ? manager : null
 					})
 				})
@@ -446,6 +447,7 @@ export default {
 		createBiz() {
 			this.createDialog.type = 'create'
 			this.createDialog.product = []
+			this.right_data = []
 			this.createDialog.dialog = true
 		},
 		async product_detail(item) {
@@ -501,9 +503,9 @@ export default {
 				let table_top6 = this.table_detail.productTable.items.filter(x => x.contractStatus === '기존')
 				this.table_detail.existing = table_top6.length
 				let table_top7 = this.table_detail.productTable.items.filter(x => x.contractStatus === '1차매각')
-				this.table_detail.existing = table_top7.length
+				this.table_detail.firstContract = table_top7.length
 				let table_top8 = this.table_detail.productTable.items.filter(x => x.contractStatus === '2차매각')
-				this.table_detail.existing = table_top8.length
+				this.table_detail.secondContract = table_top8.length
 			})
 			this.table_detail.dialog = true
 		},
@@ -574,7 +576,6 @@ export default {
 					this.right_data[i].txtfield2.value = item.manager[i].phoneNumber
 					this.right_data[i].txtfield3.value = item.manager[i].email
 				}
-				console.log(this.right_data)
 			}
 			this.createDialog.items[6].value = item.location
 			this.createDialog.dialog = true

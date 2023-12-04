@@ -433,7 +433,6 @@ export default {
 			this.addedItems = []
 			if (this.$store.state.businessSelectBox.value === businessData.idArr) {
 				await this.$store.dispatch('systems', businessData).then(res => {
-					console.log(res)
 					res.systems.sort((a, b) => {
 						return new Date(a.turn.replace(/차/g, '')) - new Date(b.turn.replace(/차/g, ''))
 					})

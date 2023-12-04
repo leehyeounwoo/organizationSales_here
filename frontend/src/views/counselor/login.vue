@@ -202,15 +202,13 @@ export default {
 				this.$store
 					.dispatch('usersConnection', data)
 					.then(res => {
-						console.log(res.usersConnection.values.length)
 						if (res.usersConnection.values.length !== 0) {
 							let password = this.generateRandomCodeStr(6)
 							const updateUserData = {
 								id: res.usersConnection.values[0].id,
 								password: password,
 							}
-							this.$store.dispatch('updateUser', updateUserData).then(res1 => {
-								console.log(res1)
+							this.$store.dispatch('updateUser', updateUserData).then(() => {
 								if (this.find_user_dialog.findUser.replace(/-/g, '').length < 10) alert('정상적인 휴대전화번호가 아닙니다.')
 								let input = {
 									phoneNumber: this.find_user_dialog.findUser.replace(/-/g, ''),
