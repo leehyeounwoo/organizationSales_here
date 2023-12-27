@@ -47,16 +47,16 @@
 							['items-per-page-text']: `• Total : ${table.items.length}`,
 						}"
 					>
-						<template v-slot:body="{ headers, items }">
+						<template v-slot:body="{ headers, items, isSelected, select }">
 							<tbody>
 								<tr v-for="(d, index) in items" :key="index">
 									<td>
 										<v-checkbox
-											:input-value="isInExcelList(d)"
+											:input-value="isSelected(d)"
+											@click="select(d, !isSelected(d))"
 											style="margin:0px;padding:0px"
 											color="#535353"
 											hide-details
-											@click="toggleExcelList(d)"
 										>
 										</v-checkbox>
 									</td>
@@ -128,6 +128,7 @@
 						엑셀파일 다운로드
 					</v-btn>
 					<download-excel
+						v-if="headerStatus"
 						class="btn btn-default"
 						id="attendanceManagement_Excel"
 						:data="excelData"
@@ -182,6 +183,7 @@ export default {
 	},
 	data() {
 		return {
+			headerStatus: true,
 			sweetInfo: {
 				open: false,
 				title: '',
@@ -264,19 +266,8 @@ export default {
 		}
 	},
 	methods: {
-		isInExcelList(item) {
-			return this.excelLists.includes(item)
-		},
-		toggleExcelList(item) {
-			const index = this.excelLists.indexOf(item)
-			if (index === -1) {
-				this.excelLists.push(item)
-			} else {
-				this.excelLists.splice(index, 1)
-			}
-		},
 		async clickExport() {
-			this.selected = this.excelLists
+			this.excelLists = this.selected
 
 			if (this.selected.length === 0) {
 				this.downloadDialogStatus = {
@@ -287,6 +278,7 @@ export default {
 				}
 				return
 			}
+
 			this.excelData = JSON.parse(JSON.stringify(this.selected))
 			const total = this.excelData
 				.map(x => x.amount)
@@ -303,6 +295,7 @@ export default {
 				amount: total,
 				vacationLength: totalVacation,
 			})
+			console.log(this.excelData)
 			setTimeout(() => {
 				document.getElementById(`attendanceManagement_Excel`).click()
 			}, 200)
@@ -321,12 +314,15 @@ export default {
 				return '휴가'
 			} else if (val === 'sick') {
 				return '병가'
-			} else {
+			} else if (val === 'startWork') {
 				return '출근'
+			} else {
+				return '-'
 			}
 		},
 		async click_search() {
 			this.$store.state.loading = true
+			this.selected = []
 			this.headerCheckAction(this.start_date_picker.date, this.end_date_picker.date)
 			let data = {
 				date_gte: this.start_date_picker.date,
@@ -601,17 +597,13 @@ export default {
 
 						userMap[el.userID].amount = num3
 						userMap[el.userID].vacationLength = num1 + num2 * 0.5
-
-						if (res.gotoworks.length !== 0) {
-							for (let i = 0; i < this.table.headers.slice(2, this.table.headers.length).length; i++) {
-								const e = this.table.headers.slice(2, this.table.headers.length)[i]
-								if (res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text).length !== 0) {
-									userMap[el.userID]['data' + i] = this.workStatus(
-										res.gotoworks.filter(x => this.$moment(x.date).format('YYYY-MM-DD') === e.text)[0].status,
-									)
-								} else {
-									userMap[el.userID]['data' + i] = '-'
-								}
+						for (let i = 0; i < this.table.headers.slice(4, this.table.headers.length).length; i++) {
+							const e = this.table.headers.slice(4, this.table.headers.length)[i]
+							if (this.$moment(el.date).format('YYYY-MM-DD') === e.text) {
+								userMap[el.userID]['data' + i] = this.workStatus(el.status)
+							}
+							if (!userMap[el.userID]['data' + i]) {
+								userMap[el.userID]['data' + i] = '-'
 							}
 						}
 					}
@@ -622,6 +614,7 @@ export default {
 			})
 		},
 		headerCheckAction(startDate, endDate) {
+			this.headerStatus = false
 			let count = this.$moment.duration(this.$moment(endDate).diff(this.$moment(startDate))).asDays() + 1
 			let result = []
 			this.table.headers = [
@@ -630,6 +623,12 @@ export default {
 				{ text: '근무일', value: 'workday', align: 'center', width: '100px' },
 				{ text: '휴무일', value: 'holiday', align: 'center', width: '100px' },
 			]
+			this.table.json_fields = {
+				상담사: 'name',
+				검색기간: 'rangeDate',
+				'휴무일(연차+반차)': 'vacationLength',
+				근무일: 'amount',
+			}
 			for (let index = 0; index < count; index++) {
 				let day = this.$moment(startDate)
 					.add(index, 'd')
@@ -637,6 +636,7 @@ export default {
 				result.push(this.table.headers.push({ text: day, value: 'data' + index, align: 'center' }))
 				this.table.json_fields[day] = 'data' + index
 			}
+			this.headerStatus = true
 		},
 		async me() {
 			await this.$store
